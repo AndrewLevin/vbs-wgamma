@@ -9,6 +9,7 @@ keep RawMET_phi
 keep Electron_pt
 keep Electron_eta
 keep Electron_phi
+keep Electron_mass
 keep Electron_pdgId
 keep Electron_charge
 keep Electron_cutBased
@@ -19,6 +20,7 @@ keep Electron_deltaEtaSC
 keep Muon_pt
 keep Muon_eta
 keep Muon_phi
+keep Muon_mass
 keep Muon_pdgId
 keep Muon_charge
 keep Muon_pfRelIso04_all
@@ -26,12 +28,14 @@ keep Muon_tightId
 keep Jet_pt
 keep Jet_eta
 keep Jet_phi
+keep Jet_mass
 keep Jet_puId
 keep Jet_jetId
 keep Jet_rawFactor
 keep Photon_pt
 keep Photon_eta
 keep Photon_phi
+keep Photon_mass
 keep Photon_cutBased
 keep Photon_electronVeto
 keep Photon_eCorr
