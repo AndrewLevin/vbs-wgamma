@@ -61,7 +61,7 @@ class exampleProducer(Module):
 
 
         for i in range (0,len(electrons)):
-            
+
             if electrons[i].pt/electrons[i].eCorr < 30:
                 continue
             
@@ -224,6 +224,9 @@ class exampleProducer(Module):
             return False
 
         if abs(deltaPhi(event.MET_phi,jets[tight_jets[1]].phi)) < 0.4:
+            return False
+
+        if len(tight_muons) +len(loose_but_not_tight_muons) +  len(tight_electrons) + len(loose_but_not_tight_electrons) > 1:
             return False
 
         if len(tight_muons) == 1:
