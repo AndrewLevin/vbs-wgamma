@@ -20,7 +20,11 @@ class exampleProducer(Module):
         pass
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = wrappedOutputTree
-        #self.out.branch("EventMass",  "F");
+        self.out.branch("lepton_pdg_id",  "I");
+        self.out.branch("lepton_pt",  "F");
+        self.out.branch("photon_pt",  "F");
+        self.out.branch("met",  "F");
+        self.out.branch("mjj","F")
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
     def analyze(self, event):
@@ -44,7 +48,7 @@ class exampleProducer(Module):
 
         for i in range(0,len(muons)):
 
-            if muons[i].pt < 20:
+            if muons[i].pt < 25:
                 continue
 
             if abs(muons[i].eta) > 2.4:
@@ -58,7 +62,7 @@ class exampleProducer(Module):
 
         for i in range (0,len(electrons)):
             
-            if electrons[i].pt/electrons[i].eCorr < 20:
+            if electrons[i].pt/electrons[i].eCorr < 30:
                 continue
             
             if abs(electrons[i].eta) > 2.5:
@@ -105,7 +109,7 @@ class exampleProducer(Module):
             return False
 
         for i in range(0,len(jets)):
-            
+
             if jets[i].pt < 30:
                 continue
 
@@ -127,31 +131,32 @@ class exampleProducer(Module):
             #if not pass_photon_dr_cut:
             #    continue
 
-            if deltaR(photons[tight_photons[0]].eta,photons[tight_photons[0]].phi,jets[i].eta,jets[i].phi) < 0.5:
+
+            if deltaR(photons[tight_photons[0]].eta,photons[tight_photons[0]].phi,jets[i].eta,jets[i].phi) < 0.50:
                 continue
 
             pass_lepton_dr_cut = True
 
             for j in range(0,len(tight_muons)):
 
-                if deltaR(muons[tight_muons[j]].eta,muons[tight_muons[j]].phi,jets[i].eta,jets[i].phi) < 0.4:
+                if deltaR(muons[tight_muons[j]].eta,muons[tight_muons[j]].phi,jets[i].eta,jets[i].phi) < 0.5:
                     pass_lepton_dr_cut = False
 
             for j in range(0,len(tight_electrons)):
                 
-                if deltaR(electrons[tight_electrons[j]].eta,electrons[tight_electrons[j]].phi,jets[i].eta,jets[i].phi) < 0.4:
+                if deltaR(electrons[tight_electrons[j]].eta,electrons[tight_electrons[j]].phi,jets[i].eta,jets[i].phi) < 0.5:
 
                     pass_lepton_dr_cut = False
 
             for j in range(0,len(loose_but_not_tight_muons)):
 
-                if deltaR(muons[loose_but_not_tight_muons[j]].eta,muons[loose_but_not_tight_muons[j]].phi,jets[i].eta,jets[i].phi) < 0.4:
+                if deltaR(muons[loose_but_not_tight_muons[j]].eta,muons[loose_but_not_tight_muons[j]].phi,jets[i].eta,jets[i].phi) < 0.5:
 
                     pass_lepton_dr_cut = False
 
             for j in range(0,len(loose_but_not_tight_electrons)):
 
-                if deltaR(electrons[loose_but_not_tight_electrons[j]].eta,electrons[loose_but_not_tight_electrons[j]].phi,jets[i].eta,jets[i].phi) < 0.4:
+                if deltaR(electrons[loose_but_not_tight_electrons[j]].eta,electrons[loose_but_not_tight_electrons[j]].phi,jets[i].eta,jets[i].phi) < 0.5:
 
                      pass_lepton_dr_cut = False
 
@@ -169,7 +174,7 @@ class exampleProducer(Module):
         if jets[tight_jets[1]].btagCSVV2 > 0.8484:
             return False
 
-        if jets[tight_jets[0]].pt < 30:
+        if jets[tight_jets[0]].pt < 40:
             return False
 
         if jets[tight_jets[1]].pt < 30:
@@ -229,10 +234,10 @@ class exampleProducer(Module):
             if deltaR(photons[tight_photons[0]].eta,photons[tight_photons[0]].phi,muons[tight_muons[0]].eta,muons[tight_muons[0]].phi) < 0.5:
                 return False
 
-            if muons[tight_muons[0]].pt < 20:
+            if muons[tight_muons[0]].pt < 25:
                 return False
 
-            if abs(muons[tight_muons[0]].eta) > 2.1:
+            if abs(muons[tight_muons[0]].eta) > 2.4:
                 return False
 
             if muons[tight_muons[0]].pfRelIso04_all > 0.15:
@@ -241,11 +246,16 @@ class exampleProducer(Module):
             if not muons[tight_muons[0]].tightId:
                 return False
 
-            if sqrt(2*muons[tight_muons[0]].pt*event.MET_pt*(1 - cos(event.MET_phi - muons[0].phi))) < 30:
+            if sqrt(2*muons[tight_muons[0]].pt*event.MET_pt*(1 - cos(event.MET_phi - muons[tight_muons[0]].phi))) < 30:
                 return False
 
             print "selected muon event: " + str(event.event) + " " + str(event.luminosityBlock) + " " + str(event.run)
             
+            self.out.fillBranch("lepton_pdg_id",13)
+            self.out.fillBranch("lepton_pt",muons[tight_muons[0]].pt)
+            self.out.fillBranch("met",event.MET_pt)
+            self.out.fillBranch("photon_pt",photons[tight_photons[0]].pt/photons[tight_photons[0]].eCorr)
+            self.out.fillBranch("mjj",(jets[tight_jets[0]].p4() + jets[tight_jets[1]].p4()).M())
 
         elif len(tight_electrons) == 1:
 
@@ -258,7 +268,7 @@ class exampleProducer(Module):
             if deltaR(photons[tight_photons[0]].eta,photons[tight_photons[0]].phi,electrons[tight_electrons[0]].eta,electrons[tight_electrons[0]].phi) < 0.5:
                 return False
 
-            if electrons[tight_electrons[0]].pt < 28:
+            if electrons[tight_electrons[0]].pt < 30:
                 return False
 
             if abs(electrons[tight_electrons[0]].eta) > 2.4:
@@ -269,6 +279,12 @@ class exampleProducer(Module):
 
             if sqrt(2*electrons[tight_electrons[0]].pt*event.MET_pt*(1 - cos(event.MET_phi - electrons[tight_electrons[0]].phi))) < 30:
                 return False
+
+            self.out.fillBranch("lepton_pdg_id",11)
+            self.out.fillBranch("lepton_pt",electrons[tight_electrons[0]].pt)
+            self.out.fillBranch("met",event.MET_pt)
+            self.out.fillBranch("photon_pt",photons[tight_photons[0]].pt/photons[tight_photons[0]].eCorr)
+            self.out.fillBranch("mjj",(jets[tight_jets[0]].p4() + jets[tight_jets[1]].p4()).M())
 
             print "selected electron event: " + str(event.event) + " " + str(event.luminosityBlock) + " " + str(event.run)
 
