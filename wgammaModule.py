@@ -71,7 +71,7 @@ class exampleProducer(Module):
             if electrons[i].cutBased >= 3:
                 tight_electrons.append(i)
 
-            elif electrons[i].cutBased == 1:
+            elif electrons[i].cutBased >= 1:
                 loose_but_not_tight_electrons.append(i)
 
         for i in range (0,len(photons)):
@@ -132,7 +132,7 @@ class exampleProducer(Module):
             #    continue
 
 
-            if deltaR(photons[tight_photons[0]].eta,photons[tight_photons[0]].phi,jets[i].eta,jets[i].phi) < 0.50:
+            if deltaR(photons[tight_photons[0]].eta,photons[tight_photons[0]].phi,jets[i].eta,jets[i].phi) < 0.5:
                 continue
 
             pass_lepton_dr_cut = True
