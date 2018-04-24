@@ -22,9 +22,11 @@ class exampleProducer(Module):
         self.out = wrappedOutputTree
         self.out.branch("lepton_pdg_id",  "I");
         self.out.branch("lepton_pt",  "F");
+        self.out.branch("lepton_eta",  "F");
         self.out.branch("photon_pt",  "F");
         self.out.branch("met",  "F");
         self.out.branch("mjj","F")
+        self.out.branch("is_lepton_tight",  "B");
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
     def analyze(self, event):
@@ -256,9 +258,36 @@ class exampleProducer(Module):
             
             self.out.fillBranch("lepton_pdg_id",13)
             self.out.fillBranch("lepton_pt",muons[tight_muons[0]].pt)
+            self.out.fillBranch("lepton_eta",muons[tight_muons[0]].eta)
             self.out.fillBranch("met",event.MET_pt)
             self.out.fillBranch("photon_pt",photons[tight_photons[0]].pt/photons[tight_photons[0]].eCorr)
             self.out.fillBranch("mjj",(jets[tight_jets[0]].p4() + jets[tight_jets[1]].p4()).M())
+            self.out.fillBranch("is_lepton_tight",1)
+
+        elif len(loose_but_not_tight_muons) == 1:
+
+            if not (event.HLT_IsoMu24 or event.HLT_IsoTkMu24):
+                return False
+        
+            if deltaR(photons[tight_photons[0]].eta,photons[tight_photons[0]].phi,muons[loose_but_not_tight_muons[0]].eta,muons[loose_but_not_tight_muons[0]].phi) < 0.5:
+                return False
+
+            if muons[loose_but_not_tight_muons[0]].pt < 25:
+                return False
+
+            if abs(muons[loose_but_not_tight_muons[0]].eta) > 2.4:
+                return False
+
+            if sqrt(2*muons[loose_but_not_tight_muons[0]].pt*event.MET_pt*(1 - cos(event.MET_phi - muons[loose_but_not_tight_muons[0]].phi))) < 30:
+                return False
+
+            self.out.fillBranch("lepton_pdg_id",13)
+            self.out.fillBranch("lepton_pt",muons[loose_but_not_tight_muons[0]].pt)
+            self.out.fillBranch("lepton_eta",muons[loose_but_not_tight_muons[0]].eta)
+            self.out.fillBranch("met",event.MET_pt)
+            self.out.fillBranch("photon_pt",photons[tight_photons[0]].pt/photons[tight_photons[0]].eCorr)
+            self.out.fillBranch("mjj",(jets[tight_jets[0]].p4() + jets[tight_jets[1]].p4()).M())
+            self.out.fillBranch("is_lepton_tight",0)
 
         elif len(tight_electrons) == 1:
 
@@ -285,12 +314,41 @@ class exampleProducer(Module):
 
             self.out.fillBranch("lepton_pdg_id",11)
             self.out.fillBranch("lepton_pt",electrons[tight_electrons[0]].pt)
+            self.out.fillBranch("lepton_eta",electrons[tight_electrons[0]].eta)
             self.out.fillBranch("met",event.MET_pt)
             self.out.fillBranch("photon_pt",photons[tight_photons[0]].pt/photons[tight_photons[0]].eCorr)
             self.out.fillBranch("mjj",(jets[tight_jets[0]].p4() + jets[tight_jets[1]].p4()).M())
+            self.out.fillBranch("is_lepton_tight",1)
 
             print "selected electron event: " + str(event.event) + " " + str(event.luminosityBlock) + " " + str(event.run)
 
+        elif len(loose_but_not_tight_electrons) == 1:
+
+            if not event.HLT_Ele27_WPTight_Gsf:
+                return False
+
+            if deltaR(photons[tight_photons[0]].eta,photons[tight_photons[0]].phi,electrons[loose_but_not_tight_electrons[0]].eta,electrons[loose_but_not_tight_electrons[0]].phi) < 0.5:
+                return False
+
+            if electrons[loose_but_not_tight_electrons[0]].pt < 30:
+                return False
+
+            if abs(electrons[loose_but_not_tight_electrons[0]].eta) > 2.4:
+                return False
+
+            if (electrons[loose_but_not_tight_electrons[0]].p4() + photons[tight_photons[0]].p4()).M() > 82 and (electrons[loose_but_not_tight_electrons[0]].p4() + photons[tight_photons[0]].p4()).M() < 102:
+                return False
+
+            if sqrt(2*electrons[loose_but_not_tight_electrons[0]].pt*event.MET_pt*(1 - cos(event.MET_phi - electrons[loose_but_not_tight_electrons[0]].phi))) < 30:
+                return False
+
+            self.out.fillBranch("lepton_pdg_id",11)
+            self.out.fillBranch("lepton_pt",electrons[loose_but_not_tight_electrons[0]].pt)
+            self.out.fillBranch("lepton_eta",electrons[loose_but_not_tight_electrons[0]].eta)
+            self.out.fillBranch("met",event.MET_pt)
+            self.out.fillBranch("photon_pt",photons[tight_photons[0]].pt/photons[tight_photons[0]].eCorr)
+            self.out.fillBranch("mjj",(jets[tight_jets[0]].p4() + jets[tight_jets[1]].p4()).M())
+            self.out.fillBranch("is_lepton_tight",0)
 
         else:
             return False
