@@ -133,7 +133,6 @@ class exampleProducer(Module):
             #if not pass_photon_dr_cut:
             #    continue
 
-
             if deltaR(photons[tight_photons[0]].eta,photons[tight_photons[0]].phi,jets[i].eta,jets[i].phi) < 0.5:
                 continue
 
