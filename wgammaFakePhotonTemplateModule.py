@@ -22,6 +22,7 @@ class exampleProducer(Module):
         self.out = wrappedOutputTree
         self.out.branch("photon_sieie",  "F");
         self.out.branch("photon_pt",  "F");
+        self.out.branch("photon_eta",  "F");
         self.out.branch("gen_weight",  "F");
         self.out.branch("lepton_pdg_id",  "I");
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
@@ -86,10 +87,10 @@ class exampleProducer(Module):
                 continue
 
             #invert the medium photon ID with the sigma_ietaieta cut removed
-            mask = (1 << 0) | (1 << 1) | (1 << 2) | (1 << 4) | (1 << 5) | (1 << 6)
+            mask = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 11) | (1 << 13)
 
-            #if mask & photons[i].vidNestedWPBitmap == mask:
-            #    continue
+            if not (mask & photons[i].vidNestedWPBitmap == mask):
+                continue
 
             if not photons[i].electronVeto:
                 continue
@@ -150,6 +151,7 @@ class exampleProducer(Module):
 
         self.out.fillBranch("photon_sieie",photons[selected_photons[0]].sieie)
         self.out.fillBranch("photon_pt",photons[selected_photons[0]].pt)
+        self.out.fillBranch("photon_eta",photons[selected_photons[0]].eta)
 
         try:
             self.out.fillBranch("gen_weight",event.Generator_weight)
