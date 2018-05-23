@@ -21,6 +21,7 @@ class exampleProducer(Module):
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = wrappedOutputTree
         self.out.branch("photon_sieie",  "F");
+        self.out.branch("photon_selection",  "I");
         self.out.branch("photon_pt",  "F");
         self.out.branch("photon_eta",  "F");
         self.out.branch("gen_weight",  "F");
@@ -86,10 +87,15 @@ class exampleProducer(Module):
             #if not (abs(photons[i].eta) < 1.4442):
                 continue
 
-            #invert the medium photon ID with the sigma_ietaieta cut removed
-            mask = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 9) | (1 << 11) | (1 << 13)
+            mask1 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) | (1 << 11) | (1 << 13)
+            mask2 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) | (1 << 11) 
+            mask3 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) |  (1 << 13)
+            mask4 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 11) | (1 << 13)
+            mask5 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 9) | (1 << 11) | (1 << 13) #invert the medium photon ID with the sigma_ietaieta cut removed
 
-            if not (mask & photons[i].vidNestedWPBitmap == mask):
+            bitmap = photons[i].vidNestedWPBitmap & mask1
+
+            if not((bitmap == mask1) or (bitmap == mask2) or (bitmap == mask3) or (bitmap == mask4) or (bitmap == mask5)):
                 continue
 
             #if abs(photons[i].eta) < 1.4442:
@@ -151,6 +157,23 @@ class exampleProducer(Module):
 
         else:
             return False
+
+        mask1 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) | (1 << 11) | (1 << 13)
+        mask2 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) | (1 << 11) 
+        mask3 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) |  (1 << 13)
+        mask4 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 11) | (1 << 13)
+        mask5 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 9) | (1 << 11) | (1 << 13) #invert the sigma_ietaieta cut
+
+        bitmap = photons[selected_photons[0]].vidNestedWPBitmap & mask1
+
+        if (bitmap == mask1):
+            self.out.fillBranch("photon_selection",2)
+        elif (bitmap == mask5):
+            self.out.fillBranch("photon_selection",1)
+        elif (bitmap == mask2) or (bitmap == mask3) or (bitmap == mask4):
+            self.out.fillBranch("photon_selection",0)
+        else:
+            assert(0)
 
         self.out.fillBranch("photon_sieie",photons[selected_photons[0]].sieie)
         self.out.fillBranch("photon_pt",photons[selected_photons[0]].pt)
