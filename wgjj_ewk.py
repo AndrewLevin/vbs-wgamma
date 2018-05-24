@@ -46,11 +46,15 @@ photon_fr_hist.Print("all")
 
 def photonfakerate(eta,pt,syst):
 
+    print pt
+
     myeta  = min(abs(eta),2.3999)
     #mypt   = min(pt,69.999)
     mypt   = min(pt,399.999)
 
-    fr = photon_fr_hist.GetXaxis().FindFixBin(mypt)
+    fr = photon_fr_hist.GetBinContent(photon_fr_hist.GetXaxis().FindFixBin(mypt))
+
+    print fr
 
     return fr
 
@@ -160,9 +164,9 @@ wg_qcd_hist.Sumw2()
 wg_ewk_hist = TH1F("wg_ewk","",18,200,2000)
 wg_ewk_hist.Sumw2()
 
-data_events_tree.Draw("mjj >> data","mjj < 400 && lepton_pdg_id == 11 && is_lepton_tight == 1 && abs(photon_eta) < 1.4442 && photon_selection == 2 && photon_pt < 70")
+data_events_tree.Draw("mjj >> data","mjj < 400 && lepton_pdg_id == 11 && is_lepton_tight == 1 && abs(photon_eta) < 1.4442 && photon_selection == 2 && photon_pt > 25 && photon_pt < 70")
 
-wg_ewk_tree.Draw("mjj >> wg_ewk","lepton_pdg_id == 11 && is_lepton_tight == 1 && photon_pt < 70","Generator_weight")
+wg_ewk_tree.Draw("mjj >> wg_ewk","lepton_pdg_id == 11 && is_lepton_tight == 1 && photon_pt > 25 && photon_pt < 70","Generator_weight")
 
 for i in range(data_events_tree.GetEntries()):
     data_events_tree.GetEntry(i)
@@ -170,13 +174,13 @@ for i in range(data_events_tree.GetEntries()):
     #if data_events_tree.lepton_pdg_id == 13 and data_events_tree.is_lepton_tight == '\x00':
     #    fake_hist.Fill(data_events_tree.mjj,muonfakerate(data_events_tree.lepton_eta, data_events_tree.lepton_pt,"nominal"))
 
-    if data_events_tree.lepton_pdg_id == 11 and data_events_tree.is_lepton_tight == '\x00' and (data_events_tree.photon_eta) < 1.4442 and data_events_tree.photon_selection == 2 and data_events_tree.photon_pt < 70:
+    if data_events_tree.lepton_pdg_id == 11 and data_events_tree.is_lepton_tight == '\x00' and (data_events_tree.photon_eta) < 1.4442 and data_events_tree.photon_selection == 2 and data_events_tree.photon_pt > 25 and data_events_tree.photon_pt < 70:
         fake_electron_hist.Fill(data_events_tree.mjj,electronfakerate(data_events_tree.lepton_eta, data_events_tree.lepton_pt,"nominal"))
 
-    if data_events_tree.lepton_pdg_id == 11 and data_events_tree.is_lepton_tight == '\x00' and (data_events_tree.photon_eta) < 1.4442 and (data_events_tree.photon_selection == 1 or data_events_tree.photon_selection == 0) and data_events_tree.photon_pt < 70:
+    if data_events_tree.lepton_pdg_id == 11 and data_events_tree.is_lepton_tight == '\x01' and (data_events_tree.photon_eta) < 1.4442 and (data_events_tree.photon_selection == 1 or data_events_tree.photon_selection == 0) and data_events_tree.photon_pt > 25 and data_events_tree.photon_pt < 70:
         fake_photon_hist.Fill(data_events_tree.mjj,photonfakerate(data_events_tree.photon_eta, data_events_tree.photon_pt,"nominal"))
 
-wg_qcd_tree.Draw("mjj >> wg_qcd","lepton_pdg_id == 11 && is_lepton_tight == 1 && abs(photon_eta) < 1.4442 && photon_selection == 2 && photon_pt < 70","Generator_weight")
+wg_qcd_tree.Draw("mjj >> wg_qcd","lepton_pdg_id == 11 && is_lepton_tight == 1 && abs(photon_eta) < 1.4442 && photon_selection == 2 && photon_pt > 25 && photon_pt < 70","Generator_weight")
 
 #single_muon_hist = gDirectory.Get("single_muon")
 
@@ -234,9 +238,9 @@ hstack.Add(wg_qcd)
 hstack.Add(fake_electron_hist)
 hstack.Add(fake_photon_hist)
 
-hstack.Draw("hist")
+data_hist.Draw("")
 
-data_hist.Draw("same")
+hstack.Draw("hist same")
 
 #wg_qcd.Draw("hist same")
 #fake_electron_hist.Draw("hist same")
