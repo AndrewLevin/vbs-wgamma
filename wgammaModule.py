@@ -23,10 +23,13 @@ class exampleProducer(Module):
         self.out.branch("lepton_pdg_id",  "I");
         self.out.branch("lepton_pt",  "F");
         self.out.branch("lepton_eta",  "F");
-        self.out.branch("photon_pt",  "F");
+        self.out.branch("photon_pt",  "F")
+        self.out.branch("photon_eta",  "F");
+        self.out.branch("photon_selection",  "I");
         self.out.branch("met",  "F");
         self.out.branch("mjj","F")
         self.out.branch("is_lepton_tight",  "B");
+        self.out.branch("gen_weight",  "F");
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
     def analyze(self, event):
@@ -85,8 +88,19 @@ class exampleProducer(Module):
             if not ((abs(photons[i].eta) < 1.4442) or (1.566 < abs(photons[i].eta) and abs(photons[i].eta) < 2.5) ):
                 continue
 
-            if photons[i].cutBased == 0 or photons[i].cutBased == 1:
+            mask1 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) | (1 << 11) | (1 << 13)
+            mask2 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) | (1 << 11) 
+            mask3 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) |  (1 << 13)
+            mask4 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 11) | (1 << 13)
+            mask5 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 9) | (1 << 11) | (1 << 13) #invert the medium photon ID with the sigma_ietaieta cut removed
+
+            bitmap = photons[i].vidNestedWPBitmap & mask1
+
+            if not((bitmap == mask1) or (bitmap == mask2) or (bitmap == mask3) or (bitmap == mask4) or (bitmap == mask5)):
                 continue
+
+            #if photons[i].cutBased == 0 or photons[i].cutBased == 1:
+            #    continue
 
             if not photons[i].electronVeto:
                 continue
@@ -197,11 +211,11 @@ class exampleProducer(Module):
             return False
 
         #if not (abs(photons[tight_photons[0]].eta) < 1.4442):
-        if not (abs(photons[tight_photons[0]].eta) < 1.4442):
-            return False        
-
-        #if not ((abs(photons[tight_photons[0]].eta) < 1.4442) or (1.566 < abs(photons[tight_photons[0]].eta) and abs(photons[tight_photons[0]].eta) < 2.5) ):
+        #if not (abs(photons[tight_photons[0]].eta) < 1.4442):
         #    return False        
+
+        if not ((abs(photons[tight_photons[0]].eta) < 1.4442) or (1.566 < abs(photons[tight_photons[0]].eta) and abs(photons[tight_photons[0]].eta) < 2.5) ):
+            return False        
 
         if deltaR(photons[tight_photons[0]].eta,photons[tight_photons[0]].phi,jets[tight_jets[0]].eta,jets[tight_jets[0]].phi) < 0.5:
             return False
@@ -212,8 +226,8 @@ class exampleProducer(Module):
         if deltaR(jets[tight_jets[0]].eta,jets[tight_jets[0]].phi,jets[tight_jets[1]].eta,jets[tight_jets[1]].phi) < 0.5:
             return False
 
-        if photons[tight_photons[0]].cutBased == 0 or photons[tight_photons[0]].cutBased == 1:
-            return False
+        #if photons[tight_photons[0]].cutBased == 0 or photons[tight_photons[0]].cutBased == 1:
+        #    return False
 
         if not photons[tight_photons[0]].electronVeto:
             return False
@@ -255,11 +269,29 @@ class exampleProducer(Module):
 
             print "selected muon event: " + str(event.event) + " " + str(event.luminosityBlock) + " " + str(event.run)
             
+            mask1 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) | (1 << 11) | (1 << 13)
+            mask2 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) | (1 << 11) 
+            mask3 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) |  (1 << 13)
+            mask4 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 11) | (1 << 13)
+            mask5 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 9) | (1 << 11) | (1 << 13) #invert the medium photon ID with the sigma_ietaieta cut removed
+
+            bitmap = photons[tight_photons[0]].vidNestedWPBitmap & mask1
+
+            if (bitmap == mask1):
+                self.out.fillBranch("photon_selection",2)
+            elif (bitmap == mask5):
+                self.out.fillBranch("photon_selection",1)
+            elif (bitmap == mask2) or (bitmap == mask3) or (bitmap == mask4):
+                self.out.fillBranch("photon_selection",0)
+            else:
+                assert(0)
+
             self.out.fillBranch("lepton_pdg_id",13)
             self.out.fillBranch("lepton_pt",muons[tight_muons[0]].pt)
             self.out.fillBranch("lepton_eta",muons[tight_muons[0]].eta)
             self.out.fillBranch("met",event.MET_pt)
             self.out.fillBranch("photon_pt",photons[tight_photons[0]].pt/photons[tight_photons[0]].eCorr)
+            self.out.fillBranch("photon_eta",photons[tight_photons[0]].eta)
             self.out.fillBranch("mjj",(jets[tight_jets[0]].p4() + jets[tight_jets[1]].p4()).M())
             self.out.fillBranch("is_lepton_tight",1)
 
@@ -280,11 +312,29 @@ class exampleProducer(Module):
             if sqrt(2*muons[loose_but_not_tight_muons[0]].pt*event.MET_pt*(1 - cos(event.MET_phi - muons[loose_but_not_tight_muons[0]].phi))) < 30:
                 return False
 
+            mask1 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) | (1 << 11) | (1 << 13)
+            mask2 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) | (1 << 11) 
+            mask3 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) |  (1 << 13)
+            mask4 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 11) | (1 << 13)
+            mask5 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 9) | (1 << 11) | (1 << 13) #invert the medium photon ID with the sigma_ietaieta cut removed
+
+            bitmap = photons[tight_photons[0]].vidNestedWPBitmap & mask1
+
+            if (bitmap == mask1):
+                self.out.fillBranch("photon_selection",2)
+            elif (bitmap == mask5):
+                self.out.fillBranch("photon_selection",1)
+            elif (bitmap == mask2) or (bitmap == mask3) or (bitmap == mask4):
+                self.out.fillBranch("photon_selection",0)
+            else:
+                assert(0)
+
             self.out.fillBranch("lepton_pdg_id",13)
             self.out.fillBranch("lepton_pt",muons[loose_but_not_tight_muons[0]].pt)
             self.out.fillBranch("lepton_eta",muons[loose_but_not_tight_muons[0]].eta)
             self.out.fillBranch("met",event.MET_pt)
             self.out.fillBranch("photon_pt",photons[tight_photons[0]].pt/photons[tight_photons[0]].eCorr)
+            self.out.fillBranch("photon_eta",photons[tight_photons[0]].eta)
             self.out.fillBranch("mjj",(jets[tight_jets[0]].p4() + jets[tight_jets[1]].p4()).M())
             self.out.fillBranch("is_lepton_tight",0)
 
@@ -311,11 +361,29 @@ class exampleProducer(Module):
             if sqrt(2*electrons[tight_electrons[0]].pt*event.MET_pt*(1 - cos(event.MET_phi - electrons[tight_electrons[0]].phi))) < 30:
                 return False
 
+            mask1 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) | (1 << 11) | (1 << 13)
+            mask2 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) | (1 << 11) 
+            mask3 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) |  (1 << 13)
+            mask4 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 11) | (1 << 13)
+            mask5 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 9) | (1 << 11) | (1 << 13) #invert the medium photon ID with the sigma_ietaieta cut removed
+
+            bitmap = photons[tight_photons[0]].vidNestedWPBitmap & mask1
+
+            if (bitmap == mask1):
+                self.out.fillBranch("photon_selection",2)
+            elif (bitmap == mask5):
+                self.out.fillBranch("photon_selection",1)
+            elif (bitmap == mask2) or (bitmap == mask3) or (bitmap == mask4):
+                self.out.fillBranch("photon_selection",0)
+            else:
+                assert(0)
+
             self.out.fillBranch("lepton_pdg_id",11)
             self.out.fillBranch("lepton_pt",electrons[tight_electrons[0]].pt)
             self.out.fillBranch("lepton_eta",electrons[tight_electrons[0]].eta)
             self.out.fillBranch("met",event.MET_pt)
             self.out.fillBranch("photon_pt",photons[tight_photons[0]].pt/photons[tight_photons[0]].eCorr)
+            self.out.fillBranch("photon_eta",photons[tight_photons[0]].eta)
             self.out.fillBranch("mjj",(jets[tight_jets[0]].p4() + jets[tight_jets[1]].p4()).M())
             self.out.fillBranch("is_lepton_tight",1)
 
@@ -341,17 +409,40 @@ class exampleProducer(Module):
             if sqrt(2*electrons[loose_but_not_tight_electrons[0]].pt*event.MET_pt*(1 - cos(event.MET_phi - electrons[loose_but_not_tight_electrons[0]].phi))) < 30:
                 return False
 
+            mask1 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) | (1 << 11) | (1 << 13)
+            mask2 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) | (1 << 11) 
+            mask3 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) |  (1 << 13)
+            mask4 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 11) | (1 << 13)
+            mask5 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 9) | (1 << 11) | (1 << 13) #invert the medium photon ID with the sigma_ietaieta cut removed
+
+            bitmap = photons[tight_photons[0]].vidNestedWPBitmap & mask1
+
+            if (bitmap == mask1):
+                self.out.fillBranch("photon_selection",2)
+            elif (bitmap == mask5):
+                self.out.fillBranch("photon_selection",1)
+            elif (bitmap == mask2) or (bitmap == mask3) or (bitmap == mask4):
+                self.out.fillBranch("photon_selection",0)
+            else:
+                assert(0)
+
             self.out.fillBranch("lepton_pdg_id",11)
             self.out.fillBranch("lepton_pt",electrons[loose_but_not_tight_electrons[0]].pt)
             self.out.fillBranch("lepton_eta",electrons[loose_but_not_tight_electrons[0]].eta)
             self.out.fillBranch("met",event.MET_pt)
             self.out.fillBranch("photon_pt",photons[tight_photons[0]].pt/photons[tight_photons[0]].eCorr)
+            self.out.fillBranch("photon_eta",photons[tight_photons[0]].eta)
             self.out.fillBranch("mjj",(jets[tight_jets[0]].p4() + jets[tight_jets[1]].p4()).M())
             self.out.fillBranch("is_lepton_tight",0)
 
         else:
             return False
 
+
+        try:
+            self.out.fillBranch("gen_weight",event.Generator_weight)
+        except:
+            pass
 
         #print event.event
 
