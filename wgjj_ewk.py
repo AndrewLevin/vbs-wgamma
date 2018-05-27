@@ -35,28 +35,84 @@ from array import array
 
 photon_ptbins=array('d', [25,30,40,50,70,100,135,400])
 
-photon_frs = [0.15550473705,0.124784207531,0.0966858503868,0.0758489934184,0.0642462907324,0.0564518837214,0.0369812872883]
+fake_photon_event_weights_muon_barrel = [0.15484967425962273, 0.11526136026220057, 0.091070354122829253, 0.072917453493902371, 0.064764981348695988, 0.04700463570126253, 0.034922659781958389]
 
-photon_fr_hist=TH1F("photon_fr_hist","photon_fr_hist",len(photon_ptbins)-1,photon_ptbins)
+fake_photon_event_weights_electron_barrel = [0.15573742576164373, 0.12494329030474935, 0.096571497677979998, 0.075752643786702545, 0.064617228770499982, 0.056704093703044904, 0.036730045038103808]
 
-for i in range(photon_fr_hist.GetNbinsX()):
-    photon_fr_hist.SetBinContent(i+1,photon_frs[i])
+fake_photon_event_weights_muon_endcap = [0.20839170212916272, 0.17498013594607562, 0.1466030335824296, 0.1125004979329069, 0.091837292330306144, 0.05591928780784014, 0.043609726517627824]
 
-photon_fr_hist.Print("all")
+fake_photon_event_weights_electron_endcap = [0.2160443399100257, 0.16915440022208778, 0.13628256324769972, 0.11803145426485719, 0.10802953403391163, 0.057281068272119165, 0.052668295670617482]
 
-def photonfakerate(eta,pt,syst):
+fake_photon_event_weights_muon_barrel_hist=TH1F("fake_photon_event_weights_muon_barrel_hist","fake_photon_event_weights_muon_barrel_hist",len(photon_ptbins)-1,photon_ptbins)
+fake_photon_event_weights_electron_barrel_hist=TH1F("fake_photon_event_weights_electron_barrel_hist","fake_photon_event_weights_electron_barrel_hist",len(photon_ptbins)-1,photon_ptbins)
+fake_photon_event_weights_muon_endcap_hist=TH1F("fake_photon_event_weights_muon_endcap_hist","fake_photon_event_weights_muon_endcap_hist",len(photon_ptbins)-1,photon_ptbins)
+fake_photon_event_weights_electron_endcap_hist=TH1F("fake_photon_event_weights_electron_endcap_hist","fake_photon_event_weights_electron_endcap_hist",len(photon_ptbins)-1,photon_ptbins)
 
-    print pt
+for i in range(fake_photon_event_weights_muon_barrel_hist.GetNbinsX()):
+    fake_photon_event_weights_muon_barrel_hist.SetBinContent(i+1,fake_photon_event_weights_muon_barrel[i])
 
-    myeta  = min(abs(eta),2.3999)
-    #mypt   = min(pt,69.999)
-    mypt   = min(pt,399.999)
+for i in range(fake_photon_event_weights_electron_barrel_hist.GetNbinsX()):
+    fake_photon_event_weights_electron_barrel_hist.SetBinContent(i+1,fake_photon_event_weights_electron_barrel[i])
 
-    fr = photon_fr_hist.GetBinContent(photon_fr_hist.GetXaxis().FindFixBin(mypt))
+for i in range(fake_photon_event_weights_muon_endcap_hist.GetNbinsX()):
+    fake_photon_event_weights_muon_endcap_hist.SetBinContent(i+1,fake_photon_event_weights_muon_endcap[i])
 
-    print fr
+for i in range(fake_photon_event_weights_electron_endcap_hist.GetNbinsX()):
+    fake_photon_event_weights_electron_endcap_hist.SetBinContent(i+1,fake_photon_event_weights_electron_endcap[i])
 
-    return fr
+fake_photon_event_weights_muon_barrel_hist.Print("all")
+fake_photon_event_weights_muon_endcap_hist.Print("all")
+fake_photon_event_weights_electron_barrel_hist.Print("all")
+fake_photon_event_weights_electron_endcap_hist.Print("all")
+
+
+
+def photonfakerate(eta,pt,lepton_pdg_id,syst):
+
+    if abs(lepton_pdg_id) == 11:
+        if abs(eta) < 1.4442:
+            myeta  = min(abs(eta),2.4999)
+            mypt   = min(pt,399.999)
+
+            fr = fake_photon_event_weights_electron_barrel_hist.GetBinContent(fake_photon_event_weights_electron_barrel_hist.GetXaxis().FindFixBin(mypt))
+
+            return fr
+
+        elif 1.566 < abs(eta) and abs(eta) < 2.5:
+            myeta  = min(abs(eta),2.4999)
+            mypt   = min(pt,399.999)
+
+            fr = fake_photon_event_weights_electron_endcap_hist.GetBinContent(fake_photon_event_weights_electron_endcap_hist.GetXaxis().FindFixBin(mypt))
+
+            return fr
+
+        else:
+
+            assert(0)
+    elif abs(lepton_pdg_id) == 13:
+        if abs(eta) < 1.4442:
+            myeta  = min(abs(eta),2.4999)
+            mypt   = min(pt,399.999)
+
+            fr = fake_photon_event_weights_muon_barrel_hist.GetBinContent(fake_photon_event_weights_muon_barrel_hist.GetXaxis().FindFixBin(mypt))
+
+            return fr
+
+        elif 1.566 < abs(eta) and abs(eta) < 2.5:
+            myeta  = min(abs(eta),2.4999)
+            mypt   = min(pt,399.999)
+
+            fr = fake_photon_event_weights_muon_endcap_hist.GetBinContent(fake_photon_event_weights_muon_endcap_hist.GetXaxis().FindFixBin(mypt))
+
+            return fr
+
+        else:
+
+            assert(0)
+
+    else:
+
+        assert(0)
 
 def muonfakerate(eta,pt,syst):
 
@@ -137,7 +193,7 @@ def draw_legend(x1,y1,hist,label,options):
     #otherwise the legend goes out of scope and is deleted once the function finishes
     hist.label = legend
 
-data_file = TFile.Open("/afs/cern.ch/work/a/amlevin/tmp/wgamma_single_electron.root")
+data_file = TFile.Open("/afs/cern.ch/work/a/amlevin/data/wgamma_single_electron.root")
 wg_qcd_file = TFile.Open("/afs/cern.ch/user/a/amlevin/vbs-wgamma/wgamma_qcd.root")
 wg_ewk_file = TFile.Open("/afs/cern.ch/user/a/amlevin/vbs-wgamma/wgammajj_ewk.root")
 
@@ -178,7 +234,7 @@ for i in range(data_events_tree.GetEntries()):
         fake_electron_hist.Fill(data_events_tree.mjj,electronfakerate(data_events_tree.lepton_eta, data_events_tree.lepton_pt,"nominal"))
 
     if data_events_tree.lepton_pdg_id == 11 and data_events_tree.is_lepton_tight == '\x01' and (data_events_tree.photon_eta) < 1.4442 and (data_events_tree.photon_selection == 1 or data_events_tree.photon_selection == 0) and data_events_tree.photon_pt > 25 and data_events_tree.photon_pt < 70:
-        fake_photon_hist.Fill(data_events_tree.mjj,photonfakerate(data_events_tree.photon_eta, data_events_tree.photon_pt,"nominal"))
+        fake_photon_hist.Fill(data_events_tree.mjj,photonfakerate(data_events_tree.photon_eta, data_events_tree.photon_pt,data_events_tree.lepton_pdg_id, "nominal"))
 
 wg_qcd_tree.Draw("mjj >> wg_qcd","lepton_pdg_id == 11 && is_lepton_tight == 1 && abs(photon_eta) < 1.4442 && photon_selection == 2 && photon_pt > 25 && photon_pt < 70","Generator_weight")
 
