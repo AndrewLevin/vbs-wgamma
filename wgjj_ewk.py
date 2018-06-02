@@ -1,8 +1,8 @@
-#photon_eta_cutstring = "1.566 < abs(photon_eta) && abs(photon_eta) < 2.5"
-photon_eta_cutstring = "abs(photon_eta) < 1.4442"
+photon_eta_cutstring = "1.566 < abs(photon_eta) && abs(photon_eta) < 2.5"
+#photon_eta_cutstring = "abs(photon_eta) < 1.4442"
 
-lepton_name = "muon"
-#lepton_name = "electron"
+#lepton_name = "muon"
+lepton_name = "electron"
 
 import sys
 import style
@@ -209,7 +209,7 @@ elif lepton_name == "electron":
     data_file = TFile.Open("/afs/cern.ch/work/a/amlevin/data/wgamma_single_electron.root")
 else:
     assert(0)
-wg_qcd_file = TFile.Open("/afs/cern.ch/user/a/amlevin/vbs-wgamma/wgamma_qcd.root")
+wg_qcd_file = TFile.Open("/afs/cern.ch/user/a/amlevin/vbs-wgamma/927F1543-6366-E811-84E9-0025905A6070_Skim.root")
 wg_ewk_file = TFile.Open("/afs/cern.ch/user/a/amlevin/vbs-wgamma/wgammajj_ewk.root")
 
 c1 = TCanvas("c1", "c1",5,50,500,500);
@@ -221,6 +221,10 @@ gROOT.cd()
 wg_qcd_tree = wg_qcd_file.Get("Events")
 wg_ewk_tree = wg_ewk_file.Get("Events")
 data_events_tree = data_file.Get("Events")
+
+wg_qcd_n_weighted_events_hist = wg_qcd_file.Get("nWeightedEvents")
+
+wg_qcd_n_weighted_events = wg_qcd_n_weighted_events_hist.GetBinContent(1)
 
 data_hist = TH1F("data","",18,200,2000)
 double_fake_hist = TH1F("double fake hist","",18,200,2000)
@@ -313,18 +317,30 @@ for i in range(wg_qcd_tree.GetEntries()):
     if photon_eta_cutstring == "abs(photon_eta) < 1.4442":
         if wg_qcd_tree.lepton_pdg_id == lepton_abs_pdg_id and wg_qcd_tree.is_lepton_tight == '\x00' and abs(wg_qcd_tree.photon_eta) < 1.4442 and wg_qcd_tree.photon_selection == 2 and wg_qcd_tree.photon_pt > 25 and wg_qcd_tree.photon_pt < 70:
             if lepton_name == "muon":
-                fake_muon_hist.Fill(wg_qcd_tree.mjj,-muonfakerate(wg_qcd_tree.lepton_eta, wg_qcd_tree.lepton_pt,"nominal")*wg_qcd_tree.Generator_weight*378.2 * 1000 * 36.15 / 6103817)
+                if wg_qcd_tree.Generator_weight > 0:
+                    fake_muon_hist.Fill(wg_qcd_tree.mjj,-muonfakerate(wg_qcd_tree.lepton_eta, wg_qcd_tree.lepton_pt,"nominal")*178.6 * 1000 * 36.15 / wg_qcd_n_weighted_events)
+                else:    
+                    fake_muon_hist.Fill(wg_qcd_tree.mjj,muonfakerate(wg_qcd_tree.lepton_eta, wg_qcd_tree.lepton_pt,"nominal")*178.6 * 1000 * 36.15 / wg_qcd_n_weighted_events)
             elif lepton_name == "electron":
-                fake_electron_hist.Fill(wg_qcd_tree.mjj,-electronfakerate(wg_qcd_tree.lepton_eta, wg_qcd_tree.lepton_pt,"nominal")*wg_qcd_tree.Generator_weight*378.2 * 1000 * 36.15 / 6103817)
+                if wg_qcd_tree.Generator_weight > 0:
+                    fake_electron_hist.Fill(wg_qcd_tree.mjj,-electronfakerate(wg_qcd_tree.lepton_eta, wg_qcd_tree.lepton_pt,"nominal")*178.6 * 1000 * 36.15 / wg_qcd_n_weighted_events)
+                else:
+                    fake_electron_hist.Fill(wg_qcd_tree.mjj,electronfakerate(wg_qcd_tree.lepton_eta, wg_qcd_tree.lepton_pt,"nominal")*178.6 * 1000 * 36.15 / wg_qcd_n_weighted_events)
                 pass
             else:
                 assert(0)
     elif photon_eta_cutstring == "1.566 < abs(photon_eta) && abs(photon_eta) < 2.5":            
         if wg_qcd_tree.lepton_pdg_id == lepton_abs_pdg_id and wg_qcd_tree.is_lepton_tight == '\x00' and 1.566 < abs(wg_qcd_tree.photon_eta) and abs(wg_qcd_tree.photon_eta) < 2.5 and wg_qcd_tree.photon_selection == 2 and wg_qcd_tree.photon_pt > 25 and wg_qcd_tree.photon_pt < 70:
             if lepton_name == "muon":
-                fake_muon_hist.Fill(wg_qcd_tree.mjj,-muonfakerate(wg_qcd_tree.lepton_eta, wg_qcd_tree.lepton_pt,"nominal")*wg_qcd_tree.Generator_weight*378.2 * 1000 * 36.15 / 6103817)
+                if wg_qcd_tree.Generator_weight > 0:
+                    fake_muon_hist.Fill(wg_qcd_tree.mjj,-muonfakerate(wg_qcd_tree.lepton_eta, wg_qcd_tree.lepton_pt,"nominal")*178.6 * 1000 * 36.15 / wg_qcd_n_weighted_events)
+                else:
+                    fake_muon_hist.Fill(wg_qcd_tree.mjj,muonfakerate(wg_qcd_tree.lepton_eta, wg_qcd_tree.lepton_pt,"nominal")*178.6 * 1000 * 36.15 / wg_qcd_n_weighted_events)
             elif lepton_name == "electron":
-                fake_electron_hist.Fill(wg_qcd_tree.mjj,-electronfakerate(wg_qcd_tree.lepton_eta, wg_qcd_tree.lepton_pt,"nominal")*wg_qcd_tree.Generator_weight*378.2 * 1000 * 36.15 / 6103817)
+                if wg_qcd_tree.Generator_weight > 0:
+                    fake_electron_hist.Fill(wg_qcd_tree.mjj,-electronfakerate(wg_qcd_tree.lepton_eta, wg_qcd_tree.lepton_pt,"nominal")*178.6 * 1000 * 36.15 / wg_qcd_n_weighted_events)
+                else:    
+                    fake_electron_hist.Fill(wg_qcd_tree.mjj,electronfakerate(wg_qcd_tree.lepton_eta, wg_qcd_tree.lepton_pt,"nominal")*178.6 * 1000 * 36.15 / wg_qcd_n_weighted_events)
             else:
                 assert(0)
     else:
@@ -332,11 +348,11 @@ for i in range(wg_qcd_tree.GetEntries()):
 
     
 
-wg_qcd_tree.Draw("mjj >> wg_qcd","lepton_pdg_id == "+str(lepton_abs_pdg_id)+" && is_lepton_tight == 1 && "+photon_eta_cutstring+" && abs(photon_eta) < 2.5 && photon_selection == 2 && photon_pt > 25 && photon_pt < 70","Generator_weight")
+wg_qcd_tree.Draw("mjj >> wg_qcd","lepton_pdg_id == "+str(lepton_abs_pdg_id)+" && is_lepton_tight == 1 && "+photon_eta_cutstring+" && abs(photon_eta) < 2.5 && photon_selection == 2 && photon_pt > 25 && photon_pt < 70","Generator_weight > 0 ? 1 : -1")
 
 #single_muon_hist = gDirectory.Get("single_muon")
 
-wg_qcd_hist.Scale(378.2 * 1000 * 36.15 / 6103817)
+wg_qcd_hist.Scale(178.6 * 1000 * 36.15 / wg_qcd_n_weighted_events)
 
 wg_ewk_hist.Scale(0.7605 * 1000 * 36.15 / 699444)
 
@@ -485,6 +501,8 @@ gstat.SetMarkerSize(0);
 gstat.SetLineWidth(0);
 gstat.SetLineColor(kWhite);
 gstat.Draw("E2same");
+
+data_hist.Draw("same")
 
 c1.Update()
 c1.ForceUpdate()
