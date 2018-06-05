@@ -168,8 +168,6 @@ class exampleProducer(Module):
             if not pass_lepton_dr_cut:
                 continue
 
-            print photons[i].pt/photons[i].eCorr
-
             tight_photons.append(i)
 
         if len(tight_photons) == 0:
