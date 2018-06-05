@@ -64,7 +64,6 @@ class exampleProducer(Module):
             elif muons[i].pfRelIso04_all < 0.25:
                 loose_but_not_tight_muons.append(i)
 
-
         for i in range (0,len(electrons)):
 
             if electrons[i].pt/electrons[i].eCorr < 30:
@@ -96,6 +95,10 @@ class exampleProducer(Module):
 
             bitmap = photons[i].vidNestedWPBitmap & mask1
 
+            #first add the photons that pass the full ID
+            if not (bitmap == mask1):
+                continue
+
             if not((bitmap == mask1) or (bitmap == mask2) or (bitmap == mask3) or (bitmap == mask4) or (bitmap == mask5)):
                 continue
 
@@ -118,6 +121,54 @@ class exampleProducer(Module):
 
             if not pass_lepton_dr_cut:
                 continue
+
+            tight_photons.append(i)
+
+        for i in range (0,len(photons)):
+
+
+            if photons[i].pt/photons[i].eCorr < 20:
+                continue
+
+            #if not ((abs(photons[i].eta) < 1.4442) or (1.566 < abs(photons[i].eta) and abs(photons[i].eta) < 2.5) ):
+            if not ((abs(photons[i].eta) < 1.4442) or (1.566 < abs(photons[i].eta) and abs(photons[i].eta) < 2.5) ):
+                continue
+
+            mask1 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) | (1 << 11) | (1 << 13)
+            mask2 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) | (1 << 11) 
+            mask3 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) |  (1 << 13)
+            mask4 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 11) | (1 << 13)
+            mask5 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 9) | (1 << 11) | (1 << 13) #invert the medium photon ID with the sigma_ietaieta cut removed
+
+            bitmap = photons[i].vidNestedWPBitmap & mask1
+
+            #after adding the photons that pass the full ID, add the photons that pass the inverted ID
+            if (bitmap == mask1):
+                continue
+
+            if not((bitmap == mask1) or (bitmap == mask2) or (bitmap == mask3) or (bitmap == mask4) or (bitmap == mask5)):
+                continue
+
+            #if photons[i].cutBased == 0 or photons[i].cutBased == 1:
+            #    continue
+
+            if not photons[i].electronVeto:
+                continue
+
+            pass_lepton_dr_cut = True
+
+            for j in range(0,len(tight_muons)):
+                if deltaR(muons[tight_muons[j]].eta,muons[tight_muons[j]].phi,photons[i].eta,photons[i].phi) < 0.5:
+                    pass_lepton_dr_cut = False
+
+            for j in range(0,len(tight_electrons)):
+                if deltaR(electrons[tight_electrons[j]].eta,electrons[tight_electrons[j]].phi,photons[i].eta,photons[i].phi) < 0.5:
+                    pass_lepton_dr_cut = False
+
+            if not pass_lepton_dr_cut:
+                continue
+
+            print photons[i].pt/photons[i].eCorr
 
             tight_photons.append(i)
 
@@ -349,16 +400,24 @@ class exampleProducer(Module):
             if deltaR(photons[tight_photons[0]].eta,photons[tight_photons[0]].phi,electrons[tight_electrons[0]].eta,electrons[tight_electrons[0]].phi) < 0.5:
                 return False
 
-            if electrons[tight_electrons[0]].pt < 30:
+            if electrons[tight_electrons[0]].pt/electrons[tight_electrons[0]].eCorr < 30:
                 return False
 
-            if abs(electrons[tight_electrons[0]].eta) > 2.4:
+            if abs(electrons[tight_electrons[0]].eta) > 2.5:
                 return False
 
-            if (electrons[tight_electrons[0]].p4() + photons[tight_photons[0]].p4()).M() > 82 and (electrons[tight_electrons[0]].p4() + photons[tight_photons[0]].p4()).M() < 102:
+            ele_p4 = electrons[tight_electrons[0]].p4()
+
+            pho_p4 = photons[tight_photons[0]].p4()
+
+            ele_p4.SetPtEtaPhiM(ele_p4.Pt()/electrons[tight_electrons[0]].eCorr , ele_p4.Eta(), ele_p4.Phi() , ele_p4.M())
+
+            pho_p4.SetPtEtaPhiM(pho_p4.Pt()/photons[tight_photons[0]].eCorr , pho_p4.Eta(), pho_p4.Phi() , pho_p4.M())
+
+            if (ele_p4 + pho_p4).M() > 81.2 and (ele_p4 + pho_4).M() < 101.2:
                 return False
 
-            if sqrt(2*electrons[tight_electrons[0]].pt*event.MET_pt*(1 - cos(event.MET_phi - electrons[tight_electrons[0]].phi))) < 30:
+            if sqrt(2*electrons[tight_electrons[0]].pt/electrons[tight_electrons[0]].eCorr*event.MET_pt*(1 - cos(event.MET_phi - electrons[tight_electrons[0]].phi))) < 30:
                 return False
 
             mask1 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) | (1 << 11) | (1 << 13)
@@ -397,16 +456,24 @@ class exampleProducer(Module):
             if deltaR(photons[tight_photons[0]].eta,photons[tight_photons[0]].phi,electrons[loose_but_not_tight_electrons[0]].eta,electrons[loose_but_not_tight_electrons[0]].phi) < 0.5:
                 return False
 
-            if electrons[loose_but_not_tight_electrons[0]].pt < 30:
+            if electrons[loose_but_not_tight_electrons[0]].pt/electrons[loose_but_not_tight_electrons[0]].eCorr < 30:
                 return False
 
-            if abs(electrons[loose_but_not_tight_electrons[0]].eta) > 2.4:
+            if abs(electrons[loose_but_not_tight_electrons[0]].eta) > 2.5:
                 return False
 
-            if (electrons[loose_but_not_tight_electrons[0]].p4() + photons[tight_photons[0]].p4()).M() > 82 and (electrons[loose_but_not_tight_electrons[0]].p4() + photons[tight_photons[0]].p4()).M() < 102:
+            ele_p4 = electrons[loose_but_not_tight_electrons[0]].p4()
+
+            pho_p4 = photons[tight_photons[0]].p4()
+
+            ele_p4.SetPtEtaPhiM(ele_p4.Pt()/electrons[loose_but_not_tight_electrons[0]].eCorr , ele_p4.Eta(), ele_p4.Phi() , ele_p4.M())
+
+            pho_p4.SetPtEtaPhiM(pho_p4.Pt()/photons[tight_photons[0]].eCorr , pho_p4.Eta(), pho_p4.Phi() , pho_p4.M())
+
+            if (ele_p4 + pho_p4).M() > 81.2 and (ele_p4 + pho_4).M() < 101.2:
                 return False
 
-            if sqrt(2*electrons[loose_but_not_tight_electrons[0]].pt*event.MET_pt*(1 - cos(event.MET_phi - electrons[loose_but_not_tight_electrons[0]].phi))) < 30:
+            if sqrt(2*electrons[loose_but_not_tight_electrons[0]].pt/electrons[loose_but_not_tight_electrons[0]].eCorr*event.MET_pt*(1 - cos(event.MET_phi - electrons[loose_but_not_tight_electrons[0]].phi))) < 30:
                 return False
 
             mask1 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) | (1 << 11) | (1 << 13)
