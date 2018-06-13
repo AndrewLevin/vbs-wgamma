@@ -53,7 +53,7 @@ class exampleProducer(Module):
 
         for i in range(0,len(muons)):
 
-            if muons[i].pt < 25:
+            if muons[i].pt < 20:
                 continue
 
             if abs(muons[i].eta) > 2.4:
@@ -66,17 +66,18 @@ class exampleProducer(Module):
 
         for i in range (0,len(electrons)):
 
-            if electrons[i].pt/electrons[i].eCorr < 30:
+            if electrons[i].pt/electrons[i].eCorr < 20:
                 continue
             
-            if abs(electrons[i].eta) > 2.5:
+            if abs(electrons[i].eta + electrons[i].deltaEtaSC) > 2.5:
                 continue
 
-            if electrons[i].cutBased >= 3:
-                tight_electrons.append(i)
+            if (abs(electrons[i].eta + electrons[i].deltaEtaSC) < 1.479 and abs(electrons[i].dz) < 0.1 and abs(electrons[i].dxy) < 0.05) or (abs(electrons[i].eta + electrons[i].deltaEtaSC) > 1.479 and abs(electrons[i].dz) < 0.2 and abs(electrons[i].dxy) < 0.1):
+                if electrons[i].cutBased >= 3:
+                    tight_electrons.append(i)
 
-            elif electrons[i].cutBased >= 1:
-                loose_but_not_tight_electrons.append(i)
+                elif electrons[i].cutBased >= 1:
+                    loose_but_not_tight_electrons.append(i)
 
         for i in range (0,len(photons)):
 
