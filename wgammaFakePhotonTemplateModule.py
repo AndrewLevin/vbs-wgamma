@@ -68,22 +68,24 @@ class exampleProducer(Module):
             if electrons[i].pt/electrons[i].eCorr < 30:
                 continue
             
-            if abs(electrons[i].eta) > 2.5:
+            if abs(electrons[i].eta+ electrons[i].deltaEtaSC) > 2.5:
                 continue
 
-            if electrons[i].cutBased >= 3:
-                tight_electrons.append(i)
+            if (abs(electrons[i].eta + electrons[i].deltaEtaSC) < 1.479 and abs(electrons[i].dz) < 0.1 and abs(electrons[i].dxy) < 0.05) or (abs(electrons[i].eta + electrons[i].deltaEtaSC) > 1.479 and abs(electrons[i].dz) < 0.2 and abs(electrons[i].dxy) < 0.1):
 
-            elif electrons[i].cutBased >= 1:
-                loose_but_not_tight_electrons.append(i)
+                if electrons[i].cutBased >= 3:
+                    tight_electrons.append(i)
+
+                elif electrons[i].cutBased >= 1:
+                    loose_but_not_tight_electrons.append(i)
 
         for i in range (0,len(photons)):
 
             if photons[i].pt/photons[i].eCorr < 20:
                 continue
 
-            #if not ((abs(photons[i].eta) < 1.4442) or (1.566 < abs(photons[i].eta) and abs(photons[i].eta) < 2.5) ):
-            if not (abs(photons[i].eta) < 1.4442):
+            if not ((abs(photons[i].eta) < 1.4442) or (1.566 < abs(photons[i].eta) and abs(photons[i].eta) < 2.5) ):
+            #if not (abs(photons[i].eta) < 1.4442):
                 continue
 
             #invert the medium photon ID with the sigma_ietaieta cut removed

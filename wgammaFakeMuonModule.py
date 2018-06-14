@@ -71,14 +71,15 @@ class exampleProducer(Module):
             if electrons[i].pt/electrons[i].eCorr < 30:
                 continue
             
-            if abs(electrons[i].eta) > 2.5:
+            if abs(electrons[i].eta+ electrons[i].deltaEtaSC) > 2.5:
                 continue
 
-            if electrons[i].cutBased >= 3:
-                tight_electrons.append(i)
+            if (abs(electrons[i].eta + electrons[i].deltaEtaSC) < 1.479 and abs(electrons[i].dz) < 0.1 and abs(electrons[i].dxy) < 0.05) or (abs(electrons[i].eta + electrons[i].deltaEtaSC) > 1.479 and abs(electrons[i].dz) < 0.2 and abs(electrons[i].dxy) < 0.1):
+                if electrons[i].cutBased >= 3:
+                    tight_electrons.append(i)
 
-            elif electrons[i].cutBased >= 1:
-                loose_but_not_tight_electrons.append(i)
+                elif electrons[i].cutBased >= 1:
+                    loose_but_not_tight_electrons.append(i)
 
         if len(tight_muons)+ len(loose_but_not_tight_muons) != 1:
             return False
