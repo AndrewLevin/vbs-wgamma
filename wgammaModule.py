@@ -26,6 +26,7 @@ class exampleProducer(Module):
         self.out.branch("photon_pt",  "F")
         self.out.branch("photon_eta",  "F");
         self.out.branch("photon_selection",  "I");
+        self.out.branch("btagging_selection",  "I");
         self.out.branch("met",  "F");
         self.out.branch("mjj","F")
         self.out.branch("is_lepton_tight",  "B");
@@ -233,11 +234,10 @@ class exampleProducer(Module):
         if len(tight_jets) < 2:
             return False
 
-        if jets[tight_jets[0]].btagCSVV2 > 0.8484:
-            return False
-
-        if jets[tight_jets[1]].btagCSVV2 > 0.8484:
-            return False
+        if jets[tight_jets[0]].btagCSVV2 < 0.8484 and jets[tight_jets[1]].btagCSVV2 < 0.8484:
+            self.out.fillBranch("btagging_selection",1)
+        else:   
+            self.out.fillBranch("btagging_selection",0)            
 
         if jets[tight_jets[0]].pt < 40:
             return False
