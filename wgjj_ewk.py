@@ -1,8 +1,8 @@
-photon_eta_cutstring = "1.566 < abs(photon_eta) && abs(photon_eta) < 2.5"
-#photon_eta_cutstring = "abs(photon_eta) < 1.4442"
+#photon_eta_cutstring = "1.566 < abs(photon_eta) && abs(photon_eta) < 2.5"
+photon_eta_cutstring = "abs(photon_eta) < 1.4442"
 
-#lepton_name = "muon"
-lepton_name = "electron"
+lepton_name = "muon"
+#lepton_name = "electron"
 
 import sys
 import style
@@ -229,8 +229,8 @@ ROOT.gROOT.cd()
 
 wg_qcd_tree = wg_qcd_file.Get("Events")
 ttg_tree = ttg_file.Get("Events")
-ttsemi_tree = ttg_file.Get("Events")
-tt2l2nu_tree = ttg_file.Get("Events")
+ttsemi_tree = ttsemi_file.Get("Events")
+tt2l2nu_tree = tt2l2nu_file.Get("Events")
 zg_qcd_tree = zg_qcd_file.Get("Events")
 wg_ewk_tree = wg_ewk_file.Get("Events")
 data_events_tree = data_file.Get("Events")
@@ -295,24 +295,24 @@ def fillHistogramMC(tree,hist,xs,n_weighted_events):
         tree.GetEntry(i)
 
         if photon_eta_cutstring == "abs(photon_eta) < 1.4442":        
-            if tree.lepton_pdg_id == lepton_abs_pdg_id and tree.is_lepton_tight == '\x01' and abs(tree.photon_eta) < 1.4442 and tree.photon_selection == 2 and tree.photon_pt > 25 and tree.photon_pt < 70 and tree.btagging_selection == btagging_selection:
-#            if tree.lepton_pdg_id == lepton_abs_pdg_id and tree.is_lepton_tight == '\x01' and abs(tree.photon_eta) < 1.4442 and tree.photon_selection == 2 and tree.photon_pt > 25 and tree.photon_pt < 70 and tree.btagging_selection == btagging_selection and tree.is_lepton_real == '\x01' and tree.is_photon_real == '\x01':
+#            if tree.lepton_pdg_id == lepton_abs_pdg_id and tree.is_lepton_tight == '\x01' and abs(tree.photon_eta) < 1.4442 and tree.photon_selection == 2 and tree.photon_pt > 25 and tree.photon_pt < 70 and tree.btagging_selection == btagging_selection:
+            if tree.lepton_pdg_id == lepton_abs_pdg_id and tree.is_lepton_tight == '\x01' and abs(tree.photon_eta) < 1.4442 and tree.photon_selection == 2 and tree.photon_pt > 25 and tree.photon_pt < 70 and tree.btagging_selection == btagging_selection and tree.is_lepton_real == '\x01' and tree.is_photon_real == '\x01':
                 if tree.Generator_weight > 0:
-                    #hist.Fill(tree.mjj,eff_scale_factor.photon_efficiency_scale_factor(tree.photon_pt,tree.photon_eta)*eff_scale_factor.electron_efficiency_scale_factor(tree.lepton_pt,tree.lepton_eta)*xs*1000*36.15/n_weighted_events)
-                    hist.Fill(tree.mjj,xs*1000*36.15/n_weighted_events)
+                    hist.Fill(tree.mjj,eff_scale_factor.photon_efficiency_scale_factor(tree.photon_pt,tree.photon_eta)*eff_scale_factor.electron_efficiency_scale_factor(tree.lepton_pt,tree.lepton_eta)*xs*1000*36.15/n_weighted_events)
+                    #hist.Fill(tree.mjj,xs*1000*36.15/n_weighted_events)
                 else:
-                    #hist.Fill(tree.mjj,-eff_scale_factor.photon_efficiency_scale_factor(tree.photon_pt,tree.photon_eta)*eff_scale_factor.electron_efficiency_scale_factor(tree.lepton_pt,tree.lepton_eta)*xs*1000*36.15/n_weighted_events)
-                    hist.Fill(tree.mjj,-xs*1000*36.15/n_weighted_events)
+                    hist.Fill(tree.mjj,-eff_scale_factor.photon_efficiency_scale_factor(tree.photon_pt,tree.photon_eta)*eff_scale_factor.electron_efficiency_scale_factor(tree.lepton_pt,tree.lepton_eta)*xs*1000*36.15/n_weighted_events)
+                    #hist.Fill(tree.mjj,-xs*1000*36.15/n_weighted_events)
         elif photon_eta_cutstring == "1.566 < abs(photon_eta) && abs(photon_eta) < 2.5":    
 
-#            if tree.lepton_pdg_id == lepton_abs_pdg_id and tree.is_lepton_tight == '\x01' and 1.566 < abs(tree.photon_eta) and abs(tree.photon_eta) < 2.5 and tree.photon_selection == 2 and tree.photon_pt > 25 and tree.photon_pt < 70 and tree.btagging_selection == btagging_selection and tree.is_lepton_real == '\x01' and tree.is_photon_real == '\x01':
-            if tree.lepton_pdg_id == lepton_abs_pdg_id and tree.is_lepton_tight == '\x01' and 1.566 < abs(tree.photon_eta) and abs(tree.photon_eta) < 2.5 and tree.photon_selection == 2 and tree.photon_pt > 25 and tree.photon_pt < 70 and tree.btagging_selection == btagging_selection:
+            if tree.lepton_pdg_id == lepton_abs_pdg_id and tree.is_lepton_tight == '\x01' and 1.566 < abs(tree.photon_eta) and abs(tree.photon_eta) < 2.5 and tree.photon_selection == 2 and tree.photon_pt > 25 and tree.photon_pt < 70 and tree.btagging_selection == btagging_selection and tree.is_lepton_real == '\x01' and tree.is_photon_real == '\x01':
+#            if tree.lepton_pdg_id == lepton_abs_pdg_id and tree.is_lepton_tight == '\x01' and 1.566 < abs(tree.photon_eta) and abs(tree.photon_eta) < 2.5 and tree.photon_selection == 2 and tree.photon_pt > 25 and tree.photon_pt < 70 and tree.btagging_selection == btagging_selection:
                 if tree.Generator_weight > 0:
-#                    hist.Fill(tree.mjj,eff_scale_factor.photon_efficiency_scale_factor(tree.photon_pt,tree.photon_eta)*eff_scale_factor.electron_efficiency_scale_factor(tree.lepton_pt,tree.lepton_eta)*xs*1000*36.15/n_weighted_events)
-                    hist.Fill(tree.mjj,xs*1000*36.15/n_weighted_events)
+                    hist.Fill(tree.mjj,eff_scale_factor.photon_efficiency_scale_factor(tree.photon_pt,tree.photon_eta)*eff_scale_factor.electron_efficiency_scale_factor(tree.lepton_pt,tree.lepton_eta)*xs*1000*36.15/n_weighted_events)
+#                    hist.Fill(tree.mjj,xs*1000*36.15/n_weighted_events)
                 else:
-#                    hist.Fill(tree.mjj,-eff_scale_factor.photon_efficiency_scale_factor(tree.photon_pt,tree.photon_eta)*eff_scale_factor.electron_efficiency_scale_factor(tree.lepton_pt,tree.lepton_eta)*xs*1000*36.15/n_weighted_events)
-                    hist.Fill(tree.mjj,-xs*1000*36.15/n_weighted_events)
+                    hist.Fill(tree.mjj,-eff_scale_factor.photon_efficiency_scale_factor(tree.photon_pt,tree.photon_eta)*eff_scale_factor.electron_efficiency_scale_factor(tree.lepton_pt,tree.lepton_eta)*xs*1000*36.15/n_weighted_events)
+#                    hist.Fill(tree.mjj,-xs*1000*36.15/n_weighted_events)
         else:
             assert(0)
 
