@@ -22,7 +22,7 @@ parser.add_option('-o',dest='outputfile',default="/eos/user/a/amlevin/www/tmp/de
 
 import eff_scale_factor
 
-from ROOT import *
+import ROOT
 
 xoffsetstart = 0.0;
 yoffsetstart = 0.0;
@@ -34,8 +34,8 @@ ypositions = [0,1,2,3,4,5,0,1,2]
 
 style.GoodStyle().cd()
 
-muon_fr_file = TFile("/afs/cern.ch/user/a/amlevin/vbs-wgamma/muon_frs.root")
-electron_fr_file = TFile("/afs/cern.ch/user/a/amlevin/vbs-wgamma/electron_frs.root")
+muon_fr_file = ROOT.TFile("/afs/cern.ch/user/a/amlevin/vbs-wgamma/muon_frs.root")
+electron_fr_file = ROOT.TFile("/afs/cern.ch/user/a/amlevin/vbs-wgamma/electron_frs.root")
 
 muon_fr_hist=muon_fr_file.Get("muon_frs")
 electron_fr_hist=electron_fr_file.Get("electron_frs")
@@ -52,10 +52,10 @@ fake_photon_event_weights_muon_endcap = [0.20783807385298056, 0.1753014423981221
 
 fake_photon_event_weights_electron_endcap = [0.197481755047577, 0.15028936497262135, 0.1197346440252747, 0.10517930137670145, 0.08989475516812702, 0.04777790529184045, 0.0388377405319603]
 
-fake_photon_event_weights_muon_barrel_hist=TH1F("fake_photon_event_weights_muon_barrel_hist","fake_photon_event_weights_muon_barrel_hist",len(photon_ptbins)-1,photon_ptbins)
-fake_photon_event_weights_electron_barrel_hist=TH1F("fake_photon_event_weights_electron_barrel_hist","fake_photon_event_weights_electron_barrel_hist",len(photon_ptbins)-1,photon_ptbins)
-fake_photon_event_weights_muon_endcap_hist=TH1F("fake_photon_event_weights_muon_endcap_hist","fake_photon_event_weights_muon_endcap_hist",len(photon_ptbins)-1,photon_ptbins)
-fake_photon_event_weights_electron_endcap_hist=TH1F("fake_photon_event_weights_electron_endcap_hist","fake_photon_event_weights_electron_endcap_hist",len(photon_ptbins)-1,photon_ptbins)
+fake_photon_event_weights_muon_barrel_hist=ROOT.TH1F("fake_photon_event_weights_muon_barrel_hist","fake_photon_event_weights_muon_barrel_hist",len(photon_ptbins)-1,photon_ptbins)
+fake_photon_event_weights_electron_barrel_hist=ROOT.TH1F("fake_photon_event_weights_electron_barrel_hist","fake_photon_event_weights_electron_barrel_hist",len(photon_ptbins)-1,photon_ptbins)
+fake_photon_event_weights_muon_endcap_hist=ROOT.TH1F("fake_photon_event_weights_muon_endcap_hist","fake_photon_event_weights_muon_endcap_hist",len(photon_ptbins)-1,photon_ptbins)
+fake_photon_event_weights_electron_endcap_hist=ROOT.TH1F("fake_photon_event_weights_electron_endcap_hist","fake_photon_event_weights_electron_endcap_hist",len(photon_ptbins)-1,photon_ptbins)
 
 for i in range(fake_photon_event_weights_muon_barrel_hist.GetNbinsX()):
     fake_photon_event_weights_muon_barrel_hist.SetBinContent(i+1,fake_photon_event_weights_muon_barrel[i])
@@ -192,7 +192,7 @@ def set_axis_fonts(thstack, coordinate, title):
 
 def draw_legend(x1,y1,hist,label,options):
 
-    legend = TLegend(x1+xoffsetstart,y1+yoffsetstart,x1+xoffsetstart + xoffset,y1+yoffsetstart + yoffset)
+    legend = ROOT.TLegend(x1+xoffsetstart,y1+yoffsetstart,x1+xoffsetstart + xoffset,y1+yoffsetstart + yoffset)
 
     legend.SetBorderSize(     0)
     legend.SetFillColor (     0)
@@ -208,22 +208,22 @@ def draw_legend(x1,y1,hist,label,options):
     hist.label = legend
 
 if lepton_name == "muon":
-    data_file = TFile.Open("/afs/cern.ch/work/a/amlevin/data/wgamma_single_muon.root")
+    data_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wgamma_single_muon.root")
 elif lepton_name == "electron":
-    data_file = TFile.Open("/afs/cern.ch/work/a/amlevin/data/wgamma_single_electron.root")
+    data_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wgamma_single_electron.root")
 else:
     assert(0)
 
-wg_qcd_file = TFile.Open("/afs/cern.ch/work/a/amlevin/data/wgamma_qcd_wg.root")
-zg_qcd_file = TFile.Open("/afs/cern.ch/work/a/amlevin/data/wgamma_qcd_zg.root")
-ttg_file = TFile.Open("/afs/cern.ch/work/a/amlevin/data/wgamma_ttg.root")
-ttsemi_file = TFile.Open("/afs/cern.ch/work/a/amlevin/data/wgamma_ttsemi.root")
-tt2l2nu_file = TFile.Open("/afs/cern.ch/work/a/amlevin/data/wgamma_tt2l2nu.root")
-wg_ewk_file = TFile.Open("/afs/cern.ch/user/a/amlevin/vbs-wgamma/wgammajj_ewk.root")
+wg_qcd_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wgamma_qcd_wg.root")
+zg_qcd_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wgamma_qcd_zg.root")
+ttg_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wgamma_ttg.root")
+ttsemi_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wgamma_ttsemi.root")
+tt2l2nu_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wgamma_tt2l2nu.root")
+wg_ewk_file = ROOT.TFile.Open("/afs/cern.ch/user/a/amlevin/vbs-wgamma/wgammajj_ewk.root")
 
-c1 = TCanvas("c1", "c1",5,50,500,500);
+c1 = ROOT.TCanvas("c1", "c1",5,50,500,500);
 
-gROOT.cd()
+ROOT.gROOT.cd()
 
 #variable = "mjj"
 
@@ -255,33 +255,35 @@ ttsemi_n_weighted_events_hist = ttsemi_file.Get("nWeightedEvents")
 
 ttsemi_n_weighted_events = ttsemi_n_weighted_events_hist.GetBinContent(1)
 
-data_hist = TH1F("data","",18,200,2000)
-double_fake_hist = TH1F("double fake hist","",18,200,2000)
-fake_photon_hist = TH1F("fake photon hist","",18,200,2000)
-fake_electron_hist = TH1F("fake electron hist","",18,200,2000)
-fake_muon_hist = TH1F("fake muon hist","",18,200,2000)
+data_hist = ROOT.TH1F("data","",18,200,2000)
+double_fake_hist = ROOT.TH1F("double fake hist","",18,200,2000)
+fake_photon_hist = ROOT.TH1F("fake photon hist","",18,200,2000)
+fake_electron_hist = ROOT.TH1F("fake electron hist","",18,200,2000)
+fake_muon_hist = ROOT.TH1F("fake muon hist","",18,200,2000)
 data_hist.Sumw2()
 fake_muon_hist.Sumw2()
 fake_electron_hist.Sumw2()
 fake_photon_hist.Sumw2()
 double_fake_hist.Sumw2()
 
-wg_qcd_hist = TH1F("wg_qcd","",18,200,2000)
+wg_qcd_hist = ROOT.TH1F("wg_qcd","",18,200,2000)
 wg_qcd_hist.Sumw2()
 
-ttg_hist = TH1F("ttg","",18,200,2000)
+ttg_hist = ROOT.TH1F("ttg","",18,200,2000)
 ttg_hist.Sumw2()
 
-tt2l2nu_hist = TH1F("tt2l2nu","",18,200,2000)
+tt2l2nu_hist = ROOT.TH1F("tt2l2nu","",18,200,2000)
 tt2l2nu_hist.Sumw2()
 
-ttsemi_hist = TH1F("ttsemi","",18,200,2000)
+ttsemi_hist = ROOT.TH1F("ttsemi","",18,200,2000)
+
 ttsemi_hist.Sumw2()
 
-zg_qcd_hist = TH1F("zg_qcd","",18,200,2000)
+zg_qcd_hist = ROOT.TH1F("zg_qcd","",18,200,2000)
+
 zg_qcd_hist.Sumw2()
 
-wg_ewk_hist = TH1F("wg_ewk","",18,200,2000)
+wg_ewk_hist = ROOT.TH1F("wg_ewk","",18,200,2000)
 wg_ewk_hist.Sumw2()
 
 data_events_tree.Draw("mjj >> data","mjj < 400 && abs(lepton_pdg_id) == "+str(lepton_abs_pdg_id)+" && is_lepton_tight == 1 && "+photon_eta_cutstring+" && photon_selection == 2 && photon_pt > 25 && photon_pt < 70 && btagging_selection == "+ str(btagging_selection))
@@ -293,7 +295,8 @@ def fillHistogramMC(tree,hist,xs,n_weighted_events):
         tree.GetEntry(i)
 
         if photon_eta_cutstring == "abs(photon_eta) < 1.4442":        
-            if tree.lepton_pdg_id == lepton_abs_pdg_id and tree.is_lepton_tight == '\x01' and abs(tree.photon_eta) < 1.4442 and tree.photon_selection == 2 and tree.photon_pt > 25 and tree.photon_pt < 70 and tree.btagging_selection == btagging_selection and tree.is_lepton_real == '\x01' and tree.is_photon_real == '\x01':
+            if tree.lepton_pdg_id == lepton_abs_pdg_id and tree.is_lepton_tight == '\x01' and abs(tree.photon_eta) < 1.4442 and tree.photon_selection == 2 and tree.photon_pt > 25 and tree.photon_pt < 70 and tree.btagging_selection == btagging_selection:
+#            if tree.lepton_pdg_id == lepton_abs_pdg_id and tree.is_lepton_tight == '\x01' and abs(tree.photon_eta) < 1.4442 and tree.photon_selection == 2 and tree.photon_pt > 25 and tree.photon_pt < 70 and tree.btagging_selection == btagging_selection and tree.is_lepton_real == '\x01' and tree.is_photon_real == '\x01':
                 if tree.Generator_weight > 0:
                     #hist.Fill(tree.mjj,eff_scale_factor.photon_efficiency_scale_factor(tree.photon_pt,tree.photon_eta)*eff_scale_factor.electron_efficiency_scale_factor(tree.lepton_pt,tree.lepton_eta)*xs*1000*36.15/n_weighted_events)
                     hist.Fill(tree.mjj,xs*1000*36.15/n_weighted_events)
@@ -301,7 +304,9 @@ def fillHistogramMC(tree,hist,xs,n_weighted_events):
                     #hist.Fill(tree.mjj,-eff_scale_factor.photon_efficiency_scale_factor(tree.photon_pt,tree.photon_eta)*eff_scale_factor.electron_efficiency_scale_factor(tree.lepton_pt,tree.lepton_eta)*xs*1000*36.15/n_weighted_events)
                     hist.Fill(tree.mjj,-xs*1000*36.15/n_weighted_events)
         elif photon_eta_cutstring == "1.566 < abs(photon_eta) && abs(photon_eta) < 2.5":    
-            if tree.lepton_pdg_id == lepton_abs_pdg_id and tree.is_lepton_tight == '\x01' and 1.566 < abs(tree.photon_eta) and abs(tree.photon_eta) < 2.5 and tree.photon_selection == 2 and tree.photon_pt > 25 and tree.photon_pt < 70 and tree.btagging_selection == btagging_selection and tree.is_lepton_real == '\x01' and tree.is_photon_real == '\x01':
+
+#            if tree.lepton_pdg_id == lepton_abs_pdg_id and tree.is_lepton_tight == '\x01' and 1.566 < abs(tree.photon_eta) and abs(tree.photon_eta) < 2.5 and tree.photon_selection == 2 and tree.photon_pt > 25 and tree.photon_pt < 70 and tree.btagging_selection == btagging_selection and tree.is_lepton_real == '\x01' and tree.is_photon_real == '\x01':
+            if tree.lepton_pdg_id == lepton_abs_pdg_id and tree.is_lepton_tight == '\x01' and 1.566 < abs(tree.photon_eta) and abs(tree.photon_eta) < 2.5 and tree.photon_selection == 2 and tree.photon_pt > 25 and tree.photon_pt < 70 and tree.btagging_selection == btagging_selection:
                 if tree.Generator_weight > 0:
 #                    hist.Fill(tree.mjj,eff_scale_factor.photon_efficiency_scale_factor(tree.photon_pt,tree.photon_eta)*eff_scale_factor.electron_efficiency_scale_factor(tree.lepton_pt,tree.lepton_eta)*xs*1000*36.15/n_weighted_events)
                     hist.Fill(tree.mjj,xs*1000*36.15/n_weighted_events)
@@ -312,7 +317,6 @@ def fillHistogramMC(tree,hist,xs,n_weighted_events):
             assert(0)
 
     hist.Print("all")
-
 
 for i in range(data_events_tree.GetEntries()):
     data_events_tree.GetEntry(i)
@@ -413,9 +417,7 @@ for i in range(wg_qcd_tree.GetEntries()):
     else:
         assert(0)
 
-
-
-fillHistogramMC(wg_qcd_tree,wg_qcd,178.6,wg_qcd_n_weighted_events)    
+fillHistogramMC(wg_qcd_tree,wg_qcd_hist,178.6,wg_qcd_n_weighted_events)    
 
 #fillHistogramMC(zg_qcd_tree,zg_qcd,,zg_qcd_n_weighted_events)    
 
@@ -451,28 +453,28 @@ wg_ewk_hist.Scale(0.7605 * 1000 * 36.15 / 699444)
 
 #events_tree.Scan("mjj")
 
-data_hist.SetMarkerStyle(kFullCircle)
+data_hist.SetMarkerStyle(ROOT.kFullCircle)
 data_hist.SetLineWidth(3)
 
 #data_hist.Draw()
 
-fake_photon_hist.SetFillColor(kMagenta)
-fake_electron_hist.SetFillColor(kBlue)
-fake_muon_hist.SetFillColor(kBlue)
-double_fake_hist.SetFillColor(kOrange)
-wg_qcd_hist.SetFillColor(kGreen+2)
-ttg_hist.SetFillColor(kAzure-1)
-ttsemi_hist.SetFillColor(kYellow)
-tt2l2nu_hist.SetFillColor(kRed)
+fake_photon_hist.SetFillColor(ROOT.kMagenta)
+fake_electron_hist.SetFillColor(ROOT.kBlue)
+fake_muon_hist.SetFillColor(ROOT.kBlue)
+double_fake_hist.SetFillColor(ROOT.kOrange)
+wg_qcd_hist.SetFillColor(ROOT.kGreen+2)
+ttg_hist.SetFillColor(ROOT.kAzure-1)
+ttsemi_hist.SetFillColor(ROOT.kYellow)
+tt2l2nu_hist.SetFillColor(ROOT.kRed)
 
-fake_photon_hist.SetLineColor(kMagenta)
-fake_electron_hist.SetLineColor(kBlue)
-fake_muon_hist.SetLineColor(kBlue)
-double_fake_hist.SetLineColor(kOrange)
-wg_qcd_hist.SetLineColor(kGreen+2)
-ttg_hist.SetLineColor(kAzure-1)
-ttsemi_hist.SetLineColor(kYellow)
-tt2l2nu_hist.SetLineColor(kRed)
+fake_photon_hist.SetLineColor(ROOT.kMagenta)
+fake_electron_hist.SetLineColor(ROOT.kBlue)
+fake_muon_hist.SetLineColor(ROOT.kBlue)
+double_fake_hist.SetLineColor(ROOT.kOrange)
+wg_qcd_hist.SetLineColor(ROOT.kGreen+2)
+ttg_hist.SetLineColor(ROOT.kAzure-1)
+ttsemi_hist.SetLineColor(ROOT.kYellow)
+tt2l2nu_hist.SetLineColor(ROOT.kRed)
 
 fake_photon_hist.SetFillStyle(1001)
 fake_electron_hist.SetFillStyle(1001)
@@ -496,7 +498,7 @@ tt2l2nu_hist.SetFillStyle(1001)
 #wg_qcd.Draw("same")
 
 s=str(options.lumi)+" fb^{-1} (13 TeV)"
-lumilabel = TLatex (0.95, 0.93, s)
+lumilabel = ROOT.TLatex (0.95, 0.93, s)
 lumilabel.SetNDC ()
 lumilabel.SetTextAlign (30)
 lumilabel.SetTextFont (42)
@@ -506,7 +508,7 @@ lumilabel.SetTextSize (0.040)
 hsum = data_hist.Clone()
 hsum.Scale(0.0)
 
-hsum.Add(wg_qcd)
+hsum.Add(wg_qcd_hist)
 hsum.Add(ttg_hist)
 hsum.Add(ttsemi_hist)
 hsum.Add(tt2l2nu_hist)
@@ -519,8 +521,8 @@ else:
 hsum.Add(fake_photon_hist)
 hsum.Add(double_fake_hist)
 
-hstack = THStack()
-hstack.Add(wg_qcd)
+hstack = ROOT.THStack()
+hstack.Add(wg_qcd_hist)
 hstack.Add(ttg_hist)
 hstack.Add(ttsemi_hist)
 hstack.Add(tt2l2nu_hist)
@@ -544,7 +546,7 @@ hstack.Draw("hist same")
 #wg_ewk_hist.Print("all")
 
 #cmslabel = TLatex (0.18, 0.93, "#bf{CMS} (Unpublished)")
-cmslabel = TLatex (0.18, 0.93, "")
+cmslabel = ROOT.TLatex (0.18, 0.93, "")
 cmslabel.SetNDC ()
 cmslabel.SetTextAlign (10)
 cmslabel.SetTextFont (42)
@@ -603,7 +605,7 @@ set_axis_fonts(hstack,"x",options.xaxislabel)
 #set_axis_fonts(data_hist,"y","Events / bin")
 #set_axis_fonts(hstack,"y","Events / bin")
 
-gstat = TGraphAsymmErrors(hsum);
+gstat = ROOT.TGraphAsymmErrors(hsum);
 
 for i in range(0,gstat.GetN()):
     gstat.SetPointEYlow (i, hsum.GetBinError(i+1));
@@ -613,7 +615,7 @@ gstat.SetFillColor(12);
 gstat.SetFillStyle(3345);
 gstat.SetMarkerSize(0);
 gstat.SetLineWidth(0);
-gstat.SetLineColor(kWhite);
+gstat.SetLineColor(ROOT.kWhite);
 gstat.Draw("E2same");
 
 data_hist.Draw("same")
