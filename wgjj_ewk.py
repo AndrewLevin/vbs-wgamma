@@ -78,11 +78,11 @@ def getXaxisLabel(varname):
     elif varname == "lepton_pt":
         return "lepton p_{T} (GeV)"
     elif varname == "lepton_eta":
-        return "lepton \eta"
+        return "lepton #eta"
     elif varname == "photon_pt":
         return "photon p_{T} (GeV)"
     elif varname == "photon_eta":
-        return "photon \eta"
+        return "photon #eta"
     else:
         assert(0)
 
