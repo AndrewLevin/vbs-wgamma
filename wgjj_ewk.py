@@ -1,9 +1,3 @@
-#photon_eta_cutstring = "1.566 < abs(photon_eta) && abs(photon_eta) < 2.5"
-photon_eta_cutstring = "abs(photon_eta) < 1.4442"
-
-lepton_name = "muon"
-#lepton_name = "electron"
-
 data_driven = True
 
 import sys
@@ -13,6 +7,11 @@ import optparse
 
 parser = optparse.OptionParser()
 
+
+parser.add_option('--lep',dest='lep',default='muon')
+parser.add_option('--phoeta',dest='phoeta',default='barrel')
+parser.add_option('--btagged',dest='btagged', default=False,  action = 'store_true')
+
 parser.add_option('--lumi',dest='lumi')
 parser.add_option('--variable',dest='variable')
 parser.add_option('--xaxislabel',dest='xaxislabel',default='m_{jj} (GeV)')
@@ -21,6 +20,27 @@ parser.add_option('-i',dest='inputfile')
 parser.add_option('-o',dest='outputdir',default="/eos/user/a/amlevin/www/tmp/")
 
 (options,args) = parser.parse_args()
+
+if options.lep == "muon":
+    lepton_name = "muon"
+elif options.lep == "electron":
+    lepton_name = "electron"
+else:
+    assert(0)
+
+if options.phoeta == "barrel":
+    photon_eta_cutstring = "abs(photon_eta) < 1.4442"
+elif options.phoeta == "endcap":
+    photon_eta_cutstring = "1.566 < abs(photon_eta) && abs(photon_eta) < 2.5"
+else:
+    assert(0)
+
+if options.btagged:
+    btagging_selection = 0
+else:
+    btagging_selection = 1
+
+
 
 import eff_scale_factor
 
@@ -128,8 +148,6 @@ if lepton_name == "muon":
     lepton_abs_pdg_id = 13
 else:
     lepton_abs_pdg_id = 11
-
-btagging_selection = 1
 
 def subtractRealMCFromFakeEstimateFromData(mc_tree,data_fake_photon,data_fake_muon,data_fake_electron,xs,n_weighted_events):
     for i in range(mc_tree.GetEntries()):
