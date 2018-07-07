@@ -119,7 +119,7 @@ class exampleProducer(Module):
             if not jets[i].jetId & (1 << 0):
                 continue
 
-            if deltaR(muons[muon_index].eta,muons[muon_index].phi,jets[i].eta,jets[i].phi) < 0.3:
+            if deltaR(muons[muon_index].eta,muons[muon_index].phi,jets[i].eta,jets[i].phi) > 0.3:
                 found_other_jet = True
 
         if not found_other_jet:
