@@ -50,6 +50,8 @@ import ROOT
 
 mc_samples = [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_qcd_wg.root", "label": "wg+jets", "xs" : 178.6, "color" : ROOT.kGreen+2},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_qcd_zg.root", "label": "zg+jets", "xs" : 47.46, "color" : ROOT.kGray+1},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_ttjets.root", "label": "tt+jets", "xs" : 831.76, "color" : ROOT.kRed}]
 
+#mc_samples = [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_wjets.root", "label": "w+jets", "xs" : 60430.0, "color" : ROOT.kGreen+2},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_zjets.root", "label": "z+jets", "xs" : 4963.0, "color" : ROOT.kGray+1},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_ttjets.root", "label": "tt+jets", "xs" : 831.76, "color" : ROOT.kRed}]
+
 variables = ["mjj","met","lepton_pt","lepton_eta","photon_pt","photon_eta"]
 
 histogram_templates = { "mjj" : ROOT.TH1F("mjj","",18,200,2000), "met" : ROOT.TH1F("met", "", 13 , 40., 300 ), "lepton_pt" : ROOT.TH1F('lepton_pt', '', 8, 20., 180 ), "lepton_eta" : ROOT.TH1F('lepton_eta', '', 10, -2.5, 2.5 ), "photon_pt" : ROOT.TH1F('photon_pt', '', 8, 20., 180 ), "photon_eta" : ROOT.TH1F('photon_eta', '', 10, -2.5, 2.5 )  } 
@@ -110,17 +112,17 @@ from array import array
 
 photon_ptbins=array('d', [25,30,40,50,70,100,135,400])
 
-fake_photon_event_weights_muon_barrel = [0.15484810789240228, 0.11524277444694236, 0.09110788743705224, 0.07294107854072265, 0.06490413072813697, 0.04693263880230566, 0.03503294901179513]
+fake_photon_event_weights_muon_barrel = [0.15815616294972137, 0.1184263571243659, 0.09497996207376012, 0.07703922097098853, 0.06705039450209543, 0.049106641104702926, 0.03711654890760473]
 
-fake_photon_event_weights_electron_barrel = [0.1447727736767519, 0.11180460340651761, 0.08074003048354975, 0.06530210040842324, 0.05420211026702524, 0.048118621720450956, 0.02967721492668453]
+fake_photon_event_weights_electron_barrel = [0.14729547518579378, 0.11421899402726987, 0.08523828088600881, 0.06762740298688567, 0.059143849049718394, 0.05021980595984381, 0.03450756757573719]
 
 #fake_photon_event_weights_electron_barrel = fake_photon_event_weights_muon_barrel
 
-fake_photon_event_weights_muon_endcap = [0.20783807385298056, 0.17530144239812215, 0.14802126262996834, 0.1137724518288847, 0.09480076729582236, 0.057066601725354965, 0.043023751606317905]
+fake_photon_event_weights_muon_endcap = [0.21096159107419185, 0.1777635032100376, 0.14987452401257567, 0.11981049265259137, 0.10177539152457545, 0.0546959737072744, 0.04894874082362516]
 
 #fake_photon_event_weights_electron_endcap = fake_photon_event_weights_muon_endcap
 
-fake_photon_event_weights_electron_endcap = [0.197481755047577, 0.15028936497262135, 0.1197346440252747, 0.10517930137670145, 0.08989475516812702, 0.04777790529184045, 0.0388377405319603]
+fake_photon_event_weights_electron_endcap = [0.19626748504363306, 0.1579388561814731, 0.11994077455155604, 0.11039567851883242, 0.08268567876519126, 0.04089723684397919, 3.444354637295313e+36]
 
 fake_photon_event_weights_muon_barrel_hist=ROOT.TH1F("fake_photon_event_weights_muon_barrel_hist","fake_photon_event_weights_muon_barrel_hist",len(photon_ptbins)-1,photon_ptbins)
 fake_photon_event_weights_electron_barrel_hist=ROOT.TH1F("fake_photon_event_weights_electron_barrel_hist","fake_photon_event_weights_electron_barrel_hist",len(photon_ptbins)-1,photon_ptbins)
