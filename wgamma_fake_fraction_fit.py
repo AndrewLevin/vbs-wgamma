@@ -36,14 +36,6 @@ photon_pt_range_cutstrings = ["photon_pt > 25 && photon_pt < 30","photon_pt > 30
 
 index = 0
 
-lepton_name = "muon"
-lepton_pdg_id = "13"
-eta_range = "abs(photon_eta) < 1.4442"
-n_bins = 128
-sieie_lower = 0.00
-sieie_upper = 0.04
-photon_pt_range_cutstring = "photon_pt > 25 && photon_pt < 30"
-
 muon_total_sieie_for_fake_photon_fraction_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wgamma_single_muon_fake_photon.root") 
 muon_fake_photon_template_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wgamma_single_muon_fake_photon_template.root")
 electron_total_sieie_for_fake_photon_fraction_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wgamma_single_electron_fake_photon.root") 
@@ -99,7 +91,7 @@ for lepton_name in lepton_names:
 
             real_photon_template_tree = real_photon_template_file.Get("Events")
             real_photon_template_hist = ROOT.TH1F("real_photon_template_hist","real_photon_template_hist",n_bins,sieie_lower,sieie_upper)
-            real_photon_template_tree.Draw("photon_sieie >> real_photon_template_hist",eta_range + " && lepton_pdg_id == "+lepton_pdg_id+" && "+photon_pt_range_cutstring)
+            real_photon_template_tree.Draw("photon_sieie >> real_photon_template_hist",eta_range + " && lepton_pdg_id == "+lepton_pdg_id+" && "+photon_pt_range_cutstring,"gen_weight > 0 ? 1 : -1")
 
             mc = ROOT.TObjArray(2)
         
