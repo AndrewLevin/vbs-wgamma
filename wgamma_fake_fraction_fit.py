@@ -46,6 +46,8 @@ created_muon_fitter = False
 created_electron_fitter = False
 
 
+
+
 for lepton_name in lepton_names:
 
     if lepton_name == "muon":
@@ -63,6 +65,9 @@ for lepton_name in lepton_names:
     for eta_range in eta_ranges:
         for photon_pt_range_cutstring in photon_pt_range_cutstrings:
 
+            #if not (lepton_pdg_id == "11" and photon_pt_range_cutstring == "photon_pt > 100 && photon_pt < 135" and eta_range == "abs(photon_eta) > 1.566 && abs(photon_eta) < 2.5"):
+            #    continue
+
             index = index+1
         
             i = str(index)
@@ -76,7 +81,9 @@ for lepton_name in lepton_names:
                 sieie_upper = 0.04
             else:
                 sieie_cut = 0.03001
-                n_bins = 160
+                #n_bins = 160
+                #n_bins = 80
+                n_bins = 40
                 sieie_lower = 0.01
                 sieie_upper = 0.06
              
@@ -91,42 +98,126 @@ for lepton_name in lepton_names:
 
             real_photon_template_tree = real_photon_template_file.Get("Events")
             real_photon_template_hist = ROOT.TH1F("real_photon_template_hist","real_photon_template_hist",n_bins,sieie_lower,sieie_upper)
-            real_photon_template_tree.Draw("photon_sieie >> real_photon_template_hist",eta_range + " && lepton_pdg_id == "+lepton_pdg_id+" && "+photon_pt_range_cutstring,"gen_weight > 0 ? 1 : -1")
+            for i in range(real_photon_template_tree.GetEntries()):
+                real_photon_template_tree.GetEntry(i)
+
+                pass_eta_range = False
+
+                if eta_range == "abs(photon_eta) < 1.4442":
+                    if abs(real_photon_template_tree.photon_eta) < 1.4442:
+                        pass_eta_range = True
+                elif eta_range == "abs(photon_eta) > 1.566 && abs(photon_eta) < 2.5":        
+                    if 1.4442 < abs(real_photon_template_tree.photon_eta) and abs(real_photon_template_tree.photon_eta) < 2.5:
+                        pass_eta_range = True
+                else:
+                    assert(0)
+
+                pass_lepton_pdg_id = False    
+                
+                if str(real_photon_template_tree.lepton_pdg_id) == lepton_pdg_id:
+                    pass_lepton_pdg_id = True
+                    
+                pass_photon_pt_range = False
+
+                if photon_pt_range_cutstring == "photon_pt > 25 && photon_pt < 30":
+                    if real_photon_template_tree.photon_pt > 25 and real_photon_template_tree.photon_pt < 30:
+                        pass_photon_pt_range = True
+                elif photon_pt_range_cutstring == "photon_pt > 30 && photon_pt < 40":       
+                    if real_photon_template_tree.photon_pt > 30 and real_photon_template_tree.photon_pt < 40:
+                        pass_photon_pt_range = True
+                elif photon_pt_range_cutstring == "photon_pt > 40 && photon_pt < 50":       
+                    if real_photon_template_tree.photon_pt > 40 and real_photon_template_tree.photon_pt < 50:
+                        pass_photon_pt_range = True
+                elif photon_pt_range_cutstring == "photon_pt > 50 && photon_pt < 70":       
+                    if real_photon_template_tree.photon_pt > 50 and real_photon_template_tree.photon_pt < 70:
+                        pass_photon_pt_range = True
+                elif photon_pt_range_cutstring == "photon_pt > 70 && photon_pt < 100":       
+                    if real_photon_template_tree.photon_pt > 70 and real_photon_template_tree.photon_pt < 100:
+                        pass_photon_pt_range = True
+                elif photon_pt_range_cutstring == "photon_pt > 100 && photon_pt < 135":       
+                    if real_photon_template_tree.photon_pt > 100 and real_photon_template_tree.photon_pt < 135:
+                        pass_photon_pt_range = True
+                elif photon_pt_range_cutstring == "photon_pt > 135 && photon_pt < 400":       
+                    if real_photon_template_tree.photon_pt > 135 and real_photon_template_tree.photon_pt < 400:
+                        pass_photon_pt_range = True
+                else:
+                    assert(0)
+
+                if pass_photon_pt_range and pass_lepton_pdg_id and pass_eta_range:        
+                    #real_photon_template_hist.Fill(real_photon_template_tree.photon_sieie)
+                    if real_photon_template_tree.gen_weight > 0:
+                        real_photon_template_hist.Fill(real_photon_template_tree.photon_sieie)
+                    else:    
+                        real_photon_template_hist.Fill(real_photon_template_tree.photon_sieie,-1)
+
+            for i in range(real_photon_template_hist.GetNbinsX()+2):
+                if real_photon_template_hist.GetBinContent(i) < 0:
+                    real_photon_template_hist.SetBinContent(i,0)
 
             mc = ROOT.TObjArray(2)
         
             mc.Add(fake_photon_template_hist)
             mc.Add(real_photon_template_hist)
 
-            if created_muon_fitter == False and lepton_name == "muon":
+            ffitter = ROOT.TFractionFitter(total_sieie_for_fake_photon_fraction_hist,mc)
 
-                muon_ffitter = ROOT.TFractionFitter(total_sieie_for_fake_photon_fraction_hist,mc)
+            #ffitter.SetData(total_sieie_for_fake_photon_fraction_hist)
+            #ffitter.SetMC(0,fake_photon_template_hist)
+            #ffitter.SetMC(1,real_photon_template_hist)
 
-                created_muon_fitter = True
+            #print "andrew debug 1"
 
-            elif created_electron_fitter == False and lepton_name == "electron":
+            c1 = ROOT.TCanvas("c1", "c1",5,50,500,500);
 
-                electron_ffitter = ROOT.TFractionFitter(total_sieie_for_fake_photon_fraction_hist,mc)
+            real_photon_template_hist.Draw("hist")
 
-                created_electron_fitter = True
-
-            if lepton_name == "muon":
-                ffitter = muon_ffitter
+            if eta_range == "abs(photon_eta) < 1.4442":
+                eta_range_no_spaces = "barrel"
+            elif eta_range == "abs(photon_eta) > 1.566 && abs(photon_eta) < 2.5":     
+                eta_range_no_spaces = "endcap"
             else:
-                ffitter = electron_ffitter
+                assert(0)
 
+            if photon_pt_range_cutstring == "photon_pt > 25 && photon_pt < 30":
+                photon_pt_range_cutstring_no_spaces = "25to30"
+            elif photon_pt_range_cutstring == "photon_pt > 30 && photon_pt < 40":       
+                photon_pt_range_cutstring_no_spaces = "30to40"
+            elif photon_pt_range_cutstring == "photon_pt > 40 && photon_pt < 50":       
+                photon_pt_range_cutstring_no_spaces = "40to50"
+            elif photon_pt_range_cutstring == "photon_pt > 50 && photon_pt < 70":       
+                photon_pt_range_cutstring_no_spaces = "50to70"
+            elif photon_pt_range_cutstring == "photon_pt > 70 && photon_pt < 100":       
+                photon_pt_range_cutstring_no_spaces = "70to100"
+            elif photon_pt_range_cutstring == "photon_pt > 100 && photon_pt < 135":       
+                photon_pt_range_cutstring_no_spaces = "100to135"
+            elif photon_pt_range_cutstring == "photon_pt > 135 && photon_pt < 400":       
+                photon_pt_range_cutstring_no_spaces = "135to400"
+            else:
+                   assert(0)
 
-            ffitter.SetData(total_sieie_for_fake_photon_fraction_hist)
-            ffitter.SetMC(0,fake_photon_template_hist)
-            ffitter.SetMC(1,real_photon_template_hist)
+            c1.SaveAs("/eos/user/a/amlevin/www/fake-photon/"+lepton_name+"/"+eta_range_no_spaces+"/real_photon_template_"+photon_pt_range_cutstring_no_spaces+".png")
+            
+            #print "andrew debug 2"
+
+            #raw_input()
+
+            fake_photon_template_hist.Draw("hist")
+
+            c1.SaveAs("/eos/user/a/amlevin/www/fake-photon/"+lepton_name+"/"+eta_range_no_spaces+"/fake_photon_template_"+photon_pt_range_cutstring_no_spaces+".png")
+
+            #raw_input()
             
             ffitter.Fit()
             
-            c1 = ROOT.TCanvas("c1", "c1",5,50,500,500);
+            total_sieie_for_fake_photon_fraction_hist.Draw("hist")
+
+            c1.SaveAs("/eos/user/a/amlevin/www/fake-photon/"+lepton_name+"/"+eta_range_no_spaces+"/total_"+photon_pt_range_cutstring_no_spaces+".png")
 
             total_sieie_for_fake_photon_fraction_hist.Draw("Ep")
 
             ffitter.GetPlot().Draw("same")
+
+            c1.SaveAs("/eos/user/a/amlevin/www/fake-photon/"+lepton_name+"/"+eta_range_no_spaces+"/fit_"+photon_pt_range_cutstring_no_spaces+".png")
                 
             c1.ForceUpdate()
             c1.Modified()
@@ -135,7 +226,7 @@ for lepton_name in lepton_names:
             error = ROOT.Double(-1)
                 
             ffitter.GetResult(0,value,error)
-                
+
             print str(value) + "+/-" + str(error)
 
             print total_sieie_for_fake_photon_fraction_hist.GetXaxis().FindFixBin( sieie_cut )
@@ -165,6 +256,8 @@ for lepton_name in lepton_names:
 
                 fake_event_weights[lepton_name+"_endcap"].append(value*fake_photon_template_hist.Integral(1,fake_photon_template_hist.GetXaxis().FindFixBin( sieie_cut ))*total_sieie_for_fake_photon_fraction_hist.Integral()/fake_photon_template_hist.Integral()/total_sieie_for_fake_photon_fraction_tree.GetEntries(eta_range + " && lepton_pdg_id == "+lepton_pdg_id+" && (photon_selection == 0 || photon_selection == 1) && "+ photon_pt_range_cutstring))
                 
+
+
 
 print fake_fractions
 
