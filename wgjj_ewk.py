@@ -159,11 +159,11 @@ def subtractRealMCFromFakeEstimateFromData(mc_tree,data_fake_photon,data_fake_mu
             
             if mc_tree.lepton_pdg_id == lepton_abs_pdg_id and mc_tree.is_lepton_tight == '\x01' and abs(mc_tree.photon_eta) < 1.4442 and (mc_tree.photon_selection == 1 or mc_tree.photon_selection == 0) and mc_tree.photon_pt > 25 and mc_tree.photon_pt < 70 and mc_tree.btagging_selection == btagging_selection and mc_tree.is_lepton_real == '\x01' and mc_tree.is_photon_real == '\x01' and mc_tree.mjj < 400:
                 for variable in variables:
-                    data_fake_photon["hists"][variable].Fill(getVariable(variable,mc_tree),-photonfakerate(mc_tree.photon_eta, mc_tree.photon_pt,mc_tree.lepton_pdg_id, "nominal"))  
+                    data_fake_photon["hists"][variable].Fill(getVariable(variable,mc_tree),-photonfakerate(mc_tree.photon_eta, mc_tree.photon_pt,mc_tree.lepton_pdg_id, "nominal")* xs * 1000 * 36.15 / n_weighted_events)  
         elif photon_eta_cutstring == "1.566 < abs(photon_eta) && abs(photon_eta) < 2.5":   
             if mc_tree.lepton_pdg_id == lepton_abs_pdg_id and mc_tree.is_lepton_tight == '\x01' and 1.566 < abs(mc_tree.photon_eta) and abs(mc_tree.photon_eta) < 2.5 and (mc_tree.photon_selection == 1 or mc_tree.photon_selection == 0) and mc_tree.photon_pt > 25 and mc_tree.photon_pt < 70 and mc_tree.btagging_selection == btagging_selection and mc_tree.is_lepton_real == '\x01' and mc_tree.is_photon_real == '\x01' and mc_tree.mjj < 400:
                 for variable in variables:
-                    data_fake_photon["hists"][variable].Fill(getVariable(variable,mc_tree),-photonfakerate(mc_tree.photon_eta, mc_tree.photon_pt,mc_tree.lepton_pdg_id, "nominal"))  
+                    data_fake_photon["hists"][variable].Fill(getVariable(variable,mc_tree),-photonfakerate(mc_tree.photon_eta, mc_tree.photon_pt,mc_tree.lepton_pdg_id, "nominal")* xs * 1000 * 36.15 / n_weighted_events)  
         else:
             assert(0)
 
@@ -448,10 +448,12 @@ for i in range(data_events_tree.GetEntries()):
                 for variable in variables:
                     double_fake["hists"][variable].Fill(getVariable(variable,data_events_tree),muonfakerate(data_events_tree.lepton_eta, data_events_tree.lepton_pt,"nominal")*photonfakerate(data_events_tree.photon_eta, data_events_tree.photon_pt,data_events_tree.lepton_pdg_id, "nominal"))
                     fake_muon["hists"][variable].Fill(getVariable(variable,data_events_tree),-muonfakerate(data_events_tree.lepton_eta, data_events_tree.lepton_pt,"nominal")*photonfakerate(data_events_tree.photon_eta, data_events_tree.photon_pt,data_events_tree.lepton_pdg_id, "nominal"))
+                    fake_photon["hists"][variable].Fill(getVariable(variable,data_events_tree),-muonfakerate(data_events_tree.lepton_eta, data_events_tree.lepton_pt,"nominal")*photonfakerate(data_events_tree.photon_eta, data_events_tree.photon_pt,data_events_tree.lepton_pdg_id, "nominal"))
             elif lepton_name == "electron":
                 for variable in variables:
                     double_fake["hists"][variable].Fill(getVariable(variable,data_events_tree),electronfakerate(data_events_tree.lepton_eta, data_events_tree.lepton_pt,"nominal")*photonfakerate(data_events_tree.photon_eta, data_events_tree.photon_pt,data_events_tree.lepton_pdg_id, "nominal"))
                     fake_electron["hists"][variable].Fill(getVariable(variable,data_events_tree),-electronfakerate(data_events_tree.lepton_eta, data_events_tree.lepton_pt,"nominal")*photonfakerate(data_events_tree.photon_eta, data_events_tree.photon_pt,data_events_tree.lepton_pdg_id, "nominal"))
+                    fake_photon["hists"][variable].Fill(getVariable(variable,data_events_tree),-electronfakerate(data_events_tree.lepton_eta, data_events_tree.lepton_pt,"nominal")*photonfakerate(data_events_tree.photon_eta, data_events_tree.photon_pt,data_events_tree.lepton_pdg_id, "nominal"))
             else:
                 assert(0)
     elif photon_eta_cutstring == "1.566 < abs(photon_eta) && abs(photon_eta) < 2.5":
@@ -460,10 +462,12 @@ for i in range(data_events_tree.GetEntries()):
                 for variable in variables:
                     double_fake["hists"][variable].Fill(getVariable(variable,data_events_tree),muonfakerate(data_events_tree.lepton_eta, data_events_tree.lepton_pt,"nominal")*photonfakerate(data_events_tree.photon_eta, data_events_tree.photon_pt,data_events_tree.lepton_pdg_id, "nominal"))
                     fake_muon["hists"][variable].Fill(getVariable(variable,data_events_tree),-muonfakerate(data_events_tree.lepton_eta, data_events_tree.lepton_pt,"nominal")*photonfakerate(data_events_tree.photon_eta, data_events_tree.photon_pt,data_events_tree.lepton_pdg_id, "nominal"))
+                    fake_photon["hists"][variable].Fill(getVariable(variable,data_events_tree),-muonfakerate(data_events_tree.lepton_eta, data_events_tree.lepton_pt,"nominal")*photonfakerate(data_events_tree.photon_eta, data_events_tree.photon_pt,data_events_tree.lepton_pdg_id, "nominal"))
             elif lepton_name == "electron":
                 for variable in variables:
                     double_fake["hists"][variable].Fill(getVariable(variable,data_events_tree),electronfakerate(data_events_tree.lepton_eta, data_events_tree.lepton_pt,"nominal")*photonfakerate(data_events_tree.photon_eta, data_events_tree.photon_pt,data_events_tree.lepton_pdg_id, "nominal"))
                     fake_electron["hists"][variable].Fill(getVariable(variable,data_events_tree),-electronfakerate(data_events_tree.lepton_eta, data_events_tree.lepton_pt,"nominal")*photonfakerate(data_events_tree.photon_eta, data_events_tree.photon_pt,data_events_tree.lepton_pdg_id, "nominal"))
+                    fake_photon["hists"][variable].Fill(getVariable(variable,data_events_tree),-electronfakerate(data_events_tree.lepton_eta, data_events_tree.lepton_pt,"nominal")*photonfakerate(data_events_tree.photon_eta, data_events_tree.photon_pt,data_events_tree.lepton_pdg_id, "nominal"))
             else:
                 assert(0)
     else:
