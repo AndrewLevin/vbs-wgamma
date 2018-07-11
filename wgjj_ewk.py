@@ -48,9 +48,22 @@ import ROOT
 
 #mc_samples = [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_qcd_wg.root", "label": "wg+jets", "xs" : 178.6, "color" : ROOT.kGreen+2},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_qcd_zg.root", "label": "zg+jets", "xs" : 47.46, "color" : ROOT.kGray+1},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_wjets.root", "label": "w+jets", "xs" : 60430.0, "color" : ROOT.kMagenta},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_zjets.root", "label": "z+jets", "xs" : 4963.0, "color" : ROOT.kBlue},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_ttjets.root", "label": "tt+jets", "xs" : 831.76, "color" : ROOT.kRed}]
 
-mc_samples = [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_qcd_wg.root", "label": "wg+jets", "xs" : 178.6, "color" : ROOT.kGreen+2},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_qcd_zg.root", "label": "zg+jets", "xs" : 47.46, "color" : ROOT.kGray+1},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_ttjets.root", "label": "tt+jets", "xs" : 831.76, "color" : ROOT.kRed}]
+#mc_samples = [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_qcd_wg.root", "label": "wg+jets", "xs" : 178.6, "color" : ROOT.kGreen+2},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_qcd_zg.root", "label": "zg+jets", "xs" : 47.46, "color" : ROOT.kGray+1},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_ttjets.root", "label": "tt+jets", "xs" : 831.76, "color" : ROOT.kRed}]
+
+#mc_samples = [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy1j_m1050.root", "label": "dy+jets", "xs" : 729.726349, "color" : ROOT.kGreen+2},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy2j_m1050.root", "label": "dy+jets", "xs" : 387.472359, "color" : ROOT.kGreen+2},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy3j_m1050.root", "label": "dy+jets", "xs" : 95.033555, "color" : ROOT.kGreen+2},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy4j_m1050.root", "label": "dy+jets", "xs" : 36.698502, "color" : ROOT.kGreen+2}]
+
+#c_samples = [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy1j_m50.root", "label": "dy+jets", "xs" : 1012.296845, "color" : ROOT.kGreen+2},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy2j_m50.root", "label": "dy+jets", "xs" : 334.717838, "color" : ROOT.kGreen+2},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy3j_m50.root", "label": "dy+jets", "xs" : 102.462800, "color" : ROOT.kGreen+2},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy4j_m50.root", "label": "dy+jets", "xs" : 54.481360, "color" : ROOT.kGreen+2}]
+
+labels = { "z+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy1j_m1050.root", "xs" : 729.726349},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy2j_m1050.root", "xs" : 387.472359},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy3j_m1050.root" , "xs" : 95.033555},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy4j_m1050.root", "xs" : 36.698502 },{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy1j_m50.root", "xs" : 1012.296845 },{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy2j_m50.root", "xs" : 334.717838},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy3j_m50.root", "xs" : 102.462800},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy4j_m50.root", "xs" : 54.481360} ] }, "wg+jets" : { "color" : ROOT.kRed, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_qcd_wg.root", "xs" : 178.6}]  }, "zg+jets" : { "color" : ROOT.kBlue, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_qcd_zg.root", "xs" : 47.46} ] }, "tt+jets" : {"color" : ROOT.kGreen+2, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_ttjets.root", "xs" : 831.76 } ] } } 
+
+#mc_samples = [ {"filename" : '/afs/cern.ch/work/a/amlevin/data/wgamma_wwlnlnu.root', "label" : "ww" , "xs" : 12.178, "color" : ROOT.kGreen+2} ]
+
+#mc_samples = [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy1j_m1050.root", "label": "dy+jets", "xs" : 729.726349, "color" : ROOT.kGreen+2},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy2j_m1050.root", "label": "dy+jets", "xs" : 387.472359, "color" : ROOT.kGreen+2},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy3j_m1050.root", "label": "dy+jets", "xs" : 95.033555, "color" : ROOT.kGreen+2},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy4j_m1050.root", "label": "dy+jets", "xs" : 36.698502, "color" : ROOT.kGreen+2},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy1j_m50.root", "label": "dy+jets", "xs" : 1012.296845, "color" : ROOT.kGreen+2},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy2j_m50.root", "label": "dy+jets", "xs" : 334.717838, "color" : ROOT.kGreen+2},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy3j_m50.root", "label": "dy+jets", "xs" : 102.462800, "color" : ROOT.kGreen+2},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy4j_m50.root", "label": "dy+jets", "xs" : 54.481360, "color" : ROOT.kGreen+2}]
+
 
 #mc_samples = [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_wjets.root", "label": "w+jets", "xs" : 60430.0, "color" : ROOT.kGreen+2},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_zjets.root", "label": "z+jets", "xs" : 4963.0, "color" : ROOT.kGray+1},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_ttjets.root", "label": "tt+jets", "xs" : 831.76, "color" : ROOT.kRed}]
+
+#mc_samples ={}
 
 variables = ["mjj","met","lepton_pt","lepton_eta","photon_pt","photon_eta"]
 
@@ -151,24 +164,28 @@ else:
     lepton_abs_pdg_id = 11
 
 def subtractRealMCFromFakeEstimateFromData(mc_tree,data_fake_photon,data_fake_muon,data_fake_electron,xs,n_weighted_events):
+
+    #if sample["label"] == "tt+jets":
+    #    return
+
     for i in range(mc_tree.GetEntries()):
 
         mc_tree.GetEntry(i)
         
         if photon_eta_cutstring == "abs(photon_eta) < 1.4442":  
             
-            if mc_tree.lepton_pdg_id == lepton_abs_pdg_id and mc_tree.is_lepton_tight == '\x01' and abs(mc_tree.photon_eta) < 1.4442 and (mc_tree.photon_selection == 1 or mc_tree.photon_selection == 0) and mc_tree.photon_pt > 25 and mc_tree.photon_pt < 70 and mc_tree.btagging_selection == btagging_selection and mc_tree.is_lepton_real == '\x01' and mc_tree.is_photon_real == '\x01' and mc_tree.mjj < 400:
+            if mc_tree.lepton_pdg_id == lepton_abs_pdg_id and mc_tree.is_lepton_tight == '\x01' and abs(mc_tree.photon_eta) < 1.4442 and (mc_tree.photon_selection == 1 or mc_tree.photon_selection == 0) and mc_tree.photon_pt > 25 and mc_tree.photon_pt < 70 and mc_tree.btagging_selection == btagging_selection and mc_tree.is_lepton_real == '\x01' and mc_tree.photon_gen_matching > 0 and mc_tree.mjj < 400:
                 for variable in variables:
                     data_fake_photon["hists"][variable].Fill(getVariable(variable,mc_tree),-photonfakerate(mc_tree.photon_eta, mc_tree.photon_pt,mc_tree.lepton_pdg_id, "nominal")* xs * 1000 * 36.15 / n_weighted_events)  
         elif photon_eta_cutstring == "1.566 < abs(photon_eta) && abs(photon_eta) < 2.5":   
-            if mc_tree.lepton_pdg_id == lepton_abs_pdg_id and mc_tree.is_lepton_tight == '\x01' and 1.566 < abs(mc_tree.photon_eta) and abs(mc_tree.photon_eta) < 2.5 and (mc_tree.photon_selection == 1 or mc_tree.photon_selection == 0) and mc_tree.photon_pt > 25 and mc_tree.photon_pt < 70 and mc_tree.btagging_selection == btagging_selection and mc_tree.is_lepton_real == '\x01' and mc_tree.is_photon_real == '\x01' and mc_tree.mjj < 400:
+            if mc_tree.lepton_pdg_id == lepton_abs_pdg_id and mc_tree.is_lepton_tight == '\x01' and 1.566 < abs(mc_tree.photon_eta) and abs(mc_tree.photon_eta) < 2.5 and (mc_tree.photon_selection == 1 or mc_tree.photon_selection == 0) and mc_tree.photon_pt > 25 and mc_tree.photon_pt < 70 and mc_tree.btagging_selection == btagging_selection and mc_tree.is_lepton_real == '\x01' and mc_tree.photon_gen_matching > 0 and mc_tree.mjj < 400:
                 for variable in variables:
                     data_fake_photon["hists"][variable].Fill(getVariable(variable,mc_tree),-photonfakerate(mc_tree.photon_eta, mc_tree.photon_pt,mc_tree.lepton_pdg_id, "nominal")* xs * 1000 * 36.15 / n_weighted_events)  
         else:
             assert(0)
 
         if photon_eta_cutstring == "abs(photon_eta) < 1.4442":
-            if mc_tree.lepton_pdg_id == lepton_abs_pdg_id and mc_tree.is_lepton_tight == '\x00' and abs(mc_tree.photon_eta) < 1.4442 and mc_tree.photon_selection == 2 and mc_tree.photon_pt > 25 and mc_tree.photon_pt < 70 and mc_tree.btagging_selection == btagging_selection and mc_tree.is_lepton_real == '\x01' and mc_tree.is_photon_real == '\x01' and mc_tree.mjj < 400:
+            if mc_tree.lepton_pdg_id == lepton_abs_pdg_id and mc_tree.is_lepton_tight == '\x00' and abs(mc_tree.photon_eta) < 1.4442 and mc_tree.photon_selection == 2 and mc_tree.photon_pt > 25 and mc_tree.photon_pt < 70 and mc_tree.btagging_selection == btagging_selection and mc_tree.is_lepton_real == '\x01' and mc_tree.photon_gen_matching > 0 and mc_tree.mjj < 400:
                 if lepton_name == "muon":
                     if mc_tree.Generator_weight > 0:
                         for variable in variables:
@@ -187,7 +204,7 @@ def subtractRealMCFromFakeEstimateFromData(mc_tree,data_fake_photon,data_fake_mu
                     assert(0)
 
         elif photon_eta_cutstring == "1.566 < abs(photon_eta) && abs(photon_eta) < 2.5":
-             if mc_tree.lepton_pdg_id == lepton_abs_pdg_id and mc_tree.is_lepton_tight == '\x00' and 1.566 < abs(mc_tree.photon_eta) and abs(mc_tree.photon_eta) < 2.5 and mc_tree.photon_selection == 2 and mc_tree.photon_pt > 25 and mc_tree.photon_pt < 70 and mc_tree.btagging_selection == btagging_selection and mc_tree.is_lepton_real == '\x01' and mc_tree.is_photon_real == '\x01' and mc_tree.mjj < 400:
+             if mc_tree.lepton_pdg_id == lepton_abs_pdg_id and mc_tree.is_lepton_tight == '\x00' and 1.566 < abs(mc_tree.photon_eta) and abs(mc_tree.photon_eta) < 2.5 and mc_tree.photon_selection == 2 and mc_tree.photon_pt > 25 and mc_tree.photon_pt < 70 and mc_tree.btagging_selection == btagging_selection and mc_tree.is_lepton_real == '\x01' and mc_tree.photon_gen_matching > 0 and mc_tree.mjj < 400:
                  if lepton_name == "muon":
                      if mc_tree.Generator_weight > 0:
                          for variable in variables:
@@ -340,14 +357,20 @@ elif lepton_name == "electron":
 else:
     assert(0)
 
-for sample in mc_samples:
-    sample["file"] = ROOT.TFile.Open(sample["filename"])
-    sample["tree"] = sample["file"].Get("Events")
-    sample["nweightedevents"] = sample["file"].Get("nWeightedEvents").GetBinContent(1)
-    sample["hists"] = {}
+for label in labels.keys():
+
+    labels[label]["hists"] = {}
+
     for variable in variables:
-        sample["hists"][variable] = histogram_templates[variable].Clone(sample["label"] + " " + variable)
-        sample["hists"][variable].Sumw2()
+        labels[label]["hists"][variable] = histogram_templates[variable].Clone(label + " " + variable)
+        labels[label]["hists"][variable].Sumw2()
+
+    for sample in labels[label]["samples"]:
+        sample["file"] = ROOT.TFile.Open(sample["filename"])
+        sample["tree"] = sample["file"].Get("Events")
+        sample["nweightedevents"] = sample["file"].Get("nWeightedEvents").GetBinContent(1)
+
+
 
 data = {}
 fake_photon = {}
@@ -394,38 +417,39 @@ ROOT.gROOT.cd()
 
 data_events_tree.Draw("mjj >> data","mjj < 400 && abs(lepton_pdg_id) == "+str(lepton_abs_pdg_id)+" && is_lepton_tight == 1 && "+photon_eta_cutstring+" && photon_selection == 2 && photon_pt > 25 && photon_pt < 70 && btagging_selection == "+ str(btagging_selection))
 
-def fillHistogramMC(sample):
+def fillHistogramMC(sample,histograms):
+
     for i in range(sample["tree"].GetEntries()):
         sample["tree"].GetEntry(i)
 
         if photon_eta_cutstring == "abs(photon_eta) < 1.4442":        
 #            if tree.lepton_pdg_id == lepton_abs_pdg_id and tree.is_lepton_tight == '\x01' and abs(tree.photon_eta) < 1.4442 and tree.photon_selection == 2 and tree.photon_pt > 25 and tree.photon_pt < 70 and tree.btagging_selection == btagging_selection:
-            if sample["tree"].lepton_pdg_id == lepton_abs_pdg_id and sample["tree"].is_lepton_tight == '\x01' and abs(sample["tree"].photon_eta) < 1.4442 and sample["tree"].photon_selection == 2 and sample["tree"].photon_pt > 25 and sample["tree"].photon_pt < 70 and sample["tree"].btagging_selection == btagging_selection and sample["tree"].is_lepton_real == '\x01' and sample["tree"].is_photon_real == '\x01' and sample["tree"].mjj < 400:
+            if sample["tree"].lepton_pdg_id == lepton_abs_pdg_id and sample["tree"].is_lepton_tight == '\x01' and abs(sample["tree"].photon_eta) < 1.4442 and sample["tree"].photon_selection == 2 and sample["tree"].photon_pt > 25 and sample["tree"].photon_pt < 70 and sample["tree"].btagging_selection == btagging_selection and sample["tree"].is_lepton_real == '\x01' and sample["tree"].photon_gen_matching > 0 and sample["tree"].mjj < 400:
                 if sample["tree"].Generator_weight > 0:
                     for variable in variables:
-                        sample["hists"][variable].Fill(getVariable(variable,sample["tree"]),eff_scale_factor.photon_efficiency_scale_factor(sample["tree"].photon_pt,sample["tree"].photon_eta)*eff_scale_factor.electron_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta)*sample["xs"]*1000*36.15/sample["nweightedevents"])
+                        histograms[variable].Fill(getVariable(variable,sample["tree"]),eff_scale_factor.photon_efficiency_scale_factor(sample["tree"].photon_pt,sample["tree"].photon_eta)*eff_scale_factor.electron_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta)*sample["xs"]*1000*36.15/sample["nweightedevents"])
                     #hist.Fill(tree.mjj,xs*1000*36.15/n_weighted_events)
                 else:
                     for variable in variables:
-                        sample["hists"][variable].Fill(getVariable(variable,sample["tree"]),-eff_scale_factor.photon_efficiency_scale_factor(sample["tree"].photon_pt,sample["tree"].photon_eta)*eff_scale_factor.electron_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta)*sample["xs"]*1000*36.15/sample["nweightedevents"])
+                        histograms[variable].Fill(getVariable(variable,sample["tree"]),-eff_scale_factor.photon_efficiency_scale_factor(sample["tree"].photon_pt,sample["tree"].photon_eta)*eff_scale_factor.electron_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta)*sample["xs"]*1000*36.15/sample["nweightedevents"])
                     #hist.Fill(tree.mjj,-xs*1000*36.15/n_weighted_events)
         elif photon_eta_cutstring == "1.566 < abs(photon_eta) && abs(photon_eta) < 2.5":    
 
-            if sample["tree"].lepton_pdg_id == lepton_abs_pdg_id and sample["tree"].is_lepton_tight == '\x01' and 1.566 < abs(sample["tree"].photon_eta) and abs(sample["tree"].photon_eta) < 2.5 and sample["tree"].photon_selection == 2 and sample["tree"].photon_pt > 25 and sample["tree"].photon_pt < 70 and sample["tree"].btagging_selection == btagging_selection and sample["tree"].is_lepton_real == '\x01' and sample["tree"].is_photon_real == '\x01' and sample["tree"].mjj < 400:
+            if sample["tree"].lepton_pdg_id == lepton_abs_pdg_id and sample["tree"].is_lepton_tight == '\x01' and 1.566 < abs(sample["tree"].photon_eta) and abs(sample["tree"].photon_eta) < 2.5 and sample["tree"].photon_selection == 2 and sample["tree"].photon_pt > 25 and sample["tree"].photon_pt < 70 and sample["tree"].btagging_selection == btagging_selection and sample["tree"].is_lepton_real == '\x01' and sample["tree"].photon_gen_matching > 0 and sample["tree"].mjj < 400:
 #            if tree.lepton_pdg_id == lepton_abs_pdg_id and tree.is_lepton_tight == '\x01' and 1.566 < abs(tree.photon_eta) and abs(tree.photon_eta) < 2.5 and tree.photon_selection == 2 and tree.photon_pt > 25 and tree.photon_pt < 70 and tree.btagging_selection == btagging_selection:
                 if sample["tree"].Generator_weight > 0:
                     for variable in variables:
-                        sample["hists"][variable].Fill(getVariable(variable,sample["tree"]),eff_scale_factor.photon_efficiency_scale_factor(sample["tree"].photon_pt,sample["tree"].photon_eta)*eff_scale_factor.electron_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta)*sample["xs"]*1000*36.15/sample["nweightedevents"])
+                        histograms[variable].Fill(getVariable(variable,sample["tree"]),eff_scale_factor.photon_efficiency_scale_factor(sample["tree"].photon_pt,sample["tree"].photon_eta)*eff_scale_factor.electron_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta)*sample["xs"]*1000*36.15/sample["nweightedevents"])
 #                    hist.Fill(tree.mjj,xs*1000*36.15/n_weighted_events)
                 else:
                     for variable in variables:
-                        sample["hists"][variable].Fill(getVariable(variable,sample["tree"]),-eff_scale_factor.photon_efficiency_scale_factor(sample["tree"].photon_pt,sample["tree"].photon_eta)*eff_scale_factor.electron_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta)*sample["xs"]*1000*36.15/sample["nweightedevents"])
+                        histograms[variable].Fill(getVariable(variable,sample["tree"]),-eff_scale_factor.photon_efficiency_scale_factor(sample["tree"].photon_pt,sample["tree"].photon_eta)*eff_scale_factor.electron_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta)*sample["xs"]*1000*36.15/sample["nweightedevents"])
 #                    hist.Fill(tree.mjj,-xs*1000*36.15/n_weighted_events)
         else:
             assert(0)
 
     if len(variables) > 0:        
-        sample["hists"][variables[0]].Print("all")
+        histograms[variables[0]].Print("all")
 
 for i in range(data_events_tree.GetEntries()):
     data_events_tree.GetEntry(i)
@@ -507,15 +531,17 @@ for i in range(data_events_tree.GetEntries()):
     else:
         assert(0)
 
-for sample in mc_samples:
-    fillHistogramMC(sample)
-    if data_driven:
-        subtractRealMCFromFakeEstimateFromData(sample["tree"],fake_photon,fake_muon,fake_electron,sample["xs"],sample["nweightedevents"])
+for label in labels.keys():
+
+    for sample in labels[label]["samples"]:
+        fillHistogramMC(sample,labels[label]["hists"])
+        if data_driven:
+            subtractRealMCFromFakeEstimateFromData(sample["tree"],fake_photon,fake_muon,fake_electron,sample["xs"],sample["nweightedevents"])
         
     for variable in variables:    
-        sample["hists"][variable].SetFillColor(sample["color"])
-        sample["hists"][variable].SetFillStyle(1001)
-        sample["hists"][variable].SetLineColor(sample["color"])
+        labels[label]["hists"][variable].SetFillColor(labels[label]["color"])
+        labels[label]["hists"][variable].SetFillStyle(1001)
+        labels[label]["hists"][variable].SetLineColor(labels[label]["color"])
     
 #subtractRealMCFromFakeEstimateFromData(mc_samples[0]["tree"],fake_photon_hist,fake_muon_hist,fake_electron_hist,mc_samples[0]["xs"],mc_samples[0]["nweightedevents"])
 
@@ -527,15 +553,15 @@ for variable in variables:
     data["hists"][variable].SetLineWidth(3)
     data["hists"][variable].SetLineColor(ROOT.kBlack)
 
-    fake_photon["hists"][variable].SetFillColor(ROOT.kMagenta)
-    fake_electron["hists"][variable].SetFillColor(ROOT.kBlue)
-    fake_muon["hists"][variable].SetFillColor(ROOT.kBlue)
-    double_fake["hists"][variable].SetFillColor(ROOT.kOrange)
+    fake_photon["hists"][variable].SetFillColor(ROOT.kGray+1)
+    fake_electron["hists"][variable].SetFillColor(ROOT.kAzure-1)
+    fake_muon["hists"][variable].SetFillColor(ROOT.kAzure-1)
+    double_fake["hists"][variable].SetFillColor(ROOT.kMagenta)
 
-    fake_photon["hists"][variable].SetLineColor(ROOT.kMagenta)
-    fake_electron["hists"][variable].SetLineColor(ROOT.kBlue)
-    fake_muon["hists"][variable].SetLineColor(ROOT.kBlue)
-    double_fake["hists"][variable].SetLineColor(ROOT.kOrange)
+    fake_photon["hists"][variable].SetLineColor(ROOT.kGray+1)
+    fake_electron["hists"][variable].SetLineColor(ROOT.kAzure-1)
+    fake_muon["hists"][variable].SetLineColor(ROOT.kAzure-1)
+    double_fake["hists"][variable].SetLineColor(ROOT.kMagenta)
 
     fake_photon["hists"][variable].SetFillStyle(1001)
     fake_electron["hists"][variable].SetFillStyle(1001)
@@ -555,9 +581,9 @@ for variable in variables:
 
     hstack = ROOT.THStack()
 
-    for sample in mc_samples:
-        hsum.Add(sample["hists"][variable])
-        hstack.Add(sample["hists"][variable])
+    for label in labels.keys():
+        hsum.Add(labels[label]["hists"][variable])
+        hstack.Add(labels[label]["hists"][variable])
 
     if data_driven:
         if lepton_name == "muon":
@@ -627,9 +653,9 @@ for variable in variables:
         j=j+1
         draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,double_fake["hists"][variable],"double fake","f")
 
-    for sample in mc_samples:
+    for label in labels:
         j=j+1    
-        draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,sample["hists"][variable],sample["label"],"f")
+        draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,labels[label]["hists"][variable],label,"f")
     
 
 #set_axis_fonts(hstack,"x","m_{ll} (GeV)")
