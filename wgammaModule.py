@@ -467,9 +467,9 @@ class exampleProducer(Module):
 
             pho_p4.SetPtEtaPhiM(pho_p4.Pt()/photons[tight_photons[0]].eCorr , pho_p4.Eta(), pho_p4.Phi() , pho_p4.M())
 
-            if (ele_p4 + pho_p4).M() > 81.2 and (ele_p4 + pho_p4).M() < 101.2:
+#            if (ele_p4 + pho_p4).M() > 81.2 and (ele_p4 + pho_p4).M() < 101.2:
 #            if (ele_p4 + pho_p4).M() > 76.2 and (ele_p4 + pho_p4).M() < 106.2:
-                return False
+#                return False
 
             if sqrt(2*electrons[tight_electrons[0]].pt/electrons[tight_electrons[0]].eCorr*event.MET_pt*(1 - cos(event.MET_phi - electrons[tight_electrons[0]].phi))) < 30:
                 return False
