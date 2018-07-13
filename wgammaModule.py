@@ -36,7 +36,6 @@ class exampleProducer(Module):
         self.out.branch("gen_weight",  "F");
         self.out.branch("is_lepton_real",  "B");
         self.out.branch("photon_gen_matching",  "I");
-        self.out.branch("gen_weight",  "F");
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
     def analyze(self, event):
@@ -583,11 +582,6 @@ class exampleProducer(Module):
         else:
             return False
 
-
-        try:
-            self.out.fillBranch("gen_weight",event.Generator_weight)
-        except:
-            pass
 
         #print event.event
 
