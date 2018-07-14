@@ -1,4 +1,4 @@
-data_driven = False
+data_driven = True
 
 import sys
 import style
@@ -56,9 +56,7 @@ import ROOT
 
 #labels = { "z+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy1j_m1050.root", "xs" : 729.726349},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy2j_m1050.root", "xs" : 387.472359},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy3j_m1050.root" , "xs" : 95.033555},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy4j_m1050.root", "xs" : 36.698502 },{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy1j_m50.root", "xs" : 1012.296845 },{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy2j_m50.root", "xs" : 334.717838},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy3j_m50.root", "xs" : 102.462800},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy4j_m50.root", "xs" : 54.481360} ] }, "wg+jets" : { "color" : ROOT.kRed, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_qcd_wg.root", "xs" : 178.6}]  }, "zg+jets" : { "color" : ROOT.kYellow, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_qcd_zg.root", "xs" : 47.46} ] }, "tt+jets" : {"color" : ROOT.kGreen+2, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_ttjets.root", "xs" : 831.76 } ] } } 
 
-#labels = { "z+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy2j_m50.root", "xs" : 729.726349} ] } } 
-
-labels = { "z+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/delete_this.root", "xs" : 334.717838} ] } } 
+labels = { "z+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy1j_m1050.root", "xs" : 729.726349},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy2j_m1050.root", "xs" : 387.472359},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy3j_m1050.root" , "xs" : 95.033555},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy4j_m1050.root", "xs" : 36.698502 },{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy1j_m50.root", "xs" : 1012.296845 },{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy2j_m50.root", "xs" : 334.717838},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy3j_m50.root", "xs" : 102.462800},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy4j_m50.root", "xs" : 54.481360} ] } } 
 
 ######labels = { "z+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy1j_m1050.root", "xs" : 729.726349},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy2j_m1050.root", "xs" : 387.472359},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy3j_m1050.root" , "xs" : 95.033555},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy4j_m1050.root", "xs" : 36.698502 },{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy1j_m50_zmassrange30.root", "xs" : 1012.296845 },{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy2j_m50_zmassrange30.root", "xs" : 334.717838},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy3j_m50_zmassrange30.root", "xs" : 102.462800},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy4j_m50_zmassrange30.root", "xs" : 54.481360} ] }, "wg+jets" : { "color" : ROOT.kRed, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_qcd_wg.root", "xs" : 178.6}]  }, "zg+jets" : { "color" : ROOT.kYellow, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_qcd_zg.root", "xs" : 47.46} ] }, "tt+jets" : {"color" : ROOT.kGreen+2, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_ttjets.root", "xs" : 831.76 } ] } } 
 
@@ -180,18 +178,18 @@ def subtractRealMCFromFakeEstimateFromData(mc_tree,data_fake_photon,data_fake_mu
         
         if photon_eta_cutstring == "abs(photon_eta) < 1.4442":  
             
-            if mc_tree.lepton_pdg_id == lepton_abs_pdg_id and mc_tree.is_lepton_tight == '\x01' and abs(mc_tree.photon_eta) < 1.4442 and (mc_tree.photon_selection == 1 or mc_tree.photon_selection == 0) and mc_tree.photon_pt > 25 and mc_tree.photon_pt < 70 and mc_tree.btagging_selection == btagging_selection and mc_tree.is_lepton_real == '\x01' and mc_tree.photon_gen_matching > 0 and mc_tree.mjj < 400:
+            if mc_tree.lepton_pdg_id == lepton_abs_pdg_id and mc_tree.is_lepton_tight == '\x01' and abs(mc_tree.photon_eta) < 1.4442 and (mc_tree.photon_selection == 1 or mc_tree.photon_selection == 0) and mc_tree.photon_pt > 25 and mc_tree.photon_pt < 70 and mc_tree.btagging_selection == btagging_selection and mc_tree.is_lepton_real == '\x01' and mc_tree.photon_gen_matching > 0 and mc_tree.mjj < 400 and not (mc_tree.mlg > 81.2 and mc_tree.mlg < 101.2):
                 for variable in variables:
                     data_fake_photon["hists"][variable].Fill(getVariable(variable,mc_tree),-photonfakerate(mc_tree.photon_eta, mc_tree.photon_pt,mc_tree.lepton_pdg_id, "nominal")* xs * 1000 * 36.15 / n_weighted_events)  
         elif photon_eta_cutstring == "1.566 < abs(photon_eta) && abs(photon_eta) < 2.5":   
-            if mc_tree.lepton_pdg_id == lepton_abs_pdg_id and mc_tree.is_lepton_tight == '\x01' and 1.566 < abs(mc_tree.photon_eta) and abs(mc_tree.photon_eta) < 2.5 and (mc_tree.photon_selection == 1 or mc_tree.photon_selection == 0) and mc_tree.photon_pt > 25 and mc_tree.photon_pt < 70 and mc_tree.btagging_selection == btagging_selection and mc_tree.is_lepton_real == '\x01' and mc_tree.photon_gen_matching > 0 and mc_tree.mjj < 400:
+            if mc_tree.lepton_pdg_id == lepton_abs_pdg_id and mc_tree.is_lepton_tight == '\x01' and 1.566 < abs(mc_tree.photon_eta) and abs(mc_tree.photon_eta) < 2.5 and (mc_tree.photon_selection == 1 or mc_tree.photon_selection == 0) and mc_tree.photon_pt > 25 and mc_tree.photon_pt < 70 and mc_tree.btagging_selection == btagging_selection and mc_tree.is_lepton_real == '\x01' and mc_tree.photon_gen_matching > 0 and mc_tree.mjj < 400 and not (mc_tree.mlg > 81.2 and mc_tree.mlg < 101.2):
                 for variable in variables:
                     data_fake_photon["hists"][variable].Fill(getVariable(variable,mc_tree),-photonfakerate(mc_tree.photon_eta, mc_tree.photon_pt,mc_tree.lepton_pdg_id, "nominal")* xs * 1000 * 36.15 / n_weighted_events)  
         else:
             assert(0)
 
         if photon_eta_cutstring == "abs(photon_eta) < 1.4442":
-            if mc_tree.lepton_pdg_id == lepton_abs_pdg_id and mc_tree.is_lepton_tight == '\x00' and abs(mc_tree.photon_eta) < 1.4442 and mc_tree.photon_selection == 2 and mc_tree.photon_pt > 25 and mc_tree.photon_pt < 70 and mc_tree.btagging_selection == btagging_selection and mc_tree.is_lepton_real == '\x01' and mc_tree.photon_gen_matching > 0 and mc_tree.mjj < 400:
+            if mc_tree.lepton_pdg_id == lepton_abs_pdg_id and mc_tree.is_lepton_tight == '\x00' and abs(mc_tree.photon_eta) < 1.4442 and mc_tree.photon_selection == 2 and mc_tree.photon_pt > 25 and mc_tree.photon_pt < 70 and mc_tree.btagging_selection == btagging_selection and mc_tree.is_lepton_real == '\x01' and mc_tree.photon_gen_matching > 0 and mc_tree.mjj < 400 and not (mc_tree.mlg > 81.2 and mc_tree.mlg < 101.2):
                 if lepton_name == "muon":
                     if mc_tree.gen_weight > 0:
                         for variable in variables:
@@ -210,7 +208,7 @@ def subtractRealMCFromFakeEstimateFromData(mc_tree,data_fake_photon,data_fake_mu
                     assert(0)
 
         elif photon_eta_cutstring == "1.566 < abs(photon_eta) && abs(photon_eta) < 2.5":
-             if mc_tree.lepton_pdg_id == lepton_abs_pdg_id and mc_tree.is_lepton_tight == '\x00' and 1.566 < abs(mc_tree.photon_eta) and abs(mc_tree.photon_eta) < 2.5 and mc_tree.photon_selection == 2 and mc_tree.photon_pt > 25 and mc_tree.photon_pt < 70 and mc_tree.btagging_selection == btagging_selection and mc_tree.is_lepton_real == '\x01' and mc_tree.photon_gen_matching > 0 and mc_tree.mjj < 400:
+             if mc_tree.lepton_pdg_id == lepton_abs_pdg_id and mc_tree.is_lepton_tight == '\x00' and 1.566 < abs(mc_tree.photon_eta) and abs(mc_tree.photon_eta) < 2.5 and mc_tree.photon_selection == 2 and mc_tree.photon_pt > 25 and mc_tree.photon_pt < 70 and mc_tree.btagging_selection == btagging_selection and mc_tree.is_lepton_real == '\x01' and mc_tree.photon_gen_matching > 0 and mc_tree.mjj < 400 and not (mc_tree.mlg > 81.2 and mc_tree.mlg < 101.2):
                  if lepton_name == "muon":
                      if mc_tree.gen_weight > 0:
                          for variable in variables:
@@ -431,8 +429,6 @@ def fillHistogramMC(sample,histograms):
         if photon_eta_cutstring == "abs(photon_eta) < 1.4442":        
 #            if tree.lepton_pdg_id == lepton_abs_pdg_id and tree.is_lepton_tight == '\x01' and abs(tree.photon_eta) < 1.4442 and tree.photon_selection == 2 and tree.photon_pt > 25 and tree.photon_pt < 70 and tree.btagging_selection == btagging_selection:
             if sample["tree"].lepton_pdg_id == lepton_abs_pdg_id and sample["tree"].is_lepton_tight == '\x01' and abs(sample["tree"].photon_eta) < 1.4442 and sample["tree"].photon_selection == 2 and sample["tree"].photon_pt > 25 and sample["tree"].photon_pt < 70 and sample["tree"].btagging_selection == btagging_selection and sample["tree"].is_lepton_real == '\x01' and sample["tree"].photon_gen_matching > 0 and sample["tree"].mjj < 400 and not (sample["tree"].mlg > 81.2 and sample["tree"].mlg < 101.2):
-
-                print sample["tree"].gen_weight
 
                 if sample["tree"].gen_weight > 0:
                     for variable in variables:
