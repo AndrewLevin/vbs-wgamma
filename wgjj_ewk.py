@@ -406,21 +406,6 @@ c1 = ROOT.TCanvas("c1", "c1",5,50,500,500);
 
 ROOT.gROOT.cd()
 
-#variable = "mjj"
-
-#data_hist = ROOT.TH1F("data","",18,200,2000)
-#double_fake_hist = ROOT.TH1F("double fake hist","",18,200,2000)
-#fake_photon_hist = ROOT.TH1F("fake photon hist","",18,200,2000)
-#fake_electron_hist = ROOT.TH1F("fake electron hist","",18,200,2000)
-#fake_muon_hist = ROOT.TH1F("fake muon hist","",18,200,2000)
-#data_hist.Sumw2()
-#fake_muon_hist.Sumw2()
-#fake_electron_hist.Sumw2()
-#fake_photon_hist.Sumw2()
-#double_fake_hist.Sumw2()
-
-data_events_tree.Draw("mjj >> data","mjj < 400 && abs(lepton_pdg_id) == "+str(lepton_abs_pdg_id)+" && is_lepton_tight == 1 && "+photon_eta_cutstring+" && photon_selection == 2 && photon_pt > 25 && photon_pt < 70 && btagging_selection == "+ str(btagging_selection))
-
 def fillHistogramMC(sample,histograms):
 
     for i in range(sample["tree"].GetEntries()):
