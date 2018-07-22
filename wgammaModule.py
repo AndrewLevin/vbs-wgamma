@@ -38,6 +38,7 @@ class exampleProducer(Module):
         self.out.branch("met",  "F");
         self.out.branch("mt",  "F");
         self.out.branch("mjj","F")
+        self.out.branch("npvs","I")
         self.out.branch("njets","I")
         self.out.branch("is_lepton_tight",  "B");
         self.out.branch("gen_weight",  "F");
@@ -302,8 +303,8 @@ class exampleProducer(Module):
         if not photons[tight_photons[0]].electronVeto:
             return False
 
-        if event.MET_pt < 35:
-            return False
+        #if event.MET_pt < 35:
+        #    return False
 
         if abs(deltaPhi(event.MET_phi,jets[tight_jets[0]].phi)) < 0.4:
             return False
@@ -350,8 +351,8 @@ class exampleProducer(Module):
             if not muons[tight_muons[0]].tightId:
                 return False
 
-            if sqrt(2*muons[tight_muons[0]].pt*event.MET_pt*(1 - cos(event.MET_phi - muons[tight_muons[0]].phi))) < 30:
-                return False
+            #if sqrt(2*muons[tight_muons[0]].pt*event.MET_pt*(1 - cos(event.MET_phi - muons[tight_muons[0]].phi))) < 30:
+            #    return False
 
             self.out.fillBranch("mt",sqrt(2*muons[tight_muons[0]].pt*event.MET_pt*(1 - cos(event.MET_phi - muons[tight_muons[0]].phi))))
 
@@ -409,8 +410,8 @@ class exampleProducer(Module):
             if abs(muons[loose_but_not_tight_muons[0]].eta) > 2.4:
                 return False
 
-            if sqrt(2*muons[loose_but_not_tight_muons[0]].pt*event.MET_pt*(1 - cos(event.MET_phi - muons[loose_but_not_tight_muons[0]].phi))) < 30:
-                return False
+            #if sqrt(2*muons[loose_but_not_tight_muons[0]].pt*event.MET_pt*(1 - cos(event.MET_phi - muons[loose_but_not_tight_muons[0]].phi))) < 30:
+            #    return False
 
             self.out.fillBranch("mt",sqrt(2*muons[loose_but_not_tight_muons[0]].pt*event.MET_pt*(1 - cos(event.MET_phi - muons[loose_but_not_tight_muons[0]].phi))))
 
@@ -481,8 +482,8 @@ class exampleProducer(Module):
 #            if (ele_p4 + pho_p4).M() > 76.2 and (ele_p4 + pho_p4).M() < 106.2:
 #                return False
 
-            if sqrt(2*electrons[tight_electrons[0]].pt/electrons[tight_electrons[0]].eCorr*event.MET_pt*(1 - cos(event.MET_phi - electrons[tight_electrons[0]].phi))) < 30:
-                return False
+            #if sqrt(2*electrons[tight_electrons[0]].pt/electrons[tight_electrons[0]].eCorr*event.MET_pt*(1 - cos(event.MET_phi - electrons[tight_electrons[0]].phi))) < 30:
+            #    return False
 
             self.out.fillBranch("mt",sqrt(2*electrons[tight_electrons[0]].pt/electrons[tight_electrons[0]].eCorr*event.MET_pt*(1 - cos(event.MET_phi - electrons[tight_electrons[0]].phi))))
 
@@ -557,8 +558,8 @@ class exampleProducer(Module):
 #            if (ele_p4 + pho_p4).M() > 76.2 and (ele_p4 + pho_p4).M() < 106.2:
 #                return False
 
-            if sqrt(2*electrons[loose_but_not_tight_electrons[0]].pt/electrons[loose_but_not_tight_electrons[0]].eCorr*event.MET_pt*(1 - cos(event.MET_phi - electrons[loose_but_not_tight_electrons[0]].phi))) < 30:
-                return False
+            #if sqrt(2*electrons[loose_but_not_tight_electrons[0]].pt/electrons[loose_but_not_tight_electrons[0]].eCorr*event.MET_pt*(1 - cos(event.MET_phi - electrons[loose_but_not_tight_electrons[0]].phi))) < 30:
+            #    return False
 
             self.out.fillBranch("mt",sqrt(2*electrons[loose_but_not_tight_electrons[0]].pt/electrons[loose_but_not_tight_electrons[0]].eCorr*event.MET_pt*(1 - cos(event.MET_phi - electrons[loose_but_not_tight_electrons[0]].phi))))                    
 
@@ -644,6 +645,7 @@ class exampleProducer(Module):
             pass
 
         self.out.fillBranch("njets",event.nJet)
+        self.out.fillBranch("npvs",event.PV_npvs)
         self.out.fillBranch("event",event.event)
         self.out.fillBranch("lumi",event.luminosityBlock)
         self.out.fillBranch("run",event.run)
