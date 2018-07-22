@@ -20,6 +20,11 @@ class exampleProducer(Module):
         pass
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = wrappedOutputTree
+        self.out.branch("run",  "i");
+        self.out.branch("lumi",  "i");
+        self.out.branch("event",  "l");
+        self.out.branch("npu",  "I");
+        self.out.branch("ntruepu",  "F");
         self.out.branch("lepton_pdg_id",  "I");
         self.out.branch("lepton_pt",  "F");
         self.out.branch("lepton_phi",  "F");
@@ -31,7 +36,9 @@ class exampleProducer(Module):
         self.out.branch("photon_selection",  "I");
         self.out.branch("btagging_selection",  "I");
         self.out.branch("met",  "F");
+        self.out.branch("mt",  "F");
         self.out.branch("mjj","F")
+        self.out.branch("njets","I")
         self.out.branch("is_lepton_tight",  "B");
         self.out.branch("gen_weight",  "F");
         self.out.branch("is_lepton_real",  "B");
@@ -346,6 +353,8 @@ class exampleProducer(Module):
             if sqrt(2*muons[tight_muons[0]].pt*event.MET_pt*(1 - cos(event.MET_phi - muons[tight_muons[0]].phi))) < 30:
                 return False
 
+            self.out.fillBranch("mt",sqrt(2*muons[tight_muons[0]].pt*event.MET_pt*(1 - cos(event.MET_phi - muons[tight_muons[0]].phi))))
+
             print "selected muon event: " + str(event.event) + " " + str(event.luminosityBlock) + " " + str(event.run)
             
             mask1 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) | (1 << 11) | (1 << 13)
@@ -402,6 +411,8 @@ class exampleProducer(Module):
 
             if sqrt(2*muons[loose_but_not_tight_muons[0]].pt*event.MET_pt*(1 - cos(event.MET_phi - muons[loose_but_not_tight_muons[0]].phi))) < 30:
                 return False
+
+            self.out.fillBranch("mt",sqrt(2*muons[loose_but_not_tight_muons[0]].pt*event.MET_pt*(1 - cos(event.MET_phi - muons[loose_but_not_tight_muons[0]].phi))))
 
             mask1 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) | (1 << 11) | (1 << 13)
             mask2 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) | (1 << 11) 
@@ -472,6 +483,8 @@ class exampleProducer(Module):
 
             if sqrt(2*electrons[tight_electrons[0]].pt/electrons[tight_electrons[0]].eCorr*event.MET_pt*(1 - cos(event.MET_phi - electrons[tight_electrons[0]].phi))) < 30:
                 return False
+
+            self.out.fillBranch("mt",sqrt(2*electrons[tight_electrons[0]].pt/electrons[tight_electrons[0]].eCorr*event.MET_pt*(1 - cos(event.MET_phi - electrons[tight_electrons[0]].phi))))
 
             mask1 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) | (1 << 11) | (1 << 13)
             mask2 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) | (1 << 11) 
@@ -547,6 +560,8 @@ class exampleProducer(Module):
             if sqrt(2*electrons[loose_but_not_tight_electrons[0]].pt/electrons[loose_but_not_tight_electrons[0]].eCorr*event.MET_pt*(1 - cos(event.MET_phi - electrons[loose_but_not_tight_electrons[0]].phi))) < 30:
                 return False
 
+            self.out.fillBranch("mt",sqrt(2*electrons[loose_but_not_tight_electrons[0]].pt/electrons[loose_but_not_tight_electrons[0]].eCorr*event.MET_pt*(1 - cos(event.MET_phi - electrons[loose_but_not_tight_electrons[0]].phi))))                    
+
             mask1 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) | (1 << 11) | (1 << 13)
             mask2 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) | (1 << 11) 
             mask3 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) |  (1 << 13)
@@ -620,6 +635,18 @@ class exampleProducer(Module):
         except:
             pass
 
+        try:
+            
+            self.out.fillBranch("npu",event.Pileup_nPU)
+            self.out.fillBranch("ntruepu",event.Pileup_nTrueInt)
+
+        except:
+            pass
+
+        self.out.fillBranch("njets",event.nJet)
+        self.out.fillBranch("event",event.event)
+        self.out.fillBranch("lumi",event.luminosityBlock)
+        self.out.fillBranch("run",event.run)
 
         return True
 
