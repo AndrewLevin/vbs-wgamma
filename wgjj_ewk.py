@@ -68,7 +68,13 @@ pu_weight_hist = f_pu_weights.Get("ratio")
 
 #labels = { "z+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy1j_m1050.root", "xs" : 729.726349},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy2j_m1050.root", "xs" : 387.472359},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy3j_m1050.root" , "xs" : 95.033555},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy4j_m1050.root", "xs" : 36.698502 },{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy1j_m50.root", "xs" : 1012.296845 },{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy2j_m50.root", "xs" : 334.717838},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy3j_m50.root", "xs" : 102.462800},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy4j_m50.root", "xs" : 54.481360} ] }, "tt+jets" : {"color" : ROOT.kGreen+2, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_ttjets.root", "xs" : 831.76 } ] }, "zg+jets" : { "color" : ROOT.kYellow, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_qcd_zg.root", "xs" : 47.46} ] }, "wg+jets" : { "color" : ROOT.kRed, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wgamma_wjets.root", "xs" : 60430.0 } ]  }} 
 
-labels = { "z+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy1j_m50.root", "xs" : 1012.296845 },{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy2j_m50.root", "xs" : 334.717838},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy3j_m50.root", "xs" : 102.462800},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy4j_m50.root", "xs" : 54.481360}, {"filename" : "/afs/cern.ch/work/a/amlevin/data/wgamma_zjets.root", "xs" : 4963.0} ] }, "tt+jets" : {"color" : ROOT.kGreen+2, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_ttjets.root", "xs" : 831.76 } ] }, "zg+jets" : { "color" : ROOT.kYellow, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_qcd_zg.root", "xs" : 47.46} ] }, "wg+jets" : { "color" : ROOT.kRed, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_qcd_wg.root", "xs" : 178.6}]  } } 
+#labels = { "z+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy1j_m50.root", "xs" : 1012.296845 },{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy2j_m50.root", "xs" : 334.717838},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy3j_m50.root", "xs" : 102.462800},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy4j_m50.root", "xs" : 54.481360}, {"filename" : "/afs/cern.ch/work/a/amlevin/data/wgamma_zjets.root", "xs" : 4963.0} ] }, "tt+jets" : {"color" : ROOT.kGreen+2, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_ttjets.root", "xs" : 831.76 } ] }, "zg+jets" : { "color" : ROOT.kYellow, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_qcd_zg.root", "xs" : 47.46} ] }, "wg+jets" : { "color" : ROOT.kRed, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_qcd_wg.root", "xs" : 178.6}]  } } 
+
+#labels = { "z+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy1j_m50.root", "xs" : 1012.296845 },{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy2j_m50.root", "xs" : 334.717838},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy3j_m50.root", "xs" : 102.462800},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy4j_m50.root", "xs" : 54.481360}] }, "tt+jets" : {"color" : ROOT.kGreen+2, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_ttjets.root", "xs" : 831.76 } ] }, "zg+jets" : { "color" : ROOT.kYellow, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_qcd_zg.root", "xs" : 47.46} ] }, "wg+jets" : { "color" : ROOT.kRed, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_qcd_wg.root", "xs" : 178.6}]  } } 
+
+#labels = { "z+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wgamma_zjets.root", "xs" : 4963.0}] }, "tt+jets" : {"color" : ROOT.kGreen+2, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_ttjets.root", "xs" : 831.76 } ] }, "zg+jets" : { "color" : ROOT.kYellow, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_qcd_zg.root", "xs" : 47.46} ] }, "wg+jets" : { "color" : ROOT.kRed, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_qcd_wg.root", "xs" : 178.6}]  }, "w+jets" : {"color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wgamma_wjets.root", "xs" : 60430.0}] } } 
+
+labels = { "z+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wgamma_zjets.root", "xs" : 4963.0}] }, "tt+jets" : {"color" : ROOT.kGreen+2, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_ttjets.root", "xs" : 831.76 } ] }, "w+jets" : {"color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wgamma_wjets.root", "xs" : 60430.0}] } } 
 
 #labels = { "wjets" : { "color" : ROOT.kOrange, "samples" : [ { "filename" : "/afs/cern.ch/work/a/amlevin/data/wgamma_w2j.root", "xs" : 3161.0},{ "filename" : "/afs/cern.ch/work/a/amlevin/data/wgamma_w3j.root", "xs" : 947.9},{ "filename" : "/afs/cern.ch/work/a/amlevin/data/wgamma_w4j.root", "xs" : 493.8} ] } }
 
@@ -79,18 +85,9 @@ labels = { "z+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/c
 
 ######labels = { "z+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy1j_m1050.root", "xs" : 729.726349},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy2j_m1050.root", "xs" : 387.472359},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy3j_m1050.root" , "xs" : 95.033555},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy4j_m1050.root", "xs" : 36.698502 },{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy1j_m50_zmassrange30.root", "xs" : 1012.296845 },{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy2j_m50_zmassrange30.root", "xs" : 334.717838},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy3j_m50_zmassrange30.root", "xs" : 102.462800},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy4j_m50_zmassrange30.root", "xs" : 54.481360} ] }, "wg+jets" : { "color" : ROOT.kRed, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_qcd_wg.root", "xs" : 178.6}]  }, "zg+jets" : { "color" : ROOT.kYellow, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_qcd_zg.root", "xs" : 47.46} ] }, "tt+jets" : {"color" : ROOT.kGreen+2, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_ttjets.root", "xs" : 831.76 } ] } } 
 
-#mc_samples = [ {"filename" : '/afs/cern.ch/work/a/amlevin/data/wgamma_wwlnlnu.root', "label" : "ww" , "xs" : 12.178, "color" : ROOT.kGreen+2} ]
+variables = ["mjj","met","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","lepton_phi","photon_phi","njets","mt","npvs"]
 
-#mc_samples = [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy1j_m1050.root", "label": "dy+jets", "xs" : 729.726349, "color" : ROOT.kGreen+2},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy2j_m1050.root", "label": "dy+jets", "xs" : 387.472359, "color" : ROOT.kGreen+2},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy3j_m1050.root", "label": "dy+jets", "xs" : 95.033555, "color" : ROOT.kGreen+2},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy4j_m1050.root", "label": "dy+jets", "xs" : 36.698502, "color" : ROOT.kGreen+2},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy1j_m50.root", "label": "dy+jets", "xs" : 1012.296845, "color" : ROOT.kGreen+2},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy2j_m50.root", "label": "dy+jets", "xs" : 334.717838, "color" : ROOT.kGreen+2},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy3j_m50.root", "label": "dy+jets", "xs" : 102.462800, "color" : ROOT.kGreen+2},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy4j_m50.root", "label": "dy+jets", "xs" : 54.481360, "color" : ROOT.kGreen+2}]
-
-
-#mc_samples = [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_wjets.root", "label": "w+jets", "xs" : 60430.0, "color" : ROOT.kGreen+2},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_zjets.root", "label": "z+jets", "xs" : 4963.0, "color" : ROOT.kGray+1},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_ttjets.root", "label": "tt+jets", "xs" : 831.76, "color" : ROOT.kRed}]
-
-#mc_samples ={}
-
-variables = ["mjj","met","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","lepton_phi","photon_phi","njets","mt"]
-
-histogram_templates = { "mjj" : ROOT.TH1F("mjj","",18,200,2000), "met" : ROOT.TH1F("met", "", 13 , 40., 300 ), "lepton_pt" : ROOT.TH1F('lepton_pt', '', 8, 20., 180 ), "lepton_eta" : ROOT.TH1F('lepton_eta', '', 10, -2.5, 2.5 ), "photon_pt" : ROOT.TH1F('photon_pt', '', 8, 20., 180 ), "photon_eta" : ROOT.TH1F('photon_eta', '', 10, -2.5, 2.5 ), "mlg" : ROOT.TH1F("mlg","",20,0,200) , "lepton_phi" : ROOT.TH1F("lepton_phi","",14,-3.5,3.5), "photon_phi" : ROOT.TH1F("photon_phi","",14,-3.5,3.5), "njets" : ROOT.TH1F("njets","",21,-0.5,20.5), "mt" : ROOT.TH1F("mt","",20,0,200)} 
+histogram_templates = { "mjj" : ROOT.TH1F("mjj","",18,200,2000), "met" : ROOT.TH1F("met", "", 15 , 0., 300 ), "lepton_pt" : ROOT.TH1F('lepton_pt', '', 8, 20., 180 ), "lepton_eta" : ROOT.TH1F('lepton_eta', '', 10, -2.5, 2.5 ), "photon_pt" : ROOT.TH1F('photon_pt', '', 8, 20., 180 ), "photon_eta" : ROOT.TH1F('photon_eta', '', 10, -2.5, 2.5 ), "mlg" : ROOT.TH1F("mlg","",20,0,200) , "lepton_phi" : ROOT.TH1F("lepton_phi","",14,-3.5,3.5), "photon_phi" : ROOT.TH1F("photon_phi","",14,-3.5,3.5), "njets" : ROOT.TH1F("njets","",21,-0.5,20.5), "mt" : ROOT.TH1F("mt","",20,0,200), "npvs" : ROOT.TH1F("npvs","",51,-0.5,50.5)} 
 
 def getVariable(varname, tree):
     if varname == "mjj":
@@ -101,6 +98,8 @@ def getVariable(varname, tree):
         return tree.mt
     elif varname == "njets":
         return float(tree.njets)
+    elif varname == "npvs":
+        return float(tree.npvs)
     elif varname == "met":
         return tree.met
     elif varname == "lepton_pt":
@@ -123,6 +122,8 @@ def getXaxisLabel(varname):
         return "m_{jj} (GeV)"
     elif varname == "njets":
         return "number of jets"
+    elif varname == "npvs":
+        return "number of PVs"
     elif varname == "mt":
         return "m_{t} (GeV)"
     elif varname == "mlg":
@@ -167,13 +168,24 @@ def pass_selection(tree, fake_lepton = False , fake_photon = False):
         
     if lepton_abs_pdg_id == 11:    
         if not (tree.mlg > 81.2 and tree.mlg < 101.2):
+#        if (tree.mlg > 61.2 and tree.mlg < 121.2):
             pass_mlg = True
         else:
             pass_mlg = False
     else:
         pass_mlg = True
 
-    if tree.mjj < 400:
+    if tree.met > 35:
+        pass_met = True
+    else:
+        pass_met = False
+
+    if tree.mt > 30:
+        pass_mt = True
+    else:
+        pass_mt = False
+
+    if tree.mjj < 500:
         pass_mjj = True
     else:
         pass_mjj = False
@@ -205,13 +217,13 @@ def pass_selection(tree, fake_lepton = False , fake_photon = False):
         else:
             pass_lepton_selection = False
             
-    if tree.photon_pt > 25 and tree.photon_pt < 70:
+    if tree.photon_pt > 25 and tree.photon_pt < 700:
         pass_photon_pt =True
     else:
         pass_photon_pt = False
 
 
-    if pass_photon_pt and pass_lepton_selection and pass_photon_selection and pass_mlg and pass_photon_eta and pass_lepton_flavor and pass_mjj and pass_btagging_selection:
+    if pass_photon_pt and pass_lepton_selection and pass_photon_selection and pass_mlg and pass_photon_eta and pass_lepton_flavor and pass_mjj and pass_btagging_selection and pass_met and pass_mt:
         return True
     else:
         return False
@@ -512,7 +524,6 @@ def fillHistogramMC(sample,histograms):
         if not pass_selection(sample["tree"]):
             continue
 
-
         if sample["tree"].photon_gen_matching > 0:
             pass_photon_gen_matching = True
         else:
@@ -524,7 +535,7 @@ def fillHistogramMC(sample,histograms):
             pass_is_lepton_real = False
 
         weight = sample["xs"]*1000*36.15/sample["nweightedevents"]
-        
+
         weight *= pu_weight_hist.GetBinContent(pu_weight_hist.FindFixBin(sample["tree"].npu))
         
         weight *= eff_scale_factor.photon_efficiency_scale_factor(sample["tree"].photon_pt,sample["tree"].photon_eta)
@@ -538,8 +549,10 @@ def fillHistogramMC(sample,histograms):
 
         if sample["tree"].gen_weight < 0:
             weight = -weight
-                
+
         if pass_photon_gen_matching and pass_is_lepton_real:
+#            print str(sample["tree"].run) + " " + str(sample["tree"].lumi) + " " + str(sample["tree"].event)+ " " + str(weight)+ " " +str(sample["tree"].lepton_pt)+ " " +str(sample["tree"].lepton_eta)+ " "+str(sample["tree"].lepton_phi)+ " "+ str(sample["tree"].photon_pt)+ " " + str(str(sample["tree"].photon_eta))+ " " + str(str(sample["tree"].photon_phi))
+
             for variable in variables:
                 histograms[variable].Fill(getVariable(variable,sample["tree"]),weight)
 
