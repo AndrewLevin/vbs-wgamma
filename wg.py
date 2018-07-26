@@ -12,7 +12,6 @@ parser = optparse.OptionParser()
 
 parser.add_option('--lep',dest='lep',default='muon')
 parser.add_option('--phoeta',dest='phoeta',default='barrel')
-parser.add_option('--btagged',dest='btagged', default=False,  action = 'store_true')
 
 parser.add_option('--lumi',dest='lumi')
 parser.add_option('--variable',dest='variable')
@@ -36,11 +35,6 @@ elif options.phoeta == "endcap":
     photon_eta_cutstring = "1.566 < abs(photon_eta) && abs(photon_eta) < 2.5"
 else:
     assert(0)
-
-if options.btagged:
-    btagging_selection = 0
-else:
-    btagging_selection = 1
 
 f_json=open("/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/ReReco/Final/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt")
 #f_json=open("delete_this_JSON.txt")
@@ -719,19 +713,19 @@ for variable in variables:
 
     c1.SaveAs(options.outputdir + "/" + variable + ".png")
 
-    if variable == "mlg":
+#    if variable == "mlg":
+#
+#        ndata = data["hists"]["mlg"].GetBinContent(data["hists"]["mlg"].GetXaxis().FindFixBin(85.0))+ data["hists"]["mlg"].GetBinContent(data["hists"]["mlg"].GetXaxis().FindFixBin(95.0))
 
-        ndata = data["hists"]["mlg"].GetBinContent(data["hists"]["mlg"].GetXaxis().FindFixBin(85.0))+ data["hists"]["mlg"].GetBinContent(data["hists"]["mlg"].GetXaxis().FindFixBin(95.0))
+#        nzjets = labels["z+jets"]["hists"]["mlg"].GetBinContent(labels["z+jets"]["hists"]["mlg"].GetXaxis().FindFixBin(85.0))+ labels["z+jets"]["hists"]["mlg"].GetBinContent(labels["z+jets"]["hists"]["mlg"].GetXaxis().FindFixBin(95.0))
 
-        nzjets = labels["z+jets"]["hists"]["mlg"].GetBinContent(labels["z+jets"]["hists"]["mlg"].GetXaxis().FindFixBin(85.0))+ labels["z+jets"]["hists"]["mlg"].GetBinContent(labels["z+jets"]["hists"]["mlg"].GetXaxis().FindFixBin(95.0))
+#        nprediction =hsum.GetBinContent(hsum.GetXaxis().FindFixBin(85.0))+ hsum.GetBinContent(hsum.GetXaxis().FindFixBin(95.0))
 
-        nprediction =hsum.GetBinContent(hsum.GetXaxis().FindFixBin(85.0))+ hsum.GetBinContent(hsum.GetXaxis().FindFixBin(95.0))
+#        print ndata
 
-        print ndata
+#        print nzjets
 
-        print nzjets
+#        print nprediction
 
-        print nprediction
-
-        print (ndata - nprediction + nzjets)/nzjets
+#        print (ndata - nprediction + nzjets)/nzjets
 
