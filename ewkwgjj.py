@@ -66,24 +66,17 @@ f_pu_weights = ROOT.TFile("/afs/cern.ch/user/a/amlevin/PileupWeights2016.root")
 
 pu_weight_hist = f_pu_weights.Get("ratio")
 
-#labels = { "z+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy1j_m1050.root", "xs" : 729.726349},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy2j_m1050.root", "xs" : 387.472359},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy3j_m1050.root" , "xs" : 95.033555},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy4j_m1050.root", "xs" : 36.698502 },{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy1j_m50.root", "xs" : 1012.296845 },{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy2j_m50.root", "xs" : 334.717838},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy3j_m50.root", "xs" : 102.462800},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy4j_m50.root", "xs" : 54.481360} ] }, "tt+jets" : {"color" : ROOT.kGreen+2, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_ttjets.root", "xs" : 831.76 } ] }, "zg+jets" : { "color" : ROOT.kYellow, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_qcd_zg.root", "xs" : 47.46} ] }, "wg+jets" : { "color" : ROOT.kRed, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wgamma_wjets.root", "xs" : 60430.0 } ]  }} 
+#labels = { "z+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_z1j_m50.root", "xs" : 1012.296845 },{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_z2j_m50.root", "xs" : 334.717838},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_z3j_m50.root", "xs" : 102.462800},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_z4j_m50.root", "xs" : 54.481360}] }, "tt+jets" : {"color" : ROOT.kGreen+2, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_ttjets.root", "xs" : 831.76 } ] }, "w+jets" : {"color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wgamma_wjets.root", "xs" : 60430.0}] } } 
 
-#labels = { "z+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy1j_m50.root", "xs" : 1012.296845 },{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy2j_m50.root", "xs" : 334.717838},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy3j_m50.root", "xs" : 102.462800},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy4j_m50.root", "xs" : 54.481360}, {"filename" : "/afs/cern.ch/work/a/amlevin/data/wgamma_zjets.root", "xs" : 4963.0} ] }, "tt+jets" : {"color" : ROOT.kGreen+2, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_ttjets.root", "xs" : 831.76 } ] }, "zg+jets" : { "color" : ROOT.kYellow, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_qcd_zg.root", "xs" : 47.46} ] }, "wg+jets" : { "color" : ROOT.kRed, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_qcd_wg.root", "xs" : 178.6}]  } } 
+labels = { "z+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/ewkwgjj/zjets.root", "xs" : 6025.2 }] }, "tt+jets" : {"color" : ROOT.kGreen+2, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/ewkwgjj/ttjets.root", "xs" : 831.76 } ] }, "w+jets" : {"color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/ewkwgjj/wjets.root", "xs" : 60430.0}] } } 
 
-#labels = { "z+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy1j_m50.root", "xs" : 1012.296845 },{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy2j_m50.root", "xs" : 334.717838},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy3j_m50.root", "xs" : 102.462800},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy4j_m50.root", "xs" : 54.481360}] }, "tt+jets" : {"color" : ROOT.kGreen+2, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_ttjets.root", "xs" : 831.76 } ] }, "zg+jets" : { "color" : ROOT.kYellow, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_qcd_zg.root", "xs" : 47.46} ] }, "wg+jets" : { "color" : ROOT.kRed, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_qcd_wg.root", "xs" : 178.6}]  } } 
+#labels ={ "w+jets" : {"color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wgamma_wjets.root", "xs" : 60430.0}] } }
 
-#labels = { "z+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wgamma_zjets.root", "xs" : 4963.0}] }, "tt+jets" : {"color" : ROOT.kGreen+2, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_ttjets.root", "xs" : 831.76 } ] }, "zg+jets" : { "color" : ROOT.kYellow, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_qcd_zg.root", "xs" : 47.46} ] }, "wg+jets" : { "color" : ROOT.kRed, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_qcd_wg.root", "xs" : 178.6}]  }, "w+jets" : {"color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wgamma_wjets.root", "xs" : 60430.0}] } } 
+#labels ={ "wg+jets" : {"color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wgamma_qcd_wg.root", "xs" : 178.6}] } }
 
-labels = { "z+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wgamma_zjets.root", "xs" : 4963.0}] }, "tt+jets" : {"color" : ROOT.kGreen+2, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_ttjets.root", "xs" : 831.76 } ] }, "w+jets" : {"color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wgamma_wjets.root", "xs" : 60430.0}] } } 
+#labels = { "z+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_zjets.root", "xs" : 6025.2 }] } } 
 
-#labels = { "wjets" : { "color" : ROOT.kOrange, "samples" : [ { "filename" : "/afs/cern.ch/work/a/amlevin/data/wgamma_w2j.root", "xs" : 3161.0},{ "filename" : "/afs/cern.ch/work/a/amlevin/data/wgamma_w3j.root", "xs" : 947.9},{ "filename" : "/afs/cern.ch/work/a/amlevin/data/wgamma_w4j.root", "xs" : 493.8} ] } }
-
-#labels ={ "zjets" : {"color": ROOT.kOrange, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wgamma_zjets.root", "xs" : 4963.0}] }}
-
-#labels ={ "wjets" : {"color": ROOT.kOrange, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wgamma_wjets.root", "xs" : 60430.0}] }}
-
-
-######labels = { "z+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy1j_m1050.root", "xs" : 729.726349},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy2j_m1050.root", "xs" : 387.472359},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy3j_m1050.root" , "xs" : 95.033555},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy4j_m1050.root", "xs" : 36.698502 },{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy1j_m50_zmassrange30.root", "xs" : 1012.296845 },{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy2j_m50_zmassrange30.root", "xs" : 334.717838},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy3j_m50_zmassrange30.root", "xs" : 102.462800},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_dy4j_m50_zmassrange30.root", "xs" : 54.481360} ] }, "wg+jets" : { "color" : ROOT.kRed, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_qcd_wg.root", "xs" : 178.6}]  }, "zg+jets" : { "color" : ROOT.kYellow, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_qcd_zg.root", "xs" : 47.46} ] }, "tt+jets" : {"color" : ROOT.kGreen+2, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_ttjets.root", "xs" : 831.76 } ] } } 
+#labels = { "zg+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_qcd_zg.root", "xs" : 47.46 }] } } 
 
 variables = ["mjj","met","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","lepton_phi","photon_phi","njets","mt","npvs"]
 
@@ -165,9 +158,10 @@ def pass_selection(tree, fake_lepton = False , fake_photon = False):
     else:
         pass_lepton_flavor = False
         
-        
     if lepton_abs_pdg_id == 11:    
-        if not (tree.mlg > 81.2 and tree.mlg < 101.2):
+#        if True:
+#        if not (tree.mlg > 81.2 and tree.mlg < 101.2):
+        if not (tree.mlg > 76.2 and tree.mlg < 106.2):
 #        if (tree.mlg > 61.2 and tree.mlg < 121.2):
             pass_mlg = True
         else:
@@ -175,17 +169,20 @@ def pass_selection(tree, fake_lepton = False , fake_photon = False):
     else:
         pass_mlg = True
 
-    if tree.met > 35:
+#    if tree.met > 35:
+    if tree.met > 0:
         pass_met = True
     else:
         pass_met = False
 
-    if tree.mt > 30:
+#    if tree.mt > 30:
+    if tree.mt > 0:
         pass_mt = True
     else:
         pass_mt = False
 
     if tree.mjj < 500:
+#    if tree.mjj < 50000:
         pass_mjj = True
     else:
         pass_mjj = False
@@ -395,7 +392,7 @@ def subtractRealMCFromFakeEstimateFromData(mc_tree,data_fake_photon,data_fake_le
 
         mc_tree.GetEntry(i)
 
-        if sample["tree"].photon_gen_matching > 0:
+        if bool(sample["tree"].photon_gen_matching & int('111',2)):
             pass_photon_gen_matching = True
         else:
             pass_photon_gen_matching = False
@@ -493,21 +490,26 @@ data = {}
 fake_photon = {}
 fake_lepton = {}
 double_fake = {}
+electron_to_photon = {}
 
 data["hists"] = {}
 fake_photon["hists"] = {}
 fake_lepton["hists"] = {}
 double_fake["hists"] = {}
+electron_to_photon["hists"] = {}
+
 
 for variable in variables:
     data["hists"][variable] = histogram_templates[variable].Clone("data " + variable)
     fake_photon["hists"][variable] = histogram_templates[variable].Clone("fake photon " + variable)
     fake_lepton["hists"][variable] = histogram_templates[variable].Clone("fake electron " + variable)
     double_fake["hists"][variable] = histogram_templates[variable].Clone("double fake " + variable)
+    electron_to_photon["hists"][variable] = histogram_templates[variable].Clone("electron to photon " + variable)
     data["hists"][variable].Sumw2()
     fake_photon["hists"][variable].Sumw2()
     fake_lepton["hists"][variable].Sumw2()
     double_fake["hists"][variable].Sumw2()
+    electron_to_photon["hists"][variable].Sumw2()
 
 data_events_tree = data_file.Get("Events")
 
@@ -515,7 +517,7 @@ c1 = ROOT.TCanvas("c1", "c1",5,50,500,500);
 
 ROOT.gROOT.cd()
 
-def fillHistogramMC(sample,histograms):
+def fillHistogramMC(sample,histograms,e_to_p_histograms):
 
     for i in range(sample["tree"].GetEntries()):
 
@@ -524,11 +526,6 @@ def fillHistogramMC(sample,histograms):
         if not pass_selection(sample["tree"]):
             continue
 
-        if sample["tree"].photon_gen_matching > 0:
-            pass_photon_gen_matching = True
-        else:
-            pass_photon_gen_matching = False
-
         if sample["tree"].is_lepton_real == '\x01':
             pass_is_lepton_real = True
         else:
@@ -536,8 +533,6 @@ def fillHistogramMC(sample,histograms):
 
         weight = sample["xs"]*1000*36.15/sample["nweightedevents"]
 
-        weight *= pu_weight_hist.GetBinContent(pu_weight_hist.FindFixBin(sample["tree"].npu))
-        
         weight *= eff_scale_factor.photon_efficiency_scale_factor(sample["tree"].photon_pt,sample["tree"].photon_eta)
          
         if lepton_abs_pdg_id == 11:
@@ -547,14 +542,20 @@ def fillHistogramMC(sample,histograms):
         else:
             assert(0)
 
+        weight *= pu_weight_hist.GetBinContent(pu_weight_hist.FindFixBin(sample["tree"].npu))
+
         if sample["tree"].gen_weight < 0:
             weight = -weight
 
-        if pass_photon_gen_matching and pass_is_lepton_real:
+        if pass_is_lepton_real:
 #            print str(sample["tree"].run) + " " + str(sample["tree"].lumi) + " " + str(sample["tree"].event)+ " " + str(weight)+ " " +str(sample["tree"].lepton_pt)+ " " +str(sample["tree"].lepton_eta)+ " "+str(sample["tree"].lepton_phi)+ " "+ str(sample["tree"].photon_pt)+ " " + str(str(sample["tree"].photon_eta))+ " " + str(str(sample["tree"].photon_phi))
 
-            for variable in variables:
-                histograms[variable].Fill(getVariable(variable,sample["tree"]),weight)
+            if bool(sample["tree"].photon_gen_matching & int('100',2)):
+                for variable in variables:
+                    histograms[variable].Fill(getVariable(variable,sample["tree"]),weight)
+            elif bool(sample["tree"].photon_gen_matching & int('010',2)):     
+                for variable in variables:
+                    e_to_p_histograms[variable].Fill(getVariable(variable,sample["tree"]),weight)
 
     if len(variables) > 0:        
         histograms[variables[0]].Print("all")
@@ -597,7 +598,7 @@ for i in range(data_events_tree.GetEntries()):
 for label in labels.keys():
 
     for sample in labels[label]["samples"]:
-        fillHistogramMC(sample,labels[label]["hists"])
+        fillHistogramMC(sample,labels[label]["hists"],electron_to_photon["hists"])
         if data_driven:
             subtractRealMCFromFakeEstimateFromData(sample["tree"],fake_photon,fake_lepton,sample["xs"],sample["nweightedevents"])
         
@@ -619,14 +620,18 @@ for variable in variables:
     fake_photon["hists"][variable].SetFillColor(ROOT.kGray+1)
     fake_lepton["hists"][variable].SetFillColor(ROOT.kAzure-1)
     double_fake["hists"][variable].SetFillColor(ROOT.kMagenta)
+    electron_to_photon["hists"][variable].SetFillColor(ROOT.kYellow)
 
     fake_photon["hists"][variable].SetLineColor(ROOT.kGray+1)
     fake_lepton["hists"][variable].SetLineColor(ROOT.kAzure-1)
     double_fake["hists"][variable].SetLineColor(ROOT.kMagenta)
+    electron_to_photon["hists"][variable].SetLineColor(ROOT.kYellow)
 
     fake_photon["hists"][variable].SetFillStyle(1001)
     fake_lepton["hists"][variable].SetFillStyle(1001)
     double_fake["hists"][variable].SetFillStyle(1001)
+    electron_to_photon["hists"][variable].SetFillStyle(1001)
+    
 
     s=str(options.lumi)+" fb^{-1} (13 TeV)"
     lumilabel = ROOT.TLatex (0.95, 0.93, s)
@@ -641,16 +646,18 @@ for variable in variables:
 
     hstack = ROOT.THStack()
 
+    
     for label in labels.keys():
         hsum.Add(labels[label]["hists"][variable])
         hstack.Add(labels[label]["hists"][variable])
 
+    hsum.Add(electron_to_photon["hists"][variable])
+    hstack.Add(electron_to_photon["hists"][variable])
+        
     if data_driven:
         hsum.Add(fake_lepton["hists"][variable])
         hsum.Add(fake_photon["hists"][variable])
         hsum.Add(double_fake["hists"][variable])
-
-    if data_driven:
         hstack.Add(fake_lepton["hists"][variable])
         hstack.Add(fake_photon["hists"][variable])
         hstack.Add(double_fake["hists"][variable])
@@ -690,6 +697,8 @@ for variable in variables:
 
     j=0
     draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,data["hists"][variable],"data","lp")
+    j=j+1
+    draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,electron_to_photon["hists"][variable],"e->g","f")
     if data_driven :
         j=j+1
         if lepton_name == "muon":
@@ -736,3 +745,4 @@ for variable in variables:
     c1.Modified()
 
     c1.SaveAs(options.outputdir + "/" + variable + ".png")
+
