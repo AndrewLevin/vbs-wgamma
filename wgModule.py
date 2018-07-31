@@ -194,6 +194,53 @@ class exampleProducer(Module):
         if len(tight_photons) == 0:
             return False
 
+        njets = 0
+
+        for i in range(0,len(jets)):
+
+            if jets[i].pt < 40:
+                continue
+
+            if abs(jets[i].eta) > 4.7:
+                continue
+
+            if not jets[i].jetId & (1 << 0):
+                continue
+
+            if deltaR(photons[tight_photons[0]].eta,photons[tight_photons[0]].phi,jets[i].eta,jets[i].phi) < 0.5:
+                continue
+
+            pass_lepton_dr_cut = True
+
+            for j in range(0,len(tight_muons)):
+
+                if deltaR(muons[tight_muons[j]].eta,muons[tight_muons[j]].phi,jets[i].eta,jets[i].phi) < 0.5:
+                    pass_lepton_dr_cut = False
+
+            for j in range(0,len(tight_electrons)):
+
+                if deltaR(electrons[tight_electrons[j]].eta,electrons[tight_electrons[j]].phi,jets[i].eta,jets[i].phi) < 0.5:
+
+                    pass_lepton_dr_cut = False
+
+            for j in range(0,len(loose_but_not_tight_muons)):
+
+                if deltaR(muons[loose_but_not_tight_muons[j]].eta,muons[loose_but_not_tight_muons[j]].phi,jets[i].eta,jets[i].phi) < 0.5:
+
+                    pass_lepton_dr_cut = False
+
+            for j in range(0,len(loose_but_not_tight_electrons)):
+
+                if deltaR(electrons[loose_but_not_tight_electrons[j]].eta,electrons[loose_but_not_tight_electrons[j]].phi,jets[i].eta,jets[i].phi) < 0.5:
+
+                     pass_lepton_dr_cut = False
+
+            if not pass_lepton_dr_cut:
+                continue
+
+            njets+=1
+
+
         if photons[tight_photons[0]].pt/photons[tight_photons[0]].eCorr < 20:
             return False
 
@@ -509,17 +556,20 @@ class exampleProducer(Module):
 
         try:
 
-            found_electron = False
+            for i in range(0,len(genparts)):
+                if genparts[i].pt > 5 and (abs(genparts[i].pdgId) == 13) and ((genparts[i].statusFlags & isprompt_mask == isprompt_mask) or (genparts[i].statusFlags & isprompttaudecayproduct_mask == isprompttaudecayproduct_mask)) and deltaR(photons[tight_photons[0]].eta,photons[tight_photons[0]].phi,genparts[i].eta,genparts[i].phi) < 0.3:
+                    photon_gen_matching += 1
+                    break
 
             for i in range(0,len(genparts)):
                 if genparts[i].pt > 5 and (abs(genparts[i].pdgId) == 11) and ((genparts[i].statusFlags & isprompt_mask == isprompt_mask) or (genparts[i].statusFlags & isprompttaudecayproduct_mask == isprompttaudecayproduct_mask)) and deltaR(photons[tight_photons[0]].eta,photons[tight_photons[0]].phi,genparts[i].eta,genparts[i].phi) < 0.3:
-                    photon_gen_matching = 2
-
-            if photon_gen_matching == 0:        
-
-                for i in range(0,len(genparts)):
-                    if genparts[i].pt > 5 and (genparts[i].pdgId == 22) and ((genparts[i].statusFlags & isprompt_mask == isprompt_mask) or (genparts[i].statusFlags & isprompttaudecayproduct_mask == isprompttaudecayproduct_mask)) and deltaR(photons[tight_photons[0]].eta,photons[tight_photons[0]].phi,genparts[i].eta,genparts[i].phi) < 0.3:
-                        photon_gen_matching = 1
+                    photon_gen_matching += 2
+                    break
+                    
+            for i in range(0,len(genparts)):
+                if genparts[i].pt > 5 and (genparts[i].pdgId == 22) and ((genparts[i].statusFlags & isprompt_mask == isprompt_mask) or (genparts[i].statusFlags & isprompttaudecayproduct_mask == isprompttaudecayproduct_mask)) and deltaR(photons[tight_photons[0]].eta,photons[tight_photons[0]].phi,genparts[i].eta,genparts[i].phi) < 0.3:
+                    photon_gen_matching += 4
+                    break
 
         except:
             pass
@@ -541,7 +591,7 @@ class exampleProducer(Module):
         except:
             pass
 
-        self.out.fillBranch("njets",event.nJet)
+        self.out.fillBranch("njets",njets)
         self.out.fillBranch("npvs",event.PV_npvs)
         self.out.fillBranch("event",event.event)
         self.out.fillBranch("lumi",event.luminosityBlock)
