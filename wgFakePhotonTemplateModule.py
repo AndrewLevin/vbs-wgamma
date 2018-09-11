@@ -94,7 +94,10 @@ class exampleProducer(Module):
             if not (mask & photons[i].vidNestedWPBitmap == mask):
                 continue
 
-            if not photons[i].electronVeto:
+#            if not photons[i].electronVeto:
+#                continue
+
+            if photons[i].pixelSeed:
                 continue
 
             #if photons[i].pfRelIso03_chg > 10 or not (photons[i].pfRelIso03_chg > 4 or photons[i].sieie > 0.01031):

@@ -69,7 +69,7 @@ class exampleProducer(Module):
 
         for i in range(0,len(muons)):
 
-            if muons[i].pt < 30:
+            if muons[i].pt < 20:
                 continue
 
             if abs(muons[i].eta) > 2.4:
@@ -83,7 +83,7 @@ class exampleProducer(Module):
 
         for i in range (0,len(electrons)):
 
-            if electrons[i].pt/electrons[i].eCorr < 30:
+            if electrons[i].pt/electrons[i].eCorr < 20:
                 continue
             
             if abs(electrons[i].eta+electrons[i].deltaEtaSC) > 2.5:
@@ -112,7 +112,10 @@ class exampleProducer(Module):
             #if mask & photons[i].vidNestedWPBitmap == mask:
             #    continue
 
-            if not photons[i].electronVeto:
+#            if not photons[i].electronVeto:
+#                continue
+
+            if photons[i].pixelSeed:
                 continue
 
             #if photons[i].pfRelIso03_chg > 10 or not (photons[i].pfRelIso03_chg > 4 or photons[i].sieie > 0.01031):
@@ -151,6 +154,9 @@ class exampleProducer(Module):
         #if not (event.HLT_Mu17_TrkIsoVVL):
                 return False
             
+            if muons[tight_muons[0]].pt < 30:
+                return False
+
             self.out.fillBranch("lepton_pdg_id",13)
 
             #if sqrt(2*muons[tight_muons[0]].pt*event.MET_pt*(1 - cos(event.MET_phi - muons[tight_muons[0]].phi))) < 30:
@@ -159,6 +165,9 @@ class exampleProducer(Module):
         elif len(tight_electrons) == 1:
 
             if not event.HLT_Ele27_WPTight_Gsf:
+                return False
+
+            if electrons[tight_electrons[0]].pt/electrons[tight_electrons[0]].eCorr < 30:
                 return False
 
             if abs((electrons[tight_electrons[0]].p4() + photons[selected_photons[0]].p4()).M() - 91.2) < 10:

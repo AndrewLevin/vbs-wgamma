@@ -49,6 +49,7 @@ keep Photon_phi
 keep Photon_mass
 keep Photon_cutBased
 keep Photon_electronVeto
+keep Photon_pixelSeed
 keep Photon_eCorr
 keep Photon_pfRelIso03_chg
 keep Photon_sieie

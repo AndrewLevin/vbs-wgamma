@@ -126,7 +126,10 @@ class exampleProducer(Module):
             #if photons[i].cutBased == 0 or photons[i].cutBased == 1:
             #    continue
 
-            if not photons[i].electronVeto:
+#            if not photons[i].electronVeto:
+#                continue
+
+            if photons[i].pixelSeed:
                 continue
 
             pass_lepton_dr_cut = True
@@ -173,7 +176,10 @@ class exampleProducer(Module):
             #if photons[i].cutBased == 0 or photons[i].cutBased == 1:
             #    continue
 
-            if not photons[i].electronVeto:
+#            if not photons[i].electronVeto:
+#                continue
+
+            if photons[i].pixelSeed:
                 continue
 
             pass_lepton_dr_cut = True
@@ -254,7 +260,10 @@ class exampleProducer(Module):
         #if photons[tight_photons[0]].cutBased == 0 or photons[tight_photons[0]].cutBased == 1:
         #    return False
 
-        if not photons[tight_photons[0]].electronVeto:
+#        if not photons[tight_photons[0]].electronVeto:
+#            return False
+
+        if photons[tight_photons[0]].pixelSeed:
             return False
 
         #if event.MET_pt < 35:

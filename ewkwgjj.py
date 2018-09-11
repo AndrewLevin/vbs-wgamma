@@ -239,8 +239,8 @@ ypositions = [0,1,2,3,0,1,2,3,4]
 
 style.GoodStyle().cd()
 
-muon_fr_file = ROOT.TFile("/afs/cern.ch/user/a/amlevin/vbs-wgamma/muon_frs.root")
-electron_fr_file = ROOT.TFile("/afs/cern.ch/user/a/amlevin/vbs-wgamma/electron_frs.root")
+muon_fr_file = ROOT.TFile("/afs/cern.ch/user/a/amlevin/wg/muon_frs.root")
+electron_fr_file = ROOT.TFile("/afs/cern.ch/user/a/amlevin/wg/electron_frs.root")
 
 muon_fr_hist=muon_fr_file.Get("muon_frs")
 electron_fr_hist=electron_fr_file.Get("electron_frs")

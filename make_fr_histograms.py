@@ -99,6 +99,8 @@ if options.finmuonmcname1 != None:
     gROOT.cd()
 
     muon_mc_tree1=finmuonmc1.Get("Events")
+    muon_mc_n_weighted_event_hist1=finmuonmc1.Get("nWeightedEvents")
+    muon_mc_n_weighted_events1=muon_mc_n_weighted_event_hist1.GetBinContent(1)
 
     for entry in range(muon_mc_tree1.GetEntries()):
         muon_mc_tree1.GetEntry(entry)
@@ -110,7 +112,7 @@ if options.finmuonmcname1 != None:
             continue
 
         #weight = (4963.0*1000/1917073)*mu17_lumi
-        weight = (60430.0*1000/21315325)*mu17_lumi
+        weight = (60430.0*1000/muon_mc_n_weighted_events1)*mu17_lumi
 
         if muon_mc_tree1.gen_weight < 0:
             weight = -weight         
@@ -140,6 +142,8 @@ if options.finmuonmcname2 != None:
     gROOT.cd()
 
     muon_mc_tree2=finmuonmc2.Get("Events")
+    muon_mc_n_weighted_event_hist2=finmuonmc2.Get("nWeightedEvents")
+    muon_mc_n_weighted_events2=muon_mc_n_weighted_event_hist2.GetBinContent(1)
 
     for entry in range(muon_mc_tree2.GetEntries()):
         muon_mc_tree2.GetEntry(entry)
@@ -150,7 +154,7 @@ if options.finmuonmcname2 != None:
         if entry % int(options.mod) != 0:
             continue
 
-        weight = (4963.0*1000/48664884)*mu17_lumi
+        weight = (4963.0*1000/muon_mc_n_weighted_events2)*mu17_lumi
         #weight = (60430.0*1000/21315325)*mu17_lumi
 
         if muon_mc_tree2.gen_weight < 0:
@@ -230,6 +234,8 @@ if options.finelectronmcname1 != None:
     gROOT.cd()
 
     electron_mc_tree1=finelectronmc1.Get("Events")
+    electron_mc_n_weighted_event_hist1=finelectronmc1.Get("nWeightedEvents")
+    electron_mc_n_weighted_events1=electron_mc_n_weighted_event_hist1.GetBinContent(1)
 
     for entry in range(electron_mc_tree1.GetEntries()):
         electron_mc_tree1.GetEntry(entry)
@@ -243,7 +249,7 @@ if options.finelectronmcname1 != None:
         if electron_mc_tree1.gen_weight < 0:
             weight = -weight         
 
-        weight = (60430.0*1000/21315325)*35.9
+        weight = (60430.0*1000/electron_mc_n_weighted_events1)*35.9
 
         if electron_mc_tree1.gen_weight < 0:
             weight = -weight         
@@ -268,6 +274,8 @@ if options.finelectronmcname2 != None:
     gROOT.cd()
 
     electron_mc_tree2=finelectronmc2.Get("Events")
+    electron_mc_n_weighted_event_hist2=finelectronmc2.Get("nWeightedEvents")
+    electron_mc_n_weighted_events2=electron_mc_n_weighted_event_hist2.GetBinContent(1)
 
     for entry in range(electron_mc_tree2.GetEntries()):
         electron_mc_tree2.GetEntry(entry)
@@ -281,7 +289,7 @@ if options.finelectronmcname2 != None:
         if electron_mc_tree2.gen_weight < 0:
             weight = -weight         
 
-        weight = (4963.0*1000/48664884)*35.9
+        weight = (4963.0*1000/electron_mc_n_weighted_events2)*35.9
 
         if electron_mc_tree2.gen_weight < 0:
             weight = -weight         

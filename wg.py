@@ -1,4 +1,4 @@
-data_driven = True
+data_driven = False
 
 import json
 
@@ -84,13 +84,13 @@ pu_weight_hist = f_pu_weights.Get("ratio")
 
 #labels = { "z+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/zjets.root", "xs" : 6025.2 }] }, "tt+jets" : {"color" : ROOT.kGreen+2, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/ttjets.root", "xs" : 831.76 } ] }, "wg+jets" : {"color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/wgjets.root", "xs" : 178.6}] } } 
 
-labels = { "z+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/zjets.root", "xs" : 6025.2 }] }, "tt+jets" : {"color" : ROOT.kGreen+2, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/ttjets.root", "xs" : 831.76 } ] }, "w+jets" : {"color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/wjets.root", "xs" : 60430.0}] } } 
+#labels = { "z+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/zjets.root", "xs" : 6025.2 }] }, "tt+jets" : {"color" : ROOT.kGreen+2, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/ttjets.root", "xs" : 831.76 } ] }, "w+jets" : {"color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/wjets.root", "xs" : 60430.0}] } } 
 
 #labels = { "z+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/zjets.root.bak", "xs" : 6025.2 }] }, "tt+jets" : {"color" : ROOT.kGreen+2, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/ttjets.root.bak", "xs" : 831.76 } ] }, "w+jets" : {"color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/wjets.root.bak", "xs" : 60430.0}] } } 
 
 #labels = { "z+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/zjets.root", "xs" : 4963.0 }] } } 
 
-#labels = { "wg+jets" : {"color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/wgjets.root", "xs" : 178.6}] } } 
+labels = { "wg+jets" : {"color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/wgjets.root", "xs" : 178.6}] } } 
 
 #labels = { "w+jets" : {"color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/wjets.root", "xs" : 60430.0}] } } 
 
@@ -225,7 +225,8 @@ def pass_selection(tree, fake_lepton = False , fake_photon = False):
         else:
             pass_lepton_selection = False
             
-    if tree.photon_pt > 25 and tree.photon_pt < 700:
+#    if tree.photon_pt > 25 and tree.photon_pt < 700:
+    if tree.photon_pt > 25 and tree.photon_pt < 40:
         pass_photon_pt =True
     else:
         pass_photon_pt = False
@@ -250,8 +251,8 @@ ypositions = [0,1,2,3,0,1,2,3,4]
 
 style.GoodStyle().cd()
 
-muon_fr_file = ROOT.TFile("/afs/cern.ch/user/a/amlevin/vbs-wgamma/muon_frs.root")
-electron_fr_file = ROOT.TFile("/afs/cern.ch/user/a/amlevin/vbs-wgamma/electron_frs.root")
+muon_fr_file = ROOT.TFile("/afs/cern.ch/user/a/amlevin/wg/muon_frs.root")
+electron_fr_file = ROOT.TFile("/afs/cern.ch/user/a/amlevin/wg/electron_frs.root")
 
 muon_fr_hist=muon_fr_file.Get("muon_frs")
 electron_fr_hist=electron_fr_file.Get("electron_frs")
@@ -539,7 +540,6 @@ def fillHistogramMC(sample,histograms,e_to_p_histograms):
         if not pass_selection(sample["tree"]):
             continue
 
-
         if sample["tree"].is_lepton_real == '\x01':
             pass_is_lepton_real = True
         else:
@@ -558,8 +558,6 @@ def fillHistogramMC(sample,histograms,e_to_p_histograms):
         else:
             assert(0)
 
-
-
         if sample["tree"].gen_weight < 0:
             weight = -weight
 
@@ -572,8 +570,7 @@ def fillHistogramMC(sample,histograms,e_to_p_histograms):
                 for variable in variables:
                     e_to_p_histograms[variable].Fill(getVariable(variable,sample["tree"]),weight)
 
-
-    if len(variables) > 0:        
+    if len(variables) > 0:
         histograms[variables[0]].Print("all")
 
 for i in range(data_events_tree.GetEntries()):

@@ -102,7 +102,10 @@ class exampleProducer(Module):
             #if abs(photons[i].eta) < 1.4442:
             #    print photons[i].pfRelIso03_chg*photons[i].pt/photons[i].eCorr
 
-            if not photons[i].electronVeto:
+#            if not photons[i].electronVeto:
+#                continue
+
+            if photons[i].pixelSeed:
                 continue
 
             #if photons[i].pfRelIso03_chg > 10 or not (photons[i].pfRelIso03_chg > 4 or photons[i].sieie > 0.01031):

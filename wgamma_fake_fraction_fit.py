@@ -36,11 +36,11 @@ photon_pt_range_cutstrings = ["photon_pt > 25 && photon_pt < 30","photon_pt > 30
 
 index = 0
 
-muon_total_sieie_for_fake_photon_fraction_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wgamma_single_muon_fake_photon.root") 
-muon_fake_photon_template_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wgamma_single_muon_fake_photon_template.root")
-electron_total_sieie_for_fake_photon_fraction_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wgamma_single_electron_fake_photon.root") 
-electron_fake_photon_template_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wgamma_single_electron_fake_photon_template.root")
-real_photon_template_file = ROOT.TFile.Open("/afs/cern.ch/user/a/amlevin/vbs-wgamma/wgamma_real_photon_template.root")
+muon_total_sieie_for_fake_photon_fraction_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/single_muon_fake_photon.root") 
+muon_fake_photon_template_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/single_muon_fake_photon_template.root")
+electron_total_sieie_for_fake_photon_fraction_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/single_electron_fake_photon.root") 
+electron_fake_photon_template_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/single_electron_fake_photon_template.root")
+real_photon_template_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/real_photon_template.root")
 
 created_muon_fitter = False
 created_electron_fitter = False
