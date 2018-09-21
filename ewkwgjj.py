@@ -66,9 +66,19 @@ f_pu_weights = ROOT.TFile("/afs/cern.ch/user/a/amlevin/PileupWeights2016.root")
 
 pu_weight_hist = f_pu_weights.Get("ratio")
 
+#labels = { "wg+jets" : {"color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/wgjets.root", "xs" : 178.6, "e_to_p_only" : False } ] }, "zg+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/zgjets.root", "xs" : 47.46, "e_to_p_only" : False } ] }, "e to p" : {"color" : None, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/zjets.root", "xs" : 4963.0, "e_to_p_only" : True }, {'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/tt2l2nujets.root', 'xs' : 88.28, "e_to_p_only" : True } ] }, "ttg+jets" : {"color" : ROOT.kGreen+2, "samples" : [ {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/ttgjets.root", "xs" : 3.795, "e_to_p_only" : False  } ] } }
+
+labels = { "wg+jets" : {"color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/ewkwgjj/wgjets.root", "xs" : 178.6, "e_to_p_only" : False } ] }, "zg+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/ewkwgjj/zgjets.root", "xs" : 47.46, "e_to_p_only" : False } ] }, "e to p" : {"color" : None, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/ewkwgjj/zjets.root", "xs" : 4963.0, "e_to_p_only" : True }, {'filename':  '/afs/cern.ch/work/a/amlevin/data/ewkwgjj/tt2l2nujets.root', 'xs' : 88.28, "e_to_p_only" : True } ] }, "ttg+jets" : {"color" : ROOT.kGreen+2, "samples" : [ {"filename" : "/afs/cern.ch/work/a/amlevin/data/ewkwgjj/ttgjets.root", "xs" : 3.795, "e_to_p_only" : False  } ] } }
+
+#labels = { "wg+jets" : {"color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/ewkwgjj/wgjets.root", "xs" : 178.6, "e_to_p_only" : False } ] }, "zg+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/ewkwgjj/zgjets.root", "xs" : 47.46, "e_to_p_only" : False } ] }, "ttg+jets" : {"color" : ROOT.kGreen+2, "samples" : [ {"filename" : "/afs/cern.ch/work/a/amlevin/data/ewkwgjj/ttgjets.root", "xs" : 3.795, "e_to_p_only" : False  } ] } }
+
+#labels = { "wg+jets" : {"color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/ewkwgjj/wgjets.root", "xs" : 178.6, "e_to_p_only" : False } ] } }
+
 #labels = { "z+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_z1j_m50.root", "xs" : 1012.296845 },{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_z2j_m50.root", "xs" : 334.717838},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_z3j_m50.root", "xs" : 102.462800},{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_z4j_m50.root", "xs" : 54.481360}] }, "tt+jets" : {"color" : ROOT.kGreen+2, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wgamma_ttjets.root", "xs" : 831.76 } ] }, "w+jets" : {"color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wgamma_wjets.root", "xs" : 60430.0}] } } 
 
-labels = { "z+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/ewkwgjj/zjets.root", "xs" : 6025.2 }] }, "tt+jets" : {"color" : ROOT.kGreen+2, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/ewkwgjj/ttjets.root", "xs" : 831.76 } ] }, "w+jets" : {"color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/ewkwgjj/wjets.root", "xs" : 60430.0}] } } 
+#labels = {}
+
+#labels = { "z+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/ewkwgjj/zjets.root", "xs" : 6025.2 }] }, "tt+jets" : {"color" : ROOT.kGreen+2, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/ewkwgjj/ttjets.root", "xs" : 831.76 } ] }, "w+jets" : {"color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/ewkwgjj/wjets.root", "xs" : 60430.0}] } } 
 
 #labels ={ "w+jets" : {"color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wgamma_wjets.root", "xs" : 60430.0}] } }
 
@@ -169,14 +179,14 @@ def pass_selection(tree, fake_lepton = False , fake_photon = False):
     else:
         pass_mlg = True
 
-#    if tree.met > 35:
-    if tree.met > 0:
+    if tree.met > 35:
+#    if tree.met > 0:
         pass_met = True
     else:
         pass_met = False
 
-#    if tree.mt > 30:
-    if tree.mt > 0:
+    if tree.mt > 30:
+#    if tree.mt > 0:
         pass_mt = True
     else:
         pass_mt = False
@@ -188,6 +198,7 @@ def pass_selection(tree, fake_lepton = False , fake_photon = False):
         pass_mjj = False
 
     if tree.btagging_selection == btagging_selection:
+
         pass_btagging_selection = True
     else:
         pass_btagging_selection = False
@@ -218,7 +229,6 @@ def pass_selection(tree, fake_lepton = False , fake_photon = False):
         pass_photon_pt =True
     else:
         pass_photon_pt = False
-
 
     if pass_photon_pt and pass_lepton_selection and pass_photon_selection and pass_mlg and pass_photon_eta and pass_lepton_flavor and pass_mjj and pass_btagging_selection and pass_met and pass_mt:
         return True
@@ -402,7 +412,15 @@ def subtractRealMCFromFakeEstimateFromData(mc_tree,data_fake_photon,data_fake_le
         else:
             pass_is_lepton_real = False
 
-        if not pass_photon_gen_matching or not pass_is_lepton_real:
+        if sample["e_to_p_only"]:
+            if bool(sample["tree"].photon_gen_matching & int('010',2)):
+                pass_e_to_p_only = True
+            else:
+                pass_e_to_p_only = False
+        else:
+            pass_e_to_p_only = True
+
+        if not pass_photon_gen_matching or not pass_is_lepton_real or not pass_e_to_p_only:
             continue
 
         if pass_selection(mc_tree,True,False):
@@ -465,9 +483,9 @@ def draw_legend(x1,y1,hist,label,options):
     hist.label = legend
 
 if lepton_name == "muon":
-    data_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wgamma_single_muon.root")
+    data_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/ewkwgjj/single_muon.root")
 elif lepton_name == "electron":
-    data_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wgamma_single_electron.root")
+    data_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/ewkwgjj/single_electron.root")
 else:
     assert(0)
 
@@ -476,6 +494,10 @@ for label in labels.keys():
     labels[label]["hists"] = {}
 
     for variable in variables:
+
+        if labels[label]["color"] == None:
+            continue
+
         labels[label]["hists"][variable] = histogram_templates[variable].Clone(label + " " + variable)
         labels[label]["hists"][variable].Sumw2()
 
@@ -550,14 +572,14 @@ def fillHistogramMC(sample,histograms,e_to_p_histograms):
         if pass_is_lepton_real:
 #            print str(sample["tree"].run) + " " + str(sample["tree"].lumi) + " " + str(sample["tree"].event)+ " " + str(weight)+ " " +str(sample["tree"].lepton_pt)+ " " +str(sample["tree"].lepton_eta)+ " "+str(sample["tree"].lepton_phi)+ " "+ str(sample["tree"].photon_pt)+ " " + str(str(sample["tree"].photon_eta))+ " " + str(str(sample["tree"].photon_phi))
 
-            if bool(sample["tree"].photon_gen_matching & int('100',2)):
+            if bool(sample["tree"].photon_gen_matching & int('100',2)) and not sample["e_to_p_only"]:
                 for variable in variables:
                     histograms[variable].Fill(getVariable(variable,sample["tree"]),weight)
             elif bool(sample["tree"].photon_gen_matching & int('010',2)):     
                 for variable in variables:
                     e_to_p_histograms[variable].Fill(getVariable(variable,sample["tree"]),weight)
 
-    if len(variables) > 0:        
+    if len(variables) > 0  and not sample["e_to_p_only"]:        
         histograms[variables[0]].Print("all")
 
 for i in range(data_events_tree.GetEntries()):
@@ -599,10 +621,14 @@ for label in labels.keys():
 
     for sample in labels[label]["samples"]:
         fillHistogramMC(sample,labels[label]["hists"],electron_to_photon["hists"])
-        if data_driven:
+        if data_driven and not sample["e_to_p_only"]:
             subtractRealMCFromFakeEstimateFromData(sample["tree"],fake_photon,fake_lepton,sample["xs"],sample["nweightedevents"])
         
     for variable in variables:    
+
+        if labels[label]["color"] == None:
+            continue
+        
         labels[label]["hists"][variable].SetFillColor(labels[label]["color"])
         labels[label]["hists"][variable].SetFillStyle(1001)
         labels[label]["hists"][variable].SetLineColor(labels[label]["color"])
@@ -648,12 +674,13 @@ for variable in variables:
 
     
     for label in labels.keys():
+
+        if labels[label]["color"] == None:
+            continue
+
         hsum.Add(labels[label]["hists"][variable])
         hstack.Add(labels[label]["hists"][variable])
 
-    hsum.Add(electron_to_photon["hists"][variable])
-    hstack.Add(electron_to_photon["hists"][variable])
-        
     if data_driven:
         hsum.Add(fake_lepton["hists"][variable])
         hsum.Add(fake_photon["hists"][variable])
@@ -662,6 +689,8 @@ for variable in variables:
         hstack.Add(fake_photon["hists"][variable])
         hstack.Add(double_fake["hists"][variable])
 
+    hsum.Add(electron_to_photon["hists"][variable])
+    hstack.Add(electron_to_photon["hists"][variable])
 
     if data["hists"][variable].GetMaximum() < hsum.GetMaximum():
         data["hists"][variable].SetMaximum(hsum.GetMaximum()*1.55)
@@ -697,8 +726,6 @@ for variable in variables:
 
     j=0
     draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,data["hists"][variable],"data","lp")
-    j=j+1
-    draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,electron_to_photon["hists"][variable],"e->g","f")
     if data_driven :
         j=j+1
         if lepton_name == "muon":
@@ -712,7 +739,12 @@ for variable in variables:
         j=j+1
         draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,double_fake["hists"][variable],"double fake","f")
 
+    j=j+1
+    draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,electron_to_photon["hists"][variable],"e->g","f")
     for label in labels:
+        if labels[label]["color"] == None:
+            continue
+
         j=j+1    
         draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,labels[label]["hists"][variable],label,"f")
     
