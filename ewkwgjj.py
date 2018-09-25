@@ -68,7 +68,7 @@ pu_weight_hist = f_pu_weights.Get("ratio")
 
 #labels = { "wg+jets" : {"color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/wgjets.root", "xs" : 178.6, "e_to_p_only" : False } ] }, "zg+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/zgjets.root", "xs" : 47.46, "e_to_p_only" : False } ] }, "e to p" : {"color" : None, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/zjets.root", "xs" : 4963.0, "e_to_p_only" : True }, {'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/tt2l2nujets.root', 'xs' : 88.28, "e_to_p_only" : True } ] }, "ttg+jets" : {"color" : ROOT.kGreen+2, "samples" : [ {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/ttgjets.root", "xs" : 3.795, "e_to_p_only" : False  } ] } }
 
-labels = { "wg+jets" : {"color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/ewkwgjj/wgjets.root", "xs" : 178.6, "e_to_p_only" : False } ] }, "zg+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/ewkwgjj/zgjets.root", "xs" : 47.46, "e_to_p_only" : False } ] }, "e to p" : {"color" : None, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/ewkwgjj/zjets.root", "xs" : 4963.0, "e_to_p_only" : True }, {'filename':  '/afs/cern.ch/work/a/amlevin/data/ewkwgjj/tt2l2nujets.root', 'xs' : 88.28, "e_to_p_only" : True } ] }, "ttg+jets" : {"color" : ROOT.kGreen+2, "samples" : [ {"filename" : "/afs/cern.ch/work/a/amlevin/data/ewkwgjj/ttgjets.root", "xs" : 3.795, "e_to_p_only" : False  } ] } }
+labels = { "tt2l2nu+jets" : {"color" : ROOT.kRed, "samples" : [{'filename':  '/afs/cern.ch/work/a/amlevin/data/ewkwgjj/tt2l2nujets.root', 'xs' : 88.28, "non_fsr" : False , "e_to_p" : True, "fsr" : True } ] }, "ttsemi+jets" : {"color" : ROOT.kSpring, "samples" : [{'filename':  '/afs/cern.ch/work/a/amlevin/data/ewkwgjj/ttsemijets.root', 'xs' : 365.4, "non_fsr" : False , "e_to_p" : True, "fsr" : True } ] }, "wg+jets" : {"color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/ewkwgjj/wgjets.root", "xs" : 178.6, "non_fsr" : True , "e_to_p" : True, "fsr" : True } ] }, "zg+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/ewkwgjj/zgjets.root", "xs" : 47.46, "non_fsr" : True , "e_to_p" : True, "fsr" : True } ] }, "no label" : {"color" : None, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/ewkwgjj/zjets.root", "xs" : 4963.0, "non_fsr" : False , "e_to_p" : True, "fsr" : False  }] }, "ttg+jets" : {"color" : ROOT.kGreen+2, "samples" : [ {"filename" : "/afs/cern.ch/work/a/amlevin/data/ewkwgjj/ttgjets.root", "xs" : 3.795, "non_fsr" : True , "e_to_p" : True, "fsr" : True } ] } }
 
 #labels = { "wg+jets" : {"color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/ewkwgjj/wgjets.root", "xs" : 178.6, "e_to_p_only" : False } ] }, "zg+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/ewkwgjj/zgjets.root", "xs" : 47.46, "e_to_p_only" : False } ] }, "ttg+jets" : {"color" : ROOT.kGreen+2, "samples" : [ {"filename" : "/afs/cern.ch/work/a/amlevin/data/ewkwgjj/ttgjets.root", "xs" : 3.795, "e_to_p_only" : False  } ] } }
 
@@ -91,6 +91,58 @@ labels = { "wg+jets" : {"color": ROOT.kCyan, "samples" : [{"filename" : "/afs/ce
 variables = ["mjj","met","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","lepton_phi","photon_phi","njets","mt","npvs"]
 
 histogram_templates = { "mjj" : ROOT.TH1F("mjj","",18,200,2000), "met" : ROOT.TH1F("met", "", 15 , 0., 300 ), "lepton_pt" : ROOT.TH1F('lepton_pt', '', 8, 20., 180 ), "lepton_eta" : ROOT.TH1F('lepton_eta', '', 10, -2.5, 2.5 ), "photon_pt" : ROOT.TH1F('photon_pt', '', 8, 20., 180 ), "photon_eta" : ROOT.TH1F('photon_eta', '', 10, -2.5, 2.5 ), "mlg" : ROOT.TH1F("mlg","",20,0,200) , "lepton_phi" : ROOT.TH1F("lepton_phi","",14,-3.5,3.5), "photon_phi" : ROOT.TH1F("photon_phi","",14,-3.5,3.5), "njets" : ROOT.TH1F("njets","",21,-0.5,20.5), "mt" : ROOT.TH1F("mt","",20,0,200), "npvs" : ROOT.TH1F("npvs","",51,-0.5,50.5)} 
+
+def nnlo_scale_factor(photon_eta,photon_pt):
+    if abs(photon_eta) < 1.4442:
+        if photon_pt < 17.5:
+            return 1.147377962
+        elif photon_pt < 22.5:
+            return 1.178472286
+        elif photon_pt < 27.5:
+            return 1.189477952
+        elif photon_pt < 32.5:
+            return 1.201940155
+        elif photon_pt < 37.5:
+            return 1.207208243
+        elif photon_pt < 42.5:
+            return 1.223341402
+        elif photon_pt < 50:
+            return 1.236597991
+        elif photon_pt < 75:
+            return 1.251381290
+        elif photon_pt < 105:
+            return 1.276937808
+        elif photon_pt < 310:
+            return 1.313879553
+        elif photon_pt < 3500:
+            return 1.342758655
+        else:
+            return 1.342758655
+    else:
+        if photon_pt < 17.5:
+            return 1.162640195
+        elif photon_pt < 22.5:
+            return 1.177382848
+        elif photon_pt < 27.5:
+            return 1.184751650
+        elif photon_pt < 32.5:
+            return 1.199851869
+        elif photon_pt < 37.5:
+            return 1.211113026
+        elif photon_pt < 42.5:
+            return 1.224040300
+        elif photon_pt < 50:
+            return 1.216979438
+        elif photon_pt < 75:
+            return 1.238354632
+        elif photon_pt < 105:
+            return 1.272419215
+        elif photon_pt < 310:
+            return 1.305852580
+        elif photon_pt < 3500:
+            return 1.296100451
+        else:
+            return 1.296100451
 
 def getVariable(varname, tree):
     if varname == "mjj":
@@ -243,9 +295,9 @@ xoffset = 0.20;
 yoffset = 0.05;
 
 #xpositions = [0.60,0.60,0.60,0.60,0.60,0.60,0.40,0.40,0.40]
-xpositions = [0.65,0.65,0.65,0.65,0.45,0.45,0.45,0.45,0.45]
+xpositions = [0.65,0.65,0.65,0.65,0.45,0.45,0.45,0.45,0.25,0.25,0.25,0.25]
 #ypositions = [0,1,2,3,4,5,0,1,2]
-ypositions = [0,1,2,3,0,1,2,3,4]
+ypositions = [0,1,2,3,0,1,2,3,0,1,2,3]
 
 style.GoodStyle().cd()
 
@@ -412,15 +464,12 @@ def subtractRealMCFromFakeEstimateFromData(mc_tree,data_fake_photon,data_fake_le
         else:
             pass_is_lepton_real = False
 
-        if sample["e_to_p_only"]:
-            if bool(sample["tree"].photon_gen_matching & int('010',2)):
-                pass_e_to_p_only = True
-            else:
-                pass_e_to_p_only = False
+        if (bool(sample["tree"].photon_gen_matching & int('010',2)) and sample["e_to_p"]) or (bool(sample["tree"].photon_gen_matching & int('1000',2)) and sample["fsr"]) or (bool(sample["tree"].photon_gen_matching & int('0100',2)) and sample["non_fsr"]) :
+            pass_photon_gen_matching = True    
         else:
-            pass_e_to_p_only = True
+            pass_photon_gen_matching = False    
 
-        if not pass_photon_gen_matching or not pass_is_lepton_real or not pass_e_to_p_only:
+        if not pass_photon_gen_matching or not pass_is_lepton_real or not pass_photon_gen_matching:
             continue
 
         if pass_selection(mc_tree,True,False):
@@ -569,17 +618,26 @@ def fillHistogramMC(sample,histograms,e_to_p_histograms):
         if sample["tree"].gen_weight < 0:
             weight = -weight
 
+        if sample["filename"] == "/afs/cern.ch/work/a/amlevin/data/ewkwgjj/wgjets.root":
+            weight = weight * nnlo_scale_factor(sample["tree"].photon_pt,sample["tree"].photon_eta)
+
         if pass_is_lepton_real:
 #            print str(sample["tree"].run) + " " + str(sample["tree"].lumi) + " " + str(sample["tree"].event)+ " " + str(weight)+ " " +str(sample["tree"].lepton_pt)+ " " +str(sample["tree"].lepton_eta)+ " "+str(sample["tree"].lepton_phi)+ " "+ str(sample["tree"].photon_pt)+ " " + str(str(sample["tree"].photon_eta))+ " " + str(str(sample["tree"].photon_phi))
 
-            if bool(sample["tree"].photon_gen_matching & int('100',2)) and not sample["e_to_p_only"]:
-                for variable in variables:
-                    histograms[variable].Fill(getVariable(variable,sample["tree"]),weight)
-            elif bool(sample["tree"].photon_gen_matching & int('010',2)):     
-                for variable in variables:
-                    e_to_p_histograms[variable].Fill(getVariable(variable,sample["tree"]),weight)
-
-    if len(variables) > 0  and not sample["e_to_p_only"]:        
+            if bool(sample["tree"].photon_gen_matching & int('0010',2)):
+                if sample["e_to_p"]:
+                    for variable in variables:
+                        e_to_p_histograms[variable].Fill(getVariable(variable,sample["tree"]),weight)
+            elif bool(sample["tree"].photon_gen_matching & int('1000',2)):
+                if sample["fsr"]:
+                    for variable in variables:
+                        histograms[variable].Fill(getVariable(variable,sample["tree"]),weight)
+            elif bool(sample["tree"].photon_gen_matching & int('0100',2)):
+                if sample["non_fsr"]:
+                    for variable in variables:
+                        histograms[variable].Fill(getVariable(variable,sample["tree"]),weight)
+                        
+    if len(variables) > 0  and not (sample["e_to_p"] and not sample["fsr"] and not sample["non_fsr"]):        
         histograms[variables[0]].Print("all")
 
 for i in range(data_events_tree.GetEntries()):
@@ -621,7 +679,7 @@ for label in labels.keys():
 
     for sample in labels[label]["samples"]:
         fillHistogramMC(sample,labels[label]["hists"],electron_to_photon["hists"])
-        if data_driven and not sample["e_to_p_only"]:
+        if data_driven and (sample["fsr"] or sample["non_fsr"]):
             subtractRealMCFromFakeEstimateFromData(sample["tree"],fake_photon,fake_lepton,sample["xs"],sample["nweightedevents"])
         
     for variable in variables:    
@@ -724,7 +782,8 @@ for variable in variables:
 
 #wpwpjjewk.Draw("same")
 
-    j=0
+    j=-1
+    j=j+1    
     draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,data["hists"][variable],"data","lp")
     if data_driven :
         j=j+1
@@ -747,7 +806,7 @@ for variable in variables:
 
         j=j+1    
         draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,labels[label]["hists"][variable],label,"f")
-    
+
 
 #set_axis_fonts(hstack,"x","m_{ll} (GeV)")
 #set_axis_fonts(hstack,"x","|\Delta \eta_{jj}|")
