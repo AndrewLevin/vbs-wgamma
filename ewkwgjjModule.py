@@ -128,7 +128,10 @@ class exampleProducer(Module):
             #if photons[i].cutBased == 0 or photons[i].cutBased == 1:
             #    continue
 
-            if not photons[i].electronVeto:
+#            if not photons[i].electronVeto:
+#                continue
+
+            if photons[i].pixelSeed:
                 continue
 
             pass_lepton_dr_cut = True
@@ -175,7 +178,10 @@ class exampleProducer(Module):
             #if photons[i].cutBased == 0 or photons[i].cutBased == 1:
             #    continue
 
-            if not photons[i].electronVeto:
+#            if not photons[i].electronVeto:
+#                continue
+            
+            if photons[i].pixelSeed:
                 continue
 
             pass_lepton_dr_cut = True
@@ -315,7 +321,10 @@ class exampleProducer(Module):
         #if photons[tight_photons[0]].cutBased == 0 or photons[tight_photons[0]].cutBased == 1:
         #    return False
 
-        if not photons[tight_photons[0]].electronVeto:
+#        if not photons[tight_photons[0]].electronVeto:
+#            return False
+
+        if photons[tight_photons[0]].pixelSeed:
             return False
 
         #if event.MET_pt < 35:
@@ -628,18 +637,22 @@ class exampleProducer(Module):
         try:
 
             for i in range(0,len(genparts)):
-                if genparts[i].pt > 5 and (abs(genparts[i].pdgId) == 13) and ((genparts[i].statusFlags & isprompt_mask == isprompt_mask) or (genparts[i].statusFlags & isprompttaudecayproduct_mask == isprompttaudecayproduct_mask)) and deltaR(photons[tight_photons[0]].eta,photons[tight_photons[0]].phi,genparts[i].eta,genparts[i].phi) < 0.3:
+                if genparts[i].pt > 5 and abs(genparts[i].pdgId) == 13 and genparts[i].status == 1 and ((genparts[i].statusFlags & isprompt_mask == isprompt_mask) or (genparts[i].statusFlags & isprompttaudecayproduct_mask == isprompttaudecayproduct_mask)) and deltaR(photons[tight_photons[0]].eta,photons[tight_photons[0]].phi,genparts[i].eta,genparts[i].phi) < 0.3:
                     photon_gen_matching += 1
                     break
 
             for i in range(0,len(genparts)):
-                if genparts[i].pt > 5 and (abs(genparts[i].pdgId) == 11) and ((genparts[i].statusFlags & isprompt_mask == isprompt_mask) or (genparts[i].statusFlags & isprompttaudecayproduct_mask == isprompttaudecayproduct_mask)) and deltaR(photons[tight_photons[0]].eta,photons[tight_photons[0]].phi,genparts[i].eta,genparts[i].phi) < 0.3:
+                if genparts[i].pt > 5 and abs(genparts[i].pdgId) == 11 and genparts[i].status == 1 and ((genparts[i].statusFlags & isprompt_mask == isprompt_mask) or (genparts[i].statusFlags & isprompttaudecayproduct_mask == isprompttaudecayproduct_mask)) and deltaR(photons[tight_photons[0]].eta,photons[tight_photons[0]].phi,genparts[i].eta,genparts[i].phi) < 0.3:
                     photon_gen_matching += 2
                     break
 
             for i in range(0,len(genparts)):
-                if genparts[i].pt > 5 and (genparts[i].pdgId == 22) and ((genparts[i].statusFlags & isprompt_mask == isprompt_mask) or (genparts[i].statusFlags & isprompttaudecayproduct_mask == isprompttaudecayproduct_mask)) and deltaR(photons[tight_photons[0]].eta,photons[tight_photons[0]].phi,genparts[i].eta,genparts[i].phi) < 0.3:
-                    photon_gen_matching += 4
+                if genparts[i].pt > 5 and genparts[i].pdgId == 22 and genparts[i].status == 1 and ((genparts[i].statusFlags & isprompt_mask == isprompt_mask) or (genparts[i].statusFlags & isprompttaudecayproduct_mask == isprompttaudecayproduct_mask)) and deltaR(photons[tight_photons[0]].eta,photons[tight_photons[0]].phi,genparts[i].eta,genparts[i].phi) < 0.3:
+
+                    if genparts[i].genPartIdxMother >= 0 and (abs(genparts[genparts[i].genPartIdxMother].pdgId) == 11 or abs(genparts[genparts[i].genPartIdxMother].pdgId) == 13 or abs(genparts[genparts[i].genPartIdxMother].pdgId) == 15):
+                        photon_gen_matching += 8
+                    else:
+                        photon_gen_matching += 4                        
                     break
 
         except:
