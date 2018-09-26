@@ -96,7 +96,8 @@ pu_weight_hist = f_pu_weights.Get("ratio")
 
 #labels = { "ttg+jets" : {"color" : ROOT.kGreen+2, "samples" : [ {'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/tt2l2nu.root', 'xs' : 88.28 } ] } }
 
-labels = { "wg+jets" : {"color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/wgjets.root", "xs" : 178.6, "e_to_p_only" : False } ] }, "zg+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/zgjets.root", "xs" : 47.46, "e_to_p_only" : False } ] }, "e to p" : {"color" : None, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/zjets.root", "xs" : 4963.0, "e_to_p_only" : True }, {'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/tt2l2nu.root', 'xs' : 88.28, "e_to_p_only" : True } ] }, "ttg+jets" : {"color" : ROOT.kGreen+2, "samples" : [ {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/ttgjets.root", "xs" : 3.795, "e_to_p_only" : False  } ] } } 
+
+labels = { "tt2l2nu+jets" : {"color" : ROOT.kRed, "samples" : [{'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/tt2l2nujets.root', 'xs' : 88.28, "non_fsr" : False , "e_to_p" : True, "fsr" : True } ] }, "ttsemi+jets" : {"color" : ROOT.kSpring, "samples" : [{'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/ttsemijets.root', 'xs' : 365.4, "non_fsr" : False , "e_to_p" : True, "fsr" : True } ] }, "wg+jets" : {"color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/wgjets.root", "xs" : 178.6, "non_fsr" : True , "e_to_p" : True, "fsr" : True } ] }, "zg+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/zgjets.root", "xs" : 47.46, "non_fsr" : True , "e_to_p" : True, "fsr" : True } ] }, "no label" : {"color" : None, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/zjets.root", "xs" : 4963.0, "non_fsr" : False , "e_to_p" : True, "fsr" : False  }] }, "ttg+jets" : {"color" : ROOT.kGreen+2, "samples" : [ {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/ttgjets.root", "xs" : 3.795, "non_fsr" : True , "e_to_p" : True, "fsr" : True } ] } }
 
 #labels = { "w+jets" : {"color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/wjets.root", "xs" : 60430.0}] } } 
 
@@ -492,16 +493,12 @@ def subtractRealMCFromFakeEstimateFromData(mc_tree,data_fake_photon,data_fake_le
         else:
             pass_is_lepton_real = False
 
-        if sample["e_to_p_only"]:
-            if bool(sample["tree"].photon_gen_matching & int('010',2)):
-                pass_e_to_p_only = True
-            else:
-                pass_e_to_p_only = False
+        if (bool(sample["tree"].photon_gen_matching & int('010',2)) and sample["e_to_p"]) or (bool(sample["tree"].photon_gen_matching & int('1000',2)) and sample["fsr"]) or (bool(sample["tree"].photon_gen_matching & int('0100',2)) and sample["non_fsr"]) :
+            pass_photon_gen_matching = True
         else:
-            pass_e_to_p_only = True
-    
+            pass_photon_gen_matching = False    
 
-        if not pass_photon_gen_matching or not pass_is_lepton_real or not pass_e_to_p_only:
+        if not pass_photon_gen_matching or not pass_is_lepton_real or not pass_photon_gen_matching:
             continue
 
         if pass_selection(mc_tree,True,False):
@@ -657,18 +654,22 @@ def fillHistogramMC(sample,histograms,e_to_p_histograms):
 
         if pass_is_lepton_real:
 
-            if bool(sample["tree"].photon_gen_matching & int('100',2)) and not sample["e_to_p_only"]:
-#                print str(sample["tree"].run) + " " + str(sample["tree"].lumi) + " " + str(sample["tree"].event)+ " " + str(weight)+ " " +str(sample["tree"].lepton_pt)+ " " +str(sample["tree"].lepton_eta)+ " "+str(sample["tree"].lepton_phi)+ " "+ str(sample["tree"].photon_pt)+ " " + str(str(sample["tree"].photon_eta))+ " " + str(str(sample["tree"].photon_phi))
-                #print str(sample["tree"].run) + " " + str(sample["tree"].lumi) + " " + str(sample["tree"].event)+ " " + str(weight)+ " " +str(getVariable("mlg",sample["tree"]))+ " " +str(sample["tree"].lepton_pt)+ " " +str(sample["tree"].lepton_eta)+ " "+str(sample["tree"].lepton_phi)+ " "+ str(sample["tree"].photon_pt)+ " " + str(str(sample["tree"].photon_eta))+ " " + str(str(sample["tree"].photon_phi))
-#            if True:
-                for variable in variables:
-                    histograms[variable].Fill(getVariable(variable,sample["tree"]),weight)
-            elif bool(sample["tree"].photon_gen_matching & int('010',2)):
-                for variable in variables:
-                    e_to_p_histograms[variable].Fill(getVariable(variable,sample["tree"]),weight)
+            if bool(sample["tree"].photon_gen_matching & int('0010',2)):
+                if sample["e_to_p"]:
+                    for variable in variables:
+                        e_to_p_histograms[variable].Fill(getVariable(variable,sample["tree"]),weight)
+            elif bool(sample["tree"].photon_gen_matching & int('1000',2)):
+                if sample["fsr"]:
+                    for variable in variables:
+                        histograms[variable].Fill(getVariable(variable,sample["tree"]),weight)
+            elif bool(sample["tree"].photon_gen_matching & int('0100',2)):
+                if sample["non_fsr"]:
+                    for variable in variables:
+                        histograms[variable].Fill(getVariable(variable,sample["tree"]),weight)
 
-    if len(variables) > 0 and not sample["e_to_p_only"]:
+    if len(variables) > 0  and not (sample["e_to_p"] and not sample["fsr"] and not sample["non_fsr"]):
         histograms[variables[0]].Print("all")
+
 
 for i in range(data_events_tree.GetEntries()):
     data_events_tree.GetEntry(i)
@@ -709,7 +710,7 @@ for label in labels.keys():
 
     for sample in labels[label]["samples"]:
         fillHistogramMC(sample,labels[label]["hists"],electron_to_photon["hists"])
-        if data_driven and not sample["e_to_p_only"]:
+        if data_driven and (sample["fsr"] or sample["non_fsr"]):
             subtractRealMCFromFakeEstimateFromData(sample["tree"],fake_photon,fake_lepton,sample["xs"],sample["nweightedevents"])
         
     for variable in variables:    
