@@ -103,24 +103,10 @@ class exampleProducer(Module):
                 continue
 
             if not ((abs(photons[i].eta) < 1.4442) or (1.566 < abs(photons[i].eta) and abs(photons[i].eta) < 2.5) ):
-            #if not (abs(photons[i].eta) < 1.4442):
                 continue
-
-            #invert the medium photon ID with the sigma_ietaieta cut removed
-            mask = (1 << 0) | (1 << 1) | (1 << 2) | (1 << 4) | (1 << 5) | (1 << 6)
-
-            #if mask & photons[i].vidNestedWPBitmap == mask:
-            #    continue
-
-#            if not photons[i].electronVeto:
-#                continue
 
             if photons[i].pixelSeed:
                 continue
-
-            #if photons[i].pfRelIso03_chg > 10 or not (photons[i].pfRelIso03_chg > 4 or photons[i].sieie > 0.01031):
-            #if photons[i].pfRelIso03_chg*photons[i].pt > 10 or photons[i].pfRelIso03_chg*photons[i].pt < 4:
-            #    continue
 
             pass_lepton_dr_cut = True
 
