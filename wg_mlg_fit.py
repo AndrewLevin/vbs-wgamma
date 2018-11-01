@@ -4,7 +4,11 @@ import ROOT
 
 photon_eta_cutstring = "abs(photon_eta) < 1.4442"
 
-lepton_name = "electron"
+#photon_eta_cutstring = "1.566 < abs(photon_eta) && abs(photon_eta) < 2.5"
+
+#lepton_name = "electron"
+
+lepton_name = "muon"
 
 if lepton_name == "muon":
     lepton_abs_pdg_id = 13
@@ -213,6 +217,27 @@ def photonfakerate(eta,pt,lepton_pdg_id,syst):
 
             return fr
 
+def muonfakerate(eta,pt,syst):
+
+    myeta  = min(abs(eta),2.4999)
+    #mypt   = min(pt,69.999)                                                                                                                                                              
+    mypt   = min(pt,44.999)
+
+    etabin = muon_fr_hist.GetXaxis().FindFixBin(myeta)
+    ptbin = muon_fr_hist.GetYaxis().FindFixBin(mypt)
+
+    prob = muon_fr_hist.GetBinContent(etabin,ptbin)
+
+    if syst == "up":
+        prob+=muon_fr_hist.GetBinError(etabin,ptbin)
+    elif syst == "down":
+        prob-=muon_fr_hist.GetBinError(etabin,ptbin)
+    else:
+        if syst != "nominal":
+            sys.exit(0)
+
+    return prob/(1-prob)
+
 def electronfakerate(eta,pt,syst):
 
     myeta  = min(abs(eta),2.4999)
@@ -249,7 +274,9 @@ hist_mlg_fake_lepton = ROOT.TH1F("mlg","mlg",100,0,150)
 
 hist_mlg_double_fake = ROOT.TH1F("mlg","mlg",100,0,150)
 
-f_data=ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/single_electron.root")
+#f_data=ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/single_electron.root")
+
+f_data=ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/single_muon.root")
 
 t_data=f_data.Get("Events")
 
@@ -302,7 +329,7 @@ hist_mlg_zg = ROOT.TH1F("mlg zg","mlg zg",150,0,150)
 
 f_zg=ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/zgjets.root")
 
-t_zg=f_wg.Get("Events")
+t_zg=f_zg.Get("Events")
 
 for i in range(0,t_zg.GetEntries()):
 
@@ -312,9 +339,9 @@ for i in range(0,t_zg.GetEntries()):
         continue
 
     if t_zg.gen_weight > 0:
-        hist_mlg_wg.Fill(t_zg.mlg)
+        hist_mlg_zg.Fill(t_zg.mlg)
     else:    
-        hist_mlg_wg.Fill(t_zg.mlg,-1)
+        hist_mlg_zg.Fill(t_zg.mlg,-1)
 
 data = ROOT.RooDataHist("data","dataset",ROOT.RooArgList(m),hist_mlg_data)
 
@@ -361,24 +388,27 @@ f= ROOT.RooRealVar("f","f",0.5,0.,1.) ;
 #sum=ROOT.RooAddPdf("sum","sum",wg,bwcb,f)
 
 #sum=ROOT.RooAddPdf("sum","sum",ROOT.RooArgList(wg,zg,bwcb),RooArgList(wg_norm,zg_norm,bwcb_norm))
-sum=ROOT.RooAddPdf("sum","sum",ROOT.RooArgList(RooHistPdf_wg,RooHistPdf_zg,RooFFTConvPdf_bwcb,RooHistPdf_fake_lepton,RooHistPdf_fake_photon,RooHistPdf_double_fake),ROOT.RooArgList(wg_norm,zg_norm,bwcb_norm,fake_lepton_norm,fake_photon_norm,double_fake_norm))
+#sum=ROOT.RooAddPdf("sum","sum",ROOT.RooArgList(RooHistPdf_wg,RooHistPdf_zg,RooFFTConvPdf_bwcb,RooHistPdf_fake_lepton,RooHistPdf_fake_photon,RooHistPdf_double_fake),ROOT.RooArgList(wg_norm,zg_norm,bwcb_norm,fake_lepton_norm,fake_photon_norm,double_fake_norm))
+
+sum=ROOT.RooAddPdf("sum","sum",ROOT.RooArgList(RooHistPdf_wg,RooHistPdf_zg,RooHistPdf_fake_lepton,RooHistPdf_fake_photon,RooHistPdf_double_fake),ROOT.RooArgList(wg_norm,zg_norm,fake_lepton_norm,fake_photon_norm,double_fake_norm))
 
 sum.fitTo(data,ROOT.RooFit.Extended())
 
 frame = m.frame()
-
-print "andrew debug 1"
-
-sum.printCompactTree()
-
-print "andrew debug 2"
 
 data.plotOn(frame)
 sum.plotOn(frame)
 #sum.plotOn(frame, ROOT.RooFit.Components(ROOT.RooArgSet(sum.getComponents()["zg"])),ROOT.RooFit.LineStyle(ROOT.kDashed)) 
 #sum.plotOn(frame, ROOT.RooFit.Components("zg,wg,bwcb"),ROOT.RooFit.LineStyle(ROOT.kDashed)) 
 sum.plotOn(frame, ROOT.RooFit.Components("wg"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kRed)) 
+sum.plotOn(frame, ROOT.RooFit.Components("zg"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kGreen)) 
 
+wg_norm.Print("all")
+zg_norm.Print("all")
+bwcb_norm.Print("all")
+fake_lepton_norm.Print("all")
+fake_photon_norm.Print("all")
+double_fake_norm.Print("all")
 
 frame.SetTitle("")
 frame.GetYaxis().SetTitle("")
