@@ -2,9 +2,9 @@ import sys
 import random
 import ROOT
 
-photon_eta_cutstring = "abs(photon_eta) < 1.4442"
+#photon_eta_cutstring = "abs(photon_eta) < 1.4442"
 
-#photon_eta_cutstring = "1.566 < abs(photon_eta) && abs(photon_eta) < 2.5"
+photon_eta_cutstring = "1.566 < abs(photon_eta) && abs(photon_eta) < 2.5"
 
 #lepton_name = "electron"
 
@@ -327,7 +327,7 @@ for i in range(0,t_wg.GetEntries()):
 
 hist_mlg_zg = ROOT.TH1F("mlg zg","mlg zg",150,0,150)
 
-f_zg=ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/zgjets.root")
+f_zg=ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/zglowmlljets.root")
 
 t_zg=f_zg.Get("Events")
 
