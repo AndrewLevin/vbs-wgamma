@@ -82,24 +82,9 @@ f_pu_weights = ROOT.TFile("/afs/cern.ch/user/a/amlevin/PileupWeights2016.root")
 
 pu_weight_hist = f_pu_weights.Get("ratio")
 
-#labels = { "z+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/zjets.root", "xs" : 6025.2 }] }, "tt+jets" : {"color" : ROOT.kGreen+2, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/ttjets.root", "xs" : 831.76 } ] }, "wg+jets" : {"color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/wgjets.root", "xs" : 178.6}] } } 
+#labels = { "tt2l2nu+jets" : {"color" : ROOT.kRed, "samples" : [{'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/tt2l2nujets.root', 'xs' : 88.28, "non_fsr" : False , "e_to_p" : True, "fsr" : True } ] }, "ttsemi+jets" : {"color" : ROOT.kSpring, "samples" : [{'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/ttsemijets.root', 'xs' : 365.4, "non_fsr" : False , "e_to_p" : True, "fsr" : True } ] }, "wg+jets" : {"color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/wgjets.root", "xs" : 178.6, "non_fsr" : True , "e_to_p" : True, "fsr" : True } ] }, "zg+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/zgjets.root", "xs" : 47.46, "non_fsr" : True , "e_to_p" : True, "fsr" : True } ] }, "no label" : {"color" : None, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/zjets.root", "xs" : 4963.0, "non_fsr" : False , "e_to_p" : True, "fsr" : False  }] }, "ttg+jets" : {"color" : ROOT.kGreen+2, "samples" : [ {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/ttgjets.root", "xs" : 3.795, "non_fsr" : True , "e_to_p" : True, "fsr" : True } ] } }
 
-#labels = { "z+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/zjets.root", "xs" : 6025.2 }] }, "tt+jets" : {"color" : ROOT.kGreen+2, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/ttjets.root", "xs" : 831.76 } ] }, "w+jets" : {"color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/wjets.root", "xs" : 60430.0}] } } 
-
-#labels = { "z+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/zjets.root.bak", "xs" : 6025.2 }] }, "tt+jets" : {"color" : ROOT.kGreen+2, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/ttjets.root.bak", "xs" : 831.76 } ] }, "w+jets" : {"color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/wjets.root.bak", "xs" : 60430.0}] } } 
-
-#labels = { "z+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/zjets.root", "xs" : 4963.0 }] } } 
-
-#labels = { "zg+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/zgjets.root", "xs" : 47.46 } ] } } 
-
-#labels = { "wg+jets" : {"color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/wgjets.root", "xs" : 178.6} ] }, "zg+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/zgjets.root", "xs" : 47.46 } ] }, "ttg+jets" : {"color" : ROOT.kGreen+2, "samples" : [ {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/ttgjets.root", "xs" : 3.795 } ] } } 
-
-#labels = { "ttg+jets" : {"color" : ROOT.kGreen+2, "samples" : [ {'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/tt2l2nu.root', 'xs' : 88.28 } ] } }
-
-
-labels = { "tt2l2nu+jets" : {"color" : ROOT.kRed, "samples" : [{'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/tt2l2nujets.root', 'xs' : 88.28, "non_fsr" : False , "e_to_p" : True, "fsr" : True } ] }, "ttsemi+jets" : {"color" : ROOT.kSpring, "samples" : [{'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/ttsemijets.root', 'xs' : 365.4, "non_fsr" : False , "e_to_p" : True, "fsr" : True } ] }, "wg+jets" : {"color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/wgjets.root", "xs" : 178.6, "non_fsr" : True , "e_to_p" : True, "fsr" : True } ] }, "zg+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/zgjets.root", "xs" : 47.46, "non_fsr" : True , "e_to_p" : True, "fsr" : True } ] }, "no label" : {"color" : None, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/zjets.root", "xs" : 4963.0, "non_fsr" : False , "e_to_p" : True, "fsr" : False  }] }, "ttg+jets" : {"color" : ROOT.kGreen+2, "samples" : [ {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/ttgjets.root", "xs" : 3.795, "non_fsr" : True , "e_to_p" : True, "fsr" : True } ] } }
-
-#labels = { "w+jets" : {"color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/wjets.root", "xs" : 60430.0}] } } 
+labels = { "tt2l2nu+jets" : {"color" : ROOT.kRed, "samples" : [{'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/tt2l2nujets.root', 'xs' : 88.28, "non_fsr" : False , "e_to_p" : True, "fsr" : True } ] }, "ttsemi+jets" : {"color" : ROOT.kSpring, "samples" : [{'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/ttsemijets.root', 'xs' : 365.4, "non_fsr" : False , "e_to_p" : True, "fsr" : True } ] }, "wg+jets" : {"color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/wgjets.root", "xs" : 178.6, "non_fsr" : True , "e_to_p" : True, "fsr" : True } ] }, "zg+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/zglowmlljets.root", "xs" : 96.75, "non_fsr" : True , "e_to_p" : False, "fsr" : True } ] }, "no label" : {"color" : None, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/zjets.root", "xs" : 4963.0, "non_fsr" : False , "e_to_p" : True, "fsr" : False  }] }, "ttg+jets" : {"color" : ROOT.kGreen+2, "samples" : [ {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/ttgjets.root", "xs" : 3.795, "non_fsr" : True , "e_to_p" : True, "fsr" : True } ] } }
 
 variables = ["met","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","lepton_phi","photon_phi","njets","mt","npvs","drlg"]
 
@@ -247,12 +232,14 @@ def pass_selection(tree, fake_lepton = False , fake_photon = False):
 
 
     if lepton_abs_pdg_id == 11:    
-        if not (tree.mlg > 60.0 and tree.mlg < 120.0):
+#        if not (tree.mlg > 60.0 and tree.mlg < 120.0):
+        if True:
             pass_mlg = True
         else:
             pass_mlg = False
     else:        
-#        if not (tree.mlg > 60.0 and tree.mlg < 100.0):
+#       if not (tree.mlg > 60.0 and tree.mlg < 100.0):
+#        if tree.mlg > 80.0 and tree.mlg < 90.0:
         if True:
             pass_mlg = True
         else:
@@ -304,7 +291,7 @@ def pass_selection(tree, fake_lepton = False , fake_photon = False):
             pass_lepton_selection = False
             
     if tree.photon_pt > 25 and tree.photon_pt < 700:
-#    if tree.photon_pt > 25 and tree.photon_pt < 40:
+#    if tree.photon_pt > 25 and tree.photon_pt < 135:
         pass_photon_pt =True
     else:
         pass_photon_pt = False
@@ -647,8 +634,8 @@ def fillHistogramMC(sample,histograms,e_to_p_histograms):
         if sample["tree"].gen_weight < 0:
             weight = -weight
 
-        if sample["filename"] == "/afs/cern.ch/work/a/amlevin/data/wg/wgjets.root":
-            weight = weight * nnlo_scale_factor(sample["tree"].photon_pt,sample["tree"].photon_eta)
+#        if sample["filename"] == "/afs/cern.ch/work/a/amlevin/data/wg/wgjets.root":
+#            weight = weight * nnlo_scale_factor(sample["tree"].photon_pt,sample["tree"].photon_eta)
 
 #        pass_is_lepton_real = True    
 
@@ -870,6 +857,8 @@ for variable in variables:
 
     c1.SaveAs(options.outputdir + "/" + variable + ".png")
 
+c1.Close()
+
 #    if variable == "mlg":
 #
 #        ndata = data["hists"]["mlg"].GetBinContent(data["hists"]["mlg"].GetXaxis().FindFixBin(85.0))+ data["hists"]["mlg"].GetBinContent(data["hists"]["mlg"].GetXaxis().FindFixBin(95.0))
@@ -885,4 +874,96 @@ for variable in variables:
 #        print nprediction
 
 #        print (ndata - nprediction + nzjets)/nzjets
+
+m= ROOT.RooRealVar("m","m",0,150)
+m0=ROOT.RooRealVar("m0",    "m0",0,-10,10)
+sigma=ROOT.RooRealVar("sigma",  "sigma",1,0.1,5)
+alpha=ROOT.RooRealVar("alpha",  "alpha",5,0,20)
+n=ROOT.RooRealVar("n",          "n",1,0,10)
+
+cb = ROOT.RooCBShape("cb", "Crystal Ball", m, m0, sigma, alpha, n)
+
+mass = ROOT.RooRealVar("mass","mass",50,0,150)
+width = ROOT.RooRealVar("width","width",5,0.1,10);
+
+bw = ROOT.RooBreitWigner("bw","Breit Wigner",m,mass,width)
+
+RooFFTConvPdf_bwcb = ROOT.RooFFTConvPdf("bwcb","Breit Wigner convolved with a Crystal Ball",m,bw,cb)
+
+data = ROOT.RooDataHist("data","dataset",ROOT.RooArgList(m),data["hists"]["mlg"])
+
+RooDataHist_mlg_wg = ROOT.RooDataHist("wg data hist","wg data hist",ROOT.RooArgList(m),labels["wg+jets"]["hists"]["mlg"])
+
+RooHistPdf_wg = ROOT.RooHistPdf("wg","wg",ROOT.RooArgSet(m),RooDataHist_mlg_wg)
+
+RooDataHist_mlg_zg = ROOT.RooDataHist("zg data hist","zg data hist",ROOT.RooArgList(m),labels["zg+jets"]["hists"]["mlg"])
+
+RooHistPdf_zg = ROOT.RooHistPdf("zg","zg",ROOT.RooArgSet(m),RooDataHist_mlg_zg)
+
+RooDataHist_mlg_fake_lepton = ROOT.RooDataHist("zg data hist","zg data hist",ROOT.RooArgList(m),fake_lepton["hists"]["mlg"])
+
+RooHistPdf_fake_lepton = ROOT.RooHistPdf("fake lepton","fake lepton",ROOT.RooArgSet(m),RooDataHist_mlg_fake_lepton)
+
+RooDataHist_mlg_fake_photon = ROOT.RooDataHist("zg data hist","zg data hist",ROOT.RooArgList(m),fake_photon["hists"]["mlg"])
+
+RooHistPdf_fake_photon = ROOT.RooHistPdf("fake photon","fake photon",ROOT.RooArgSet(m),RooDataHist_mlg_fake_photon)
+
+RooDataHist_mlg_double_fake = ROOT.RooDataHist("zg data hist","zg data hist",ROOT.RooArgList(m),double_fake["hists"]["mlg"])
+
+RooHistPdf_double_fake = ROOT.RooHistPdf("double fake","double fake",ROOT.RooArgSet(m),RooDataHist_mlg_double_fake)
+
+
+wg_norm = ROOT.RooRealVar("wg_norm","wg_norm",0,1000000);    
+zg_norm = ROOT.RooRealVar("zg_norm","zg_norm",0,1000000);    
+bwcb_norm = ROOT.RooRealVar("bwcb_norm","bwcb_norm",0,1000000);    
+fake_lepton_norm = ROOT.RooRealVar("fake_lepton_norm","fake_lepton_norm",fake_lepton["hists"]["mlg"].Integral(),fake_lepton["hists"]["mlg"].Integral());    
+fake_photon_norm = ROOT.RooRealVar("fake_photon_norm","fake_photon_norm",fake_photon["hists"]["mlg"].Integral(),fake_photon["hists"]["mlg"].Integral());    
+double_fake_norm = ROOT.RooRealVar("double_fake_norm","double_fake_norm",double_fake["hists"]["mlg"].Integral(),double_fake["hists"]["mlg"].Integral());    
+
+#wg = ROOT.RooExtendPdf("wg","wg",RooHistPdf_wg,wg_norm)
+
+#zg = ROOT.RooExtendPdf("wg","wg",RooHistPdf_zg,zg_norm)
+
+#bwcb = ROOT.RooExtendPdf("bwcb","bwcb",RooFFTConvPdf_bwcb,bwcb_norm)
+
+n1=ROOT.RooRealVar("n1","n1",0.1,0.01,100000)
+n2=ROOT.RooRealVar("n2","n2",0.1,0.01,100000)
+
+f= ROOT.RooRealVar("f","f",0.5,0.,1.) ;
+
+#sum=ROOT.RooAddPdf("sum","sum",ROOT.RooArgList(wg,bwcb),RooArgList(n1,n2))
+#sum=ROOT.RooAddPdf("sum","sum",wg,bwcb,f)
+
+#sum=ROOT.RooAddPdf("sum","sum",ROOT.RooArgList(wg,zg,bwcb),RooArgList(wg_norm,zg_norm,bwcb_norm))
+#sum=ROOT.RooAddPdf("sum","sum",ROOT.RooArgList(RooHistPdf_wg,RooHistPdf_zg,RooFFTConvPdf_bwcb,RooHistPdf_fake_lepton,RooHistPdf_fake_photon,RooHistPdf_double_fake),ROOT.RooArgList(wg_norm,zg_norm,bwcb_norm,fake_lepton_norm,fake_photon_norm,double_fake_norm))
+
+sum=ROOT.RooAddPdf("sum","sum",ROOT.RooArgList(RooHistPdf_wg,RooHistPdf_zg,RooHistPdf_fake_lepton,RooHistPdf_fake_photon,RooHistPdf_double_fake),ROOT.RooArgList(wg_norm,zg_norm,fake_lepton_norm,fake_photon_norm,double_fake_norm))
+
+sum.fitTo(data,ROOT.RooFit.Extended())
+
+frame = m.frame()
+
+data.plotOn(frame)
+sum.plotOn(frame)
+#sum.plotOn(frame, ROOT.RooFit.Components(ROOT.RooArgSet(sum.getComponents()["zg"])),ROOT.RooFit.LineStyle(ROOT.kDashed)) 
+#sum.plotOn(frame, ROOT.RooFit.Components("zg,wg,bwcb"),ROOT.RooFit.LineStyle(ROOT.kDashed)) 
+sum.plotOn(frame, ROOT.RooFit.Components("wg"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kRed)) 
+sum.plotOn(frame, ROOT.RooFit.Components("zg"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kGreen)) 
+
+wg_norm.Print("all")
+zg_norm.Print("all")
+bwcb_norm.Print("all")
+fake_lepton_norm.Print("all")
+fake_photon_norm.Print("all")
+double_fake_norm.Print("all")
+
+frame.SetTitle("")
+frame.GetYaxis().SetTitle("")
+frame.Draw()
+
+c1.Update()
+c1.ForceUpdate()
+c1.Modified()
+
+raw_input()
 
