@@ -90,6 +90,8 @@ variables = ["met","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","lept
 
 histogram_templates = { "met" : ROOT.TH1F("met", "", 15 , 0., 300 ), "lepton_pt" : ROOT.TH1F('lepton_pt', '', 8, 20., 180 ), "lepton_eta" : ROOT.TH1F('lepton_eta', '', 10, -2.5, 2.5 ), "photon_pt" : ROOT.TH1F('photon_pt', '', 8, 20., 180 ), "photon_eta" : ROOT.TH1F('photon_eta', '', 10, -2.5, 2.5 ), "mlg" : ROOT.TH1F("mlg","",20,0,200) , "lepton_phi" : ROOT.TH1F("lepton_phi","",14,-3.5,3.5), "photon_phi" : ROOT.TH1F("photon_phi","",14,-3.5,3.5), "njets" : ROOT.TH1F("njets","",7,-0.5,6.5), "mt" : ROOT.TH1F("mt","",20,0,200), "npvs" : ROOT.TH1F("npvs","",51,-0.5,50.5), "drlg" : ROOT.TH1F("drlg","",60,0,6)} 
 
+histogram_templates = { "met" : ROOT.TH1F("met", "", 15 , 0., 300 ), "lepton_pt" : ROOT.TH1F('lepton_pt', '', 8, 20., 180 ), "lepton_eta" : ROOT.TH1F('lepton_eta', '', 10, -2.5, 2.5 ), "photon_pt" : ROOT.TH1F('photon_pt', '', 8, 20., 180 ), "photon_eta" : ROOT.TH1F('photon_eta', '', 10, -2.5, 2.5 ), "mlg" : ROOT.TH1F("mlg","",100,0,200) , "lepton_phi" : ROOT.TH1F("lepton_phi","",14,-3.5,3.5), "photon_phi" : ROOT.TH1F("photon_phi","",14,-3.5,3.5), "njets" : ROOT.TH1F("njets","",7,-0.5,6.5), "mt" : ROOT.TH1F("mt","",20,0,200), "npvs" : ROOT.TH1F("npvs","",51,-0.5,50.5), "drlg" : ROOT.TH1F("drlg","",60,0,6)} 
+
 def nnlo_scale_factor(photon_eta,photon_pt):
     if abs(photon_eta) < 1.4442:
         if photon_pt < 17.5:
@@ -875,7 +877,7 @@ c1.Close()
 
 #        print (ndata - nprediction + nzjets)/nzjets
 
-m= ROOT.RooRealVar("m","m",0,150)
+m= ROOT.RooRealVar("m","m",0,200)
 m0=ROOT.RooRealVar("m0",    "m0",0,-10,10)
 sigma=ROOT.RooRealVar("sigma",  "sigma",1,0.1,5)
 alpha=ROOT.RooRealVar("alpha",  "alpha",5,0,20)
@@ -883,7 +885,7 @@ n=ROOT.RooRealVar("n",          "n",1,0,10)
 
 cb = ROOT.RooCBShape("cb", "Crystal Ball", m, m0, sigma, alpha, n)
 
-mass = ROOT.RooRealVar("mass","mass",50,0,150)
+mass = ROOT.RooRealVar("mass","mass",90,0,200)
 width = ROOT.RooRealVar("width","width",5,0.1,10);
 
 bw = ROOT.RooBreitWigner("bw","Breit Wigner",m,mass,width)
@@ -935,20 +937,28 @@ f= ROOT.RooRealVar("f","f",0.5,0.,1.) ;
 #sum=ROOT.RooAddPdf("sum","sum",wg,bwcb,f)
 
 #sum=ROOT.RooAddPdf("sum","sum",ROOT.RooArgList(wg,zg,bwcb),RooArgList(wg_norm,zg_norm,bwcb_norm))
-#sum=ROOT.RooAddPdf("sum","sum",ROOT.RooArgList(RooHistPdf_wg,RooHistPdf_zg,RooFFTConvPdf_bwcb,RooHistPdf_fake_lepton,RooHistPdf_fake_photon,RooHistPdf_double_fake),ROOT.RooArgList(wg_norm,zg_norm,bwcb_norm,fake_lepton_norm,fake_photon_norm,double_fake_norm))
 
-sum=ROOT.RooAddPdf("sum","sum",ROOT.RooArgList(RooHistPdf_wg,RooHistPdf_zg,RooHistPdf_fake_lepton,RooHistPdf_fake_photon,RooHistPdf_double_fake),ROOT.RooArgList(wg_norm,zg_norm,fake_lepton_norm,fake_photon_norm,double_fake_norm))
+if lepton_abs_pdg_id == 11:
+    sum=ROOT.RooAddPdf("sum","sum",ROOT.RooArgList(RooHistPdf_wg,RooHistPdf_zg,RooFFTConvPdf_bwcb,RooHistPdf_fake_lepton,RooHistPdf_fake_photon,RooHistPdf_double_fake),ROOT.RooArgList(wg_norm,zg_norm,bwcb_norm,fake_lepton_norm,fake_photon_norm,double_fake_norm))
+else:
+    sum=ROOT.RooAddPdf("sum","sum",ROOT.RooArgList(RooHistPdf_wg,RooHistPdf_zg,RooHistPdf_fake_lepton,RooHistPdf_fake_photon,RooHistPdf_double_fake),ROOT.RooArgList(wg_norm,zg_norm,fake_lepton_norm,fake_photon_norm,double_fake_norm))
 
 sum.fitTo(data,ROOT.RooFit.Extended())
 
-frame = m.frame()
+frame1 = m.frame()
 
-data.plotOn(frame)
-sum.plotOn(frame)
+data.plotOn(frame1)
+sum.plotOn(frame1)
 #sum.plotOn(frame, ROOT.RooFit.Components(ROOT.RooArgSet(sum.getComponents()["zg"])),ROOT.RooFit.LineStyle(ROOT.kDashed)) 
 #sum.plotOn(frame, ROOT.RooFit.Components("zg,wg,bwcb"),ROOT.RooFit.LineStyle(ROOT.kDashed)) 
-sum.plotOn(frame, ROOT.RooFit.Components("wg"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kRed)) 
-sum.plotOn(frame, ROOT.RooFit.Components("zg"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kGreen)) 
+
+if lepton_abs_pdg_id == 11:
+    sum.plotOn(frame1, ROOT.RooFit.Components("wg"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kRed)) 
+    sum.plotOn(frame1, ROOT.RooFit.Components("zg"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kGreen)) 
+    sum.plotOn(frame1, ROOT.RooFit.Components("bwcb"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kMagenta)) 
+else:
+    sum.plotOn(frame1, ROOT.RooFit.Components("wg"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kRed)) 
+    sum.plotOn(frame1, ROOT.RooFit.Components("zg"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kGreen)) 
 
 wg_norm.Print("all")
 zg_norm.Print("all")
@@ -957,13 +967,41 @@ fake_lepton_norm.Print("all")
 fake_photon_norm.Print("all")
 double_fake_norm.Print("all")
 
-frame.SetTitle("")
-frame.GetYaxis().SetTitle("")
-frame.Draw()
+frame1.SetTitle("")
+frame1.GetYaxis().SetTitle("")
 
-c1.Update()
-c1.ForceUpdate()
-c1.Modified()
+c2 = ROOT.TCanvas("c2", "c2",5,50,500,500)
 
-raw_input()
+frame1.Draw()
 
+c2.Update()
+c2.ForceUpdate()
+c2.Modified()
+
+c2.SaveAs(options.outputdir + "/" +"frame1.png")
+
+c2.Close()
+
+frame2 = m.frame()
+
+data.plotOn(frame2)
+sum.plotOn(frame2)
+
+sum.plotOn(frame2, ROOT.RooFit.Components("fake photon"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kRed)) 
+sum.plotOn(frame2, ROOT.RooFit.Components("fake lepton"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kGreen)) 
+sum.plotOn(frame2, ROOT.RooFit.Components("double fake"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kMagenta)) 
+
+frame2.SetTitle("")
+frame2.GetYaxis().SetTitle("")
+
+c3 = ROOT.TCanvas("c3", "c3",5,50,500,500)
+
+frame2.Draw()
+
+c3.Update()
+c3.ForceUpdate()
+c3.Modified()
+
+c3.SaveAs(options.outputdir + "/" +"frame2.png")
+
+c3.Close()
