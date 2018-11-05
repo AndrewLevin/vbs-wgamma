@@ -573,7 +573,7 @@ def fillHistogramMC(sample,histograms,e_to_p_histograms,fake_photon_histograms,f
         else:
             pass_photon_gen_matching = False    
 
-        if pass_photon_gen_matching and pass_is_lepton_real and pass_photon_gen_matching:
+        if pass_photon_gen_matching and pass_is_lepton_real:
             if pass_selection(sample["tree"],True,False):
 
                 weight =-leptonfakerate(sample["tree"].lepton_pdg_id,sample["tree"].lepton_eta, sample["tree"].lepton_pt,"nominal")* sample["xs"] * 1000 * 36.15 / sample["nweightedevents"]
