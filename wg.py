@@ -258,7 +258,8 @@ def pass_selection(tree, fake_lepton = False , fake_photon = False):
 #    else:
 #        pass_mlg = True
 
-    if tree.met > 35:
+#    if tree.met > 35:
+    if tree.met > 70:
 #    if tree.met > 0:
         pass_met = True
     else:
@@ -462,27 +463,29 @@ def leptonfakerate(lepton_abs_pdg_id,eta,pt,syst):
     else:
         assert(0)
 
-def subtractRealMCFromFakeEstimateFromData(mc_tree,data_fake_photon,data_fake_lepton,xs,n_weighted_events):
+def subtractRealMCFromFakeEstimateFromData(mc_sample,data_fake_photon,data_fake_lepton,xs,n_weighted_events):
 
     #if sample["label"] == "tt+jets":
     #    return
+
+    mc_tree = mc_sample["tree"]
 
     for i in range(mc_tree.GetEntries()):
 
         mc_tree.GetEntry(i)
 
-        if sample["tree"].photon_gen_matching > 0:
-#        if sample["tree"].photon_gen_matching > -1:
+        if mc_tree.photon_gen_matching > 0:
+#        if mc_tree.photon_gen_matching > -1:
             pass_photon_gen_matching = True
         else:
             pass_photon_gen_matching = False
 
-        if sample["tree"].is_lepton_real == '\x01':
+        if mc_tree.is_lepton_real == '\x01':
             pass_is_lepton_real = True
         else:
             pass_is_lepton_real = False
 
-        if (bool(sample["tree"].photon_gen_matching & int('010',2)) and sample["e_to_p"]) or (bool(sample["tree"].photon_gen_matching & int('1000',2)) and sample["fsr"]) or (bool(sample["tree"].photon_gen_matching & int('0100',2)) and sample["non_fsr"]) :
+        if (bool(mc_tree.photon_gen_matching & int('010',2)) and mc_sample["e_to_p"]) or (bool(mc_tree.photon_gen_matching & int('1000',2)) and mc_sample["fsr"]) or (bool(mc_tree.photon_gen_matching & int('0100',2)) and mc_sample["non_fsr"]) :
             pass_photon_gen_matching = True
         else:
             pass_photon_gen_matching = False    
@@ -699,8 +702,9 @@ for label in labels.keys():
 
     for sample in labels[label]["samples"]:
         fillHistogramMC(sample,labels[label]["hists"],electron_to_photon["hists"])
-        if data_driven and (sample["fsr"] or sample["non_fsr"]):
-            subtractRealMCFromFakeEstimateFromData(sample["tree"],fake_photon,fake_lepton,sample["xs"],sample["nweightedevents"])
+#        if data_driven and (sample["fsr"] or sample["non_fsr"]):
+        if data_driven:
+            subtractRealMCFromFakeEstimateFromData(sample,fake_photon,fake_lepton,sample["xs"],sample["nweightedevents"])
         
     for variable in variables:    
 
@@ -1005,3 +1009,11 @@ c3.Modified()
 c3.SaveAs(options.outputdir + "/" +"frame2.png")
 
 c3.Close()
+
+print "wg_norm.getVal() = " + str(wg_norm.getVal())
+
+print "(number of selected wg+jets events) * (data/MC eff scale factor) = "+str(labels["wg+jets"]["hists"]["mlg"].Integral()*labels["wg+jets"]["samples"][0]["nweightedevents"]/(labels["wg+jets"]["samples"][0]["xs"]*1000*36.15))
+
+print "(number of wg+jets events run over) = "+str(labels["wg+jets"]["samples"][0]["nweightedevents"])
+ 
+print "(number of selected wg+jets events) * (data/MC eff scale factor) / (number of wg+jets events run over)= "+str(labels["wg+jets"]["hists"]["mlg"].Integral()/(labels["wg+jets"]["samples"][0]["xs"]*1000*36.15))
