@@ -463,58 +463,6 @@ def leptonfakerate(lepton_abs_pdg_id,eta,pt,syst):
     else:
         assert(0)
 
-def subtractRealMCFromFakeEstimateFromData(mc_sample,data_fake_photon,data_fake_lepton,xs,n_weighted_events):
-
-    #if sample["label"] == "tt+jets":
-    #    return
-
-    mc_tree = mc_sample["tree"]
-
-    for i in range(mc_tree.GetEntries()):
-
-        mc_tree.GetEntry(i)
-
-        if mc_tree.photon_gen_matching > 0:
-#        if mc_tree.photon_gen_matching > -1:
-            pass_photon_gen_matching = True
-        else:
-            pass_photon_gen_matching = False
-
-        if mc_tree.is_lepton_real == '\x01':
-            pass_is_lepton_real = True
-        else:
-            pass_is_lepton_real = False
-
-        if (bool(mc_tree.photon_gen_matching & int('010',2)) and mc_sample["e_to_p"]) or (bool(mc_tree.photon_gen_matching & int('1000',2)) and mc_sample["fsr"]) or (bool(mc_tree.photon_gen_matching & int('0100',2)) and mc_sample["non_fsr"]) :
-            pass_photon_gen_matching = True
-        else:
-            pass_photon_gen_matching = False    
-
-        if not pass_photon_gen_matching or not pass_is_lepton_real or not pass_photon_gen_matching:
-            continue
-
-        if pass_selection(mc_tree,True,False):
-
-            weight =-leptonfakerate(mc_tree.lepton_pdg_id,mc_tree.lepton_eta, mc_tree.lepton_pt,"nominal")* xs * 1000 * 36.15 / n_weighted_events
-
-            if mc_tree.gen_weight < 0:
-                weight = -weight
-
-            for variable in variables:
-                data_fake_lepton["hists"][variable].Fill(getVariable(variable,mc_tree),weight)  
-
-        if pass_selection(mc_tree,False,True):
-
-            weight = -photonfakerate(mc_tree.photon_eta, mc_tree.photon_pt,mc_tree.lepton_pdg_id, "nominal")* xs * 1000 * 36.15 / n_weighted_events
-
-            if mc_tree.gen_weight < 0:
-                weight = -weight
-
-            for variable in variables:
-                data_fake_photon["hists"][variable].Fill(getVariable(variable,mc_tree),weight)  
-                
-
-
 def set_axis_fonts(thstack, coordinate, title):
 
     if coordinate == "x":
@@ -609,24 +557,50 @@ c1 = ROOT.TCanvas("c1", "c1",5,50,500,500);
 
 ROOT.gROOT.cd()
 
-def fillHistogramMC(sample,histograms,e_to_p_histograms):
+def fillHistogramMC(sample,histograms,e_to_p_histograms,fake_photon_histograms,fake_lepton_histograms):
 
     for i in range(sample["tree"].GetEntries()):
 
         sample["tree"].GetEntry(i)
-
-        if not pass_selection(sample["tree"]):
-            continue
 
         if sample["tree"].is_lepton_real == '\x01':
             pass_is_lepton_real = True
         else:
             pass_is_lepton_real = False
 
+        if (bool(sample["tree"].photon_gen_matching & int('010',2)) and sample["e_to_p"]) or (bool(sample["tree"].photon_gen_matching & int('1000',2)) and sample["fsr"]) or (bool(sample["tree"].photon_gen_matching & int('0100',2)) and sample["non_fsr"]) :
+            pass_photon_gen_matching = True
+        else:
+            pass_photon_gen_matching = False    
+
+        if pass_photon_gen_matching and pass_is_lepton_real and pass_photon_gen_matching:
+            if pass_selection(sample["tree"],True,False):
+
+                weight =-leptonfakerate(sample["tree"].lepton_pdg_id,sample["tree"].lepton_eta, sample["tree"].lepton_pt,"nominal")* sample["xs"] * 1000 * 36.15 / sample["nweightedevents"]
+
+                if sample["tree"].gen_weight < 0:
+                    weight = -weight
+
+                for variable in variables:
+                    fake_lepton_histograms[variable].Fill(getVariable(variable,sample["tree"]),weight)  
+
+            if pass_selection(sample["tree"],False,True):
+
+                weight = -photonfakerate(sample["tree"].photon_eta, sample["tree"].photon_pt,sample["tree"].lepton_pdg_id, "nominal")* sample["xs"] * 1000 * 36.15 / sample["nweightedevents"]
+
+                if sample["tree"].gen_weight < 0:
+                    weight = -weight
+
+                for variable in variables:
+                    fake_photon_histograms[variable].Fill(getVariable(variable,sample["tree"]),weight)  
+
+        if not pass_selection(sample["tree"]):
+            continue
+
         weight = sample["xs"]*1000*36.15/sample["nweightedevents"]
 
         weight *= pu_weight_hist.GetBinContent(pu_weight_hist.FindFixBin(sample["tree"].npu))
-        
+
         weight *= eff_scale_factor.photon_efficiency_scale_factor(sample["tree"].photon_pt,sample["tree"].photon_eta)
          
         if lepton_abs_pdg_id == 11:
@@ -701,11 +675,8 @@ for i in range(data_events_tree.GetEntries()):
 for label in labels.keys():
 
     for sample in labels[label]["samples"]:
-        fillHistogramMC(sample,labels[label]["hists"],electron_to_photon["hists"])
-#        if data_driven and (sample["fsr"] or sample["non_fsr"]):
-        if data_driven:
-            subtractRealMCFromFakeEstimateFromData(sample,fake_photon,fake_lepton,sample["xs"],sample["nweightedevents"])
-        
+        fillHistogramMC(sample,labels[label]["hists"],electron_to_photon["hists"],fake_photon["hists"],fake_lepton["hists"])
+
     for variable in variables:    
 
         if labels[label]["color"] == None:
