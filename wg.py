@@ -944,6 +944,7 @@ double_fake_norm.Print("all")
 
 frame1.SetTitle("")
 frame1.GetYaxis().SetTitle("")
+frame1.GetXaxis().SetTitle("m_{lg} (GeV)")
 
 c2 = ROOT.TCanvas("c2", "c2",5,50,500,500)
 
@@ -968,6 +969,7 @@ sum.plotOn(frame2, ROOT.RooFit.Components("double fake"),ROOT.RooFit.LineStyle(R
 
 frame2.SetTitle("")
 frame2.GetYaxis().SetTitle("")
+frame2.GetXaxis().SetTitle("m_{lg} (GeV)")
 
 c3 = ROOT.TCanvas("c3", "c3",5,50,500,500)
 
@@ -982,6 +984,7 @@ c3.SaveAs(options.outputdir + "/" +"frame2.png")
 c3.Close()
 
 print "wg_norm.getVal() = " + str(wg_norm.getVal())
+print "wg_norm.getError() = " + str(wg_norm.getError())
 
 print "(number of selected wg+jets events) * (data/MC eff scale factor) * (wg+jets xs) * (2016 integrated luminosity) / (number of wg+jets events run over) = "+str(labels["wg+jets"]["hists"]["mlg"].Integral())
 
