@@ -7,7 +7,7 @@ import style
 
 import optparse
 
-from math import hypot, pi
+from math import hypot, pi, sqrt
 
 def deltaPhi(phi1,phi2):
     ## Catch if being called with two objects                                                                                                                        
@@ -84,7 +84,7 @@ pu_weight_hist = f_pu_weights.Get("ratio")
 
 #labels = { "tt2l2nu+jets" : {"color" : ROOT.kRed, "samples" : [{'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/tt2l2nujets.root', 'xs' : 88.28, "non_fsr" : False , "e_to_p" : True, "fsr" : True } ] }, "ttsemi+jets" : {"color" : ROOT.kSpring, "samples" : [{'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/ttsemijets.root', 'xs' : 365.4, "non_fsr" : False , "e_to_p" : True, "fsr" : True } ] }, "wg+jets" : {"color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/wgjets.root", "xs" : 178.6, "non_fsr" : True , "e_to_p" : True, "fsr" : True } ] }, "zg+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/zgjets.root", "xs" : 47.46, "non_fsr" : True , "e_to_p" : True, "fsr" : True } ] }, "no label" : {"color" : None, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/zjets.root", "xs" : 4963.0, "non_fsr" : False , "e_to_p" : True, "fsr" : False  }] }, "ttg+jets" : {"color" : ROOT.kGreen+2, "samples" : [ {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/ttgjets.root", "xs" : 3.795, "non_fsr" : True , "e_to_p" : True, "fsr" : True } ] } }
 
-labels = { "tt2l2nu+jets" : {"color" : ROOT.kRed, "samples" : [{'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/tt2l2nujets.root', 'xs' : 88.28, "non_fsr" : False , "e_to_p" : True, "fsr" : True } ] }, "ttsemi+jets" : {"color" : ROOT.kSpring, "samples" : [{'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/ttsemijets.root', 'xs' : 365.4, "non_fsr" : False , "e_to_p" : True, "fsr" : True } ] }, "wg+jets" : {"color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/wgjets.root", "xs" : 178.6, "non_fsr" : True , "e_to_p" : True, "fsr" : True } ] }, "zg+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/zglowmlljets.root", "xs" : 96.75, "non_fsr" : True , "e_to_p" : False, "fsr" : True } ] }, "no label" : {"color" : None, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/zjets.root", "xs" : 4963.0, "non_fsr" : False , "e_to_p" : True, "fsr" : False  }] }, "ttg+jets" : {"color" : ROOT.kGreen+2, "samples" : [ {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/ttgjets.root", "xs" : 3.795, "non_fsr" : True , "e_to_p" : True, "fsr" : True } ] } }
+labels = { "tt2l2nu+jets" : {"syst-pdf" : False, "syst-scale" : False, "color" : ROOT.kRed, "samples" : [{'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/tt2l2nujets.root', 'xs' : 88.28, "non_fsr" : False , "e_to_p" : True, "fsr" : True } ] }, "ttsemi+jets" : {"syst-pdf" : False, "syst-scale" : False, "color" : ROOT.kSpring, "samples" : [{'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/ttsemijets.root', 'xs' : 365.4, "non_fsr" : False , "e_to_p" : True, "fsr" : True } ] }, "wg+jets" : {"syst-pdf": True, "syst-scale": True, "color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/wgjets.root", "xs" : 178.6, "non_fsr" : True , "e_to_p" : True, "fsr" : True } ] }, "zg+jets" : {"syst-pdf" : False, "syst-scale" : False, "color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/zglowmlljets.root", "xs" : 96.75, "non_fsr" : True , "e_to_p" : False, "fsr" : True } ] }, "no label" : {"syst-pdf" : False, "syst-scale" : False, "color" : None, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/zjets.root", "xs" : 4963.0, "non_fsr" : False , "e_to_p" : True, "fsr" : False  }] }, "ttg+jets" : {"syst-pdf" : False, "syst-scale" : False,  "color" : ROOT.kGreen+2, "samples" : [ {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/ttgjets.root", "xs" : 3.795, "non_fsr" : True , "e_to_p" : True, "fsr" : True } ] } }
 
 variables = ["met","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","lepton_phi","photon_phi","njets","mt","npvs","drlg"]
 
@@ -513,12 +513,31 @@ for label in labels.keys():
 
     labels[label]["hists"] = {}
 
+    if labels[label]["syst-pdf"]:
+        for i in range(0,102):
+            labels[label]["hists-pdf-variation"+str(i)] = {}
+
+    if labels[label]["syst-scale"]:
+        for i in range(0,8):
+            labels[label]["hists-scale-variation"+str(i)] = {}
+
     for variable in variables:
         if labels[label]["color"] == None:
             continue
 
         labels[label]["hists"][variable] = histogram_templates[variable].Clone(label + " " + variable)
         labels[label]["hists"][variable].Sumw2()
+
+        if labels[label]["syst-pdf"]:
+            for i in range(0,102):
+                labels[label]["hists-pdf-variation"+str(i)][variable] = histogram_templates[variable].Clone(label + " " + variable)
+                labels[label]["hists-pdf-variation"+str(i)][variable].Sumw2()
+
+        if labels[label]["syst-scale"]:
+            for i in range(0,8):
+                labels[label]["hists-scale-variation"+str(i)][variable] = histogram_templates[variable].Clone(label + " " + variable)
+                labels[label]["hists-scale-variation"+str(i)][variable].Sumw2()
+            
 
     for sample in labels[label]["samples"]:
         sample["file"] = ROOT.TFile.Open(sample["filename"])
@@ -557,7 +576,7 @@ c1 = ROOT.TCanvas("c1", "c1",5,50,500,500);
 
 ROOT.gROOT.cd()
 
-def fillHistogramMC(sample,histograms,e_to_p_histograms,fake_photon_histograms,fake_lepton_histograms):
+def fillHistogramMC(label,sample,e_to_p_histograms,fake_photon_histograms,fake_lepton_histograms):
 
     for i in range(sample["tree"].GetEntries()):
 
@@ -627,15 +646,28 @@ def fillHistogramMC(sample,histograms,e_to_p_histograms,fake_photon_histograms,f
             elif bool(sample["tree"].photon_gen_matching & int('1000',2)):
                 if sample["fsr"]:
                     for variable in variables:
-                        histograms[variable].Fill(getVariable(variable,sample["tree"]),weight)
+                        label["hists"][variable].Fill(getVariable(variable,sample["tree"]),weight)
+                        if label["syst-pdf"]:
+                            for j in range(0,102):
+                                label["hists-pdf-variation"+str(j)][variable].Fill(getVariable(variable,sample["tree"]),weight*sample["tree"].LHEPdfWeight[j+1])
+                        if label["syst-scale"]:
+                            for j in range(0,8):
+                                label["hists-scale-variation"+str(j)][variable].Fill(getVariable(variable,sample["tree"]),weight*sample["tree"].LHEScaleWeight[j]*2)
+                                
+                        
             elif bool(sample["tree"].photon_gen_matching & int('0100',2)):
                 if sample["non_fsr"]:
                     for variable in variables:
-                        histograms[variable].Fill(getVariable(variable,sample["tree"]),weight)
+                        label["hists"][variable].Fill(getVariable(variable,sample["tree"]),weight)
+                        if label["syst-pdf"]:
+                            for j in range(0,102):
+                                label["hists-pdf-variation"+str(j)][variable].Fill(getVariable(variable,sample["tree"]),weight*sample["tree"].LHEPdfWeight[j+1])
+                        if label["syst-scale"]:
+                            for j in range(0,8):
+                                label["hists-scale-variation"+str(j)][variable].Fill(getVariable(variable,sample["tree"]),weight*sample["tree"].LHEScaleWeight[j]*2)
 
     if len(variables) > 0  and not (sample["e_to_p"] and not sample["fsr"] and not sample["non_fsr"]):
-        histograms[variables[0]].Print("all")
-
+        label["hists"][variables[0]].Print("all")
 
 for i in range(data_events_tree.GetEntries()):
     data_events_tree.GetEntry(i)
@@ -671,11 +703,12 @@ for i in range(data_events_tree.GetEntries()):
             double_fake["hists"][variable].Fill(getVariable(variable,data_events_tree),weight)
             fake_lepton["hists"][variable].Fill(getVariable(variable,data_events_tree),-weight)
             fake_photon["hists"][variable].Fill(getVariable(variable,data_events_tree),-weight)
+
         
 for label in labels.keys():
 
     for sample in labels[label]["samples"]:
-        fillHistogramMC(sample,labels[label]["hists"],electron_to_photon["hists"],fake_photon["hists"],fake_lepton["hists"])
+        fillHistogramMC(labels[label],sample,electron_to_photon["hists"],fake_photon["hists"],fake_lepton["hists"])
 
     for variable in variables:    
 
@@ -988,8 +1021,36 @@ print "wg_norm.getError() = " + str(wg_norm.getError())
 
 print "(number of selected wg+jets events) * (data/MC eff scale factor) * (wg+jets xs) * (2016 integrated luminosity) / (number of wg+jets events run over) = "+str(labels["wg+jets"]["hists"]["mlg"].Integral())
 
+mean_pdf=0
+for i in range(0,102):
+    mean_pdf += labels["wg+jets"]["hists-pdf-variation"+str(i)]["mlg"].Integral() 
+
+mean_pdf = mean_pdf/102.0
+
+print "mean_pdf = "+str(mean_pdf)
+
+stddev_pdf = 0
+for i in range(0,102):
+    stddev_pdf += pow((labels["wg+jets"]["hists-pdf-variation"+str(i)]["mlg"].Integral() - mean_pdf),2)
+
+stddev_pdf = sqrt(stddev_pdf/(102-1))
+
+print "stddev_pdf = "+str(mean_pdf/102.0)
+
+qcd_up = labels["wg+jets"]["hists-scale-variation3"]["mlg"].Integral()
+qcd_nom = labels["wg+jets"]["hists"]["mlg"].Integral()
+qcd_down = labels["wg+jets"]["hists-scale-variation7"]["mlg"].Integral()
+
+qcd_unc=0.5*max(abs(qcd_up - qcd_nom),abs(qcd_up-qcd_down),abs(qcd_nom-qcd_down))
+
+print "qcd_unc = " + str(qcd_unc)
+
+print "(number of selected wg+jets events) * (data/MC eff scale factor) * (wg+jets xs) * (2016 integrated luminosity) / (number of wg+jets events run over) = "+str(labels["wg+jets"]["hists-pdf-variation44"]["mlg"].Integral())
+
 print "(number of selected wg+jets events) * (data/MC eff scale factor) = "+str(labels["wg+jets"]["hists"]["mlg"].Integral()*labels["wg+jets"]["samples"][0]["nweightedevents"]/(labels["wg+jets"]["samples"][0]["xs"]*1000*36.15))
+print "(number of selected wg+jets events) * (data/MC eff scale factor) = "+str(labels["wg+jets"]["hists-pdf-variation44"]["mlg"].Integral()*labels["wg+jets"]["samples"][0]["nweightedevents"]/(labels["wg+jets"]["samples"][0]["xs"]*1000*36.15))
 
 print "(number of wg+jets events run over) = "+str(labels["wg+jets"]["samples"][0]["nweightedevents"])
  
 print "(number of selected wg+jets events) * (data/MC eff scale factor) / (number of wg+jets events run over)= "+str(labels["wg+jets"]["hists"]["mlg"].Integral()/(labels["wg+jets"]["samples"][0]["xs"]*1000*36.15))
+print "(number of selected wg+jets events) * (data/MC eff scale factor) / (number of wg+jets events run over)= "+str(labels["wg+jets"]["hists-pdf-variation44"]["mlg"].Integral()/(labels["wg+jets"]["samples"][0]["xs"]*1000*36.15))
