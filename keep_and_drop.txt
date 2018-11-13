@@ -4,6 +4,8 @@ keep run
 keep luminosityBlock
 keep event
 keep Generator_weight
+keep LHEPdfWeight
+keep LHEScaleWeight
 keep MET_pt
 keep MET_phi
 keep RawMET_pt
