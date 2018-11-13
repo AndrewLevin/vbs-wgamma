@@ -513,6 +513,12 @@ for label in labels.keys():
 
     labels[label]["hists"] = {}
 
+    labels[label]["hists-electron-id-sf-variation"] = {}
+
+    labels[label]["hists-electron-reco-sf-variation"] = {}
+
+    labels[label]["hists-photon-id-sf-variation"] = {}
+
     if labels[label]["syst-pdf"]:
         for i in range(0,102):
             labels[label]["hists-pdf-variation"+str(i)] = {}
@@ -527,6 +533,13 @@ for label in labels.keys():
 
         labels[label]["hists"][variable] = histogram_templates[variable].Clone(label + " " + variable)
         labels[label]["hists"][variable].Sumw2()
+
+        labels[label]["hists-electron-id-sf-variation"][variable] = histogram_templates[variable].Clone(label + " " + variable)
+        labels[label]["hists-electron-reco-sf-variation"][variable] = histogram_templates[variable].Clone(label + " " + variable)
+        labels[label]["hists-photon-id-sf-variation"][variable] = histogram_templates[variable].Clone(label + " " + variable)
+        labels[label]["hists-electron-id-sf-variation"][variable].Sumw2()
+        labels[label]["hists-electron-reco-sf-variation"][variable].Sumw2()
+        labels[label]["hists-photon-id-sf-variation"][variable].Sumw2()
 
         if labels[label]["syst-pdf"]:
             for i in range(0,102):
@@ -595,7 +608,7 @@ def fillHistogramMC(label,sample,e_to_p_histograms,fake_photon_histograms,fake_l
         if pass_photon_gen_matching and pass_is_lepton_real:
             if pass_selection(sample["tree"],True,False):
 
-                weight =-leptonfakerate(sample["tree"].lepton_pdg_id,sample["tree"].lepton_eta, sample["tree"].lepton_pt,"nominal")* sample["xs"] * 1000 * 36.15 / sample["nweightedevents"]
+                weight =-leptonfakerate(sample["tree"].lepton_pdg_id,sample["tree"].lepton_eta, sample["tree"].lepton_pt,"nominal")* sample["xs"] * 1000 * 35.9 / sample["nweightedevents"]
 
                 if sample["tree"].gen_weight < 0:
                     weight = -weight
@@ -605,7 +618,7 @@ def fillHistogramMC(label,sample,e_to_p_histograms,fake_photon_histograms,fake_l
 
             if pass_selection(sample["tree"],False,True):
 
-                weight = -photonfakerate(sample["tree"].photon_eta, sample["tree"].photon_pt,sample["tree"].lepton_pdg_id, "nominal")* sample["xs"] * 1000 * 36.15 / sample["nweightedevents"]
+                weight = -photonfakerate(sample["tree"].photon_eta, sample["tree"].photon_pt,sample["tree"].lepton_pdg_id, "nominal")* sample["xs"] * 1000 * 35.9 / sample["nweightedevents"]
 
                 if sample["tree"].gen_weight < 0:
                     weight = -weight
@@ -616,21 +629,32 @@ def fillHistogramMC(label,sample,e_to_p_histograms,fake_photon_histograms,fake_l
         if not pass_selection(sample["tree"]):
             continue
 
-        weight = sample["xs"]*1000*36.15/sample["nweightedevents"]
+        weight = sample["xs"]*1000*35.9/sample["nweightedevents"]
 
         weight *= pu_weight_hist.GetBinContent(pu_weight_hist.FindFixBin(sample["tree"].npu))
 
+        weight_photon_id_sf_variation = weight * eff_scale_factor.photon_efficiency_scale_factor(sample["tree"].photon_pt,sample["tree"].photon_eta,True)
         weight *= eff_scale_factor.photon_efficiency_scale_factor(sample["tree"].photon_pt,sample["tree"].photon_eta)
+
          
         if lepton_abs_pdg_id == 11:
+            weight_electron_id_sf_variation = weight * eff_scale_factor.electron_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta,True,False)
+            weight_electron_reco_sf_variation = weight * eff_scale_factor.electron_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta,False,True)
             weight *= eff_scale_factor.electron_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta)
+            weight_photon_id_sf_variation *= eff_scale_factor.electron_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta)
         elif lepton_abs_pdg_id == 13:
             weight *= eff_scale_factor.muon_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta)
+            weight_photon_id_sf_variation *= eff_scale_factor.muon_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta)
+            weight_electron_id_sf_variation = weight
+            weight_electron_reco_sf_variation = weight
         else:
             assert(0)
 
         if sample["tree"].gen_weight < 0:
             weight = -weight
+            weight_electron_id_sf_variation = -weight_electron_id_sf_variation
+            weight_electron_reco_sf_variation = -weight_electron_reco_sf_variation
+            weight_photon_id_sf_variation = -weight_photon_id_sf_variation
 
 #        if sample["filename"] == "/afs/cern.ch/work/a/amlevin/data/wg/wgjets.root":
 #            weight = weight * nnlo_scale_factor(sample["tree"].photon_pt,sample["tree"].photon_eta)
@@ -647,6 +671,9 @@ def fillHistogramMC(label,sample,e_to_p_histograms,fake_photon_histograms,fake_l
                 if sample["fsr"]:
                     for variable in variables:
                         label["hists"][variable].Fill(getVariable(variable,sample["tree"]),weight)
+                        label["hists-electron-id-sf-variation"][variable].Fill(getVariable(variable,sample["tree"]),weight_electron_id_sf_variation)
+                        label["hists-electron-reco-sf-variation"][variable].Fill(getVariable(variable,sample["tree"]),weight_electron_reco_sf_variation)
+                        label["hists-photon-id-sf-variation"][variable].Fill(getVariable(variable,sample["tree"]),weight_photon_id_sf_variation)
                         if label["syst-pdf"]:
                             for j in range(0,102):
                                 label["hists-pdf-variation"+str(j)][variable].Fill(getVariable(variable,sample["tree"]),weight*sample["tree"].LHEPdfWeight[j+1])
@@ -659,6 +686,9 @@ def fillHistogramMC(label,sample,e_to_p_histograms,fake_photon_histograms,fake_l
                 if sample["non_fsr"]:
                     for variable in variables:
                         label["hists"][variable].Fill(getVariable(variable,sample["tree"]),weight)
+                        label["hists-electron-id-sf-variation"][variable].Fill(getVariable(variable,sample["tree"]),weight_electron_id_sf_variation)
+                        label["hists-electron-reco-sf-variation"][variable].Fill(getVariable(variable,sample["tree"]),weight_electron_reco_sf_variation)
+                        label["hists-photon-id-sf-variation"][variable].Fill(getVariable(variable,sample["tree"]),weight_photon_id_sf_variation)
                         if label["syst-pdf"]:
                             for j in range(0,102):
                                 label["hists-pdf-variation"+str(j)][variable].Fill(getVariable(variable,sample["tree"]),weight*sample["tree"].LHEPdfWeight[j+1])
@@ -1037,6 +1067,14 @@ stddev_pdf = sqrt(stddev_pdf/(102-1))
 
 print "stddev_pdf = "+str(mean_pdf/102.0)
 
+electron_id_sf_unc = labels["wg+jets"]["hists-electron-id-sf-variation"]["mlg"].Integral() - labels["wg+jets"]["hists"]["mlg"].Integral()
+electron_reco_sf_unc = labels["wg+jets"]["hists-electron-reco-sf-variation"]["mlg"].Integral() - labels["wg+jets"]["hists"]["mlg"].Integral()
+photon_id_sf_unc = labels["wg+jets"]["hists-photon-id-sf-variation"]["mlg"].Integral() - labels["wg+jets"]["hists"]["mlg"].Integral()
+
+print "electron_id_sf_unc = "+str(electron_id_sf_unc)
+print "electron_reco_sf_unc = "+str(electron_reco_sf_unc)
+print "photon_id_sf_unc = "+str(photon_id_sf_unc)
+
 qcd_up = labels["wg+jets"]["hists-scale-variation3"]["mlg"].Integral()
 qcd_nom = labels["wg+jets"]["hists"]["mlg"].Integral()
 qcd_down = labels["wg+jets"]["hists-scale-variation7"]["mlg"].Integral()
@@ -1045,12 +1083,36 @@ qcd_unc=0.5*max(abs(qcd_up - qcd_nom),abs(qcd_up-qcd_down),abs(qcd_nom-qcd_down)
 
 print "qcd_unc = " + str(qcd_unc)
 
-print "(number of selected wg+jets events) * (data/MC eff scale factor) * (wg+jets xs) * (2016 integrated luminosity) / (number of wg+jets events run over) = "+str(labels["wg+jets"]["hists-pdf-variation44"]["mlg"].Integral())
-
-print "(number of selected wg+jets events) * (data/MC eff scale factor) = "+str(labels["wg+jets"]["hists"]["mlg"].Integral()*labels["wg+jets"]["samples"][0]["nweightedevents"]/(labels["wg+jets"]["samples"][0]["xs"]*1000*36.15))
-print "(number of selected wg+jets events) * (data/MC eff scale factor) = "+str(labels["wg+jets"]["hists-pdf-variation44"]["mlg"].Integral()*labels["wg+jets"]["samples"][0]["nweightedevents"]/(labels["wg+jets"]["samples"][0]["xs"]*1000*36.15))
+print "(number of selected wg+jets events) * (data/MC eff scale factor) = "+str(labels["wg+jets"]["hists"]["mlg"].Integral()*labels["wg+jets"]["samples"][0]["nweightedevents"]/(labels["wg+jets"]["samples"][0]["xs"]*1000*35.9))
 
 print "(number of wg+jets events run over) = "+str(labels["wg+jets"]["samples"][0]["nweightedevents"])
+
+Aepsilon = labels["wg+jets"]["hists"]["mlg"].Integral()/(labels["wg+jets"]["samples"][0]["xs"]*1000*35.9)
+
+Aepsilon_pdf = (labels["wg+jets"]["hists"]["mlg"].Integral()-stddev_pdf)/(labels["wg+jets"]["samples"][0]["xs"]*1000*35.9)
+
+Aepsilon_scale = (labels["wg+jets"]["hists"]["mlg"].Integral()-qcd_unc)/(labels["wg+jets"]["samples"][0]["xs"]*1000*35.9)
+
+Aepsilon_electron_id_sf = (labels["wg+jets"]["hists"]["mlg"].Integral()-electron_id_sf_unc)/(labels["wg+jets"]["samples"][0]["xs"]*1000*35.9)
+
+Aepsilon_electron_reco_sf = (labels["wg+jets"]["hists"]["mlg"].Integral()-electron_reco_sf_unc)/(labels["wg+jets"]["samples"][0]["xs"]*1000*35.9)
+
+Aepsilon_photon_id_sf = (labels["wg+jets"]["hists"]["mlg"].Integral()-photon_id_sf_unc)/(labels["wg+jets"]["samples"][0]["xs"]*1000*35.9)
  
-print "(number of selected wg+jets events) * (data/MC eff scale factor) / (number of wg+jets events run over)= "+str(labels["wg+jets"]["hists"]["mlg"].Integral()/(labels["wg+jets"]["samples"][0]["xs"]*1000*36.15))
-print "(number of selected wg+jets events) * (data/MC eff scale factor) / (number of wg+jets events run over)= "+str(labels["wg+jets"]["hists-pdf-variation44"]["mlg"].Integral()/(labels["wg+jets"]["samples"][0]["xs"]*1000*36.15))
+print "Aepsilon = (number of selected wg+jets events) * (data/MC eff scale factor) / (number of wg+jets events run over)= "+str(Aepsilon)
+
+print "wg_norm.getVal()/Aepsilon/35.9/1000.0 = " + str(wg_norm.getVal()/Aepsilon/35.9/1000.0)
+
+print "stat uncertainty = " + str(wg_norm.getError()/Aepsilon/35.9/1000.0)
+
+print "lumi uncertainty = " + str(wg_norm.getVal()/Aepsilon/(35.9*0.975)/1000.0 - wg_norm.getVal()/Aepsilon/35.9/1000.0)
+
+print "pdf uncertainty   = " + str(wg_norm.getVal()/Aepsilon_pdf/35.9/1000.0 - wg_norm.getVal()/Aepsilon/35.9/1000.0)
+
+print "scale uncertainty = " + str(wg_norm.getVal()/Aepsilon_scale/35.9/1000.0 - wg_norm.getVal()/Aepsilon/35.9/1000.0)
+
+print "electron id sf uncertainty = " + str(wg_norm.getVal()/Aepsilon_electron_id_sf/35.9/1000.0 - wg_norm.getVal()/Aepsilon/35.9/1000.0)
+
+print "electron reco sf uncertainty = " + str(wg_norm.getVal()/Aepsilon_electron_reco_sf/35.9/1000.0 - wg_norm.getVal()/Aepsilon/35.9/1000.0)
+
+print "photon id sf uncertainty = " + str(wg_norm.getVal()/Aepsilon_photon_id_sf/35.9/1000.0 - wg_norm.getVal()/Aepsilon/35.9/1000.0)
