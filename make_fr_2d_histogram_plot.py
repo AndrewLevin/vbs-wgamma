@@ -1,7 +1,6 @@
 from ROOT import *
 import sys
 
-
 if len(sys.argv) != 4:
     print "len(sys.argv) != 4, exiting"
     sys.exit(0)
@@ -29,7 +28,6 @@ hist.Draw("texte colz")
 #gPad.SetPhi( -50 )
 #gPad.SetTheta( 50 )
 #hist.Draw("lego")
-
 
 c1.SaveAs(output_file_name)
 
