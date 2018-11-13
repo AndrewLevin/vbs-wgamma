@@ -57,9 +57,7 @@ class exampleProducer(Module):
 
             genparts = Collection(event, "GenPart")
         except:
-            
             pass
-            
 
         tight_muons = []
 
