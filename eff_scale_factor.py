@@ -36,14 +36,29 @@ muon_id_sf_file.cd("MC_NUM_TightID_DEN_genTracks_PAR_pt_eta")
 
 muon_id_sf = muon_id_sf_file.Get("MC_NUM_TightID_DEN_genTracks_PAR_pt_eta/abseta_pt_ratio")
 
-def electron_efficiency_scale_factor(pt,eta):
+def electron_efficiency_scale_factor(pt,eta,id_err_up=False,reco_err_up=False):
 
     #the reoc 2D histogram is really a 1D histogram
-    return electron_id_sf.GetBinContent(electron_id_sf.GetXaxis().FindFixBin(eta),electron_id_sf.GetYaxis().FindFixBin(pt))* electron_reco_sf.GetBinContent(electron_reco_sf.GetXaxis().FindFixBin(eta),1)
 
-def photon_efficiency_scale_factor(pt,eta):
+    sf_id=electron_id_sf.GetBinContent(electron_id_sf.GetXaxis().FindFixBin(eta),electron_id_sf.GetYaxis().FindFixBin(pt))
+    if id_err_up:
+        sf_id+=electron_id_sf.GetBinError(electron_id_sf.GetXaxis().FindFixBin(eta),electron_id_sf.GetYaxis().FindFixBin(pt))
 
-    return photon_id_sf.GetBinContent(photon_id_sf.GetXaxis().FindFixBin(eta),photon_id_sf.GetYaxis().FindFixBin(pt))
+    sf_reco=electron_reco_sf.GetBinContent(electron_reco_sf.GetXaxis().FindFixBin(eta),1)
+
+    if reco_err_up:
+        sf_reco+=electron_reco_sf.GetBinError(electron_reco_sf.GetXaxis().FindFixBin(eta),1) 
+    
+    return sf_id*sf_reco
+
+def photon_efficiency_scale_factor(pt,eta,err_up=False):
+
+    sf = photon_id_sf.GetBinContent(photon_id_sf.GetXaxis().FindFixBin(eta),photon_id_sf.GetYaxis().FindFixBin(pt))
+
+    if err_up:
+        sf += photon_id_sf.GetBinError(photon_id_sf.GetXaxis().FindFixBin(eta),photon_id_sf.GetYaxis().FindFixBin(pt))
+
+    return sf
 
 def muon_efficiency_scale_factor(pt,eta):
 
