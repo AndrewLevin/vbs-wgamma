@@ -1,4 +1,5 @@
 import ROOT
+import math
 
 f=ROOT.TFile.Open("/eos/user/a/amlevin/tmp/Merged15.wgjets.root")
 t=f.Get("Events")
@@ -42,6 +43,11 @@ for i in range(0,t.GetEntries()):
         else:    
             n_weighted_pdf[j].Fill(0.5,-t.LHEPdfWeight[j+1])
 
+pdf_mean = 0
+pdf_stddev = 0
+scale_mean = 0
+scale_stddev = 0
+
 print "n_weighted.GetBinContent(1) = "+str(n_weighted.GetBinContent(1))
 print "n_weighted.GetBinError(1) = " + str(n_weighted.GetBinError(1))
 
@@ -50,9 +56,50 @@ for i in range(0,102):
     #print "n_weighted_pdf[i].GetBinError(1) = " + str(n_weighted_pdf[i].GetBinError(1))
 
     print "pdf variation "+str(i)+" xs: "+str(nominal_xs*n_weighted_pdf[i].GetBinContent(1)/n_weighted.GetBinContent(1))
+    pdf_mean+=n_weighted_pdf[i].GetBinContent(1)
+
+pdf_mean += n_weighted.GetBinContent(1)
+
+pdf_mean /= 103
+
+for i in range(0,102):
+    pdf_stddev+= pow(n_weighted_pdf[i].GetBinContent(1)-pdf_mean,2)
+
+pdf_stddev += pow(n_weighted.GetBinContent(1)-pdf_mean,2)
+
+pdf_stddev /= (103-1)
+
+pdf_stddev = math.sqrt(pdf_stddev)
 
 for i in range(0,8):
+    if i == 6 or i == 4:
+        continue
+
+    scale_mean += n_weighted_scale[i].GetBinContent(1)
+
     #print "n_weighted_scale[i].GetBinContent(1) = " + str(n_weighted_scale[i].GetBinContent(1))
     #print "n_weighted_scale[i].GetBinError(1) = " + str(n_weighted_scale[i].GetBinError(1))
 
     print "scale variation "+str(i)+" xs: "+ str(nominal_xs*n_weighted_scale[i].GetBinContent(1)/n_weighted.GetBinContent(1))
+
+scale_mean += n_weighted.GetBinContent(1)
+
+scale_mean /= 7
+
+for i in range(0,8):
+    if i == 6 or i == 4:
+        continue
+
+    scale_stddev += pow(n_weighted_scale[i].GetBinContent(1)-scale_mean,2)
+
+scale_stddev += pow(n_weighted.GetBinContent(1)-scale_mean,2)
+
+scale_stddev /= (7-1)
+
+scale_stddev = math.sqrt(scale_stddev)
+
+print "xs = "+str(n_weighted.GetBinContent(1) * nominal_xs / n_weighted.GetBinContent(1))
+
+print "pdf unc = "+ str(pdf_stddev * nominal_xs / n_weighted.GetBinContent(1))
+
+print "scale unc = "+ str(scale_stddev * nominal_xs / n_weighted.GetBinContent(1))
