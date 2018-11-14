@@ -514,9 +514,9 @@ for label in labels.keys():
     labels[label]["hists"] = {}
 
     labels[label]["hists-electron-id-sf-variation"] = {}
-
     labels[label]["hists-electron-reco-sf-variation"] = {}
-
+    labels[label]["hists-muon-id-sf-variation"] = {}
+    labels[label]["hists-muon-iso-sf-variation"] = {}
     labels[label]["hists-photon-id-sf-variation"] = {}
 
     if labels[label]["syst-pdf"]:
@@ -536,9 +536,13 @@ for label in labels.keys():
 
         labels[label]["hists-electron-id-sf-variation"][variable] = histogram_templates[variable].Clone(label + " " + variable)
         labels[label]["hists-electron-reco-sf-variation"][variable] = histogram_templates[variable].Clone(label + " " + variable)
+        labels[label]["hists-muon-id-sf-variation"][variable] = histogram_templates[variable].Clone(label + " " + variable)
+        labels[label]["hists-muon-iso-sf-variation"][variable] = histogram_templates[variable].Clone(label + " " + variable)
         labels[label]["hists-photon-id-sf-variation"][variable] = histogram_templates[variable].Clone(label + " " + variable)
         labels[label]["hists-electron-id-sf-variation"][variable].Sumw2()
         labels[label]["hists-electron-reco-sf-variation"][variable].Sumw2()
+        labels[label]["hists-muon-id-sf-variation"][variable].Sumw2()
+        labels[label]["hists-muon-iso-sf-variation"][variable].Sumw2()
         labels[label]["hists-photon-id-sf-variation"][variable].Sumw2()
 
         if labels[label]["syst-pdf"]:
@@ -642,7 +646,11 @@ def fillHistogramMC(label,sample,e_to_p_histograms,fake_photon_histograms,fake_l
             weight_electron_reco_sf_variation = weight * eff_scale_factor.electron_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta,False,True)
             weight *= eff_scale_factor.electron_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta)
             weight_photon_id_sf_variation *= eff_scale_factor.electron_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta)
+            weight_muon_id_sf_variation = weight
+            weight_muon_iso_sf_variation = weight
         elif lepton_abs_pdg_id == 13:
+            weight_muon_id_sf_variation = weight * eff_scale_factor.muon_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta,False,True)
+            weight_muon_iso_sf_variation = weight * eff_scale_factor.muon_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta,True,False)
             weight *= eff_scale_factor.muon_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta)
             weight_photon_id_sf_variation *= eff_scale_factor.muon_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta)
             weight_electron_id_sf_variation = weight
@@ -654,6 +662,8 @@ def fillHistogramMC(label,sample,e_to_p_histograms,fake_photon_histograms,fake_l
             weight = -weight
             weight_electron_id_sf_variation = -weight_electron_id_sf_variation
             weight_electron_reco_sf_variation = -weight_electron_reco_sf_variation
+            weight_muon_id_sf_variation = -weight_muon_id_sf_variation
+            weight_muon_iso_sf_variation = -weight_muon_iso_sf_variation
             weight_photon_id_sf_variation = -weight_photon_id_sf_variation
 
 #        if sample["filename"] == "/afs/cern.ch/work/a/amlevin/data/wg/wgjets.root":
@@ -673,6 +683,8 @@ def fillHistogramMC(label,sample,e_to_p_histograms,fake_photon_histograms,fake_l
                         label["hists"][variable].Fill(getVariable(variable,sample["tree"]),weight)
                         label["hists-electron-id-sf-variation"][variable].Fill(getVariable(variable,sample["tree"]),weight_electron_id_sf_variation)
                         label["hists-electron-reco-sf-variation"][variable].Fill(getVariable(variable,sample["tree"]),weight_electron_reco_sf_variation)
+                        label["hists-muon-id-sf-variation"][variable].Fill(getVariable(variable,sample["tree"]),weight_muon_id_sf_variation)
+                        label["hists-muon-iso-sf-variation"][variable].Fill(getVariable(variable,sample["tree"]),weight_muon_iso_sf_variation)
                         label["hists-photon-id-sf-variation"][variable].Fill(getVariable(variable,sample["tree"]),weight_photon_id_sf_variation)
                         if label["syst-pdf"]:
                             for j in range(0,102):
@@ -688,6 +700,8 @@ def fillHistogramMC(label,sample,e_to_p_histograms,fake_photon_histograms,fake_l
                         label["hists"][variable].Fill(getVariable(variable,sample["tree"]),weight)
                         label["hists-electron-id-sf-variation"][variable].Fill(getVariable(variable,sample["tree"]),weight_electron_id_sf_variation)
                         label["hists-electron-reco-sf-variation"][variable].Fill(getVariable(variable,sample["tree"]),weight_electron_reco_sf_variation)
+                        label["hists-muon-id-sf-variation"][variable].Fill(getVariable(variable,sample["tree"]),weight_muon_id_sf_variation)
+                        label["hists-muon-iso-sf-variation"][variable].Fill(getVariable(variable,sample["tree"]),weight_muon_iso_sf_variation)
                         label["hists-photon-id-sf-variation"][variable].Fill(getVariable(variable,sample["tree"]),weight_photon_id_sf_variation)
                         if label["syst-pdf"]:
                             for j in range(0,102):
@@ -1069,10 +1083,14 @@ print "stddev_pdf = "+str(mean_pdf/102.0)
 
 electron_id_sf_unc = labels["wg+jets"]["hists-electron-id-sf-variation"]["mlg"].Integral() - labels["wg+jets"]["hists"]["mlg"].Integral()
 electron_reco_sf_unc = labels["wg+jets"]["hists-electron-reco-sf-variation"]["mlg"].Integral() - labels["wg+jets"]["hists"]["mlg"].Integral()
+muon_id_sf_unc = labels["wg+jets"]["hists-muon-id-sf-variation"]["mlg"].Integral() - labels["wg+jets"]["hists"]["mlg"].Integral()
+muon_iso_sf_unc = labels["wg+jets"]["hists-muon-iso-sf-variation"]["mlg"].Integral() - labels["wg+jets"]["hists"]["mlg"].Integral()
 photon_id_sf_unc = labels["wg+jets"]["hists-photon-id-sf-variation"]["mlg"].Integral() - labels["wg+jets"]["hists"]["mlg"].Integral()
 
 print "electron_id_sf_unc = "+str(electron_id_sf_unc)
 print "electron_reco_sf_unc = "+str(electron_reco_sf_unc)
+print "muon_id_sf_unc = "+str(muon_id_sf_unc)
+print "muon_reco_sf_unc = "+str(muon_iso_sf_unc)
 print "photon_id_sf_unc = "+str(photon_id_sf_unc)
 
 qcd_up = labels["wg+jets"]["hists-scale-variation3"]["mlg"].Integral()
@@ -1097,6 +1115,10 @@ Aepsilon_electron_id_sf = (labels["wg+jets"]["hists"]["mlg"].Integral()-electron
 
 Aepsilon_electron_reco_sf = (labels["wg+jets"]["hists"]["mlg"].Integral()-electron_reco_sf_unc)/(labels["wg+jets"]["samples"][0]["xs"]*1000*35.9)
 
+Aepsilon_muon_id_sf = (labels["wg+jets"]["hists"]["mlg"].Integral()-muon_id_sf_unc)/(labels["wg+jets"]["samples"][0]["xs"]*1000*35.9)
+
+Aepsilon_muon_iso_sf = (labels["wg+jets"]["hists"]["mlg"].Integral()-muon_iso_sf_unc)/(labels["wg+jets"]["samples"][0]["xs"]*1000*35.9)
+
 Aepsilon_photon_id_sf = (labels["wg+jets"]["hists"]["mlg"].Integral()-photon_id_sf_unc)/(labels["wg+jets"]["samples"][0]["xs"]*1000*35.9)
  
 print "Aepsilon = (number of selected wg+jets events) * (data/MC eff scale factor) / (number of wg+jets events run over)= "+str(Aepsilon)
@@ -1114,5 +1136,9 @@ print "scale uncertainty = " + str(wg_norm.getVal()/Aepsilon_scale/35.9/1000.0 -
 print "electron id sf uncertainty = " + str(wg_norm.getVal()/Aepsilon_electron_id_sf/35.9/1000.0 - wg_norm.getVal()/Aepsilon/35.9/1000.0)
 
 print "electron reco sf uncertainty = " + str(wg_norm.getVal()/Aepsilon_electron_reco_sf/35.9/1000.0 - wg_norm.getVal()/Aepsilon/35.9/1000.0)
+
+print "muon id sf uncertainty = " + str(wg_norm.getVal()/Aepsilon_muon_id_sf/35.9/1000.0 - wg_norm.getVal()/Aepsilon/35.9/1000.0)
+
+print "muon iso sf uncertainty = " + str(wg_norm.getVal()/Aepsilon_muon_iso_sf/35.9/1000.0 - wg_norm.getVal()/Aepsilon/35.9/1000.0)
 
 print "photon id sf uncertainty = " + str(wg_norm.getVal()/Aepsilon_photon_id_sf/35.9/1000.0 - wg_norm.getVal()/Aepsilon/35.9/1000.0)
