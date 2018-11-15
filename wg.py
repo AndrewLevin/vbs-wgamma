@@ -216,6 +216,8 @@ def pass_selection(tree, fake_lepton = False , fake_photon = False):
             pass_photon_eta = False
     else:
         assert(0)
+
+#    pass_photon_eta = True    
         
     if tree.lepton_pdg_id == lepton_abs_pdg_id:
         pass_lepton_flavor = True
@@ -950,6 +952,18 @@ RooDataHist_mlg_wg = ROOT.RooDataHist("wg data hist","wg data hist",ROOT.RooArgL
 
 RooHistPdf_wg = ROOT.RooHistPdf("wg","wg",ROOT.RooArgSet(m),RooDataHist_mlg_wg)
 
+RooDataHist_mlg_ttsemi = ROOT.RooDataHist("ttsemi data hist","ttsemi data hist",ROOT.RooArgList(m),labels["ttsemi+jets"]["hists"]["mlg"])
+
+RooHistPdf_ttsemi = ROOT.RooHistPdf("ttsemi","ttsemi",ROOT.RooArgSet(m),RooDataHist_mlg_ttsemi)
+
+RooDataHist_mlg_tt2l2nu = ROOT.RooDataHist("tt2l2nu data hist","tt2l2nu data hist",ROOT.RooArgList(m),labels["tt2l2nu+jets"]["hists"]["mlg"])
+
+RooHistPdf_tt2l2nu = ROOT.RooHistPdf("tt2l2nu","tt2l2nu",ROOT.RooArgSet(m),RooDataHist_mlg_tt2l2nu)
+
+RooDataHist_mlg_ttg = ROOT.RooDataHist("ttg data hist","ttg data hist",ROOT.RooArgList(m),labels["ttg+jets"]["hists"]["mlg"])
+
+RooHistPdf_ttg = ROOT.RooHistPdf("ttg","ttg",ROOT.RooArgSet(m),RooDataHist_mlg_ttg)
+
 RooDataHist_mlg_zg = ROOT.RooDataHist("zg data hist","zg data hist",ROOT.RooArgList(m),labels["zg+jets"]["hists"]["mlg"])
 
 RooHistPdf_zg = ROOT.RooHistPdf("zg","zg",ROOT.RooArgSet(m),RooDataHist_mlg_zg)
@@ -967,6 +981,9 @@ RooDataHist_mlg_double_fake = ROOT.RooDataHist("zg data hist","zg data hist",ROO
 RooHistPdf_double_fake = ROOT.RooHistPdf("double fake","double fake",ROOT.RooArgSet(m),RooDataHist_mlg_double_fake)
 
 
+ttsemi_norm = ROOT.RooRealVar("ttsemi_norm","ttsemi_norm",labels["ttsemi+jets"]["hists"]["mlg"].Integral(),labels["ttsemi+jets"]["hists"]["mlg"].Integral());    
+tt2l2nu_norm = ROOT.RooRealVar("tt2l2nu_norm","tt2l2nu_norm",labels["tt2l2nu+jets"]["hists"]["mlg"].Integral(),labels["tt2l2nu+jets"]["hists"]["mlg"].Integral()); 
+ttg_norm = ROOT.RooRealVar("ttg_norm","ttg_norm",labels["ttg+jets"]["hists"]["mlg"].Integral(),labels["ttg+jets"]["hists"]["mlg"].Integral());    
 wg_norm = ROOT.RooRealVar("wg_norm","wg_norm",0,1000000);    
 zg_norm = ROOT.RooRealVar("zg_norm","zg_norm",0,1000000);    
 bwcb_norm = ROOT.RooRealVar("bwcb_norm","bwcb_norm",0,1000000);    
@@ -991,9 +1008,9 @@ f= ROOT.RooRealVar("f","f",0.5,0.,1.) ;
 #sum=ROOT.RooAddPdf("sum","sum",ROOT.RooArgList(wg,zg,bwcb),RooArgList(wg_norm,zg_norm,bwcb_norm))
 
 if lepton_abs_pdg_id == 11:
-    sum=ROOT.RooAddPdf("sum","sum",ROOT.RooArgList(RooHistPdf_wg,RooHistPdf_zg,RooFFTConvPdf_bwcb,RooHistPdf_fake_lepton,RooHistPdf_fake_photon,RooHistPdf_double_fake),ROOT.RooArgList(wg_norm,zg_norm,bwcb_norm,fake_lepton_norm,fake_photon_norm,double_fake_norm))
+    sum=ROOT.RooAddPdf("sum","sum",ROOT.RooArgList(RooHistPdf_wg,RooHistPdf_zg,RooFFTConvPdf_bwcb,RooHistPdf_fake_lepton,RooHistPdf_fake_photon,RooHistPdf_double_fake,RooHistPdf_ttsemi,RooHistPdf_tt2l2nu,RooHistPdf_ttg),ROOT.RooArgList(wg_norm,zg_norm,bwcb_norm,fake_lepton_norm,fake_photon_norm,double_fake_norm,ttsemi_norm,tt2l2nu_norm,ttg_norm))
 else:
-    sum=ROOT.RooAddPdf("sum","sum",ROOT.RooArgList(RooHistPdf_wg,RooHistPdf_zg,RooHistPdf_fake_lepton,RooHistPdf_fake_photon,RooHistPdf_double_fake),ROOT.RooArgList(wg_norm,zg_norm,fake_lepton_norm,fake_photon_norm,double_fake_norm))
+    sum=ROOT.RooAddPdf("sum","sum",ROOT.RooArgList(RooHistPdf_wg,RooHistPdf_zg,RooHistPdf_fake_lepton,RooHistPdf_fake_photon,RooHistPdf_double_fake,RooHistPdf_ttsemi,RooHistPdf_tt2l2nu,RooHistPdf_ttg),ROOT.RooArgList(wg_norm,zg_norm,fake_lepton_norm,fake_photon_norm,double_fake_norm,ttsemi_norm,tt2l2nu_norm,ttg_norm))
 
 sum.fitTo(data,ROOT.RooFit.Extended())
 
@@ -1004,13 +1021,39 @@ sum.plotOn(frame1)
 #sum.plotOn(frame, ROOT.RooFit.Components(ROOT.RooArgSet(sum.getComponents()["zg"])),ROOT.RooFit.LineStyle(ROOT.kDashed)) 
 #sum.plotOn(frame, ROOT.RooFit.Components("zg,wg,bwcb"),ROOT.RooFit.LineStyle(ROOT.kDashed)) 
 
+red_th1f=ROOT.TH1F("red_th1f","red_th1f",1,0,1)
+red_th1f.SetLineColor(ROOT.kRed)
+red_th1f.SetLineWidth(3)
+red_th1f.SetLineStyle(ROOT.kDashed)
+green_th1f=ROOT.TH1F("green_th1f","green_th1f",1,0,1)
+green_th1f.SetLineColor(ROOT.kGreen)
+green_th1f.SetLineWidth(3)
+green_th1f.SetLineStyle(ROOT.kDashed)
+magenta_th1f=ROOT.TH1F("magenta_th1f","magenta_th1f",1,0,1)
+magenta_th1f.SetLineColor(ROOT.kMagenta)
+magenta_th1f.SetLineWidth(3)
+magenta_th1f.SetLineStyle(ROOT.kDashed)
+
 if lepton_abs_pdg_id == 11:
     sum.plotOn(frame1, ROOT.RooFit.Components("wg"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kRed)) 
     sum.plotOn(frame1, ROOT.RooFit.Components("zg"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kGreen)) 
     sum.plotOn(frame1, ROOT.RooFit.Components("bwcb"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kMagenta)) 
+
+    legend1 = ROOT.TLegend(0.6, 0.7, 0.89, 0.89)
+    legend1.SetBorderSize(0)  # no border
+    legend1.SetFillStyle(0)  # make transparent
+    legend1.AddEntry(red_th1f,"wg","lp")
+    legend1.AddEntry(green_th1f,"zg","lp")
+    legend1.AddEntry(magenta_th1f,"bwcb","lp")
 else:
     sum.plotOn(frame1, ROOT.RooFit.Components("wg"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kRed)) 
     sum.plotOn(frame1, ROOT.RooFit.Components("zg"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kGreen)) 
+
+    legend1 = ROOT.TLegend(0.6, 0.7, 0.89, 0.89)
+    legend1.SetBorderSize(0)  # no border
+    legend1.SetFillStyle(0)  # make transparent
+    legend1.AddEntry(red_th1f,"wg","lp")
+    legend1.AddEntry(green_th1f,"zg","lp")
 
 wg_norm.Print("all")
 zg_norm.Print("all")
@@ -1018,6 +1061,9 @@ bwcb_norm.Print("all")
 fake_lepton_norm.Print("all")
 fake_photon_norm.Print("all")
 double_fake_norm.Print("all")
+ttsemi_norm.Print("all")
+tt2l2nu_norm.Print("all")
+ttg_norm.Print("all")
 
 frame1.SetTitle("")
 frame1.GetYaxis().SetTitle("")
@@ -1026,6 +1072,8 @@ frame1.GetXaxis().SetTitle("m_{lg} (GeV)")
 c2 = ROOT.TCanvas("c2", "c2",5,50,500,500)
 
 frame1.Draw()
+
+legend1.Draw("same")
 
 c2.Update()
 c2.ForceUpdate()
@@ -1050,7 +1098,16 @@ frame2.GetXaxis().SetTitle("m_{lg} (GeV)")
 
 c3 = ROOT.TCanvas("c3", "c3",5,50,500,500)
 
+legend2 = ROOT.TLegend(0.6, 0.7, 0.89, 0.89)
+legend2.SetBorderSize(0)  # no border
+legend2.SetFillStyle(0)  # make transparent
+legend2.AddEntry(red_th1f,"fake photon","lp")
+legend2.AddEntry(green_th1f,"fake lepton","lp")
+legend2.AddEntry(magenta_th1f,"double fake","lp")
+
 frame2.Draw()
+
+legend2.Draw("same")
 
 c3.Update()
 c3.ForceUpdate()
