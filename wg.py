@@ -32,8 +32,8 @@ def deltaR(eta1,phi1,eta2=None,phi2=None):
 parser = optparse.OptionParser()
 
 
-parser.add_option('--lep',dest='lep',default='muon')
-parser.add_option('--phoeta',dest='phoeta',default='barrel')
+parser.add_option('--lep',dest='lep',default='both')
+parser.add_option('--phoeta',dest='phoeta',default='both')
 
 parser.add_option('--lumi',dest='lumi')
 parser.add_option('--variable',dest='variable')
@@ -48,13 +48,6 @@ if options.lep == "muon":
     lepton_name = "muon"
 elif options.lep == "electron":
     lepton_name = "electron"
-else:
-    assert(0)
-
-if options.phoeta == "barrel":
-    photon_eta_cutstring = "abs(photon_eta) < 1.4442"
-elif options.phoeta == "endcap":
-    photon_eta_cutstring = "1.566 < abs(photon_eta) && abs(photon_eta) < 2.5"
 else:
     assert(0)
 
@@ -203,13 +196,16 @@ def getXaxisLabel(varname):
     else:
         assert(0)
 
-def pass_selection(tree, fake_lepton = False , fake_photon = False):
-    if photon_eta_cutstring == "abs(photon_eta) < 1.4442":        
+def pass_selection(tree, barrel_or_endcap_or_both = "both", fake_lepton = False , fake_photon = False):
+
+    if barrel_or_endcap_or_both == "both":
+        pass_photon_eta = True    
+    elif barrel_or_endcap == "barrel":        
         if abs(tree.photon_eta) < 1.4442:
             pass_photon_eta = True
         else:
             pass_photon_eta = False
-    elif photon_eta_cutstring == "1.566 < abs(photon_eta) && abs(photon_eta) < 2.5":        
+    elif barrel_or_endcap_or_both == "endcap":        
         if 1.566 < abs(tree.photon_eta) and abs(tree.photon_eta) < 2.5:
             pass_photon_eta = True
         else:
@@ -217,7 +213,7 @@ def pass_selection(tree, fake_lepton = False , fake_photon = False):
     else:
         assert(0)
 
-#    pass_photon_eta = True    
+
         
     if tree.lepton_pdg_id == lepton_abs_pdg_id:
         pass_lepton_flavor = True
@@ -612,7 +608,7 @@ def fillHistogramMC(label,sample,e_to_p_histograms,fake_photon_histograms,fake_l
             pass_photon_gen_matching = False    
 
         if pass_photon_gen_matching and pass_is_lepton_real:
-            if pass_selection(sample["tree"],True,False):
+            if pass_selection(sample["tree"],options.phoeta,True,False):
 
                 weight =-leptonfakerate(sample["tree"].lepton_pdg_id,sample["tree"].lepton_eta, sample["tree"].lepton_pt,"nominal")* sample["xs"] * 1000 * 35.9 / sample["nweightedevents"]
 
@@ -622,7 +618,7 @@ def fillHistogramMC(label,sample,e_to_p_histograms,fake_photon_histograms,fake_l
                 for variable in variables:
                     fake_lepton_histograms[variable].Fill(getVariable(variable,sample["tree"]),weight)  
 
-            if pass_selection(sample["tree"],False,True):
+            if pass_selection(sample["tree"],options.phoeta,False,True):
 
                 weight = -photonfakerate(sample["tree"].photon_eta, sample["tree"].photon_pt,sample["tree"].lepton_pdg_id, "nominal")* sample["xs"] * 1000 * 35.9 / sample["nweightedevents"]
 
@@ -632,7 +628,7 @@ def fillHistogramMC(label,sample,e_to_p_histograms,fake_photon_histograms,fake_l
                 for variable in variables:
                     fake_photon_histograms[variable].Fill(getVariable(variable,sample["tree"]),weight)  
 
-        if not pass_selection(sample["tree"]):
+        if not pass_selection(sample["tree"],options.phoeta,False,False):
             continue
 
         weight = sample["xs"]*1000*35.9/sample["nweightedevents"]
@@ -721,26 +717,26 @@ for i in range(data_events_tree.GetEntries()):
 #    if not pass_json(data_events_tree.run,data_events_tree.lumi):
 #        continue
 
-    if pass_selection(data_events_tree):
+    if pass_selection(data_events_tree,options.phoeta):
         for variable in variables:
             data["hists"][variable].Fill(getVariable(variable,data_events_tree))        
 
 
-    if pass_selection(data_events_tree,True,False):
+    if pass_selection(data_events_tree,options.phoeta,True,False):
 
         weight = leptonfakerate(data_events_tree.lepton_pdg_id,data_events_tree.lepton_eta, data_events_tree.lepton_pt,"nominal")
 
         for variable in variables:
             fake_lepton["hists"][variable].Fill(getVariable(variable,data_events_tree),weight)
 
-    if pass_selection(data_events_tree,False,True):
+    if pass_selection(data_events_tree,options.phoeta,False,True):
 
         weight = photonfakerate(data_events_tree.photon_eta, data_events_tree.photon_pt,data_events_tree.lepton_pdg_id, "nominal")
 
         for variable in variables:
             fake_photon["hists"][variable].Fill(getVariable(variable,data_events_tree),weight)
 
-    if pass_selection(data_events_tree,True,True):
+    if pass_selection(data_events_tree,options.phoeta,True,True):
 
         weight = leptonfakerate(data_events_tree.lepton_pdg_id,data_events_tree.lepton_eta, data_events_tree.lepton_pt,"nominal")*photonfakerate(data_events_tree.photon_eta, data_events_tree.photon_pt,data_events_tree.lepton_pdg_id, "nominal")
 
