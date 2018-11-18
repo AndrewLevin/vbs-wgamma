@@ -25,6 +25,9 @@ class exampleProducer(Module):
         self.out.branch("photon_eta",  "F");
         self.out.branch("gen_weight",  "F");
         self.out.branch("lepton_pdg_id",  "I");
+        self.out.branch("run",  "i");
+        self.out.branch("lumi",  "i");
+        self.out.branch("event",  "l");
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
     def analyze(self, event):
@@ -175,6 +178,10 @@ class exampleProducer(Module):
             self.out.fillBranch("gen_weight",event.Generator_weight)
         except:
             pass
+
+        self.out.fillBranch("event",event.event)
+        self.out.fillBranch("lumi",event.luminosityBlock)
+        self.out.fillBranch("run",event.run)
 
         return True
 
