@@ -964,6 +964,15 @@ RooDataHist_mlg_ttg = ROOT.RooDataHist("ttg data hist","ttg data hist",ROOT.RooA
 
 RooHistPdf_ttg = ROOT.RooHistPdf("ttg","ttg",ROOT.RooArgSet(m),RooDataHist_mlg_ttg)
 
+top_mlg_hist = labels["ttg+jets"]["hists"]["mlg"].Clone("top")
+
+top_mlg_hist.Add(labels["tt2l2nu+jets"]["hists"]["mlg"])
+top_mlg_hist.Add(labels["ttsemi+jets"]["hists"]["mlg"])
+
+RooDataHist_mlg_top = ROOT.RooDataHist("top data hist","top data hist",ROOT.RooArgList(m),top_mlg_hist)
+
+RooHistPdf_top = ROOT.RooHistPdf("top","top",ROOT.RooArgSet(m),RooDataHist_mlg_top)
+
 RooDataHist_mlg_zg = ROOT.RooDataHist("zg data hist","zg data hist",ROOT.RooArgList(m),labels["zg+jets"]["hists"]["mlg"])
 
 RooHistPdf_zg = ROOT.RooHistPdf("zg","zg",ROOT.RooArgSet(m),RooDataHist_mlg_zg)
@@ -986,6 +995,10 @@ etog_norm = ROOT.RooRealVar("etog_norm","etog_norm",electron_to_photon["hists"][
 ttsemi_norm = ROOT.RooRealVar("ttsemi_norm","ttsemi_norm",labels["ttsemi+jets"]["hists"]["mlg"].Integral(),labels["ttsemi+jets"]["hists"]["mlg"].Integral());    
 tt2l2nu_norm = ROOT.RooRealVar("tt2l2nu_norm","tt2l2nu_norm",labels["tt2l2nu+jets"]["hists"]["mlg"].Integral(),labels["tt2l2nu+jets"]["hists"]["mlg"].Integral()); 
 ttg_norm = ROOT.RooRealVar("ttg_norm","ttg_norm",labels["ttg+jets"]["hists"]["mlg"].Integral(),labels["ttg+jets"]["hists"]["mlg"].Integral());    
+
+top_norm = ROOT.RooRealVar("top_norm","top_norm",top_mlg_hist.Integral(),top_mlg_hist.Integral());    
+
+
 wg_norm = ROOT.RooRealVar("wg_norm","wg_norm",0,1000000);    
 zg_norm = ROOT.RooRealVar("zg_norm","zg_norm",0,1000000);    
 bwcb_norm = ROOT.RooRealVar("bwcb_norm","bwcb_norm",0,1000000);    
@@ -1010,9 +1023,9 @@ f= ROOT.RooRealVar("f","f",0.5,0.,1.) ;
 #sum=ROOT.RooAddPdf("sum","sum",ROOT.RooArgList(wg,zg,bwcb),RooArgList(wg_norm,zg_norm,bwcb_norm))
 
 if lepton_abs_pdg_id == 11:
-    sum=ROOT.RooAddPdf("sum","sum",ROOT.RooArgList(RooHistPdf_wg,RooHistPdf_zg,RooFFTConvPdf_bwcb,RooHistPdf_fake_lepton,RooHistPdf_fake_photon,RooHistPdf_double_fake,RooHistPdf_ttsemi,RooHistPdf_tt2l2nu,RooHistPdf_ttg,RooHistPdf_etog),ROOT.RooArgList(wg_norm,zg_norm,bwcb_norm,fake_lepton_norm,fake_photon_norm,double_fake_norm,ttsemi_norm,tt2l2nu_norm,ttg_norm,etog_norm))
+    sum=ROOT.RooAddPdf("sum","sum",ROOT.RooArgList(RooHistPdf_wg,RooHistPdf_zg,RooFFTConvPdf_bwcb,RooHistPdf_fake_lepton,RooHistPdf_fake_photon,RooHistPdf_double_fake,RooHistPdf_top,RooHistPdf_etog),ROOT.RooArgList(wg_norm,zg_norm,bwcb_norm,fake_lepton_norm,fake_photon_norm,double_fake_norm,top_norm,etog_norm))
 else:
-    sum=ROOT.RooAddPdf("sum","sum",ROOT.RooArgList(RooHistPdf_wg,RooHistPdf_zg,RooHistPdf_fake_lepton,RooHistPdf_fake_photon,RooHistPdf_double_fake,RooHistPdf_ttsemi,RooHistPdf_tt2l2nu,RooHistPdf_ttg),ROOT.RooArgList(wg_norm,zg_norm,fake_lepton_norm,fake_photon_norm,double_fake_norm,ttsemi_norm,tt2l2nu_norm,ttg_norm))
+    sum=ROOT.RooAddPdf("sum","sum",ROOT.RooArgList(RooHistPdf_wg,RooHistPdf_zg,RooHistPdf_fake_lepton,RooHistPdf_fake_photon,RooHistPdf_double_fake,RooHistPdf_top),ROOT.RooArgList(wg_norm,zg_norm,fake_lepton_norm,fake_photon_norm,double_fake_norm,top_norm))
 
 sum.fitTo(data,ROOT.RooFit.Extended())
 
