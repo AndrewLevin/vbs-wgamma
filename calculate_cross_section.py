@@ -124,6 +124,12 @@ print "xs based on electron channel = " +str(xs_electron) + " +/- " + str(stat_e
 
 print "xs based on muon channel = " +str(xs_muon) + " +/- "+ str(stat_err_muon) + " (stat) +/- " + str(syst_err_muon) + " (syst) +/- "  + str(lumi_err_muon) + " (lumi)" 
 
+print "acc = "+str(acc)
+
+print "acc_muon = "+str(acc_muon)
+
+print "acc_electron = "+str(acc_electron)
+
 print "fractional_err_on_acc_due_to_pdf = " + str(fractional_err_on_acc_due_to_pdf)
 
 print "fractional_err_on_acc_due_to_pdf_muon = " + str(fractional_err_on_acc_due_to_pdf_muon)
