@@ -1,58 +1,6 @@
 import ROOT
 import math
 
-def nnlo_scale_factor(photon_eta,photon_pt):
-    if abs(photon_eta) < 1.4442:
-        if photon_pt < 17.5:
-            return 1.147377962
-        elif photon_pt < 22.5:
-            return 1.178472286
-        elif photon_pt < 27.5:
-            return 1.189477952
-        elif photon_pt < 32.5:
-            return 1.201940155
-        elif photon_pt < 37.5:
-            return 1.207208243
-        elif photon_pt < 42.5:
-            return 1.223341402
-        elif photon_pt < 50:
-            return 1.236597991
-        elif photon_pt < 75:
-            return 1.251381290
-        elif photon_pt < 105:
-            return 1.276937808
-        elif photon_pt < 310:
-            return 1.313879553
-        elif photon_pt < 3500:
-            return 1.342758655
-        else:
-            return 1.342758655
-    else:
-        if photon_pt < 17.5:
-            return 1.162640195
-        elif photon_pt < 22.5:
-            return 1.177382848
-        elif photon_pt < 27.5:
-            return 1.184751650
-        elif photon_pt < 32.5:
-            return 1.199851869
-        elif photon_pt < 37.5:
-            return 1.211113026
-        elif photon_pt < 42.5:
-            return 1.224040300
-        elif photon_pt < 50:
-            return 1.216979438
-        elif photon_pt < 75:
-            return 1.238354632
-        elif photon_pt < 105:
-            return 1.272419215
-        elif photon_pt < 310:
-            return 1.305852580
-        elif photon_pt < 3500:
-            return 1.296100451
-        else:
-            return 1.296100451
-
 f=ROOT.TFile.Open("/eos/user/a/amlevin/tmp/Merged15.wgjets.root")
 t=f.Get("Events")
 
@@ -100,7 +48,7 @@ for i in range(0,t.GetEntries()):
 
     assert(n_photon == 1)
 
-    weight = nnlo_scale_factor(photon_eta,photon_pt)
+    weight = 1
 
     if t.Generator_weight > 0:
         n_weighted.Fill(0.5)
@@ -175,8 +123,10 @@ scale_stddev /= (7-1)
 
 scale_stddev = math.sqrt(scale_stddev)
 
-print "nnlo xs = "+str(n_weighted_nnlo.GetBinContent(1) * nominal_xs / n_weighted.GetBinContent(1))
+nlo_xs = n_weighted_nnlo.GetBinContent(1) * nominal_xs / n_weighted.GetBinContent(1)
 
-print "pdf unc = "+ str(pdf_stddev * nominal_xs / n_weighted.GetBinContent(1))
+pdf_unc = n_weighted_nnlo.GetBinContent(1) * nominal_xs / n_weighted.GetBinContent(1)
 
-print "scale unc = "+ str(scale_stddev * nominal_xs / n_weighted.GetBinContent(1))
+scale_unc = scale_stddev * nominal_xs / n_weighted.GetBinContent(1)
+
+print "nlo xs = " + str(nlo_xs) + " +/- " + str(scale_unc) + " (scale) +/- " + str(pdf_unc) + " (pdf)" 
