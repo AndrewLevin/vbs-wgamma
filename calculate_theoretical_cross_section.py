@@ -68,7 +68,7 @@ for i in range(0,t.GetEntries()):
     else:    
         n_weighted.Fill(0.5,-1)
 
-    if deltaR(lepton_eta,lepton_phi,photon_eta,photon_phi) < 0.0:
+    if deltaR(lepton_eta,lepton_phi,photon_eta,photon_phi) < 0.7:
         continue
 
     if t.Generator_weight > 0:
@@ -109,7 +109,7 @@ pdf_mean /= 103
 for i in range(0,102):
     pdf_stddev+= pow(n_weighted_pdf[i].GetBinContent(1)-pdf_mean,2)
 
-pdf_stddev += pow(n_weighted.GetBinContent(1)-pdf_mean,2)
+pdf_stddev += pow(n_weighted_nlo.GetBinContent(1)-pdf_mean,2)
 
 pdf_stddev /= (103-1)
 
@@ -126,7 +126,7 @@ for i in range(0,8):
 
 #    print "scale variation "+str(i)+" xs: "+ str(nominal_xs*n_weighted_scale[i].GetBinContent(1)/n_weighted.GetBinContent(1))
 
-scale_mean += n_weighted.GetBinContent(1)
+scale_mean += n_weighted_nlo.GetBinContent(1)
 
 scale_mean /= 7
 
