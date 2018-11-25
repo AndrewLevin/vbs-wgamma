@@ -1,6 +1,12 @@
 import ROOT
 import math
 
+from math import hypot, pi
+def deltaR(eta1,phi1,eta2,phi2):
+    dphi = abs(phi1-phi2);
+    if dphi > pi: dphi = 2*pi-dphi
+    return hypot(eta1-eta2,dphi)
+
 f=ROOT.TFile.Open("/eos/user/a/amlevin/tmp/Merged15.wgjets.root")
 t=f.Get("Events")
 
@@ -34,19 +40,29 @@ for i in range(0,t.GetEntries()):
     n_w_minus = 0
     n_photon = 0
 
+    
+
     for j in range(0,t.nLHEPart):
         if t.LHEPart_pdgId[j] == -11 or t.LHEPart_pdgId[j] == -13 or t.LHEPart_pdgId[j] == -15:
             n_w_plus+=1
+            lepton_eta = t.LHEPart_eta[j]
+            lepton_phi = t.LHEPart_phi[j]
         elif t.LHEPart_pdgId[j] == 11 or t.LHEPart_pdgId[j] == 13 or t.LHEPart_pdgId[j] == 15:
             n_w_minus+=1
+            lepton_eta = t.LHEPart_eta[j]
+            lepton_phi = t.LHEPart_phi[j]
         elif t.LHEPart_pdgId[j] == 22:
             n_photon += 1 
+            photon_phi = t.LHEPart_phi[j]
             photon_eta = t.LHEPart_eta[j]
             photon_pt = t.LHEPart_pt[j]
 
     assert(n_w_minus == 1 or n_w_plus == 1)        
 
     assert(n_photon == 1)
+
+    if deltaR(lepton_eta,lepton_phi,photon_eta,photon_phi) < 0.7:
+        continue
 
     weight = 1
 
