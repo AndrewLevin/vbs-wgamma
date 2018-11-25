@@ -15,8 +15,8 @@ nominal_xs = 178.6
 n_total = 0
 n_weighted = ROOT.TH1F("n_weighted","n_weighted",1,0,1)
 n_weighted.Sumw2()
-n_weighted_nnlo = ROOT.TH1F("n_weighted_nnlo","n_weighted_nnlo",1,0,1)
-n_weighted_nnlo.Sumw2()
+n_weighted_nlo = ROOT.TH1F("n_weighted_nlo","n_weighted_nlo",1,0,1)
+n_weighted_nlo.Sumw2()
 n_weighted_pdf = []
 n_weighted_scale = []
 
@@ -61,17 +61,20 @@ for i in range(0,t.GetEntries()):
 
     assert(n_photon == 1)
 
-    if deltaR(lepton_eta,lepton_phi,photon_eta,photon_phi) < 0.7:
-        continue
-
     weight = 1
 
     if t.Generator_weight > 0:
         n_weighted.Fill(0.5)
-        n_weighted_nnlo.Fill(0.5,weight)
     else:    
         n_weighted.Fill(0.5,-1)
-        n_weighted_nnlo.Fill(0.5,-weight)
+
+    if deltaR(lepton_eta,lepton_phi,photon_eta,photon_phi) < 0.7:
+        continue
+
+    if t.Generator_weight > 0:
+        n_weighted_nlo.Fill(0.5,weight)
+    else:    
+        n_weighted_nlo.Fill(0.5,-weight)
 
     for j in range(0,8):
         if t.Generator_weight > 0:
@@ -139,9 +142,9 @@ scale_stddev /= (7-1)
 
 scale_stddev = math.sqrt(scale_stddev)
 
-nlo_xs = n_weighted_nnlo.GetBinContent(1) * nominal_xs / n_weighted.GetBinContent(1)
+nlo_xs = n_weighted_nlo.GetBinContent(1) * nominal_xs / n_weighted.GetBinContent(1)
 
-pdf_unc = n_weighted_nnlo.GetBinContent(1) * nominal_xs / n_weighted.GetBinContent(1)
+pdf_unc = n_weighted_nlo.GetBinContent(1) * nominal_xs / n_weighted.GetBinContent(1)
 
 scale_unc = scale_stddev * nominal_xs / n_weighted.GetBinContent(1)
 
