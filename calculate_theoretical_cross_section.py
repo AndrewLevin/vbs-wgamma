@@ -7,7 +7,7 @@ def deltaR(eta1,phi1,eta2,phi2):
     if dphi > pi: dphi = 2*pi-dphi
     return hypot(eta1-eta2,dphi)
 
-f=ROOT.TFile.Open("/eos/user/a/amlevin/tmp/Merged15.wgjets.root")
+f=ROOT.TFile.Open("/eos/user/a/amlevin/tmp/wgjets.1.root")
 t=f.Get("Events")
 
 nominal_xs = 178.6
@@ -68,7 +68,7 @@ for i in range(0,t.GetEntries()):
     else:    
         n_weighted.Fill(0.5,-1)
 
-    if deltaR(lepton_eta,lepton_phi,photon_eta,photon_phi) < 0.7:
+    if deltaR(lepton_eta,lepton_phi,photon_eta,photon_phi) < 0.0:
         continue
 
     if t.Generator_weight > 0:
@@ -144,7 +144,7 @@ scale_stddev = math.sqrt(scale_stddev)
 
 nlo_xs = n_weighted_nlo.GetBinContent(1) * nominal_xs / n_weighted.GetBinContent(1)
 
-pdf_unc = n_weighted_nlo.GetBinContent(1) * nominal_xs / n_weighted.GetBinContent(1)
+pdf_unc = pdf_stddev * nominal_xs / n_weighted.GetBinContent(1)
 
 scale_unc = scale_stddev * nominal_xs / n_weighted.GetBinContent(1)
 
