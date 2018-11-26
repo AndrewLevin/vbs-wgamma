@@ -38,7 +38,7 @@ gStyle.SetOptStat(0)
 
 foutname=options.foutname
 
-fout=TFile(foutname,"recreate")
+fout=TFile("electron_closure_test_frs.root","recreate")
 
 electron_fr_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/qcd_bctoe_170250.root", "xs" : 2608},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/qcd_bctoe_2030.root", "xs" : 363100},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/qcd_bctoe_250.root", "xs" : 722.6},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/qcd_bctoe_3080.root", "xs" : 417800},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/qcd_bctoe_80170.root", "xs" : 39860}]
 
@@ -88,6 +88,16 @@ for sample in electron_fr_samples:
     t = f.Get("Events")
     n_weighted_events = f.Get("nWeightedEvents").GetBinContent(1)
     fill_loose_and_tight_th2ds(t,tight_electron_th2d,loose_electron_th2d,sample["xs"]*1000*35.9/n_weighted_events)
+
+fout.cd()
+
+tight_electron_th2d.Clone().Write()
+loose_electron_th2d.Clone().Write()
+
+loose_electron_th2d.Add(tight_electron_th2d)
+    
+tight_electron_th2d.Divide(loose_electron_th2d)
+tight_electron_th2d.Clone("electron_frs").Write()
 
 if options.finmuondataname != None:
 
@@ -222,12 +232,6 @@ if options.finmuonmcname2 != None:
             else:    
                 loose_muon_th2d.Fill(abs(muon_mc_tree2.lepton_eta),muon_mc_tree2.lepton_pt,-weight)
 
-#tight_muon_th2d.Print("all")
-#loose_muon_th2d.Print("all")
-
-#tight_muon_th2d.Print("all")
-#loose_muon_th2d.Print("all")
-
 if options.finelectrondataname != None:
 
     finelectronname=options.finelectrondataname
@@ -332,14 +336,5 @@ if options.finmuondataname != None or options.finmuonmcname1 != None or options.
 
     tight_muon_th2d.Divide(loose_muon_th2d)
     tight_muon_th2d.Clone("muon_frs").Write()
-
-
-tight_electron_th2d.Clone().Write()
-loose_electron_th2d.Clone().Write()
-
-loose_electron_th2d.Add(tight_electron_th2d)
-    
-tight_electron_th2d.Divide(loose_electron_th2d)
-tight_electron_th2d.Clone("electron_frs").Write()
 
 
