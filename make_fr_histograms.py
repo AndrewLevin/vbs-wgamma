@@ -40,6 +40,55 @@ foutname=options.foutname
 
 fout=TFile(foutname,"recreate")
 
+electron_fr_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/qcd_bctoe_170250.root", "xs" : 2608},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/qcd_bctoe_2030.root", "xs" : 363100},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/qcd_bctoe_250.root", "xs" : 722.6},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/qcd_bctoe_3080.root", "xs" : 417800},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/qcd_bctoe_80170.root", "xs" : 39860}]
+
+
+electron_ptbins=array('d', [30,40,50])
+electron_etabins=array('d', [0,0.5,1,1.479,2.0,2.5])
+
+loose_electron_th2d=TH2F("loose_electron_hist","loose_electron_hist",len(electron_etabins)-1,electron_etabins,len(electron_ptbins)-1,electron_ptbins)
+tight_electron_th2d=TH2F("tight_electron_hist","tight_electron_hist",len(electron_etabins)-1,electron_etabins,len(electron_ptbins)-1,electron_ptbins)
+
+loose_electron_th2d.Sumw2()
+tight_electron_th2d.Sumw2()
+
+def fill_loose_and_tight_th2ds(tree,tight_th2d,loose_th2d,xs_weight = None):
+    for entry in range(tree.GetEntries()):
+        tree.GetEntry(entry)
+
+        if entry % 100000 == 0:
+            print entry
+
+        if entry % int(options.mod) != 0:
+            continue
+
+        if xs_weight:
+            weight = xs_weight
+        else:
+            weight = 1
+
+        if tree.gen_weight < 0:
+            weight = -weight
+
+        if (tree.is_lepton_tight == '\x01'):
+            if tree.lepton_pt > tight_th2d.GetYaxis().GetBinUpEdge(tight_th2d.GetYaxis().GetNbins()):
+                tight_th2d.Fill(abs(tree.lepton_eta),tight_th2d.GetYaxis().GetBinCenter(tight_th2d.GetYaxis().GetNbins()),weight)
+            else:
+                tight_th2d.Fill(abs(tree.lepton_eta),tree.lepton_pt,weight)
+
+        else:
+            
+            if tree.lepton_pt > loose_th2d.GetYaxis().GetBinUpEdge(loose_th2d.GetYaxis().GetNbins()):
+                loose_th2d.Fill(abs(tree.lepton_eta),loose_th2d.GetYaxis().GetBinCenter(loose_th2d.GetYaxis().GetNbins()),weight)
+            else:    
+                loose_th2d.Fill(abs(tree.lepton_eta),tree.lepton_pt,weight)
+
+for sample in electron_fr_samples:
+    f = TFile.Open(sample["filename"])
+    t = f.Get("Events")
+    n_weighted_events = f.Get("nWeightedEvents").GetBinContent(1)
+    fill_loose_and_tight_th2ds(t,tight_electron_th2d,loose_electron_th2d,sample["xs"]*1000*35.9/n_weighted_events)
+
 if options.finmuondataname != None:
 
     #muon_ptbins=array('d', [10,15,20,25,30,40,50])
@@ -173,7 +222,6 @@ if options.finmuonmcname2 != None:
             else:    
                 loose_muon_th2d.Fill(abs(muon_mc_tree2.lepton_eta),muon_mc_tree2.lepton_pt,-weight)
 
-
 #tight_muon_th2d.Print("all")
 #loose_muon_th2d.Print("all")
 
@@ -182,50 +230,15 @@ if options.finmuonmcname2 != None:
 
 if options.finelectrondataname != None:
 
-    electron_ptbins=array('d', [30,40,50])
-    electron_etabins=array('d', [0,0.5,1,1.479,2.0,2.5])
-
-    loose_electron_th2d=TH2F("loose_electron_hist","loose_electron_hist",len(electron_etabins)-1,electron_etabins,len(electron_ptbins)-1,electron_ptbins)
-    tight_electron_th2d=TH2F("tight_electron_hist","tight_electron_hist",len(electron_etabins)-1,electron_etabins,len(electron_ptbins)-1,electron_ptbins)
-
-    loose_electron_th2d.Sumw2()
-    tight_electron_th2d.Sumw2()
-
     finelectronname=options.finelectrondataname
 
     finelectron=TFile(finelectronname)
-
+    
     gROOT.cd()
 
     electron_tree=finelectron.Get("Events")
 
-    for entry in range(electron_tree.GetEntries()):
-        electron_tree.GetEntry(entry)
-
-    #if entry >= options.n_events:
-    #    break
-
-        if entry % 100000 == 0:
-            print entry
-
-        if entry % int(options.mod) != 0:
-            continue
-
-        weight = 1
-
-        if (electron_tree.is_lepton_tight == '\x01'):
-            if electron_tree.lepton_pt > tight_electron_th2d.GetYaxis().GetBinUpEdge(tight_electron_th2d.GetYaxis().GetNbins()):
-                tight_electron_th2d.Fill(abs(electron_tree.lepton_eta),tight_electron_th2d.GetYaxis().GetBinCenter(tight_electron_th2d.GetYaxis().GetNbins()),weight)
-            else:
-                tight_electron_th2d.Fill(abs(electron_tree.lepton_eta),electron_tree.lepton_pt,weight)
-
-        else:
-            
-            if electron_tree.lepton_pt > loose_electron_th2d.GetYaxis().GetBinUpEdge(loose_electron_th2d.GetYaxis().GetNbins()):
-                loose_electron_th2d.Fill(abs(electron_tree.lepton_eta),loose_electron_th2d.GetYaxis().GetBinCenter(loose_electron_th2d.GetYaxis().GetNbins()),weight)
-            else:    
-                loose_electron_th2d.Fill(abs(electron_tree.lepton_eta),electron_tree.lepton_pt,weight)
-
+    fill_loose_and_tight_th2ds(electron_tree,tight_electron_th2d,loose_electron_th2d)
 
 if options.finelectronmcname1 != None:
 
@@ -320,16 +333,13 @@ if options.finmuondataname != None or options.finmuonmcname1 != None or options.
     tight_muon_th2d.Divide(loose_muon_th2d)
     tight_muon_th2d.Clone("muon_frs").Write()
 
-if options.finelectrondataname != None or options.finelectronmcname1 != None or options.finelectronmcname2 != None:
 
-    tight_electron_th2d.Clone().Write()
-    loose_electron_th2d.Clone().Write()
+tight_electron_th2d.Clone().Write()
+loose_electron_th2d.Clone().Write()
 
-    loose_electron_th2d.Add(tight_electron_th2d)
+loose_electron_th2d.Add(tight_electron_th2d)
     
-    tight_electron_th2d.Divide(loose_electron_th2d)
-#tight_electron_th2d.Draw("lego")
-    tight_electron_th2d.Clone("electron_frs").Write()
+tight_electron_th2d.Divide(loose_electron_th2d)
+tight_electron_th2d.Clone("electron_frs").Write()
 
-#raw_input()
 
