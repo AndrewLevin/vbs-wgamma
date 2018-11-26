@@ -136,7 +136,7 @@ for i in range(0,8):
 
     scale_stddev += pow(n_weighted_scale[i].GetBinContent(1)-scale_mean,2)
 
-scale_stddev += pow(n_weighted.GetBinContent(1)-scale_mean,2)
+scale_stddev += pow(n_weighted_nlo.GetBinContent(1)-scale_mean,2)
 
 scale_stddev /= (7-1)
 
