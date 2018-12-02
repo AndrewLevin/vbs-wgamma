@@ -763,153 +763,7 @@ for label in labels.keys():
     
 #subtractRealMCFromFakeEstimateFromData(mc_samples[0]["tree"],fake_photon_hist,fake_muon_hist,fake_lepton_hist,mc_samples[0]["xs"],mc_samples[0]["nweightedevents"])
 
-for variable in variables:
 
-    data["hists"][variable].Print("all")
-
-    data["hists"][variable].SetMarkerStyle(ROOT.kFullCircle)
-    data["hists"][variable].SetLineWidth(3)
-    data["hists"][variable].SetLineColor(ROOT.kBlack)
-
-    fake_photon["hists"][variable].SetFillColor(ROOT.kGray+1)
-    fake_lepton["hists"][variable].SetFillColor(ROOT.kAzure-1)
-    double_fake["hists"][variable].SetFillColor(ROOT.kMagenta)
-    electron_to_photon["hists"][variable].SetFillColor(ROOT.kYellow)
-
-    fake_photon["hists"][variable].SetLineColor(ROOT.kGray+1)
-    fake_lepton["hists"][variable].SetLineColor(ROOT.kAzure-1)
-    double_fake["hists"][variable].SetLineColor(ROOT.kMagenta)
-    electron_to_photon["hists"][variable].SetLineColor(ROOT.kYellow)
-    
-
-    fake_photon["hists"][variable].SetFillStyle(1001)
-    fake_lepton["hists"][variable].SetFillStyle(1001)
-    double_fake["hists"][variable].SetFillStyle(1001)
-    electron_to_photon["hists"][variable].SetFillStyle(1001)
-
-    s=str(options.lumi)+" fb^{-1} (13 TeV)"
-    lumilabel = ROOT.TLatex (0.95, 0.93, s)
-    lumilabel.SetNDC ()
-    lumilabel.SetTextAlign (30)
-    lumilabel.SetTextFont (42)
-    lumilabel.SetTextSize (0.040)
-
-#
-    hsum = data["hists"][variable].Clone()
-    hsum.Scale(0.0)
-
-    hstack = ROOT.THStack()
-
-    if lepton_abs_pdg_id == 11: 
-        hsum.Add(electron_to_photon["hists"][variable])
-        hstack.Add(electron_to_photon["hists"][variable])
-
-    for label in labels.keys():
-        if labels[label]["color"] == None:
-            continue
-        hsum.Add(labels[label]["hists"][variable])
-        hstack.Add(labels[label]["hists"][variable])
-
-    if data_driven:
-        hsum.Add(fake_lepton["hists"][variable])
-        hsum.Add(fake_photon["hists"][variable])
-        hsum.Add(double_fake["hists"][variable])
-
-    if data_driven:
-        hstack.Add(fake_lepton["hists"][variable])
-        hstack.Add(fake_photon["hists"][variable])
-        hstack.Add(double_fake["hists"][variable])
-
-
-    if data["hists"][variable].GetMaximum() < hsum.GetMaximum():
-        data["hists"][variable].SetMaximum(hsum.GetMaximum()*1.55)
-    else:
-        data["hists"][variable].SetMaximum(data["hists"][variable].GetMaximum()*1.55)
-        
-
-    data["hists"][variable].SetMinimum(0)
-    hstack.SetMinimum(0)
-    hsum.SetMinimum(0)
-
-    data["hists"][variable].Draw("")
-
-    hstack.Draw("hist same")
-
-#wg_qcd.Draw("hist same")
-#fake_lepton_hist.Draw("hist same")
-#fake_photon_hist.Draw("hist same")
-
-#wg_ewk_hist.Print("all")
-
-#cmslabel = TLatex (0.18, 0.93, "#bf{CMS} (Unpublished)")
-    cmslabel = ROOT.TLatex (0.18, 0.93, "")
-    cmslabel.SetNDC ()
-    cmslabel.SetTextAlign (10)
-    cmslabel.SetTextFont (42)
-    cmslabel.SetTextSize (0.040)
-    cmslabel.Draw ("same") 
-    
-    lumilabel.Draw("same")
-
-#wpwpjjewk.Draw("same")
-
-    j=0
-    draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,data["hists"][variable],"data","lp")
-
-    if data_driven :
-        j=j+1
-        if lepton_name == "muon":
-            draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,fake_lepton["hists"][variable],"fake muon","f")
-        elif lepton_name == "electron":
-            draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,fake_lepton["hists"][variable],"fake electron","f")
-        else:
-            assert(0)
-        j=j+1
-        draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,fake_photon["hists"][variable],"fake photon","f")
-        j=j+1
-        draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,double_fake["hists"][variable],"double fake","f")
-
-    if lepton_abs_pdg_id == 11:
-        j=j+1
-        draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,electron_to_photon["hists"][variable],"e->g","f")
-
-    for label in labels.keys():
-        if labels[label]["color"] == None:
-            continue
-        j=j+1    
-        draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,labels[label]["hists"][variable],label,"f")
-    
-
-#set_axis_fonts(hstack,"x","m_{ll} (GeV)")
-#set_axis_fonts(hstack,"x","|\Delta \eta_{jj}|")
-    set_axis_fonts(data["hists"][variable],"x",getXaxisLabel(variable))
-    set_axis_fonts(hstack,"x",options.xaxislabel)
-#set_axis_fonts(hstack,"x","pt_{l}^{max} (GeV)")
-#set_axis_fonts(data_hist,"y","Events / bin")
-#set_axis_fonts(hstack,"y","Events / bin")
-
-    gstat = ROOT.TGraphAsymmErrors(hsum);
-
-    for i in range(0,gstat.GetN()):
-        gstat.SetPointEYlow (i, hsum.GetBinError(i+1));
-        gstat.SetPointEYhigh(i, hsum.GetBinError(i+1));
-
-    gstat.SetFillColor(12);
-    gstat.SetFillStyle(3345);
-    gstat.SetMarkerSize(0);
-    gstat.SetLineWidth(0);
-    gstat.SetLineColor(ROOT.kWhite);
-    gstat.Draw("E2same");
-
-    data["hists"][variable].Draw("same")
-
-    c1.Update()
-    c1.ForceUpdate()
-    c1.Modified()
-
-    c1.SaveAs(options.outputdir + "/" + variable + ".png")
-
-c1.Close()
 
 #    if variable == "mlg":
 #
@@ -1074,6 +928,7 @@ else:
     legend1.AddEntry(red_th1f,"wg","lp")
     legend1.AddEntry(green_th1f,"zg","lp")
 
+top_norm.Print("all")
 etog_norm.Print("all")
 wg_norm.Print("all")
 zg_norm.Print("all")
@@ -1188,21 +1043,23 @@ print "(number of selected wg+jets events) * (data/MC eff scale factor) = "+str(
 
 print "(number of wg+jets events run over) = "+str(labels["wg+jets"]["samples"][0]["nweightedevents"])
 
-Aepsilon = labels["wg+jets"]["hists"]["mlg"].Integral()/(labels["wg+jets"]["samples"][0]["xs"]*1000*35.9)
+fiducial_region_cuts_efficiency = 0.51649677698712206047032474804031
 
-Aepsilon_pdf = (labels["wg+jets"]["hists"]["mlg"].Integral()-stddev_pdf)/(labels["wg+jets"]["samples"][0]["xs"]*1000*35.9)
+Aepsilon = labels["wg+jets"]["hists"]["mlg"].Integral()/(labels["wg+jets"]["samples"][0]["xs"]*fiducial_region_cuts_efficiency*1000*35.9)
 
-Aepsilon_scale = (labels["wg+jets"]["hists"]["mlg"].Integral()-qcd_unc)/(labels["wg+jets"]["samples"][0]["xs"]*1000*35.9)
+Aepsilon_pdf = (labels["wg+jets"]["hists"]["mlg"].Integral()-stddev_pdf)/(labels["wg+jets"]["samples"][0]["xs"]*fiducial_region_cuts_efficiency*1000*35.9)
 
-Aepsilon_electron_id_sf = (labels["wg+jets"]["hists"]["mlg"].Integral()-electron_id_sf_unc)/(labels["wg+jets"]["samples"][0]["xs"]*1000*35.9)
+Aepsilon_scale = (labels["wg+jets"]["hists"]["mlg"].Integral()-qcd_unc)/(labels["wg+jets"]["samples"][0]["xs"]*fiducial_region_cuts_efficiency*1000*35.9)
 
-Aepsilon_electron_reco_sf = (labels["wg+jets"]["hists"]["mlg"].Integral()-electron_reco_sf_unc)/(labels["wg+jets"]["samples"][0]["xs"]*1000*35.9)
+Aepsilon_electron_id_sf = (labels["wg+jets"]["hists"]["mlg"].Integral()-electron_id_sf_unc)/(labels["wg+jets"]["samples"][0]["xs"]*fiducial_region_cuts_efficiency*1000*35.9)
 
-Aepsilon_muon_id_sf = (labels["wg+jets"]["hists"]["mlg"].Integral()-muon_id_sf_unc)/(labels["wg+jets"]["samples"][0]["xs"]*1000*35.9)
+Aepsilon_electron_reco_sf = (labels["wg+jets"]["hists"]["mlg"].Integral()-electron_reco_sf_unc)/(labels["wg+jets"]["samples"][0]["xs"]*fiducial_region_cuts_efficiency*1000*35.9)
 
-Aepsilon_muon_iso_sf = (labels["wg+jets"]["hists"]["mlg"].Integral()-muon_iso_sf_unc)/(labels["wg+jets"]["samples"][0]["xs"]*1000*35.9)
+Aepsilon_muon_id_sf = (labels["wg+jets"]["hists"]["mlg"].Integral()-muon_id_sf_unc)/(labels["wg+jets"]["samples"][0]["xs"]*fiducial_region_cuts_efficiency*1000*35.9)
 
-Aepsilon_photon_id_sf = (labels["wg+jets"]["hists"]["mlg"].Integral()-photon_id_sf_unc)/(labels["wg+jets"]["samples"][0]["xs"]*1000*35.9)
+Aepsilon_muon_iso_sf = (labels["wg+jets"]["hists"]["mlg"].Integral()-muon_iso_sf_unc)/(labels["wg+jets"]["samples"][0]["xs"]*fiducial_region_cuts_efficiency*1000*35.9)
+
+Aepsilon_photon_id_sf = (labels["wg+jets"]["hists"]["mlg"].Integral()-photon_id_sf_unc)/(labels["wg+jets"]["samples"][0]["xs"]*fiducial_region_cuts_efficiency*1000*35.9)
  
 print "Aepsilon = (number of selected wg+jets events) * (data/MC eff scale factor) / (number of wg+jets events run over)= "+str(Aepsilon)
 
@@ -1225,3 +1082,151 @@ print "muon id sf uncertainty = " + str(wg_norm.getVal()/Aepsilon_muon_id_sf/35.
 print "muon iso sf uncertainty = " + str(wg_norm.getVal()/Aepsilon_muon_iso_sf/35.9/1000.0 - wg_norm.getVal()/Aepsilon/35.9/1000.0)
 
 print "photon id sf uncertainty = " + str(wg_norm.getVal()/Aepsilon_photon_id_sf/35.9/1000.0 - wg_norm.getVal()/Aepsilon/35.9/1000.0)
+
+for variable in variables:
+
+    data["hists"][variable].Print("all")
+
+    data["hists"][variable].SetMarkerStyle(ROOT.kFullCircle)
+    data["hists"][variable].SetLineWidth(3)
+    data["hists"][variable].SetLineColor(ROOT.kBlack)
+
+    fake_photon["hists"][variable].SetFillColor(ROOT.kGray+1)
+    fake_lepton["hists"][variable].SetFillColor(ROOT.kAzure-1)
+    double_fake["hists"][variable].SetFillColor(ROOT.kMagenta)
+    electron_to_photon["hists"][variable].SetFillColor(ROOT.kYellow)
+
+    fake_photon["hists"][variable].SetLineColor(ROOT.kGray+1)
+    fake_lepton["hists"][variable].SetLineColor(ROOT.kAzure-1)
+    double_fake["hists"][variable].SetLineColor(ROOT.kMagenta)
+    electron_to_photon["hists"][variable].SetLineColor(ROOT.kYellow)
+    
+
+    fake_photon["hists"][variable].SetFillStyle(1001)
+    fake_lepton["hists"][variable].SetFillStyle(1001)
+    double_fake["hists"][variable].SetFillStyle(1001)
+    electron_to_photon["hists"][variable].SetFillStyle(1001)
+
+    s=str(options.lumi)+" fb^{-1} (13 TeV)"
+    lumilabel = ROOT.TLatex (0.95, 0.93, s)
+    lumilabel.SetNDC ()
+    lumilabel.SetTextAlign (30)
+    lumilabel.SetTextFont (42)
+    lumilabel.SetTextSize (0.040)
+
+#
+    hsum = data["hists"][variable].Clone()
+    hsum.Scale(0.0)
+
+    hstack = ROOT.THStack()
+
+    if lepton_abs_pdg_id == 11: 
+        hsum.Add(electron_to_photon["hists"][variable])
+        hstack.Add(electron_to_photon["hists"][variable])
+
+    for label in labels.keys():
+        if labels[label]["color"] == None:
+            continue
+        hsum.Add(labels[label]["hists"][variable])
+        hstack.Add(labels[label]["hists"][variable])
+
+    if data_driven:
+        hsum.Add(fake_lepton["hists"][variable])
+        hsum.Add(fake_photon["hists"][variable])
+        hsum.Add(double_fake["hists"][variable])
+
+    if data_driven:
+        hstack.Add(fake_lepton["hists"][variable])
+        hstack.Add(fake_photon["hists"][variable])
+        hstack.Add(double_fake["hists"][variable])
+
+
+    if data["hists"][variable].GetMaximum() < hsum.GetMaximum():
+        data["hists"][variable].SetMaximum(hsum.GetMaximum()*1.55)
+    else:
+        data["hists"][variable].SetMaximum(data["hists"][variable].GetMaximum()*1.55)
+        
+
+    data["hists"][variable].SetMinimum(0)
+    hstack.SetMinimum(0)
+    hsum.SetMinimum(0)
+
+    data["hists"][variable].Draw("")
+
+    hstack.Draw("hist same")
+
+#wg_qcd.Draw("hist same")
+#fake_lepton_hist.Draw("hist same")
+#fake_photon_hist.Draw("hist same")
+
+#wg_ewk_hist.Print("all")
+
+#cmslabel = TLatex (0.18, 0.93, "#bf{CMS} (Unpublished)")
+    cmslabel = ROOT.TLatex (0.18, 0.93, "")
+    cmslabel.SetNDC ()
+    cmslabel.SetTextAlign (10)
+    cmslabel.SetTextFont (42)
+    cmslabel.SetTextSize (0.040)
+    cmslabel.Draw ("same") 
+    
+    lumilabel.Draw("same")
+
+#wpwpjjewk.Draw("same")
+
+    j=0
+    draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,data["hists"][variable],"data","lp")
+
+    if data_driven :
+        j=j+1
+        if lepton_name == "muon":
+            draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,fake_lepton["hists"][variable],"fake muon","f")
+        elif lepton_name == "electron":
+            draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,fake_lepton["hists"][variable],"fake electron","f")
+        else:
+            assert(0)
+        j=j+1
+        draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,fake_photon["hists"][variable],"fake photon","f")
+        j=j+1
+        draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,double_fake["hists"][variable],"double fake","f")
+
+    if lepton_abs_pdg_id == 11:
+        j=j+1
+        draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,electron_to_photon["hists"][variable],"e->g","f")
+
+    for label in labels.keys():
+        if labels[label]["color"] == None:
+            continue
+        j=j+1    
+        draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,labels[label]["hists"][variable],label,"f")
+    
+
+#set_axis_fonts(hstack,"x","m_{ll} (GeV)")
+#set_axis_fonts(hstack,"x","|\Delta \eta_{jj}|")
+    set_axis_fonts(data["hists"][variable],"x",getXaxisLabel(variable))
+    set_axis_fonts(hstack,"x",options.xaxislabel)
+#set_axis_fonts(hstack,"x","pt_{l}^{max} (GeV)")
+#set_axis_fonts(data_hist,"y","Events / bin")
+#set_axis_fonts(hstack,"y","Events / bin")
+
+    gstat = ROOT.TGraphAsymmErrors(hsum);
+
+    for i in range(0,gstat.GetN()):
+        gstat.SetPointEYlow (i, hsum.GetBinError(i+1));
+        gstat.SetPointEYhigh(i, hsum.GetBinError(i+1));
+
+    gstat.SetFillColor(12);
+    gstat.SetFillStyle(3345);
+    gstat.SetMarkerSize(0);
+    gstat.SetLineWidth(0);
+    gstat.SetLineColor(ROOT.kWhite);
+    gstat.Draw("E2same");
+
+    data["hists"][variable].Draw("same")
+
+    c1.Update()
+    c1.ForceUpdate()
+    c1.Modified()
+
+    c1.SaveAs(options.outputdir + "/" + variable + ".png")
+
+c1.Close()
