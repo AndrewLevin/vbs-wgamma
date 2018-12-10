@@ -875,7 +875,10 @@ RooHistPdf_fake_lepton = ROOT.RooHistPdf("fake lepton","fake lepton",ROOT.RooArg
 
 TH1F_fake_lepton_mlg_syst=fake_lepton["hists"]["mlg"].Clone("fake lepton syst")
 
-TH1F_fake_lepton_mlg_syst.Scale(1.48)
+if lepton_abs_pdg_id == 11:
+    TH1F_fake_lepton_mlg_syst.Scale(1.48)
+else:
+    TH1F_fake_lepton_mlg_syst.Scale(1.12)
 
 RooDataHist_mlg_fake_lepton_syst = ROOT.RooDataHist("zg data hist","zg data hist",ROOT.RooArgList(m),TH1F_fake_lepton_mlg_syst)
 
