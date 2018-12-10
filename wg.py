@@ -1068,6 +1068,7 @@ wg_norm_fake_photon_syst_stat_unc = wg_norm.getError()
 
 print "wg_norm_fake_photon_syst_val = " + str(wg_norm_fake_photon_syst_val)
 print "wg_norm_fake_photon_syst_stat_unc = " + str(wg_norm_fake_photon_syst_stat_unc)
+print "wg_norm_syst_unc_due_to_fake_photon_unc = " + str(wg_norm_fake_photon_syst_val-wg_norm_val)
 
 sum_fake_lepton_syst.fitTo(RooDataHist_mlg_data,ROOT.RooFit.Extended())
 
@@ -1076,6 +1077,7 @@ wg_norm_fake_lepton_syst_stat_unc = wg_norm.getError()
 
 print "wg_norm_fake_lepton_syst_val = " + str(wg_norm_fake_lepton_syst_val)
 print "wg_norm_fake_lepton_syst_stat_unc = " + str(wg_norm_fake_lepton_syst_stat_unc)
+print "wg_norm_syst_unc_due_to_fake_lepton_unc = " + str(wg_norm_val-wg_norm_fake_lepton_syst_val)
 
 print "(number of selected wg+jets events) * (data/MC eff scale factor) * (wg+jets xs) * (2016 integrated luminosity) / (number of wg+jets events run over) = "+str(labels["wg+jets"]["hists"]["mlg"].Integral())
 
