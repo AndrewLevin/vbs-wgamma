@@ -54,6 +54,8 @@ if options.lep == "muon":
     lepton_name = "muon"
 elif options.lep == "electron":
     lepton_name = "electron"
+elif options.lep == "both":
+    lepton_name = "both"
 else:
     assert(0)
 
@@ -237,11 +239,22 @@ def pass_selection(tree, barrel_or_endcap_or_both = "both", fake_lepton = False 
         assert(0)
 
 
-        
-    if tree.lepton_pdg_id == lepton_abs_pdg_id:
+    if lepton_name == "electron":
+        if tree.lepton_pdg_id == 11:
+            pass_lepton_flavor = True
+        else:
+            pass_lepton_flavor = False
+    elif lepton_name == "muon":
+        if tree.lepton_pdg_id == 13:
+            pass_lepton_flavor = True
+        else:
+            pass_lepton_flavor = False
+    elif lepton_name == "both":
+        assert(tree.lepton_pdg_id == 11 or tree.lepton_pdg_id == 13)
         pass_lepton_flavor = True
     else:
-        pass_lepton_flavor = False
+        assert(0)
+
         
 #    if tree.npvs < 20:
 #        pass_lepton_flavor = False
@@ -254,19 +267,26 @@ def pass_selection(tree, barrel_or_endcap_or_both = "both", fake_lepton = False 
 #    if True:    
 
 
-    if lepton_abs_pdg_id == 11:    
+    if lepton_name == "electron":    
 #        if not (tree.mlg > 60.0 and tree.mlg < 120.0):
         if True:
             pass_mlg = True
         else:
             pass_mlg = False
-    else:        
+    elif lepton_name == "muon":        
 #       if not (tree.mlg > 60.0 and tree.mlg < 100.0):
 #        if tree.mlg > 80.0 and tree.mlg < 90.0:
         if True:
             pass_mlg = True
         else:
             pass_mlg = False
+    elif lepton_name == "both":
+        if True:
+            pass_mlg = True
+        else:
+            pass_mlg = False
+    else:
+        assert(0)
 
 #    if lepton_abs_pdg_id == 11:    
 #        if True:
@@ -392,11 +412,6 @@ for i in range(fake_photon_event_weights_muon_endcap_hist.GetNbinsX()):
 for i in range(fake_photon_event_weights_electron_endcap_hist.GetNbinsX()):
     fake_photon_event_weights_electron_endcap_hist.SetBinContent(i+1,fake_photon_event_weights_electron_endcap[i])
     fake_photon_event_weights_electron_endcap_MC_hist.SetBinContent(i+1,fake_photon_event_weights_electron_endcap_MC[i])
-
-if lepton_name == "muon":
-    lepton_abs_pdg_id = 13
-else:
-    lepton_abs_pdg_id = 11
 
 def photonfakerate(eta,pt,lepton_pdg_id,for_syst=False):
 
@@ -549,6 +564,8 @@ if lepton_name == "muon":
 elif lepton_name == "electron":
 #    data_file = ROOT.TFile.Open("/afs/cern.ch/project/afs/var/ABS/recover/R.1935065321.08020759/data/wg/single_electron.root")
     data_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/single_electron.root")
+elif lepton_name == "both":
+    data_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/single_lepton.root")
 else:
     assert(0)
 
@@ -694,14 +711,14 @@ def fillHistogramMC(label,sample):
         weight *= eff_scale_factor.photon_efficiency_scale_factor(sample["tree"].photon_pt,sample["tree"].photon_eta)
 
          
-        if lepton_abs_pdg_id == 11:
+        if sample["tree"].lepton_pdg_id == 11:
             weight_electron_id_sf_variation = weight * eff_scale_factor.electron_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta,True,False)
             weight_electron_reco_sf_variation = weight * eff_scale_factor.electron_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta,False,True)
             weight *= eff_scale_factor.electron_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta)
             weight_photon_id_sf_variation *= eff_scale_factor.electron_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta)
             weight_muon_id_sf_variation = weight
             weight_muon_iso_sf_variation = weight
-        elif lepton_abs_pdg_id == 13:
+        elif sample["tree"].lepton_pdg_id == 13:
             weight_muon_id_sf_variation = weight * eff_scale_factor.muon_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta,False,True)
             weight_muon_iso_sf_variation = weight * eff_scale_factor.muon_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta,True,False)
             weight *= eff_scale_factor.muon_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta)
@@ -1057,9 +1074,9 @@ RooHistPdf_fake_lepton = ROOT.RooHistPdf("fake lepton","fake lepton",ROOT.RooArg
 
 TH1F_fake_lepton_mlg_syst=fake_lepton["hists"][mlg_index].Clone("fake lepton syst")
 
-if lepton_abs_pdg_id == 11:
+if lepton_name == "electron":
     TH1F_fake_lepton_mlg_syst.Scale(1.48)
-else:
+elif lepton_name == "muon":
     TH1F_fake_lepton_mlg_syst.Scale(1.12)
 
 RooDataHist_mlg_fake_lepton_syst = ROOT.RooDataHist("zg data hist","zg data hist",ROOT.RooArgList(m),TH1F_fake_lepton_mlg_syst)
@@ -1113,14 +1130,16 @@ f= ROOT.RooRealVar("f","f",0.5,0.,1.) ;
 
 #sum=ROOT.RooAddPdf("sum","sum",ROOT.RooArgList(wg,zg,bwcb),RooArgList(wg_norm,zg_norm,bwcb_norm))
 
-if lepton_abs_pdg_id == 11:
+if lepton_name == "electron" or lepton_name == "both":
     sum=ROOT.RooAddPdf("sum","sum",ROOT.RooArgList(RooHistPdf_wg,RooHistPdf_zg,RooFFTConvPdf_bwcb,RooHistPdf_fake_lepton,RooHistPdf_fake_photon,RooHistPdf_double_fake,RooHistPdf_top,RooHistPdf_etog),ROOT.RooArgList(wg_norm,zg_norm,bwcb_norm,fake_lepton_norm,fake_photon_norm,double_fake_norm,top_norm,etog_norm))
     sum_fake_photon_syst=ROOT.RooAddPdf("sum","sum",ROOT.RooArgList(RooHistPdf_wg,RooHistPdf_zg,RooFFTConvPdf_bwcb,RooHistPdf_fake_lepton,RooHistPdf_fake_photon_syst,RooHistPdf_double_fake,RooHistPdf_top,RooHistPdf_etog),ROOT.RooArgList(wg_norm,zg_norm,bwcb_norm,fake_lepton_norm,fake_photon_syst_norm,double_fake_norm,top_norm,etog_norm))
     sum_fake_lepton_syst=ROOT.RooAddPdf("sum","sum",ROOT.RooArgList(RooHistPdf_wg,RooHistPdf_zg,RooFFTConvPdf_bwcb,RooHistPdf_fake_lepton_syst,RooHistPdf_fake_photon,RooHistPdf_double_fake,RooHistPdf_top,RooHistPdf_etog),ROOT.RooArgList(wg_norm,zg_norm,bwcb_norm,fake_lepton_syst_norm,fake_photon_norm,double_fake_norm,top_norm,etog_norm))
-else:
+elif lepton_name == "muon":
     sum=ROOT.RooAddPdf("sum","sum",ROOT.RooArgList(RooHistPdf_wg,RooHistPdf_zg,RooHistPdf_fake_lepton,RooHistPdf_fake_photon,RooHistPdf_double_fake,RooHistPdf_top),ROOT.RooArgList(wg_norm,zg_norm,fake_lepton_norm,fake_photon_norm,double_fake_norm,top_norm))
     sum_fake_photon_syst=ROOT.RooAddPdf("sum","sum",ROOT.RooArgList(RooHistPdf_wg,RooHistPdf_zg,RooHistPdf_fake_lepton,RooHistPdf_fake_photon_syst,RooHistPdf_double_fake,RooHistPdf_top),ROOT.RooArgList(wg_norm,zg_norm,fake_lepton_norm,fake_photon_syst_norm,double_fake_norm,top_norm))
     sum_fake_lepton_syst=ROOT.RooAddPdf("sum","sum",ROOT.RooArgList(RooHistPdf_wg,RooHistPdf_zg,RooHistPdf_fake_lepton_syst,RooHistPdf_fake_photon,RooHistPdf_double_fake,RooHistPdf_top),ROOT.RooArgList(wg_norm,zg_norm,fake_lepton_syst_norm,fake_photon_norm,double_fake_norm,top_norm))
+else:
+    assert(0)
 
 sum.fitTo(RooDataHist_mlg_data,ROOT.RooFit.Extended())
 
@@ -1149,7 +1168,7 @@ orangeminus1_th1f.SetLineColor(ROOT.kOrange-1)
 orangeminus1_th1f.SetLineWidth(3)
 orangeminus1_th1f.SetLineStyle(ROOT.kDashed)
 
-if lepton_abs_pdg_id == 11:
+if lepton_name == "both" or lepton_name == "electron":
     sum.plotOn(frame1, ROOT.RooFit.Components("wg"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kRed)) 
     sum.plotOn(frame1, ROOT.RooFit.Components("zg"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kGreen)) 
     sum.plotOn(frame1, ROOT.RooFit.Components("bwcb"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kMagenta)) 
@@ -1160,7 +1179,7 @@ if lepton_abs_pdg_id == 11:
     legend1.AddEntry(red_th1f,"wg","lp")
     legend1.AddEntry(green_th1f,"zg","lp")
     legend1.AddEntry(magenta_th1f,"bwcb","lp")
-else:
+elif lepton_name == "muon":
     sum.plotOn(frame1, ROOT.RooFit.Components("wg"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kRed)) 
     sum.plotOn(frame1, ROOT.RooFit.Components("zg"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kGreen)) 
 
@@ -1169,6 +1188,8 @@ else:
     legend1.SetFillStyle(0)  # make transparent
     legend1.AddEntry(red_th1f,"wg","lp")
     legend1.AddEntry(green_th1f,"zg","lp")
+else:
+    assert(0)
 
 top_norm.Print("all")
 etog_norm.Print("all")
@@ -1209,7 +1230,7 @@ sum.plotOn(frame2, ROOT.RooFit.Components("fake photon"),ROOT.RooFit.LineStyle(R
 sum.plotOn(frame2, ROOT.RooFit.Components("fake lepton"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kGreen)) 
 sum.plotOn(frame2, ROOT.RooFit.Components("double fake"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kMagenta)) 
 
-if lepton_abs_pdg_id == 11:
+if lepton_name == "electron" or lepton_name == "both":
     sum.plotOn(frame2, ROOT.RooFit.Components("etog"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kOrange-1)) 
 
 frame2.SetTitle("")
@@ -1224,7 +1245,7 @@ legend2.SetFillStyle(0)  # make transparent
 legend2.AddEntry(red_th1f,"fake photon","lp")
 legend2.AddEntry(green_th1f,"fake lepton","lp")
 legend2.AddEntry(magenta_th1f,"double fake","lp")
-if lepton_abs_pdg_id == 11:
+if lepton_name == "electron" or lepton_name == "both":
     legend2.AddEntry(orangeminus1_th1f,"e->g non-res","lp")
 
 
@@ -1390,7 +1411,7 @@ for i in range(len(variables)):
 
     hstack = ROOT.THStack()
 
-    if lepton_abs_pdg_id == 11: 
+    if lepton_name == "electron" or lepton_name == "both": 
         hsum.Add(electron_to_photon["hists"][i])
         hstack.Add(electron_to_photon["hists"][i])
 
@@ -1452,6 +1473,8 @@ for i in range(len(variables)):
             draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,fake_lepton["hists"][i],"fake muon","f")
         elif lepton_name == "electron":
             draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,fake_lepton["hists"][i],"fake electron","f")
+        elif lepton_name == "both":
+            draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,fake_lepton["hists"][i],"fake lepton","f")
         else:
             assert(0)
         j=j+1
@@ -1459,7 +1482,7 @@ for i in range(len(variables)):
         j=j+1
         draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,double_fake["hists"][i],"double fake","f")
 
-    if lepton_abs_pdg_id == 11:
+    if lepton_name == "electron" or lepton_name == "both":
         j=j+1
         draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,electron_to_photon["hists"][i],"e->g","f")
 
