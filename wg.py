@@ -1544,7 +1544,7 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
     dcard.write('\n')    
     
     dcard.write("process")
-    dcard.write(" WWjj")
+    dcard.write(" Wg")
         
     for label in labels:
         if label == "no label" or label == "wg+jets":
