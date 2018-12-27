@@ -2,9 +2,9 @@ import sys
 import random
 import ROOT
 
-#photon_eta_cutstring = "abs(photon_eta) < 1.4442"
+photon_eta_cutstring = "abs(photon_eta) < 1.4442"
 
-photon_eta_cutstring = "1.566 < abs(photon_eta) && abs(photon_eta) < 2.5"
+#photon_eta_cutstring = "1.566 < abs(photon_eta) && abs(photon_eta) < 2.5"
 
 #lepton_name = "electron"
 

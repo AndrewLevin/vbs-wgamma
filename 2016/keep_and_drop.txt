@@ -4,8 +4,14 @@ keep run
 keep luminosityBlock
 keep event
 keep Generator_weight
+keep LHEPart_pt
+keep LHEPart_eta
+keep LHEPart_phi
+keep LHEPart_mass
+keep LHEPart_pdgId
 keep LHEPdfWeight
 keep LHEScaleWeight
+keep LHEWeight_rwgt_*
 keep MET_pt
 keep MET_phi
 keep RawMET_pt

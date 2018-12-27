@@ -43,6 +43,7 @@ class exampleProducer(Module):
         self.out.branch("is_lepton_tight",  "B");
         self.out.branch("gen_weight",  "F");
         self.out.branch("is_lepton_real",  "B");
+        self.out.branch("lhe_lepton_charge",  "B");
         self.out.branch("photon_gen_matching",  "I");
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
@@ -54,8 +55,8 @@ class exampleProducer(Module):
         photons = Collection(event, "Photon")
 
         try:
-
             genparts = Collection(event, "GenPart")
+            lheparts = Collection(event, "LHEPart")
         except:
             
             pass
@@ -589,17 +590,29 @@ class exampleProducer(Module):
         self.out.fillBranch("photon_gen_matching",photon_gen_matching)
 
         try:
-
             self.out.fillBranch("gen_weight",event.Generator_weight)
-
         except:
             pass
 
         try:
-            
             self.out.fillBranch("npu",event.Pileup_nPU)
             self.out.fillBranch("ntruepu",event.Pileup_nTrueInt)
+        except:
+            pass
 
+        try:
+            n_w_plus = 0
+            n_w_minus = 0
+            
+            for i in range(0,len(lheparts)):
+                if lheparts[i].pdgId == -11 or lheparts[i].pdgId == -13 or lheparts[i].pdgId == -15:
+                    n_w_plus+=1
+                elif lheparts[i].pdgId == 11 or lheparts[i].pdgId == 13 or lheparts[i].pdgId == 15:
+                    n_w_minus+=1
+
+            assert(n_w_plus == 1 or n_w_minus == 1)        
+            
+            self.out.fillBranch("lhe_lepton_charge",bool(n_w_plus))
         except:
             pass
 

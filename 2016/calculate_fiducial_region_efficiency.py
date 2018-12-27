@@ -137,7 +137,6 @@ for i in range(0,t.GetEntries()):
             else:    
                 n_weighted_wplus_pdf[j].Fill(0.5,-t.LHEPdfWeight[j+1]*weight)
 
-
 pdf_mean = 0
 wplus_pdf_mean = 0
 wminus_pdf_mean = 0
@@ -241,6 +240,8 @@ wminus_pdf_unc = wminus_pdf_stddev * nominal_xs / n_weighted.GetBinContent(1)
 scale_unc = scale_stddev * nominal_xs / n_weighted.GetBinContent(1)
 wplus_scale_unc = wplus_scale_stddev * nominal_xs / n_weighted.GetBinContent(1)
 wminus_scale_unc = wminus_scale_stddev * nominal_xs / n_weighted.GetBinContent(1)
+
+print "efficiency of fiducal region cuts = " + str(n_weighted_nlo.GetBinContent(1) * nominal_xs / n_weighted.GetBinContent(1))
 
 print "nlo xs = " + str(nlo_xs) + " +/- " + str(scale_unc) + " (scale) +/- " + str(pdf_unc) + " (pdf)" 
 

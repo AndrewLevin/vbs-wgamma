@@ -94,6 +94,7 @@ class exampleProducer(Module):
 
         self.out.fillBranch("electron_pt",electrons[electron_index].pt)
         self.out.fillBranch("electron_eta",electrons[electron_index].eta)
+        self.out.fillBranch("met",event.MET_pt)
 
         try:
             self.out.fillBranch("gen_weight",event.Generator_weight)

@@ -60,8 +60,18 @@ def photon_efficiency_scale_factor(pt,eta,err_up=False):
 
     return sf
 
-def muon_efficiency_scale_factor(pt,eta):
+def muon_efficiency_scale_factor(pt,eta,iso_err_up=False,id_err_up=False):
 
-    return muon_iso_sf.GetBinContent(muon_iso_sf.GetXaxis().FindFixBin(abs(eta)),muon_iso_sf.GetYaxis().FindFixBin(min(pt,muon_iso_sf.GetYaxis().GetBinCenter(muon_id_sf.GetNbinsY()))))*muon_id_sf.GetBinContent(muon_id_sf.GetXaxis().FindFixBin(abs(eta)),muon_id_sf.GetYaxis().FindFixBin(min(pt,muon_id_sf.GetYaxis().GetBinCenter(muon_id_sf.GetNbinsY()))))
+    iso_sf = muon_iso_sf.GetBinContent(muon_iso_sf.GetXaxis().FindFixBin(abs(eta)),muon_iso_sf.GetYaxis().FindFixBin(min(pt,muon_iso_sf.GetYaxis().GetBinCenter(muon_id_sf.GetNbinsY()))))
+
+    if iso_err_up:
+        iso_sf += muon_iso_sf.GetBinError(muon_iso_sf.GetXaxis().FindFixBin(abs(eta)),muon_iso_sf.GetYaxis().FindFixBin(min(pt,muon_iso_sf.GetYaxis().GetBinCenter(muon_id_sf.GetNbinsY()))))
+
+    id_sf = muon_id_sf.GetBinContent(muon_id_sf.GetXaxis().FindFixBin(abs(eta)),muon_id_sf.GetYaxis().FindFixBin(min(pt,muon_id_sf.GetYaxis().GetBinCenter(muon_id_sf.GetNbinsY())))) 
+    
+    if id_err_up:
+        id_sf += muon_id_sf.GetBinError(muon_id_sf.GetXaxis().FindFixBin(abs(eta)),muon_id_sf.GetYaxis().FindFixBin(min(pt,muon_id_sf.GetYaxis().GetBinCenter(muon_id_sf.GetNbinsY())))) 
+
+    return iso_sf * id_sf
 
 #print electron_efficiency_scale_factor(25,0.7)
