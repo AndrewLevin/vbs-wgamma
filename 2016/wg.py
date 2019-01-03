@@ -878,9 +878,9 @@ for i in range(ewdim6_tree.GetEntries()):
 
     w *= eff_scale_factor.photon_efficiency_scale_factor(ewdim6_tree.photon_pt,ewdim6_tree.photon_eta)
 
-    if labels["wg+jets"]["samples"][0]["tree"].lepton_pdg_id == 13:
+    if ewdim6_tree.lepton_pdg_id == 13:
         w *= eff_scale_factor.muon_efficiency_scale_factor(ewdim6_tree.lepton_pt,ewdim6_tree.lepton_eta)
-    elif labels["wg+jets"]["samples"][0]["tree"].lepton_pdg_id == 11:    
+    elif ewdim6_tree.lepton_pdg_id == 11:    
         w *= eff_scale_factor.electron_efficiency_scale_factor(ewdim6_tree.lepton_pt,ewdim6_tree.lepton_eta)
     else:
         assert(0)
