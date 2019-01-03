@@ -85,7 +85,7 @@ pu_weight_hist = f_pu_weights.Get("ratio")
 
 #labels = { "tt2l2nu+jets" : {"color" : ROOT.kRed, "samples" : [{'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/tt2l2nujets.root', 'xs' : 88.28, "non_fsr" : False , "e_to_p" : True, "fsr" : True } ] }, "ttsemi+jets" : {"color" : ROOT.kSpring, "samples" : [{'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/ttsemijets.root', 'xs' : 365.4, "non_fsr" : False , "e_to_p" : True, "fsr" : True } ] }, "wg+jets" : {"color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/wgjets.root", "xs" : 178.6, "non_fsr" : True , "e_to_p" : True, "fsr" : True } ] }, "zg+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/zgjets.root", "xs" : 47.46, "non_fsr" : True , "e_to_p" : True, "fsr" : True } ] }, "no label" : {"color" : None, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/zjets.root", "xs" : 4963.0, "non_fsr" : False , "e_to_p" : True, "fsr" : False  }] }, "ttg+jets" : {"color" : ROOT.kGreen+2, "samples" : [ {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/ttgjets.root", "xs" : 3.795, "non_fsr" : True , "e_to_p" : True, "fsr" : True } ] } }
 
-labels = { "tt2l2nu+jets" : {"syst-pdf" : False, "syst-scale" : False, "color" : ROOT.kRed, "samples" : [{'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/tt2l2nujets.root', 'xs' : 88.28, "non_fsr" : False , "e_to_p" : True, "fsr" : True } ] }, "ttsemi+jets" : {"syst-pdf" : False, "syst-scale" : False, "color" : ROOT.kSpring, "samples" : [{'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/ttsemijets.root', 'xs' : 365.4, "non_fsr" : False , "e_to_p" : True, "fsr" : True } ] }, "wg+jets" : {"syst-pdf": True, "syst-scale": True, "color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/wgjets.root", "xs" : 178.6, "non_fsr" : True , "e_to_p" : True, "fsr" : True } ] }, "zg+jets" : {"syst-pdf" : False, "syst-scale" : False, "color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/zglowmlljets.root", "xs" : 96.75, "non_fsr" : True , "e_to_p" : False, "fsr" : True } ] }, "no label" : {"syst-pdf" : False, "syst-scale" : False, "color" : None, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/zjets.root", "xs" : 4963.0, "non_fsr" : False , "e_to_p" : True, "fsr" : False  }] }, "ttg+jets" : {"syst-pdf" : False, "syst-scale" : False,  "color" : ROOT.kGreen+2, "samples" : [ {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/ttgjets.root", "xs" : 3.795, "non_fsr" : True , "e_to_p" : True, "fsr" : True } ] } }
+labels = { "tt2l2nu+jets" : {"syst-pdf" : False, "syst-scale" : False, "color" : ROOT.kRed, "samples" : [{'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/2016/tt2l2nujets.root', 'xs' : 88.28, "non_fsr" : False , "e_to_p" : True, "fsr" : True } ] }, "ttsemi+jets" : {"syst-pdf" : False, "syst-scale" : False, "color" : ROOT.kSpring, "samples" : [{'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/2016/ttsemijets.root', 'xs' : 365.4, "non_fsr" : False , "e_to_p" : True, "fsr" : True } ] }, "wg+jets" : {"syst-pdf": True, "syst-scale": True, "color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjets.root", "xs" : 178.6, "non_fsr" : True , "e_to_p" : True, "fsr" : True } ] }, "zg+jets" : {"syst-pdf" : False, "syst-scale" : False, "color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/2016/zglowmlljets.root", "xs" : 96.75, "non_fsr" : True , "e_to_p" : False, "fsr" : True } ] }, "no label" : {"syst-pdf" : False, "syst-scale" : False, "color" : None, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/2016/zjets.root", "xs" : 4963.0, "non_fsr" : False , "e_to_p" : True, "fsr" : False  }] }, "ttg+jets" : {"syst-pdf" : False, "syst-scale" : False,  "color" : ROOT.kGreen+2, "samples" : [ {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/ttgjets.root", "xs" : 3.795, "non_fsr" : True , "e_to_p" : True, "fsr" : True } ] } }
 
 #labels = { "tt2l2nu+jets" : {"syst-pdf" : False, "syst-scale" : False, "color" : ROOT.kRed, "samples" : [{'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/tt2l2nujets.root', 'xs' : 88.28, "non_fsr" : False , "e_to_p" : True, "fsr" : True } ] }, "ttsemi+jets" : {"syst-pdf" : False, "syst-scale" : False, "color" : ROOT.kSpring, "samples" : [{'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/ttsemijets.root', 'xs' : 365.4, "non_fsr" : False , "e_to_p" : True, "fsr" : True } ] }, "wg+jets" : {"syst-pdf": True, "syst-scale": False, "color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/wgjetsewdim6.root", "xs" : 5.519, "non_fsr" : True , "e_to_p" : True, "fsr" : True } ] }, "zg+jets" : {"syst-pdf" : False, "syst-scale" : False, "color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/zglowmlljets.root", "xs" : 96.75, "non_fsr" : True , "e_to_p" : False, "fsr" : True } ] }, "no label" : {"syst-pdf" : False, "syst-scale" : False, "color" : None, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/zjets.root", "xs" : 4963.0, "non_fsr" : False , "e_to_p" : True, "fsr" : False  }] }, "ttg+jets" : {"syst-pdf" : False, "syst-scale" : False,  "color" : ROOT.kGreen+2, "samples" : [ {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/ttgjets.root", "xs" : 3.795, "non_fsr" : True , "e_to_p" : True, "fsr" : True } ] } }
 
@@ -98,13 +98,15 @@ assert(len(variables) == len(histogram_templates))
 
 mlg_index = 6
 
-ewdim6_filename = "/afs/cern.ch/work/a/amlevin/data/wg/wgjetsewdim6.root"
+#ewdim6_filename = "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjetsewdim6.root"
+ewdim6_filename = "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjetsewdim6.root.bak"
 
 ewdim6_file = ROOT.TFile(ewdim6_filename)
 
 ewdim6_tree = ewdim6_file.Get("Events")
 
 ewdim6_xs = 5.519
+#ewdim6_xs = 4.318
 
 ewdim6_nweightedevents = ewdim6_file.Get("nWeightedEvents").GetBinContent(1)
 
@@ -360,8 +362,8 @@ ypositions = [0,1,2,3,0,1,2,3,0,1,2,3]
 
 style.GoodStyle().cd()
 
-muon_fr_file = ROOT.TFile("/afs/cern.ch/user/a/amlevin/wg/muon_frs.root")
-electron_fr_file = ROOT.TFile("/afs/cern.ch/user/a/amlevin/wg/electron_frs.root")
+muon_fr_file = ROOT.TFile("/afs/cern.ch/user/a/amlevin/wg/2016/muon_frs.root")
+electron_fr_file = ROOT.TFile("/afs/cern.ch/user/a/amlevin/wg/2016/electron_frs.root")
 
 muon_fr_hist=muon_fr_file.Get("muon_frs")
 electron_fr_hist=electron_fr_file.Get("electron_frs")
@@ -560,12 +562,12 @@ def draw_legend(x1,y1,hist,label,options):
 
 if lepton_name == "muon":
 #    data_file = ROOT.TFile.Open("/afs/cern.ch/project/afs/var/ABS/recover/R.1935065321.08020759/data/wg/single_muon.root")
-    data_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/single_muon.root")
+    data_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/2016/single_muon.root")
 elif lepton_name == "electron":
 #    data_file = ROOT.TFile.Open("/afs/cern.ch/project/afs/var/ABS/recover/R.1935065321.08020759/data/wg/single_electron.root")
-    data_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/single_electron.root")
+    data_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/2016/single_electron.root")
 elif lepton_name == "both":
-    data_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/single_lepton.root")
+    data_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/2016/single_lepton.root")
 else:
     assert(0)
 
@@ -786,9 +788,13 @@ sm_lhe_weight = 373
 
 sm_lhe_weight_hist = ROOT.TH1F('', '', 5, 100., 600 )
 
+sm_hist = ROOT.TH1F('', '', 5, 100., 600 )
+
 cwww_reweights = [373,1,2,3,4,5,6]
 
 cwww_coefficients = [0.0, 10.0,-10.0,20.0,-20.0,-30.0,30.0]
+
+#cwww_coefficients = [0.0, 1.0,-1.0,2.0,-2.0,-3.0,3.0]
 
 cwww_hists = []
 
@@ -796,11 +802,15 @@ cw_reweights = [373,7,8,9,10,11,12]
 
 cw_coefficients = [0.0, 80.0,-80.0,160.0,-160.0,240.0,-240.0]
 
+#cw_coefficients = [0.0, 17.0,-17.0,34.0,-34.0,51.0,-51.0]
+
 cw_hists = []
 
 cb_reweights = [373,13,14,15,16,17,18]
 
 cb_coefficients = [0.0, 80.0,-80.0,160.0,-160.0,240.0,-240.0]
+
+#cb_coefficients = [0.0, 17.0,-17.0,34.0,-34.0,51.0,-51.0]
 
 cb_hists = []
 
@@ -808,11 +818,15 @@ cpwww_reweights = [373,19,20,21,22,23,24]
 
 cpwww_coefficients = [0.0, 4.0,-4.0,8.0,-8.0,12.0,-12.0]
 
+#cpwww_coefficients = [0.0, 0.5,-0.5,1.0,-1.0,1.5,-1.5]
+
 cpwww_hists = []
 
 cpw_reweights = [373,25,26,27,28,29,30]
 
 cpw_coefficients = [0.0, 40.0,-40.0,80.0,-80.0,120.0,-120.0]
+
+#cpw_coefficients = [0.0, 8.0,-8.0,16.0,-16.0,24.0,-24.0]
 
 cpw_hists = []
 
@@ -831,10 +845,48 @@ for i in range(0,len(cpwww_reweights)):
 for i in range(0,len(cpw_reweights)):
     cpw_hists.append(ROOT.TH1F('', '', 5, 100., 600 ))
 
+for i in range(labels["wg+jets"]["samples"][0]["tree"].GetEntries()):
+    labels["wg+jets"]["samples"][0]["tree"].GetEntry(i)
+
+    w = labels["wg+jets"]["samples"][0]["xs"]*1000*35.9/labels["wg+jets"]["samples"][0]["nweightedevents"]
+
+    w *= pu_weight_hist.GetBinContent(pu_weight_hist.FindFixBin(labels["wg+jets"]["samples"][0]["tree"].npu))
+
+    w *= eff_scale_factor.photon_efficiency_scale_factor(labels["wg+jets"]["samples"][0]["tree"].photon_pt,labels["wg+jets"]["samples"][0]["tree"].photon_eta)
+
+    if labels["wg+jets"]["samples"][0]["tree"].lepton_pdg_id == 13:
+        w *= eff_scale_factor.muon_efficiency_scale_factor(labels["wg+jets"]["samples"][0]["tree"].lepton_pt,labels["wg+jets"]["samples"][0]["tree"].lepton_eta)
+    elif labels["wg+jets"]["samples"][0]["tree"].lepton_pdg_id == 11:    
+        w *= eff_scale_factor.electron_efficiency_scale_factor(labels["wg+jets"]["samples"][0]["tree"].lepton_pt,labels["wg+jets"]["samples"][0]["tree"].lepton_eta)
+    else:
+        assert(0)
+
+    if labels["wg+jets"]["samples"][0]["tree"].gen_weight < 0:
+        w = -w
+
+    if pass_selection(labels["wg+jets"]["samples"][0]["tree"],options.phoeta):
+        fillHistogram(sm_hist,getVariable(variables[0],labels["wg+jets"]["samples"][0]["tree"]),w)
+
+sm_hist.Print("all")
+
 for i in range(ewdim6_tree.GetEntries()):
     ewdim6_tree.GetEntry(i)
 
     w = ewdim6_xs*1000*35.9/ewdim6_nweightedevents
+
+    w *= pu_weight_hist.GetBinContent(pu_weight_hist.FindFixBin(ewdim6_tree.npu))
+
+    w *= eff_scale_factor.photon_efficiency_scale_factor(ewdim6_tree.photon_pt,ewdim6_tree.photon_eta)
+
+    if labels["wg+jets"]["samples"][0]["tree"].lepton_pdg_id == 13:
+        w *= eff_scale_factor.muon_efficiency_scale_factor(ewdim6_tree.lepton_pt,ewdim6_tree.lepton_eta)
+    elif labels["wg+jets"]["samples"][0]["tree"].lepton_pdg_id == 11:    
+        w *= eff_scale_factor.electron_efficiency_scale_factor(ewdim6_tree.lepton_pt,ewdim6_tree.lepton_eta)
+    else:
+        assert(0)
+
+    if ewdim6_tree.gen_weight < 0:
+        w = -w
 
     if pass_selection(ewdim6_tree,options.phoeta):
         for j in range(len(cwww_reweights)):
@@ -1541,6 +1593,9 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
         dcard.write(" bin1")
 
     dcard.write(" bin1")    
+    dcard.write(" bin1")    
+    dcard.write(" bin1")    
+    dcard.write(" bin1")    
     dcard.write('\n')    
     
     dcard.write("process")
@@ -1551,7 +1606,10 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
             continue
         dcard.write(" " + label)
 
-    dcard.write(" fake")
+    dcard.write(" fake_photon")
+    dcard.write(" fake_lepton")
+    dcard.write(" double_fake")
+    dcard.write(" electron_to_photon")
     dcard.write('\n')    
     dcard.write("process")
     dcard.write(" 0")
@@ -1572,7 +1630,22 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
     if fake_photon["hists"][0].GetBinContent(i) > 0:        
         dcard.write(" "+str(fake_photon["hists"][0].GetBinContent(i))) 
     else:
-                            dcard.write(" 0.0001") 
+        dcard.write(" 0.0001") 
+
+    if fake_lepton["hists"][0].GetBinContent(i) > 0:        
+        dcard.write(" "+str(fake_lepton["hists"][0].GetBinContent(i))) 
+    else:
+        dcard.write(" 0.0001") 
+
+    if double_fake["hists"][0].GetBinContent(i) > 0:        
+        dcard.write(" "+str(double_fake["hists"][0].GetBinContent(i))) 
+    else:
+        dcard.write(" 0.0001") 
+
+    if electron_to_photon["hists"][0].GetBinContent(i) > 0:        
+        dcard.write(" "+str(electron_to_photon["hists"][0].GetBinContent(i))) 
+    else:
+        dcard.write(" 0.0001") 
    
     dcard.write('\n')    
 
@@ -1585,6 +1658,9 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
             continue
         dcard.write(" 1.027")
 
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
     dcard.write(" 1.027")
 
     dcard.write('\n')    
@@ -1595,6 +1671,9 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
             if label == "no label" or label == "wg+jets":
                 dcard.write(" -")
 
+        dcard.write(" -")                
+        dcard.write(" -")                
+        dcard.write(" -")                
         dcard.write(" -")                
         dcard.write("\n")  
 
