@@ -86,7 +86,7 @@ class exampleProducer(Module):
 
         for i in range (0,len(electrons)):
 
-            if electrons[i].pt/electrons[i].eCorr < 20:
+            if electrons[i].pt < 20:
                 continue
             
             if abs(electrons[i].eta+electrons[i].deltaEtaSC) > 2.5:
@@ -102,7 +102,7 @@ class exampleProducer(Module):
 
         for i in range (0,len(photons)):
 
-            if photons[i].pt/photons[i].eCorr < 20:
+            if photons[i].pt < 20:
                 continue
 
             if not ((abs(photons[i].eta) < 1.4442) or (1.566 < abs(photons[i].eta) and abs(photons[i].eta) < 2.5) ):
@@ -156,7 +156,7 @@ class exampleProducer(Module):
             if not event.HLT_Ele27_WPTight_Gsf:
                 return False
 
-            if electrons[tight_electrons[0]].pt/electrons[tight_electrons[0]].eCorr < 30:
+            if electrons[tight_electrons[0]].pt < 30:
                 return False
 
             if abs((electrons[tight_electrons[0]].p4() + photons[selected_photons[0]].p4()).M() - 91.2) < 10:
