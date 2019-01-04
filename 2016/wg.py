@@ -92,7 +92,7 @@ labels = { "tt2l2nu+jets" : {"syst-pdf" : False, "syst-scale" : False, "color" :
 #the first variable is for the ewdim6 analysis
 variables = ["photon_pt","dphilg","met","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","lepton_phi","photon_phi","njets","mt","npvs","drlg"]
 
-histogram_templates = [ROOT.TH1F('', '', 5, 100., 600 ),ROOT.TH1F('','',8,pi/2,pi), ROOT.TH1F("met", "", 15 , 0., 300 ), ROOT.TH1F('lepton_pt', '', 8, 20., 180 ), ROOT.TH1F('lepton_eta', '', 10, -2.5, 2.5 ), ROOT.TH1F('photon_pt', '', 9, 100., 1000 ), ROOT.TH1F('photon_eta', '', 10, -2.5, 2.5 ), ROOT.TH1F("mlg","",100,0,200) , ROOT.TH1F("lepton_phi","",14,-3.5,3.5), ROOT.TH1F("photon_phi","",14,-3.5,3.5), ROOT.TH1F("njets","",7,-0.5,6.5), ROOT.TH1F("mt","",20,0,200), ROOT.TH1F("npvs","",51,-0.5,50.5), ROOT.TH1F("drlg","",60,0,6)] 
+histogram_templates = [ROOT.TH1F('', '', 5, 100., 600 ),ROOT.TH1F('','',8,pi/2,pi), ROOT.TH1F("met", "", 15 , 0., 300 ), ROOT.TH1F('lepton_pt', '', 8, 20., 180 ), ROOT.TH1F('lepton_eta', '', 10, -2.5, 2.5 ), ROOT.TH1F('photon_pt', '', 2, 400., 600 ), ROOT.TH1F('photon_eta', '', 10, -2.5, 2.5 ), ROOT.TH1F("mlg","",100,0,200) , ROOT.TH1F("lepton_phi","",14,-3.5,3.5), ROOT.TH1F("photon_phi","",14,-3.5,3.5), ROOT.TH1F("njets","",7,-0.5,6.5), ROOT.TH1F("mt","",20,0,200), ROOT.TH1F("npvs","",51,-0.5,50.5), ROOT.TH1F("drlg","",60,0,6)] 
 
 assert(len(variables) == len(histogram_templates))
 
@@ -1587,7 +1587,7 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
     dcard.write("bin")
     dcard.write(" bin1")
     
-    for label in labels:
+    for label in labels.keys():
         if label == "no label" or label == "wg+jets":
             continue
         dcard.write(" bin1")
@@ -1601,7 +1601,7 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
     dcard.write("process")
     dcard.write(" Wg")
         
-    for label in labels:
+    for label in labels.keys():
         if label == "no label" or label == "wg+jets":
             continue
         dcard.write(" " + label)
@@ -1614,12 +1614,12 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
     dcard.write("process")
     dcard.write(" 0")
     
-    for j in range(1,len(labels)):
+    for j in range(1,len(labels.keys())+3):
         dcard.write(" " + str(j))
     dcard.write('\n')    
     dcard.write('rate')
     dcard.write(' '+str(sm_lhe_weight_hist.GetBinContent(i)))
-    for label in labels:
+    for label in labels.keys():
         if label == "no label" or label == "wg+jets":
             continue
         if labels[label]["hists"][0].GetBinContent(i) > 0:
@@ -1650,10 +1650,9 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
     dcard.write('\n')    
 
     dcard.write("lumi_13tev lnN")
-
     dcard.write(" 1.027")
 
-    for label in labels:
+    for label in labels.keys():
         if label == "no label" or label == "wg+jets":
             continue
         dcard.write(" 1.027")
@@ -1667,9 +1666,10 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
 
     if sm_lhe_weight_hist.GetBinContent(i) > 0:
         dcard.write("mcstat_ewdim6 lnN "+str(1+sm_lhe_weight_hist.GetBinError(i)/sm_lhe_weight_hist.GetBinContent(i)))
-        for j in range(0,len(labels)):
+        for label in labels.keys():
             if label == "no label" or label == "wg+jets":
-                dcard.write(" -")
+                continue
+            dcard.write(" -")
 
         dcard.write(" -")                
         dcard.write(" -")                
@@ -1677,3 +1677,37 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
         dcard.write(" -")                
         dcard.write("\n")  
 
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets":
+            continue
+
+        if labels[label]["hists"][0].GetBinContent(i) > 0:
+            dcard.write("mcstat_"+str(label)+" lnN ")
+            dcard.write(" -")
+
+            for l in labels.keys():
+                if l == "no label" or l == "wg+jets":
+                    continue
+                if l == label:
+                    dcard.write(" "+str(1+labels[label]["hists"][0].GetBinError(i)/labels[label]["hists"][0].GetBinContent(i)))
+                else:    
+                    dcard.write(" -")
+
+            dcard.write(" -")                
+            dcard.write(" -")                
+            dcard.write(" -")                
+            dcard.write(" -")                
+            dcard.write("\n")  
+
+    if fake_lepton["hists"][0].GetBinContent(i) > 0:        
+        dcard.write("fake_lepton_syst lnN -")
+        for label in labels.keys():
+            if label == "no label" or label == "wg+jets":
+                continue
+            dcard.write(" -")
+
+        dcard.write(" -")                
+        dcard.write(" 1.3")                
+        dcard.write(" -")                
+        dcard.write(" -")                
+        dcard.write("\n")  
