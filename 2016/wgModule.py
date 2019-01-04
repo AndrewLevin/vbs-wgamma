@@ -87,7 +87,7 @@ class exampleProducer(Module):
 
         for i in range (0,len(electrons)):
 
-            if electrons[i].pt/electrons[i].eCorr < 20:
+            if electrons[i].pt < 20:
                 continue
             
             if abs(electrons[i].eta + electrons[i].deltaEtaSC) > 2.5:
@@ -102,7 +102,7 @@ class exampleProducer(Module):
 
         for i in range (0,len(photons)):
 
-            if photons[i].pt/photons[i].eCorr < 20:
+            if photons[i].pt < 20:
                 continue
 
             #if not ((abs(photons[i].eta) < 1.4442) or (1.566 < abs(photons[i].eta) and abs(photons[i].eta) < 2.5) ):
@@ -152,7 +152,7 @@ class exampleProducer(Module):
         for i in range (0,len(photons)):
 
 
-            if photons[i].pt/photons[i].eCorr < 20:
+            if photons[i].pt < 20:
                 continue
 
             #if not ((abs(photons[i].eta) < 1.4442) or (1.566 < abs(photons[i].eta) and abs(photons[i].eta) < 2.5) ):
@@ -248,7 +248,7 @@ class exampleProducer(Module):
             njets+=1
 
 
-        if photons[tight_photons[0]].pt/photons[tight_photons[0]].eCorr < 20:
+        if photons[tight_photons[0]].pt < 20:
             return False
 
         #if not (abs(photons[tight_photons[0]].eta) < 1.4442):
@@ -339,7 +339,7 @@ class exampleProducer(Module):
             self.out.fillBranch("lepton_eta",muons[tight_muons[0]].eta)
             self.out.fillBranch("lepton_phi",muons[tight_muons[0]].phi)
             self.out.fillBranch("met",event.MET_pt)
-            self.out.fillBranch("photon_pt",photons[tight_photons[0]].pt/photons[tight_photons[0]].eCorr)
+            self.out.fillBranch("photon_pt",photons[tight_photons[0]].pt)
             self.out.fillBranch("photon_eta",photons[tight_photons[0]].eta)
             self.out.fillBranch("photon_phi",photons[tight_photons[0]].phi)
             self.out.fillBranch("mlg",(muons[tight_muons[0]].p4() + photons[tight_photons[0]].p4()).M())
@@ -395,7 +395,7 @@ class exampleProducer(Module):
             self.out.fillBranch("lepton_eta",muons[loose_but_not_tight_muons[0]].eta)
             self.out.fillBranch("lepton_phi",muons[loose_but_not_tight_muons[0]].phi)
             self.out.fillBranch("met",event.MET_pt)
-            self.out.fillBranch("photon_pt",photons[tight_photons[0]].pt/photons[tight_photons[0]].eCorr)
+            self.out.fillBranch("photon_pt",photons[tight_photons[0]].pt)
             self.out.fillBranch("photon_eta",photons[tight_photons[0]].eta)
             self.out.fillBranch("photon_phi",photons[tight_photons[0]].phi)
             self.out.fillBranch("mlg",(muons[loose_but_not_tight_muons[0]].p4() + photons[tight_photons[0]].p4()).M())
@@ -420,7 +420,7 @@ class exampleProducer(Module):
             if deltaR(photons[tight_photons[0]].eta,photons[tight_photons[0]].phi,electrons[tight_electrons[0]].eta,electrons[tight_electrons[0]].phi) < 0.5:
                 return False
 
-            if electrons[tight_electrons[0]].pt/electrons[tight_electrons[0]].eCorr < 30:
+            if electrons[tight_electrons[0]].pt < 30:
                 return False
 
             if abs(electrons[tight_electrons[0]].eta) > 2.5:
@@ -430,9 +430,9 @@ class exampleProducer(Module):
 
             pho_p4 = photons[tight_photons[0]].p4()
 
-            ele_p4.SetPtEtaPhiM(ele_p4.Pt()/electrons[tight_electrons[0]].eCorr , ele_p4.Eta(), ele_p4.Phi() , ele_p4.M())
+            ele_p4.SetPtEtaPhiM(ele_p4.Pt() , ele_p4.Eta(), ele_p4.Phi() , ele_p4.M())
 
-            pho_p4.SetPtEtaPhiM(pho_p4.Pt()/photons[tight_photons[0]].eCorr , pho_p4.Eta(), pho_p4.Phi() , pho_p4.M())
+            pho_p4.SetPtEtaPhiM(pho_p4.Pt() , pho_p4.Eta(), pho_p4.Phi() , pho_p4.M())
 
 #            if (ele_p4 + pho_p4).M() > 81.2 and (ele_p4 + pho_p4).M() < 101.2:
 #            if (ele_p4 + pho_p4).M() > 76.2 and (ele_p4 + pho_p4).M() < 106.2:
@@ -441,7 +441,7 @@ class exampleProducer(Module):
             #if sqrt(2*electrons[tight_electrons[0]].pt/electrons[tight_electrons[0]].eCorr*event.MET_pt*(1 - cos(event.MET_phi - electrons[tight_electrons[0]].phi))) < 30:
             #    return False
 
-            self.out.fillBranch("mt",sqrt(2*electrons[tight_electrons[0]].pt/electrons[tight_electrons[0]].eCorr*event.MET_pt*(1 - cos(event.MET_phi - electrons[tight_electrons[0]].phi))))
+            self.out.fillBranch("mt",sqrt(2*electrons[tight_electrons[0]].pt*event.MET_pt*(1 - cos(event.MET_phi - electrons[tight_electrons[0]].phi))))
 
             mask1 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) | (1 << 11) | (1 << 13)
             mask2 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) | (1 << 11) 
@@ -469,7 +469,7 @@ class exampleProducer(Module):
             self.out.fillBranch("lepton_eta",electrons[tight_electrons[0]].eta)
             self.out.fillBranch("lepton_phi",electrons[tight_electrons[0]].phi)
             self.out.fillBranch("met",event.MET_pt)
-            self.out.fillBranch("photon_pt",photons[tight_photons[0]].pt/photons[tight_photons[0]].eCorr)
+            self.out.fillBranch("photon_pt",photons[tight_photons[0]].pt)
             self.out.fillBranch("photon_eta",photons[tight_photons[0]].eta)
             self.out.fillBranch("photon_phi",photons[tight_photons[0]].phi)
             self.out.fillBranch("mlg",(ele_p4 + pho_p4).M())
@@ -495,7 +495,7 @@ class exampleProducer(Module):
             if deltaR(photons[tight_photons[0]].eta,photons[tight_photons[0]].phi,electrons[loose_but_not_tight_electrons[0]].eta,electrons[loose_but_not_tight_electrons[0]].phi) < 0.5:
                 return False
 
-            if electrons[loose_but_not_tight_electrons[0]].pt/electrons[loose_but_not_tight_electrons[0]].eCorr < 30:
+            if electrons[loose_but_not_tight_electrons[0]].pt < 30:
                 return False
 
             if abs(electrons[loose_but_not_tight_electrons[0]].eta) > 2.5:
@@ -505,9 +505,9 @@ class exampleProducer(Module):
 
             pho_p4 = photons[tight_photons[0]].p4()
 
-            ele_p4.SetPtEtaPhiM(ele_p4.Pt()/electrons[loose_but_not_tight_electrons[0]].eCorr , ele_p4.Eta(), ele_p4.Phi() , ele_p4.M())
+            ele_p4.SetPtEtaPhiM(ele_p4.Pt() , ele_p4.Eta(), ele_p4.Phi() , ele_p4.M())
 
-            pho_p4.SetPtEtaPhiM(pho_p4.Pt()/photons[tight_photons[0]].eCorr , pho_p4.Eta(), pho_p4.Phi() , pho_p4.M())
+            pho_p4.SetPtEtaPhiM(pho_p4.Pt() , pho_p4.Eta(), pho_p4.Phi() , pho_p4.M())
 
 #            if (ele_p4 + pho_p4).M() > 81.2 and (ele_p4 + pho_p4).M() < 101.2:
 #            if (ele_p4 + pho_p4).M() > 76.2 and (ele_p4 + pho_p4).M() < 106.2:
@@ -516,7 +516,7 @@ class exampleProducer(Module):
             #if sqrt(2*electrons[loose_but_not_tight_electrons[0]].pt/electrons[loose_but_not_tight_electrons[0]].eCorr*event.MET_pt*(1 - cos(event.MET_phi - electrons[loose_but_not_tight_electrons[0]].phi))) < 30:
             #    return False
 
-            self.out.fillBranch("mt",sqrt(2*electrons[loose_but_not_tight_electrons[0]].pt/electrons[loose_but_not_tight_electrons[0]].eCorr*event.MET_pt*(1 - cos(event.MET_phi - electrons[loose_but_not_tight_electrons[0]].phi))))                    
+            self.out.fillBranch("mt",sqrt(2*electrons[loose_but_not_tight_electrons[0]].pt*event.MET_pt*(1 - cos(event.MET_phi - electrons[loose_but_not_tight_electrons[0]].phi))))                    
 
             mask1 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) | (1 << 11) | (1 << 13)
             mask2 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) | (1 << 11) 
@@ -543,7 +543,7 @@ class exampleProducer(Module):
             self.out.fillBranch("lepton_eta",electrons[loose_but_not_tight_electrons[0]].eta)
             self.out.fillBranch("lepton_phi",electrons[loose_but_not_tight_electrons[0]].phi)
             self.out.fillBranch("met",event.MET_pt)
-            self.out.fillBranch("photon_pt",photons[tight_photons[0]].pt/photons[tight_photons[0]].eCorr)
+            self.out.fillBranch("photon_pt",photons[tight_photons[0]].pt)
             self.out.fillBranch("photon_eta",photons[tight_photons[0]].eta)
             self.out.fillBranch("photon_phi",photons[tight_photons[0]].phi)
             self.out.fillBranch("mlg",(ele_p4 + pho_p4).M())
