@@ -67,7 +67,7 @@ class exampleProducer(Module):
 
         for i in range (0,len(electrons)):
 
-            if electrons[i].pt/electrons[i].eCorr < 30:
+            if electrons[i].pt < 30:
                 continue
             
             if abs(electrons[i].eta+electrons[i].deltaEtaSC) > 2.5:
