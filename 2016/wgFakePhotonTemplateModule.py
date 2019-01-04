@@ -68,7 +68,7 @@ class exampleProducer(Module):
 
         for i in range (0,len(electrons)):
 
-            if electrons[i].pt/electrons[i].eCorr < 30:
+            if electrons[i].pt < 30:
                 continue
             
             if abs(electrons[i].eta+ electrons[i].deltaEtaSC) > 2.5:
@@ -84,7 +84,7 @@ class exampleProducer(Module):
 
         for i in range (0,len(photons)):
 
-            if photons[i].pt/photons[i].eCorr < 20:
+            if photons[i].pt < 20:
                 continue
 
             if not ((abs(photons[i].eta) < 1.4442) or (1.566 < abs(photons[i].eta) and abs(photons[i].eta) < 2.5) ):
