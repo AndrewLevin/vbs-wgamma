@@ -96,9 +96,9 @@ for sample in electron_mc_samples:
     t = f.Get("Events")
     n_weighted_events = f.Get("nWeightedEvents").GetBinContent(1)
     if sample["subtract"]:
-        fill_loose_and_tight_th2ds(t,tight_electron_th2d,loose_electron_th2d,sample["xs"]*1000*35.9/n_weighted_events)
-    else:
         fill_loose_and_tight_th2ds(t,tight_electron_th2d,loose_electron_th2d,-sample["xs"]*1000*35.9/n_weighted_events)
+    else:
+        fill_loose_and_tight_th2ds(t,tight_electron_th2d,loose_electron_th2d,sample["xs"]*1000*35.9/n_weighted_events)
 
 fout.cd()
 
