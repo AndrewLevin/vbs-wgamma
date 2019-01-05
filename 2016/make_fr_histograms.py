@@ -40,8 +40,11 @@ foutname=options.foutname
 
 fout=TFile("electron_closure_test_frs.root","recreate")
 
-electron_fr_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/qcd_bctoe_170250.root", "xs" : 2608},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/qcd_bctoe_2030.root", "xs" : 363100},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/qcd_bctoe_250.root", "xs" : 722.6},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/qcd_bctoe_3080.root", "xs" : 417800},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/qcd_bctoe_80170.root", "xs" : 39860}]
+electron_data_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/single_electron_fake_electron.root"}]
 
+electron_mc_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wjets_fake_electron.root", "xs" : 60430.0, "subtract" : True},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/zjets_fake_electron.root", "xs" : 4963.0, "subtract" : True}]
+
+#electron_mc_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/qcd_bctoe_170250.root", "xs" : 2608, "subtract" : False},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/qcd_bctoe_2030.root", "xs" : 363100, "subtract" : False},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/qcd_bctoe_250.root", "xs" : 722.6, "subtract" : False},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/qcd_bctoe_3080.root", "xs" : 417800, "subtract" : False},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/qcd_bctoe_80170.root", "xs" : 39860, "subtract" : False}]
 
 electron_ptbins=array('d', [30,40,50])
 electron_etabins=array('d', [0,0.5,1,1.479,2.0,2.5])
@@ -83,11 +86,19 @@ def fill_loose_and_tight_th2ds(tree,tight_th2d,loose_th2d,xs_weight = None):
             else:    
                 loose_th2d.Fill(abs(tree.lepton_eta),tree.lepton_pt,weight)
 
-for sample in electron_fr_samples:
+for sample in electron_data_samples:
+    f = TFile.Open(sample["filename"])
+    t = f.Get("Events")
+    fill_loose_and_tight_th2ds(t,tight_electron_th2d,loose_electron_th2d,1.0)
+
+for sample in electron_mc_samples:
     f = TFile.Open(sample["filename"])
     t = f.Get("Events")
     n_weighted_events = f.Get("nWeightedEvents").GetBinContent(1)
-    fill_loose_and_tight_th2ds(t,tight_electron_th2d,loose_electron_th2d,sample["xs"]*1000*35.9/n_weighted_events)
+    if sample["subtract"]:
+        fill_loose_and_tight_th2ds(t,tight_electron_th2d,loose_electron_th2d,sample["xs"]*1000*35.9/n_weighted_events)
+    else:
+        fill_loose_and_tight_th2ds(t,tight_electron_th2d,loose_electron_th2d,-sample["xs"]*1000*35.9/n_weighted_events)
 
 fout.cd()
 
