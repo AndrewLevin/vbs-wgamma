@@ -41,7 +41,7 @@ parser = optparse.OptionParser()
 parser.add_option('--lep',dest='lep',default='both')
 parser.add_option('--phoeta',dest='phoeta',default='both')
 parser.add_option('--overflow',dest='overflow',action='store_true',default=False)
-parser.add_option('--ewdim6',dest='overflow',action='store_true',default=False)
+parser.add_option('--ewdim6',dest='ewdim6',action='store_true',default=False)
 
 parser.add_option('--lumi',dest='lumi')
 parser.add_option('--variable',dest='variable')
@@ -60,9 +60,6 @@ elif options.lep == "both":
     lepton_name = "both"
 else:
     assert(0)
-
-print options.overflow
-exit
 
 f_json=open("/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/ReReco/Final/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt")
 #f_json=open("delete_this_JSON.txt")
