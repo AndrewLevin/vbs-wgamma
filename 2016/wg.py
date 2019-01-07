@@ -1,10 +1,10 @@
 data_driven = True
 
 def fillHistogram(hist,value,weight=1):
-    if value > hist.GetBinLowEdge(hist.GetNbinsX()):
-        value = hist.GetBinCenter(hist.GetNbinsX())
+    if options.overflow:
+        if value > hist.GetBinLowEdge(hist.GetNbinsX()):
+            value = hist.GetBinCenter(hist.GetNbinsX())
     hist.Fill(value,weight)
-    
 
 import json
 
@@ -40,6 +40,8 @@ parser = optparse.OptionParser()
 
 parser.add_option('--lep',dest='lep',default='both')
 parser.add_option('--phoeta',dest='phoeta',default='both')
+parser.add_option('--overflow',dest='overflow',action='store_true',default=False)
+parser.add_option('--ewdim6',dest='overflow',action='store_true',default=False)
 
 parser.add_option('--lumi',dest='lumi')
 parser.add_option('--variable',dest='variable')
@@ -58,6 +60,9 @@ elif options.lep == "both":
     lepton_name = "both"
 else:
     assert(0)
+
+print options.overflow
+exit
 
 f_json=open("/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/ReReco/Final/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt")
 #f_json=open("delete_this_JSON.txt")
@@ -85,7 +90,7 @@ pu_weight_hist = f_pu_weights.Get("ratio")
 
 #labels = { "tt2l2nu+jets" : {"color" : ROOT.kRed, "samples" : [{'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/tt2l2nujets.root', 'xs' : 88.28, "non_fsr" : False , "e_to_p" : True, "fsr" : True } ] }, "ttsemi+jets" : {"color" : ROOT.kSpring, "samples" : [{'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/ttsemijets.root', 'xs' : 365.4, "non_fsr" : False , "e_to_p" : True, "fsr" : True } ] }, "wg+jets" : {"color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/wgjets.root", "xs" : 178.6, "non_fsr" : True , "e_to_p" : True, "fsr" : True } ] }, "zg+jets" : {"color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/zgjets.root", "xs" : 47.46, "non_fsr" : True , "e_to_p" : True, "fsr" : True } ] }, "no label" : {"color" : None, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/zjets.root", "xs" : 4963.0, "non_fsr" : False , "e_to_p" : True, "fsr" : False  }] }, "ttg+jets" : {"color" : ROOT.kGreen+2, "samples" : [ {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/ttgjets.root", "xs" : 3.795, "non_fsr" : True , "e_to_p" : True, "fsr" : True } ] } }
 
-labels = { "tt2l2nu+jets" : {"syst-pdf" : False, "syst-scale" : False, "color" : ROOT.kRed, "samples" : [{'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/2016/tt2l2nujets.root', 'xs' : 88.28, "non_fsr" : False , "e_to_p" : True, "fsr" : True } ] }, "ttsemi+jets" : {"syst-pdf" : False, "syst-scale" : False, "color" : ROOT.kSpring, "samples" : [{'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/2016/ttsemijets.root', 'xs' : 365.4, "non_fsr" : False , "e_to_p" : True, "fsr" : True } ] }, "wg+jets" : {"syst-pdf": True, "syst-scale": True, "color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjets.root", "xs" : 178.6, "non_fsr" : True , "e_to_p" : True, "fsr" : True } ] }, "zg+jets" : {"syst-pdf" : False, "syst-scale" : False, "color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/2016/zglowmlljets.root", "xs" : 96.75, "non_fsr" : True , "e_to_p" : False, "fsr" : True } ] }, "no label" : {"syst-pdf" : False, "syst-scale" : False, "color" : None, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/2016/zjets.root", "xs" : 4963.0, "non_fsr" : False , "e_to_p" : True, "fsr" : False  }] }, "ttg+jets" : {"syst-pdf" : False, "syst-scale" : False,  "color" : ROOT.kGreen+2, "samples" : [ {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/ttgjets.root", "xs" : 3.795, "non_fsr" : True , "e_to_p" : True, "fsr" : True } ] } }
+labels = { "tt2l2nu+jets" : {"syst-pdf" : False, "syst-scale" : False, "color" : ROOT.kRed, "samples" : [{'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/2016/tt2l2nujets.root', 'xs' : 88.28, "non_fsr" : False , "e_to_p" : True, "fsr" : True } ] }, "ttsemi+jets" : {"syst-pdf" : False, "syst-scale" : False, "color" : ROOT.kSpring, "samples" : [{'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/2016/ttsemijets.root', 'xs' : 365.4, "non_fsr" : False , "e_to_p" : True, "fsr" : True } ] }, "wg+jets" : {"syst-pdf": True, "syst-scale": True, "color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjets.root.bak", "xs" : 178.6, "non_fsr" : True , "e_to_p" : True, "fsr" : True } ] }, "zg+jets" : {"syst-pdf" : False, "syst-scale" : False, "color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/2016/zglowmlljets.root", "xs" : 96.75, "non_fsr" : True , "e_to_p" : False, "fsr" : True } ] }, "no label" : {"syst-pdf" : False, "syst-scale" : False, "color" : None, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/2016/zjets.root", "xs" : 4963.0, "non_fsr" : False , "e_to_p" : True, "fsr" : False  }] }, "ttg+jets" : {"syst-pdf" : False, "syst-scale" : False,  "color" : ROOT.kGreen+2, "samples" : [ {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/ttgjets.root", "xs" : 3.795, "non_fsr" : True , "e_to_p" : True, "fsr" : True } ] } }
 
 #labels = { "tt2l2nu+jets" : {"syst-pdf" : False, "syst-scale" : False, "color" : ROOT.kRed, "samples" : [{'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/tt2l2nujets.root', 'xs' : 88.28, "non_fsr" : False , "e_to_p" : True, "fsr" : True } ] }, "ttsemi+jets" : {"syst-pdf" : False, "syst-scale" : False, "color" : ROOT.kSpring, "samples" : [{'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/ttsemijets.root', 'xs' : 365.4, "non_fsr" : False , "e_to_p" : True, "fsr" : True } ] }, "wg+jets" : {"syst-pdf": True, "syst-scale": False, "color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/wgjetsewdim6.root", "xs" : 5.519, "non_fsr" : True , "e_to_p" : True, "fsr" : True } ] }, "zg+jets" : {"syst-pdf" : False, "syst-scale" : False, "color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/zglowmlljets.root", "xs" : 96.75, "non_fsr" : True , "e_to_p" : False, "fsr" : True } ] }, "no label" : {"syst-pdf" : False, "syst-scale" : False, "color" : None, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/zjets.root", "xs" : 4963.0, "non_fsr" : False , "e_to_p" : True, "fsr" : False  }] }, "ttg+jets" : {"syst-pdf" : False, "syst-scale" : False,  "color" : ROOT.kGreen+2, "samples" : [ {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/ttgjets.root", "xs" : 3.795, "non_fsr" : True , "e_to_p" : True, "fsr" : True } ] } }
 
@@ -96,7 +101,7 @@ histogram_templates = [ROOT.TH1F('', '', 5, 100., 600 ),ROOT.TH1F('','',8,pi/2,p
 
 assert(len(variables) == len(histogram_templates))
 
-mlg_index = 6
+mlg_index = 7
 
 #ewdim6_filename = "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjetsewdim6.root"
 ewdim6_filename = "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjetsewdim6.root.bak"
@@ -105,8 +110,8 @@ ewdim6_file = ROOT.TFile(ewdim6_filename)
 
 ewdim6_tree = ewdim6_file.Get("Events")
 
-ewdim6_xs = 5.519
-#ewdim6_xs = 4.318
+#ewdim6_xs = 5.519
+ewdim6_xs = 4.318
 
 ewdim6_nweightedevents = ewdim6_file.Get("nWeightedEvents").GetBinContent(1)
 
@@ -784,215 +789,217 @@ def fillHistogramMC(label,sample):
 #    if len(variables) > 0  and not (sample["e_to_p"] and not sample["fsr"] and not sample["non_fsr"]):
 #        label["hists"][variables[0]].Print("all")
 
-sm_lhe_weight = 373
+if options.ewdim6:
 
-sm_lhe_weight_hist = ROOT.TH1F('', '', 5, 100., 600 )
+    sm_lhe_weight = 373
 
-sm_hist = ROOT.TH1F('', '', 5, 100., 600 )
+    sm_lhe_weight_hist = ROOT.TH1F('', '', 5, 100., 600 )
 
-cwww_reweights = [373,1,2,3,4,5,6]
+    sm_hist = ROOT.TH1F('', '', 5, 100., 600 )
 
-cwww_coefficients = [0.0, 10.0,-10.0,20.0,-20.0,-30.0,30.0]
+    cwww_reweights = [373,1,2,3,4,5,6]
 
-#cwww_coefficients = [0.0, 1.0,-1.0,2.0,-2.0,-3.0,3.0]
+    cwww_coefficients = [0.0, 10.0,-10.0,20.0,-20.0,-30.0,30.0]
 
-cwww_hists = []
+    #cwww_coefficients = [0.0, 1.0,-1.0,2.0,-2.0,-3.0,3.0]
 
-cw_reweights = [373,7,8,9,10,11,12]
+    cwww_hists = []
 
-cw_coefficients = [0.0, 80.0,-80.0,160.0,-160.0,240.0,-240.0]
+    cw_reweights = [373,7,8,9,10,11,12]
 
-#cw_coefficients = [0.0, 17.0,-17.0,34.0,-34.0,51.0,-51.0]
+    cw_coefficients = [0.0, 80.0,-80.0,160.0,-160.0,240.0,-240.0]
 
-cw_hists = []
+    #cw_coefficients = [0.0, 17.0,-17.0,34.0,-34.0,51.0,-51.0]
 
-cb_reweights = [373,13,14,15,16,17,18]
+    cw_hists = []
 
-cb_coefficients = [0.0, 80.0,-80.0,160.0,-160.0,240.0,-240.0]
+    cb_reweights = [373,13,14,15,16,17,18]
 
-#cb_coefficients = [0.0, 17.0,-17.0,34.0,-34.0,51.0,-51.0]
+    cb_coefficients = [0.0, 80.0,-80.0,160.0,-160.0,240.0,-240.0]
 
-cb_hists = []
+    #cb_coefficients = [0.0, 17.0,-17.0,34.0,-34.0,51.0,-51.0]
 
-cpwww_reweights = [373,19,20,21,22,23,24]
+    cb_hists = []
 
-cpwww_coefficients = [0.0, 4.0,-4.0,8.0,-8.0,12.0,-12.0]
+    cpwww_reweights = [373,19,20,21,22,23,24]
 
-#cpwww_coefficients = [0.0, 0.5,-0.5,1.0,-1.0,1.5,-1.5]
+    cpwww_coefficients = [0.0, 4.0,-4.0,8.0,-8.0,12.0,-12.0]
 
-cpwww_hists = []
+    #cpwww_coefficients = [0.0, 0.5,-0.5,1.0,-1.0,1.5,-1.5]
 
-cpw_reweights = [373,25,26,27,28,29,30]
+    cpwww_hists = []
 
-cpw_coefficients = [0.0, 40.0,-40.0,80.0,-80.0,120.0,-120.0]
+    cpw_reweights = [373,25,26,27,28,29,30]
 
-#cpw_coefficients = [0.0, 8.0,-8.0,16.0,-16.0,24.0,-24.0]
+    cpw_coefficients = [0.0, 40.0,-40.0,80.0,-80.0,120.0,-120.0]
 
-cpw_hists = []
+    #cpw_coefficients = [0.0, 8.0,-8.0,16.0,-16.0,24.0,-24.0]
 
-for i in range(0,len(cwww_reweights)):
-    cwww_hists.append(ROOT.TH1F('', '', 5, 100., 600 ))
+    cpw_hists = []
 
-for i in range(0,len(cw_reweights)):
-    cw_hists.append(ROOT.TH1F('', '', 5, 100., 600 ))
+    for i in range(0,len(cwww_reweights)):
+        cwww_hists.append(ROOT.TH1F('', '', 5, 100., 600 ))
 
-for i in range(0,len(cb_reweights)):
-    cb_hists.append(ROOT.TH1F('', '', 5, 100., 600 ))
+    for i in range(0,len(cw_reweights)):
+        cw_hists.append(ROOT.TH1F('', '', 5, 100., 600 ))
 
-for i in range(0,len(cpwww_reweights)):
-    cpwww_hists.append(ROOT.TH1F('', '', 5, 100., 600 ))
+    for i in range(0,len(cb_reweights)):
+        cb_hists.append(ROOT.TH1F('', '', 5, 100., 600 ))
 
-for i in range(0,len(cpw_reweights)):
-    cpw_hists.append(ROOT.TH1F('', '', 5, 100., 600 ))
+    for i in range(0,len(cpwww_reweights)):
+        cpwww_hists.append(ROOT.TH1F('', '', 5, 100., 600 ))
 
-for i in range(labels["wg+jets"]["samples"][0]["tree"].GetEntries()):
-    labels["wg+jets"]["samples"][0]["tree"].GetEntry(i)
+    for i in range(0,len(cpw_reweights)):
+        cpw_hists.append(ROOT.TH1F('', '', 5, 100., 600 ))
 
-    w = labels["wg+jets"]["samples"][0]["xs"]*1000*35.9/labels["wg+jets"]["samples"][0]["nweightedevents"]
+    for i in range(labels["wg+jets"]["samples"][0]["tree"].GetEntries()):
+        labels["wg+jets"]["samples"][0]["tree"].GetEntry(i)
 
-    w *= pu_weight_hist.GetBinContent(pu_weight_hist.FindFixBin(labels["wg+jets"]["samples"][0]["tree"].npu))
+        w = labels["wg+jets"]["samples"][0]["xs"]*1000*35.9/labels["wg+jets"]["samples"][0]["nweightedevents"]
 
-    w *= eff_scale_factor.photon_efficiency_scale_factor(labels["wg+jets"]["samples"][0]["tree"].photon_pt,labels["wg+jets"]["samples"][0]["tree"].photon_eta)
+        w *= pu_weight_hist.GetBinContent(pu_weight_hist.FindFixBin(labels["wg+jets"]["samples"][0]["tree"].npu))
 
-    if labels["wg+jets"]["samples"][0]["tree"].lepton_pdg_id == 13:
-        w *= eff_scale_factor.muon_efficiency_scale_factor(labels["wg+jets"]["samples"][0]["tree"].lepton_pt,labels["wg+jets"]["samples"][0]["tree"].lepton_eta)
-    elif labels["wg+jets"]["samples"][0]["tree"].lepton_pdg_id == 11:    
-        w *= eff_scale_factor.electron_efficiency_scale_factor(labels["wg+jets"]["samples"][0]["tree"].lepton_pt,labels["wg+jets"]["samples"][0]["tree"].lepton_eta)
-    else:
-        assert(0)
+        w *= eff_scale_factor.photon_efficiency_scale_factor(labels["wg+jets"]["samples"][0]["tree"].photon_pt,labels["wg+jets"]["samples"][0]["tree"].photon_eta)
 
-    if labels["wg+jets"]["samples"][0]["tree"].gen_weight < 0:
-        w = -w
+        if labels["wg+jets"]["samples"][0]["tree"].lepton_pdg_id == 13:
+            w *= eff_scale_factor.muon_efficiency_scale_factor(labels["wg+jets"]["samples"][0]["tree"].lepton_pt,labels["wg+jets"]["samples"][0]["tree"].lepton_eta)
+        elif labels["wg+jets"]["samples"][0]["tree"].lepton_pdg_id == 11:    
+            w *= eff_scale_factor.electron_efficiency_scale_factor(labels["wg+jets"]["samples"][0]["tree"].lepton_pt,labels["wg+jets"]["samples"][0]["tree"].lepton_eta)
+        else:
+            assert(0)
 
-    if pass_selection(labels["wg+jets"]["samples"][0]["tree"],options.phoeta):
-        fillHistogram(sm_hist,getVariable(variables[0],labels["wg+jets"]["samples"][0]["tree"]),w)
+        if labels["wg+jets"]["samples"][0]["tree"].gen_weight < 0:
+            w = -w
 
-sm_hist.Print("all")
+        if pass_selection(labels["wg+jets"]["samples"][0]["tree"],options.phoeta):
+            fillHistogram(sm_hist,getVariable(variables[0],labels["wg+jets"]["samples"][0]["tree"]),w)
 
-for i in range(ewdim6_tree.GetEntries()):
-    ewdim6_tree.GetEntry(i)
+    sm_hist.Print("all")
 
-    w = ewdim6_xs*1000*35.9/ewdim6_nweightedevents
+    for i in range(ewdim6_tree.GetEntries()):
+        ewdim6_tree.GetEntry(i)
 
-    w *= pu_weight_hist.GetBinContent(pu_weight_hist.FindFixBin(ewdim6_tree.npu))
+        w = ewdim6_xs*1000*35.9/ewdim6_nweightedevents
 
-    w *= eff_scale_factor.photon_efficiency_scale_factor(ewdim6_tree.photon_pt,ewdim6_tree.photon_eta)
+        w *= pu_weight_hist.GetBinContent(pu_weight_hist.FindFixBin(ewdim6_tree.npu))
 
-    if ewdim6_tree.lepton_pdg_id == 13:
-        w *= eff_scale_factor.muon_efficiency_scale_factor(ewdim6_tree.lepton_pt,ewdim6_tree.lepton_eta)
-    elif ewdim6_tree.lepton_pdg_id == 11:    
-        w *= eff_scale_factor.electron_efficiency_scale_factor(ewdim6_tree.lepton_pt,ewdim6_tree.lepton_eta)
-    else:
-        assert(0)
+        w *= eff_scale_factor.photon_efficiency_scale_factor(ewdim6_tree.photon_pt,ewdim6_tree.photon_eta)
 
-    if ewdim6_tree.gen_weight < 0:
-        w = -w
+        if ewdim6_tree.lepton_pdg_id == 13:
+            w *= eff_scale_factor.muon_efficiency_scale_factor(ewdim6_tree.lepton_pt,ewdim6_tree.lepton_eta)
+        elif ewdim6_tree.lepton_pdg_id == 11:    
+            w *= eff_scale_factor.electron_efficiency_scale_factor(ewdim6_tree.lepton_pt,ewdim6_tree.lepton_eta)
+        else:
+            assert(0)
 
-    if pass_selection(ewdim6_tree,options.phoeta):
-        for j in range(len(cwww_reweights)):
-            fillHistogram(cwww_hists[j],getVariable(variables[0],ewdim6_tree),w*getattr(ewdim6_tree, 'LHEWeight_rwgt_'+str(cwww_reweights[j])))
+        if ewdim6_tree.gen_weight < 0:
+            w = -w
 
-        for j in range(len(cw_reweights)):
-            fillHistogram(cw_hists[j],getVariable(variables[0],ewdim6_tree),w*getattr(ewdim6_tree, 'LHEWeight_rwgt_'+str(cw_reweights[j])))
+        if pass_selection(ewdim6_tree,options.phoeta):
+            for j in range(len(cwww_reweights)):
+                fillHistogram(cwww_hists[j],getVariable(variables[0],ewdim6_tree),w*getattr(ewdim6_tree, 'LHEWeight_rwgt_'+str(cwww_reweights[j])))
 
-        for j in range(len(cb_reweights)):
-            fillHistogram(cb_hists[j],getVariable(variables[0],ewdim6_tree),w*getattr(ewdim6_tree, 'LHEWeight_rwgt_'+str(cb_reweights[j])))
+            for j in range(len(cw_reweights)):
+                fillHistogram(cw_hists[j],getVariable(variables[0],ewdim6_tree),w*getattr(ewdim6_tree, 'LHEWeight_rwgt_'+str(cw_reweights[j])))
 
-        for j in range(len(cpwww_reweights)):
-            fillHistogram(cpwww_hists[j],getVariable(variables[0],ewdim6_tree),w*getattr(ewdim6_tree, 'LHEWeight_rwgt_'+str(cpwww_reweights[j])))
+            for j in range(len(cb_reweights)):
+                fillHistogram(cb_hists[j],getVariable(variables[0],ewdim6_tree),w*getattr(ewdim6_tree, 'LHEWeight_rwgt_'+str(cb_reweights[j])))
 
-        for j in range(len(cpw_reweights)):
-            fillHistogram(cpw_hists[j],getVariable(variables[0],ewdim6_tree),w*getattr(ewdim6_tree, 'LHEWeight_rwgt_'+str(cpw_reweights[j])))
+            for j in range(len(cpwww_reweights)):
+                fillHistogram(cpwww_hists[j],getVariable(variables[0],ewdim6_tree),w*getattr(ewdim6_tree, 'LHEWeight_rwgt_'+str(cpwww_reweights[j])))
 
-        fillHistogram(sm_lhe_weight_hist,getVariable(variables[0],ewdim6_tree),w*getattr(ewdim6_tree, 'LHEWeight_rwgt_'+str(sm_lhe_weight)))
+            for j in range(len(cpw_reweights)):
+                fillHistogram(cpw_hists[j],getVariable(variables[0],ewdim6_tree),w*getattr(ewdim6_tree, 'LHEWeight_rwgt_'+str(cpw_reweights[j])))
 
-cwww_scaling_outfile = ROOT.TFile("cwww_scaling.root",'recreate')
-cw_scaling_outfile = ROOT.TFile("cw_scaling.root",'recreate')
-cb_scaling_outfile = ROOT.TFile("cb_scaling.root",'recreate')
-cpwww_scaling_outfile = ROOT.TFile("cpwww_scaling.root",'recreate')
-cpw_scaling_outfile = ROOT.TFile("cpw_scaling.root",'recreate')
+            fillHistogram(sm_lhe_weight_hist,getVariable(variables[0],ewdim6_tree),w*getattr(ewdim6_tree, 'LHEWeight_rwgt_'+str(sm_lhe_weight)))
 
-cwww_hist_max = max(cwww_coefficients) + (max(cwww_coefficients) - min(cwww_coefficients))/(len(cwww_coefficients)-1)/2
-cwww_hist_min = min(cwww_coefficients) - (max(cwww_coefficients) - min(cwww_coefficients))/(len(cwww_coefficients)-1)/2
+    cwww_scaling_outfile = ROOT.TFile("cwww_scaling.root",'recreate')
+    cw_scaling_outfile = ROOT.TFile("cw_scaling.root",'recreate')
+    cb_scaling_outfile = ROOT.TFile("cb_scaling.root",'recreate')
+    cpwww_scaling_outfile = ROOT.TFile("cpwww_scaling.root",'recreate')
+    cpw_scaling_outfile = ROOT.TFile("cpw_scaling.root",'recreate')
 
-cw_hist_max = max(cw_coefficients) + (max(cw_coefficients) - min(cw_coefficients))/(len(cw_coefficients)-1)/2
-cw_hist_min = min(cw_coefficients) - (max(cw_coefficients) - min(cw_coefficients))/(len(cw_coefficients)-1)/2
+    cwww_hist_max = max(cwww_coefficients) + (max(cwww_coefficients) - min(cwww_coefficients))/(len(cwww_coefficients)-1)/2
+    cwww_hist_min = min(cwww_coefficients) - (max(cwww_coefficients) - min(cwww_coefficients))/(len(cwww_coefficients)-1)/2
 
-cb_hist_max = max(cb_coefficients) + (max(cb_coefficients) - min(cb_coefficients))/(len(cb_coefficients)-1)/2
-cb_hist_min = min(cb_coefficients) - (max(cb_coefficients) - min(cb_coefficients))/(len(cb_coefficients)-1)/2
+    cw_hist_max = max(cw_coefficients) + (max(cw_coefficients) - min(cw_coefficients))/(len(cw_coefficients)-1)/2
+    cw_hist_min = min(cw_coefficients) - (max(cw_coefficients) - min(cw_coefficients))/(len(cw_coefficients)-1)/2
 
-cpwww_hist_max = max(cpwww_coefficients) + (max(cpwww_coefficients) - min(cpwww_coefficients))/(len(cpwww_coefficients)-1)/2
-cpwww_hist_min = min(cpwww_coefficients) - (max(cpwww_coefficients) - min(cpwww_coefficients))/(len(cpwww_coefficients)-1)/2
+    cb_hist_max = max(cb_coefficients) + (max(cb_coefficients) - min(cb_coefficients))/(len(cb_coefficients)-1)/2
+    cb_hist_min = min(cb_coefficients) - (max(cb_coefficients) - min(cb_coefficients))/(len(cb_coefficients)-1)/2
 
-cpw_hist_max = max(cpw_coefficients) + (max(cpw_coefficients) - min(cpw_coefficients))/(len(cpw_coefficients)-1)/2
-cpw_hist_min = min(cpw_coefficients) - (max(cpw_coefficients) - min(cpw_coefficients))/(len(cpw_coefficients)-1)/2
+    cpwww_hist_max = max(cpwww_coefficients) + (max(cpwww_coefficients) - min(cpwww_coefficients))/(len(cpwww_coefficients)-1)/2
+    cpwww_hist_min = min(cpwww_coefficients) - (max(cpwww_coefficients) - min(cpwww_coefficients))/(len(cpwww_coefficients)-1)/2
 
-sm_lhe_weight_hist.Print("all")
+    cpw_hist_max = max(cpw_coefficients) + (max(cpw_coefficients) - min(cpw_coefficients))/(len(cpw_coefficients)-1)/2
+    cpw_hist_min = min(cpw_coefficients) - (max(cpw_coefficients) - min(cpw_coefficients))/(len(cpw_coefficients)-1)/2
 
-for i in range(1,cwww_hists[0].GetNbinsX()+1):
-    cwww_scaling_hist=ROOT.TH1D("ewdim6_scaling_bin_"+str(i),"ewdim6_scaling_bin_"+str(i),len(cwww_coefficients),cwww_hist_min,cwww_hist_max);
+    sm_lhe_weight_hist.Print("all")
 
-    for j in range(0,len(cwww_hists)):
-        assert(sm_lhe_weight_hist.GetBinContent(i) > 0)
+    for i in range(1,cwww_hists[0].GetNbinsX()+1):
+        cwww_scaling_hist=ROOT.TH1D("ewdim6_scaling_bin_"+str(i),"ewdim6_scaling_bin_"+str(i),len(cwww_coefficients),cwww_hist_min,cwww_hist_max);
 
-        cwww_scaling_hist.SetBinContent(cwww_scaling_hist.GetXaxis().FindFixBin(cwww_coefficients[j]), cwww_hists[j].GetBinContent(i)/sm_lhe_weight_hist.GetBinContent(i))
+        for j in range(0,len(cwww_hists)):
+            assert(sm_lhe_weight_hist.GetBinContent(i) > 0)
+
+            cwww_scaling_hist.SetBinContent(cwww_scaling_hist.GetXaxis().FindFixBin(cwww_coefficients[j]), cwww_hists[j].GetBinContent(i)/sm_lhe_weight_hist.GetBinContent(i))
         
-    cwww_scaling_outfile.cd()
-    cwww_scaling_hist.Write()
+        cwww_scaling_outfile.cd()
+        cwww_scaling_hist.Write()
 
-cwww_scaling_outfile.Close()
+    cwww_scaling_outfile.Close()
 
-for i in range(1,cw_hists[0].GetNbinsX()+1):
-    cw_scaling_hist=ROOT.TH1D("ewdim6_scaling_bin_"+str(i),"ewdim6_scaling_bin_"+str(i),len(cw_coefficients),cw_hist_min,cw_hist_max);
+    for i in range(1,cw_hists[0].GetNbinsX()+1):
+        cw_scaling_hist=ROOT.TH1D("ewdim6_scaling_bin_"+str(i),"ewdim6_scaling_bin_"+str(i),len(cw_coefficients),cw_hist_min,cw_hist_max);
 
-    for j in range(0,len(cw_hists)):
-        assert(sm_lhe_weight_hist.GetBinContent(i) > 0)
+        for j in range(0,len(cw_hists)):
+            assert(sm_lhe_weight_hist.GetBinContent(i) > 0)
 
-        cw_scaling_hist.SetBinContent(cw_scaling_hist.GetXaxis().FindFixBin(cw_coefficients[j]), cw_hists[j].GetBinContent(i)/sm_lhe_weight_hist.GetBinContent(i))
+            cw_scaling_hist.SetBinContent(cw_scaling_hist.GetXaxis().FindFixBin(cw_coefficients[j]), cw_hists[j].GetBinContent(i)/sm_lhe_weight_hist.GetBinContent(i))
         
-    cw_scaling_outfile.cd()
-    cw_scaling_hist.Write()
+        cw_scaling_outfile.cd()
+        cw_scaling_hist.Write()
 
-cw_scaling_outfile.Close()
+    cw_scaling_outfile.Close()
 
-for i in range(1,cb_hists[0].GetNbinsX()+1):
-    cb_scaling_hist=ROOT.TH1D("ewdim6_scaling_bin_"+str(i),"ewdim6_scaling_bin_"+str(i),len(cb_coefficients),cb_hist_min,cb_hist_max);
+    for i in range(1,cb_hists[0].GetNbinsX()+1):
+        cb_scaling_hist=ROOT.TH1D("ewdim6_scaling_bin_"+str(i),"ewdim6_scaling_bin_"+str(i),len(cb_coefficients),cb_hist_min,cb_hist_max);
 
-    for j in range(0,len(cb_hists)):
-        assert(sm_lhe_weight_hist.GetBinContent(i) > 0)
+        for j in range(0,len(cb_hists)):
+            assert(sm_lhe_weight_hist.GetBinContent(i) > 0)
 
-        cb_scaling_hist.SetBinContent(cb_scaling_hist.GetXaxis().FindFixBin(cb_coefficients[j]), cb_hists[j].GetBinContent(i)/sm_lhe_weight_hist.GetBinContent(i))
+            cb_scaling_hist.SetBinContent(cb_scaling_hist.GetXaxis().FindFixBin(cb_coefficients[j]), cb_hists[j].GetBinContent(i)/sm_lhe_weight_hist.GetBinContent(i))
         
-    cb_scaling_outfile.cd()
-    cb_scaling_hist.Write()
+        cb_scaling_outfile.cd()
+        cb_scaling_hist.Write()
 
-cb_scaling_outfile.Close()
+    cb_scaling_outfile.Close()
 
-for i in range(1,cpwww_hists[0].GetNbinsX()+1):
-    cpwww_scaling_hist=ROOT.TH1D("ewdim6_scaling_bin_"+str(i),"ewdim6_scaling_bin_"+str(i),len(cpwww_coefficients),cpwww_hist_min,cpwww_hist_max);
+    for i in range(1,cpwww_hists[0].GetNbinsX()+1):
+        cpwww_scaling_hist=ROOT.TH1D("ewdim6_scaling_bin_"+str(i),"ewdim6_scaling_bin_"+str(i),len(cpwww_coefficients),cpwww_hist_min,cpwww_hist_max);
 
-    for j in range(0,len(cpwww_hists)):
-        assert(sm_lhe_weight_hist.GetBinContent(i) > 0)
+        for j in range(0,len(cpwww_hists)):
+            assert(sm_lhe_weight_hist.GetBinContent(i) > 0)
 
-        cpwww_scaling_hist.SetBinContent(cpwww_scaling_hist.GetXaxis().FindFixBin(cpwww_coefficients[j]), cpwww_hists[j].GetBinContent(i)/sm_lhe_weight_hist.GetBinContent(i))
+            cpwww_scaling_hist.SetBinContent(cpwww_scaling_hist.GetXaxis().FindFixBin(cpwww_coefficients[j]), cpwww_hists[j].GetBinContent(i)/sm_lhe_weight_hist.GetBinContent(i))
         
-    cpwww_scaling_outfile.cd()
-    cpwww_scaling_hist.Write()
+        cpwww_scaling_outfile.cd()
+        cpwww_scaling_hist.Write()
 
-cpwww_scaling_outfile.Close()
+    cpwww_scaling_outfile.Close()
 
-for i in range(1,cpw_hists[0].GetNbinsX()+1):
-    cpw_scaling_hist=ROOT.TH1D("ewdim6_scaling_bin_"+str(i),"ewdim6_scaling_bin_"+str(i),len(cpw_coefficients),cpw_hist_min,cpw_hist_max);
+    for i in range(1,cpw_hists[0].GetNbinsX()+1):
+        cpw_scaling_hist=ROOT.TH1D("ewdim6_scaling_bin_"+str(i),"ewdim6_scaling_bin_"+str(i),len(cpw_coefficients),cpw_hist_min,cpw_hist_max);
 
-    for j in range(0,len(cpw_hists)):
-        assert(sm_lhe_weight_hist.GetBinContent(i) > 0)
+        for j in range(0,len(cpw_hists)):
+            assert(sm_lhe_weight_hist.GetBinContent(i) > 0)
 
-        cpw_scaling_hist.SetBinContent(cpw_scaling_hist.GetXaxis().FindFixBin(cpw_coefficients[j]), cpw_hists[j].GetBinContent(i)/sm_lhe_weight_hist.GetBinContent(i))
+            cpw_scaling_hist.SetBinContent(cpw_scaling_hist.GetXaxis().FindFixBin(cpw_coefficients[j]), cpw_hists[j].GetBinContent(i)/sm_lhe_weight_hist.GetBinContent(i))
         
-    cpw_scaling_outfile.cd()
-    cpw_scaling_hist.Write()
+        cpw_scaling_outfile.cd()
+        cpw_scaling_hist.Write()
 
-cpw_scaling_outfile.Close()
+    cpw_scaling_outfile.Close()
 
 for i in range(data_events_tree.GetEntries()):
     data_events_tree.GetEntry(i)
@@ -1575,6 +1582,9 @@ for i in range(len(variables)):
     c1.SaveAs(options.outputdir + "/" + variables[i] + ".png")
 
 c1.Close()
+
+if not options.ewdim6:
+    sys.exit(0)
 
 for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
 
