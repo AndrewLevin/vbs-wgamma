@@ -788,7 +788,7 @@ def fillHistogramMC(label,sample):
                         fillHistogram(label["hists-electron-id-sf-variation"][j],getVariable(variables[j],sample["tree"]),weight_electron_id_sf_variation)
                         fillHistogram(label["hists-electron-reco-sf-variation"][j],getVariable(variables[j],sample["tree"]),weight_electron_reco_sf_variation)
                         fillHistogram(label["hists-muon-id-sf-variation"][j],getVariable(variables[j],sample["tree"]),weight_muon_id_sf_variation)
-                        fillHistogram(label["hists-muon-iso-sf-variation"][j],getVariable(variables[j],sample["tree"],weight_muon_iso_sf_variation)
+                        fillHistogram(label["hists-muon-iso-sf-variation"][j],getVariable(variables[j],sample["tree"]),weight_muon_iso_sf_variation)
                         fillHistogram(label["hists-photon-id-sf-variation"][j],getVariable(variables[j],sample["tree"]),weight_photon_id_sf_variation)
                         if label["syst-pdf"]:
                             for k in range(0,102):
