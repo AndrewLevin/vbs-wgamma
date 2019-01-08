@@ -104,15 +104,15 @@ assert(len(variables) == len(histogram_templates))
 
 mlg_index = 7
 
-#ewdim6_filename = "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjetsewdim6.root"
-ewdim6_filename = "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjetsewdim6.root.bak"
+#ewdim6_filename = "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjetsewdim6.root.bak"
+ewdim6_filename = "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjetsewdim6.root"
 
 ewdim6_file = ROOT.TFile(ewdim6_filename)
 
 ewdim6_tree = ewdim6_file.Get("Events")
 
-ewdim6_xs = 5.519
-#ewdim6_xs = 4.318
+#ewdim6_xs = 5.519
+ewdim6_xs = 4.318
 
 ewdim6_nweightedevents = ewdim6_file.Get("nWeightedEvents").GetBinContent(1)
 
@@ -805,41 +805,41 @@ if options.ewdim6:
 
     cwww_reweights = [373,1,2,3,4,5,6]
 
-    cwww_coefficients = [0.0, 10.0,-10.0,20.0,-20.0,-30.0,30.0]
+    #cwww_coefficients = [0.0, 10.0,-10.0,20.0,-20.0,-30.0,30.0]
 
-    #cwww_coefficients = [0.0, 1.0,-1.0,2.0,-2.0,-3.0,3.0]
+    cwww_coefficients = [0.0, 1.0,-1.0,2.0,-2.0,-3.0,3.0]
 
     cwww_hists = []
 
     cw_reweights = [373,7,8,9,10,11,12]
 
-    cw_coefficients = [0.0, 80.0,-80.0,160.0,-160.0,240.0,-240.0]
+    #cw_coefficients = [0.0, 80.0,-80.0,160.0,-160.0,240.0,-240.0]
 
-    #cw_coefficients = [0.0, 17.0,-17.0,34.0,-34.0,51.0,-51.0]
+    cw_coefficients = [0.0, 17.0,-17.0,34.0,-34.0,51.0,-51.0]
 
     cw_hists = []
 
     cb_reweights = [373,13,14,15,16,17,18]
 
-    cb_coefficients = [0.0, 80.0,-80.0,160.0,-160.0,240.0,-240.0]
+    #cb_coefficients = [0.0, 80.0,-80.0,160.0,-160.0,240.0,-240.0]
 
-    #cb_coefficients = [0.0, 17.0,-17.0,34.0,-34.0,51.0,-51.0]
+    cb_coefficients = [0.0, 17.0,-17.0,34.0,-34.0,51.0,-51.0]
 
     cb_hists = []
 
     cpwww_reweights = [373,19,20,21,22,23,24]
 
-    cpwww_coefficients = [0.0, 4.0,-4.0,8.0,-8.0,12.0,-12.0]
+    #cpwww_coefficients = [0.0, 4.0,-4.0,8.0,-8.0,12.0,-12.0]
 
-    #cpwww_coefficients = [0.0, 0.5,-0.5,1.0,-1.0,1.5,-1.5]
+    cpwww_coefficients = [0.0, 0.5,-0.5,1.0,-1.0,1.5,-1.5]
 
     cpwww_hists = []
 
     cpw_reweights = [373,25,26,27,28,29,30]
 
-    cpw_coefficients = [0.0, 40.0,-40.0,80.0,-80.0,120.0,-120.0]
+    #cpw_coefficients = [0.0, 40.0,-40.0,80.0,-80.0,120.0,-120.0]
 
-    #cpw_coefficients = [0.0, 8.0,-8.0,16.0,-16.0,24.0,-24.0]
+    cpw_coefficients = [0.0, 8.0,-8.0,16.0,-16.0,24.0,-24.0]
 
     cpw_hists = []
 
