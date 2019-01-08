@@ -1,4 +1,4 @@
-data_driven = True
+1;136;0cdata_driven = True
 
 def fillHistogram(hist,value,weight=1):
     if options.overflow:
@@ -44,6 +44,7 @@ parser.add_option('--overflow',dest='overflow',action='store_true',default=False
 parser.add_option('--ewdim6',dest='ewdim6',action='store_true',default=False)
 parser.add_option('--ewdim6_scaling_only',dest='ewdim6_scaling_only',action='store_true',default=False)
 
+parser.add_option('--blinding_cut',dest='blinding_cut',default=1000000)
 parser.add_option('--lumi',dest='lumi')
 parser.add_option('--variable',dest='variable')
 parser.add_option('--xaxislabel',dest='xaxislabel',default='m_{jj} (GeV)')
@@ -52,6 +53,8 @@ parser.add_option('-i',dest='inputfile')
 parser.add_option('-o',dest='outputdir',default="/eos/user/a/amlevin/www/tmp/")
 
 (options,args) = parser.parse_args()
+
+blinding_cut = float(options.blinding_cut)
 
 if options.ewdim6_scaling_only and not options.ewdim6:
     assert(0)
@@ -1023,6 +1026,9 @@ for i in range(data_events_tree.GetEntries()):
     if pass_selection(data_events_tree,options.phoeta,True,False):
 
         weight = leptonfakerate(data_events_tree.lepton_pdg_id,data_events_tree.lepton_eta, data_events_tree.lepton_pt,"nominal")
+
+        if data_events_tree.photon_pt > blinding_cut:
+            continue
 
         for j in range(len(variables)):
             fillHistogram(fake_lepton["hists"][j],getVariable(variables[j],data_events_tree),weight)
