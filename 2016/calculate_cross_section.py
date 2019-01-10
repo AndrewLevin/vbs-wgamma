@@ -3,23 +3,23 @@ import math
 fiducial_region_cuts_efficiency = 0.51649677698712206047032474804031
 #fiducial_region_cuts_efficiency = 1
 
-n_signal_electron = 10158.782842 
+n_signal_electron = 9485.58976681
 
-n_signal_muon = 17335.345719
+n_signal_muon = 17244.0419755
 
-n_signal_syst_unc_due_to_fake_photon_electron = 344.847133046
+n_signal_syst_unc_due_to_fake_photon_electron = 147.554857917
 
-n_signal_syst_unc_due_to_fake_photon_muon = 381.858058185
+n_signal_syst_unc_due_to_fake_photon_muon = 374.031969817
 
-n_signal_syst_unc_due_to_fake_lepton_electron = 260.240840513
+n_signal_syst_unc_due_to_fake_lepton_electron = 410.245448217
 
-n_signal_syst_unc_due_to_fake_lepton_muon = 204.653934008
+n_signal_syst_unc_due_to_fake_lepton_muon = 178.404898505
 
-n_signal_stat_unc_electron = 146.684973647
+n_signal_stat_unc_electron = 248.29148261
 
-n_signal_stat_unc_muon = 268.75772812
+n_signal_stat_unc_muon = 267.58323769
 
-n_weighted_selected_data_mc_sf_electron = 19363.7797862
+n_weighted_selected_data_mc_sf_electron = 19363.7797862 
 
 n_weighted_selected_data_mc_sf_muon = 33287.8325007
 
@@ -77,11 +77,11 @@ xs_muon =  n_signal_muon/(n_weighted_selected_data_mc_sf_muon*35.9*1000/n_weight
 
 lumi_err =  n_signal/(n_weighted_selected_data_mc_sf*35.9*0.975*1000/n_weighted_run_over/fiducial_region_cuts_efficiency) - xs
 
-lumi_err_electron =  n_signal_electron/(n_weighted_selected_data_mc_sf_electron*35.9*0.975*1000/n_weighted_run_over/fiducial_region_cuts_efficiency) - xs
+lumi_err_electron =  n_signal_electron/(n_weighted_selected_data_mc_sf_electron*35.9*0.975*1000/n_weighted_run_over/fiducial_region_cuts_efficiency) - xs_electron
 
-lumi_err_muon =  n_signal_muon/(n_weighted_selected_data_mc_sf_muon*35.9*0.975*1000/n_weighted_run_over/fiducial_region_cuts_efficiency) - xs
+lumi_err_muon =  n_signal_muon/(n_weighted_selected_data_mc_sf_muon*35.9*0.975*1000/n_weighted_run_over/fiducial_region_cuts_efficiency) - xs_muon
 
-stat_err = (n_signal+n_signal_stat_unc)/(n_weighted_selected_data_mc_sf*35.9*1000/n_weighted_run_over/fiducial_region_cuts_efficiency) - xs
+stat_err = (n_signal+n_signal_stat_unc)/(n_weighted_selected_data_mc_sf*35.9*1000/n_weighted_run_over/fiducial_region_cuts_efficiency) - xs_muon
 
 stat_err_electron = (n_signal_electron+n_signal_stat_unc_electron)/(n_weighted_selected_data_mc_sf_electron*35.9*1000/n_weighted_run_over/fiducial_region_cuts_efficiency) - xs_electron
 
