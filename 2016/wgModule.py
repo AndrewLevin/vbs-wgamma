@@ -40,6 +40,7 @@ class exampleProducer(Module):
         self.out.branch("mjj","F")
         self.out.branch("npvs","I")
         self.out.branch("njets","I")
+        self.out.branch("pass_fiducial",  "B");
         self.out.branch("is_lepton_tight",  "B");
         self.out.branch("gen_weight",  "F");
         self.out.branch("is_lepton_real",  "B");
@@ -99,6 +100,9 @@ class exampleProducer(Module):
 
                 elif electrons[i].cutBased >= 1:
                     loose_but_not_tight_electrons.append(i)
+
+        if len(tight_muons) + len(loose_but_not_tight_muons) +  len(tight_electrons) + len(loose_but_not_tight_electrons) > 1:
+            return False
 
         for i in range (0,len(photons)):
 
@@ -270,10 +274,8 @@ class exampleProducer(Module):
         #if event.MET_pt < 35:
         #    return False
 
-        if len(tight_muons) + len(loose_but_not_tight_muons) +  len(tight_electrons) + len(loose_but_not_tight_electrons) > 1:
-            return False
-
         isprompt_mask = (1 << 0) #isPrompt
+        isfromhardprocess_mask = (1 << 8) #isFromHardProcess
         isprompttaudecayproduct_mask = (1 << 4) #isPromptTauDecayProduct
 
 
@@ -615,6 +617,31 @@ class exampleProducer(Module):
             self.out.fillBranch("lhe_lepton_charge",bool(n_w_plus))
         except:
             pass
+
+        try:
+
+            n_gen_leptons = 0
+            n_gen_photons = 0
+            for i in range(0,len(genparts)):
+                if genparts[i].pt > 5 and genparts[i].status == 1 and (abs(genparts[i].pdgId) == 11 or abs(genparts[i].pdgId) == 13 or abs(genparts[i].pdgId) == 15) and (genparts[i].statusFlags & isfromhardprocess_mask == isfromhardprocess_mask) and ((genparts[i].statusFlags & isprompt_mask == isprompt_mask) or (genparts[i].statusFlags & isprompttaudecayproduct_mask == isprompttaudecayproduct_mask)):
+                    gen_lepton_index = i
+                    n_gen_leptons +=  1
+                if genparts[i].pt > 5 and genparts[i].status == 1 and genparts[i].pdgId == 22 and (genparts[i].statusFlags & isfromhardprocess_mask == isfromhardprocess_mask) and (genparts[i].statusFlags & isprompt_mask == isprompt_mask):
+                    gen_photon_index = i
+                    n_gen_photons +=1
+
+            if n_gen_leptons == 1 and n_gen_photons == 1:
+                if deltaR(genparts[gen_lepton_index].eta,genparts[gen_lepton_index].phi,genparts[gen_photon_index].eta,genparts[gen_photon_index].phi) > 0.7 and genparts[gen_lepton_index].pt > 20 and genparts[gen_photon_index].pt > 20 and abs(genparts[gen_photon_index].eta) < 2.5:
+                    self.out.fillBranch("pass_fiducial",1)
+                else:
+                    self.out.fillBranch("pass_fiducial",0)
+            else:        
+                self.out.fillBranch("pass_fiducial",0)
+        except: 
+            pass
+
+#        assert(n_gen_leptons == 1 or n_gen_leptons == 0)        
+#        assert(n_gen_photons == 1 or n_gen_photons == 0)        
 
         self.out.fillBranch("njets",njets)
         self.out.fillBranch("npvs",event.PV_npvs)
