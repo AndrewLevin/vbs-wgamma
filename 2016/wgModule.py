@@ -50,6 +50,10 @@ class exampleProducer(Module):
         pass
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
+        #do this first for processing speed-up
+        if not (event.HLT_Ele27_WPTight_Gsf or event.HLT_IsoMu24 or event.HLT_IsoTkMu24):
+            return False
+
         electrons = Collection(event, "Electron")
         muons = Collection(event, "Muon")
         jets = Collection(event, "Jet")
@@ -62,6 +66,7 @@ class exampleProducer(Module):
             
             pass
             
+        debug = False
 
         tight_muons = []
 
@@ -85,6 +90,10 @@ class exampleProducer(Module):
                 tight_muons.append(i)
             elif muons[i].pfRelIso04_all < 0.25:
                 loose_but_not_tight_muons.append(i)
+
+        #for processing speed-up
+        if len(tight_muons) + len(loose_but_not_tight_muons) > 1:
+            return False
 
         for i in range (0,len(electrons)):
 
@@ -284,15 +293,6 @@ class exampleProducer(Module):
 
         if len(tight_muons) == 1:
 
-            try:
-
-                for i in range(0,len(genparts)):
-                    if genparts[i].pt > 5 and abs(genparts[i].pdgId) == 13 and ((genparts[i].statusFlags & isprompt_mask == isprompt_mask) or (genparts[i].statusFlags & isprompttaudecayproduct_mask == isprompttaudecayproduct_mask)) and deltaR(muons[tight_muons[0]].eta,muons[tight_muons[0]].phi,genparts[i].eta,genparts[i].phi) < 0.3:
-                        is_lepton_real=1
-
-            except:
-                pass
-
             if not (event.HLT_IsoMu24 or event.HLT_IsoTkMu24):
                 return False
         
@@ -314,9 +314,8 @@ class exampleProducer(Module):
             #if sqrt(2*muons[tight_muons[0]].pt*event.MET_pt*(1 - cos(event.MET_phi - muons[tight_muons[0]].phi))) < 30:
             #    return False
 
-            self.out.fillBranch("mt",sqrt(2*muons[tight_muons[0]].pt*event.MET_pt*(1 - cos(event.MET_phi - muons[tight_muons[0]].phi))))
-
-            print "selected muon event: " + str(event.event) + " " + str(event.luminosityBlock) + " " + str(event.run)
+            if debug:
+                print "selected muon event: " + str(event.event) + " " + str(event.luminosityBlock) + " " + str(event.run)
             
             mask1 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) | (1 << 11) | (1 << 13)
             mask2 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) | (1 << 11) 
@@ -335,6 +334,14 @@ class exampleProducer(Module):
             else:
                 assert(0)
 
+            try:
+                for i in range(0,len(genparts)):
+                    if genparts[i].pt > 5 and abs(genparts[i].pdgId) == 13 and ((genparts[i].statusFlags & isprompt_mask == isprompt_mask) or (genparts[i].statusFlags & isprompttaudecayproduct_mask == isprompttaudecayproduct_mask)) and deltaR(muons[tight_muons[0]].eta,muons[tight_muons[0]].phi,genparts[i].eta,genparts[i].phi) < 0.3:
+                        is_lepton_real=1
+            except:
+                pass
+
+            self.out.fillBranch("mt",sqrt(2*muons[tight_muons[0]].pt*event.MET_pt*(1 - cos(event.MET_phi - muons[tight_muons[0]].phi))))
             self.out.fillBranch("is_lepton_real",is_lepton_real)
             self.out.fillBranch("lepton_pdg_id",13)
             self.out.fillBranch("lepton_pt",muons[tight_muons[0]].pt)
@@ -349,13 +356,6 @@ class exampleProducer(Module):
 
         elif len(loose_but_not_tight_muons) == 1:
 
-            try:
-
-                for i in range(0,len(genparts)):
-                    if genparts[i].pt > 5 and abs(genparts[i].pdgId) == 13 and ((genparts[i].statusFlags & isprompt_mask == isprompt_mask) or (genparts[i].statusFlags & isprompttaudecayproduct_mask == isprompttaudecayproduct_mask)) and deltaR(muons[loose_but_not_tight_muons[0]].eta,muons[loose_but_not_tight_muons[0]].phi,genparts[i].eta,genparts[i].phi) < 0.3:
-                        is_lepton_real=1
-            except:
-                pass
 
             if not (event.HLT_IsoMu24 or event.HLT_IsoTkMu24):
                 return False
@@ -372,7 +372,6 @@ class exampleProducer(Module):
             #if sqrt(2*muons[loose_but_not_tight_muons[0]].pt*event.MET_pt*(1 - cos(event.MET_phi - muons[loose_but_not_tight_muons[0]].phi))) < 30:
             #    return False
 
-            self.out.fillBranch("mt",sqrt(2*muons[loose_but_not_tight_muons[0]].pt*event.MET_pt*(1 - cos(event.MET_phi - muons[loose_but_not_tight_muons[0]].phi))))
 
             mask1 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) | (1 << 11) | (1 << 13)
             mask2 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) | (1 << 11) 
@@ -391,6 +390,16 @@ class exampleProducer(Module):
             else:
                 assert(0)
 
+            try:
+
+                for i in range(0,len(genparts)):
+                    if genparts[i].pt > 5 and abs(genparts[i].pdgId) == 13 and ((genparts[i].statusFlags & isprompt_mask == isprompt_mask) or (genparts[i].statusFlags & isprompttaudecayproduct_mask == isprompttaudecayproduct_mask)) and deltaR(muons[loose_but_not_tight_muons[0]].eta,muons[loose_but_not_tight_muons[0]].phi,genparts[i].eta,genparts[i].phi) < 0.3:
+                        is_lepton_real=1
+            except:
+                pass
+
+
+            self.out.fillBranch("mt",sqrt(2*muons[loose_but_not_tight_muons[0]].pt*event.MET_pt*(1 - cos(event.MET_phi - muons[loose_but_not_tight_muons[0]].phi))))
             self.out.fillBranch("is_lepton_real",is_lepton_real)
             self.out.fillBranch("lepton_pdg_id",13)
             self.out.fillBranch("lepton_pt",muons[loose_but_not_tight_muons[0]].pt)
@@ -404,14 +413,6 @@ class exampleProducer(Module):
             self.out.fillBranch("is_lepton_tight",0)
 
         elif len(tight_electrons) == 1:
-
-            try:
-
-                for i in range(0,len(genparts)):
-                    if genparts[i].pt > 5 and abs(genparts[i].pdgId) == 11 and ((genparts[i].statusFlags & isprompt_mask == isprompt_mask) or (genparts[i].statusFlags & isprompttaudecayproduct_mask == isprompttaudecayproduct_mask)) and deltaR(electrons[tight_electrons[0]].eta,electrons[tight_electrons[0]].phi,genparts[i].eta,genparts[i].phi) < 0.3:
-                        is_lepton_real=1
-            except:
-                pass
 
             if not event.HLT_Ele27_WPTight_Gsf:
                 return False
@@ -428,23 +429,6 @@ class exampleProducer(Module):
             if abs(electrons[tight_electrons[0]].eta) > 2.5:
                 return False
 
-            ele_p4 = electrons[tight_electrons[0]].p4()
-
-            pho_p4 = photons[tight_photons[0]].p4()
-
-            ele_p4.SetPtEtaPhiM(ele_p4.Pt() , ele_p4.Eta(), ele_p4.Phi() , ele_p4.M())
-
-            pho_p4.SetPtEtaPhiM(pho_p4.Pt() , pho_p4.Eta(), pho_p4.Phi() , pho_p4.M())
-
-#            if (ele_p4 + pho_p4).M() > 81.2 and (ele_p4 + pho_p4).M() < 101.2:
-#            if (ele_p4 + pho_p4).M() > 76.2 and (ele_p4 + pho_p4).M() < 106.2:
-#                return False
-
-            #if sqrt(2*electrons[tight_electrons[0]].pt/electrons[tight_electrons[0]].eCorr*event.MET_pt*(1 - cos(event.MET_phi - electrons[tight_electrons[0]].phi))) < 30:
-            #    return False
-
-            self.out.fillBranch("mt",sqrt(2*electrons[tight_electrons[0]].pt*event.MET_pt*(1 - cos(event.MET_phi - electrons[tight_electrons[0]].phi))))
-
             mask1 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) | (1 << 11) | (1 << 13)
             mask2 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) | (1 << 11) 
             mask3 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) |  (1 << 13)
@@ -462,9 +446,15 @@ class exampleProducer(Module):
             else:
                 assert(0)
 
+            try:
 
+                for i in range(0,len(genparts)):
+                    if genparts[i].pt > 5 and abs(genparts[i].pdgId) == 11 and ((genparts[i].statusFlags & isprompt_mask == isprompt_mask) or (genparts[i].statusFlags & isprompttaudecayproduct_mask == isprompttaudecayproduct_mask)) and deltaR(electrons[tight_electrons[0]].eta,electrons[tight_electrons[0]].phi,genparts[i].eta,genparts[i].phi) < 0.3:
+                        is_lepton_real=1
+            except:
+                pass
 
-
+            self.out.fillBranch("mt",sqrt(2*electrons[tight_electrons[0]].pt*event.MET_pt*(1 - cos(event.MET_phi - electrons[tight_electrons[0]].phi))))
             self.out.fillBranch("is_lepton_real",is_lepton_real)
             self.out.fillBranch("lepton_pdg_id",11)
             self.out.fillBranch("lepton_pt",electrons[tight_electrons[0]].pt)
@@ -474,22 +464,14 @@ class exampleProducer(Module):
             self.out.fillBranch("photon_pt",photons[tight_photons[0]].pt)
             self.out.fillBranch("photon_eta",photons[tight_photons[0]].eta)
             self.out.fillBranch("photon_phi",photons[tight_photons[0]].phi)
-            self.out.fillBranch("mlg",(ele_p4 + pho_p4).M())
+            self.out.fillBranch("mlg",(electrons[tight_electrons[0]].p4()+photons[tight_photons[0]].p4()).M())
             self.out.fillBranch("is_lepton_tight",1)
 
-            print "selected electron event: " + str(event.event) + " " + str(event.luminosityBlock) + " " + str(event.run)
+            if debug:
+                print "selected electron event: " + str(event.event) + " " + str(event.luminosityBlock) + " " + str(event.run)
 
         elif len(loose_but_not_tight_electrons) == 1:
 
-            try:
-
-                for i in range(0,len(genparts)):
-                    if genparts[i].pt > 5 and abs(genparts[i].pdgId) == 11 and ((genparts[i].statusFlags & isprompt_mask == isprompt_mask) or (genparts[i].statusFlags & isprompttaudecayproduct_mask == isprompttaudecayproduct_mask)) and deltaR(electrons[loose_but_not_tight_electrons[0]].eta,electrons[loose_but_not_tight_electrons[0]].phi,genparts[i].eta,genparts[i].phi) < 0.3:
-                        is_lepton_real=1
-
-            except:
-
-                pass
                         
             if not event.HLT_Ele27_WPTight_Gsf:
                 return False
@@ -503,23 +485,6 @@ class exampleProducer(Module):
             if abs(electrons[loose_but_not_tight_electrons[0]].eta) > 2.5:
                 return False
 
-            ele_p4 = electrons[loose_but_not_tight_electrons[0]].p4()
-
-            pho_p4 = photons[tight_photons[0]].p4()
-
-            ele_p4.SetPtEtaPhiM(ele_p4.Pt() , ele_p4.Eta(), ele_p4.Phi() , ele_p4.M())
-
-            pho_p4.SetPtEtaPhiM(pho_p4.Pt() , pho_p4.Eta(), pho_p4.Phi() , pho_p4.M())
-
-#            if (ele_p4 + pho_p4).M() > 81.2 and (ele_p4 + pho_p4).M() < 101.2:
-#            if (ele_p4 + pho_p4).M() > 76.2 and (ele_p4 + pho_p4).M() < 106.2:
-#                return False
-
-            #if sqrt(2*electrons[loose_but_not_tight_electrons[0]].pt/electrons[loose_but_not_tight_electrons[0]].eCorr*event.MET_pt*(1 - cos(event.MET_phi - electrons[loose_but_not_tight_electrons[0]].phi))) < 30:
-            #    return False
-
-            self.out.fillBranch("mt",sqrt(2*electrons[loose_but_not_tight_electrons[0]].pt*event.MET_pt*(1 - cos(event.MET_phi - electrons[loose_but_not_tight_electrons[0]].phi))))                    
-
             mask1 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) | (1 << 11) | (1 << 13)
             mask2 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) | (1 << 11) 
             mask3 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) |  (1 << 13)
@@ -537,8 +502,17 @@ class exampleProducer(Module):
             else:
                 assert(0)
 
+            try:
 
+                for i in range(0,len(genparts)):
+                    if genparts[i].pt > 5 and abs(genparts[i].pdgId) == 11 and ((genparts[i].statusFlags & isprompt_mask == isprompt_mask) or (genparts[i].statusFlags & isprompttaudecayproduct_mask == isprompttaudecayproduct_mask)) and deltaR(electrons[loose_but_not_tight_electrons[0]].eta,electrons[loose_but_not_tight_electrons[0]].phi,genparts[i].eta,genparts[i].phi) < 0.3:
+                        is_lepton_real=1
 
+            except:
+
+                pass
+
+            self.out.fillBranch("mt",sqrt(2*electrons[loose_but_not_tight_electrons[0]].pt*event.MET_pt*(1 - cos(event.MET_phi - electrons[loose_but_not_tight_electrons[0]].phi))))                    
             self.out.fillBranch("is_lepton_real",is_lepton_real)
             self.out.fillBranch("lepton_pdg_id",11)
             self.out.fillBranch("lepton_pt",electrons[loose_but_not_tight_electrons[0]].pt)
@@ -548,21 +522,12 @@ class exampleProducer(Module):
             self.out.fillBranch("photon_pt",photons[tight_photons[0]].pt)
             self.out.fillBranch("photon_eta",photons[tight_photons[0]].eta)
             self.out.fillBranch("photon_phi",photons[tight_photons[0]].phi)
-            self.out.fillBranch("mlg",(ele_p4 + pho_p4).M())
+            self.out.fillBranch("mlg",(electrons[tight_electrons[0]].p4()+photons[tight_photons[0]].p4()).M())
             self.out.fillBranch("is_lepton_tight",0)
 
         else:
             return False
 
-
-        #print event.event
-
-
-        #self.out.fillBranch("EventMass",eventSum.M())
-        #if eventSum.M() < 2000:
-        #    return False
-        #else:
-        #    return True
 
         photon_gen_matching=0
 
@@ -571,21 +536,15 @@ class exampleProducer(Module):
             for i in range(0,len(genparts)):
                 if genparts[i].pt > 5 and genparts[i].status == 1 and abs(genparts[i].pdgId) == 13 and ((genparts[i].statusFlags & isprompt_mask == isprompt_mask) or (genparts[i].statusFlags & isprompttaudecayproduct_mask == isprompttaudecayproduct_mask)) and deltaR(photons[tight_photons[0]].eta,photons[tight_photons[0]].phi,genparts[i].eta,genparts[i].phi) < 0.3:
                     photon_gen_matching += 1 #m -> g
-                    break
 
-            for i in range(0,len(genparts)):
                 if genparts[i].pt > 5 and genparts[i].status == 1 and abs(genparts[i].pdgId) == 11 and ((genparts[i].statusFlags & isprompt_mask == isprompt_mask) or (genparts[i].statusFlags & isprompttaudecayproduct_mask == isprompttaudecayproduct_mask)) and deltaR(photons[tight_photons[0]].eta,photons[tight_photons[0]].phi,genparts[i].eta,genparts[i].phi) < 0.3:
                     photon_gen_matching += 2 #e -> g
-                    break
-                    
-            for i in range(0,len(genparts)):
+
                 if genparts[i].pt > 5 and genparts[i].status == 1 and genparts[i].pdgId == 22 and ((genparts[i].statusFlags & isprompt_mask == isprompt_mask) or (genparts[i].statusFlags & isprompttaudecayproduct_mask == isprompttaudecayproduct_mask)) and deltaR(photons[tight_photons[0]].eta,photons[tight_photons[0]].phi,genparts[i].eta,genparts[i].phi) < 0.3:
                     if genparts[i].genPartIdxMother >= 0 and (abs(genparts[genparts[i].genPartIdxMother].pdgId) == 11 or abs(genparts[genparts[i].genPartIdxMother].pdgId) == 13 or abs(genparts[genparts[i].genPartIdxMother].pdgId) == 15):
                         photon_gen_matching += 8 #fsr photon
                     else:
                         photon_gen_matching += 4 #non-fsr photon
-                    break
-
         except:
             pass
 
