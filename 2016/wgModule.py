@@ -522,7 +522,7 @@ class exampleProducer(Module):
             self.out.fillBranch("photon_pt",photons[tight_photons[0]].pt)
             self.out.fillBranch("photon_eta",photons[tight_photons[0]].eta)
             self.out.fillBranch("photon_phi",photons[tight_photons[0]].phi)
-            self.out.fillBranch("mlg",(electrons[tight_electrons[0]].p4()+photons[tight_photons[0]].p4()).M())
+            self.out.fillBranch("mlg",(electrons[loose_but_not_tight_electrons[0]].p4()+photons[tight_photons[0]].p4()).M())
             self.out.fillBranch("is_lepton_tight",0)
 
         else:
