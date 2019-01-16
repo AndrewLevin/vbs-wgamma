@@ -429,6 +429,9 @@ class exampleProducer(Module):
             if abs(electrons[tight_electrons[0]].eta) > 2.5:
                 return False
 
+            if debug:
+                print "selected electron event: " + str(event.event) + " " + str(event.luminosityBlock) + " " + str(event.run)
+
             mask1 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) | (1 << 11) | (1 << 13)
             mask2 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) | (1 << 11) 
             mask3 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) |  (1 << 13)
@@ -466,9 +469,6 @@ class exampleProducer(Module):
             self.out.fillBranch("photon_phi",photons[tight_photons[0]].phi)
             self.out.fillBranch("mlg",(electrons[tight_electrons[0]].p4()+photons[tight_photons[0]].p4()).M())
             self.out.fillBranch("is_lepton_tight",1)
-
-            if debug:
-                print "selected electron event: " + str(event.event) + " " + str(event.luminosityBlock) + " " + str(event.run)
 
         elif len(loose_but_not_tight_electrons) == 1:
 

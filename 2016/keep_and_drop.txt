@@ -4,6 +4,9 @@ keep run
 keep luminosityBlock
 keep event
 keep Generator_weight
+keep L1PreFiringWeight
+keep L1PreFiringWeightUp
+keep L1PreFiringWeightDn
 keep LHEPart_pt
 keep LHEPart_eta
 keep LHEPart_phi

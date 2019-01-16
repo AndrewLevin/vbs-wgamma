@@ -92,9 +92,7 @@ f_pu_weights = ROOT.TFile("/afs/cern.ch/user/a/amlevin/PileupWeights2016.root")
 
 pu_weight_hist = f_pu_weights.Get("ratio")
 
-
-
-labels = { "tt2l2nu+jets" : {"syst-pdf" : False, "syst-scale" : False, "color" : ROOT.kRed, "samples" : [{'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/2016/tt2l2nujets.root', 'xs' : 88.28, "non_fsr" : False , "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True } ] }, "ttsemi+jets" : {"syst-pdf" : False, "syst-scale" : False, "color" : ROOT.kSpring, "samples" : [{'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/2016/ttsemijets.root', 'xs' : 365.4, "non_fsr" : False , "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True } ] }, "wg+jets" : {"syst-pdf": True, "syst-scale": True, "color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjets.root.bak", "xs" : 178.6, "non_fsr" : True , "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True } ] }, "zg+jets" : {"syst-pdf" : False, "syst-scale" : False, "color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/2016/zglowmlljets.root", "xs" : 96.75, "non_fsr" : True , "e_to_p" : False, "fsr" : True, "e_to_p_for_fake" : True } ] }, "no label" : {"syst-pdf" : False, "syst-scale" : False, "color" : None, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/2016/zjets.root", "xs" : 4963.0, "non_fsr" : False , "e_to_p" : False, "fsr" : False, "e_to_p_for_fake" : True }] }, "ttg+jets" : {"syst-pdf" : False, "syst-scale" : False,  "color" : ROOT.kGreen+2, "samples" : [ {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/ttgjets.root", "xs" : 3.795, "non_fsr" : True , "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True } ] } }
+labels = { "tt2l2nu+jets" : {"syst-pdf" : False, "syst-scale" : False, "color" : ROOT.kRed, "samples" : [{'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/2016/tt2l2nujets.root', 'xs' : 88.28, "non_fsr" : False , "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True } ] }, "ttsemi+jets" : {"syst-pdf" : False, "syst-scale" : False, "color" : ROOT.kSpring, "samples" : [{'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/2016/ttsemijets.root', 'xs' : 365.4, "non_fsr" : False , "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True } ] }, "wg+jets" : {"syst-pdf": True, "syst-scale": True, "color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjets.root", "xs" : 178.6, "non_fsr" : True , "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True } ] }, "zg+jets" : {"syst-pdf" : False, "syst-scale" : False, "color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/2016/zglowmlljets.root", "xs" : 96.75, "non_fsr" : True , "e_to_p" : False, "fsr" : True, "e_to_p_for_fake" : True } ] }, "no label" : {"syst-pdf" : False, "syst-scale" : False, "color" : None, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/2016/zjets.root", "xs" : 4963.0, "non_fsr" : False , "e_to_p" : False, "fsr" : False, "e_to_p_for_fake" : True }] }, "ttg+jets" : {"syst-pdf" : False, "syst-scale" : False,  "color" : ROOT.kGreen+2, "samples" : [ {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/ttgjets.root", "xs" : 3.795, "non_fsr" : True , "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True } ] } }
 
 #labels = { "tt2l2nu+jets" : {"syst-pdf" : False, "syst-scale" : False, "color" : ROOT.kRed, "samples" : [{'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/2016/tt2l2nujets.root', 'xs' : 88.28, "non_fsr" : False , "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True } ] }, "ttsemi+jets" : {"syst-pdf" : False, "syst-scale" : False, "color" : ROOT.kSpring, "samples" : [{'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/2016/ttsemijets.root', 'xs' : 365.4, "non_fsr" : False , "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True } ] }, "wg+jets" : {"syst-pdf": True, "syst-scale": True, "color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjetsewdim6.root", "xs" : 178.6, "non_fsr" : True , "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True } ] }, "zg+jets" : {"syst-pdf" : False, "syst-scale" : False, "color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/2016/zglowmlljets.root", "xs" : 96.75, "non_fsr" : True , "e_to_p" : False, "fsr" : True, "e_to_p_for_fake" : True } ] }, "no label" : {"syst-pdf" : False, "syst-scale" : False, "color" : None, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/2016/zjets.root", "xs" : 4963.0, "non_fsr" : False , "e_to_p" : False, "fsr" : False, "e_to_p_for_fake" : True }] }, "ttg+jets" : {"syst-pdf" : False, "syst-scale" : False,  "color" : ROOT.kGreen+2, "samples" : [ {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/ttgjets.root", "xs" : 3.795, "non_fsr" : True , "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True } ] } }
 
@@ -634,6 +632,14 @@ for label in labels.keys():
         sample["tree"] = sample["file"].Get("Events")
         sample["nweightedevents"] = sample["file"].Get("nWeightedEvents").GetBinContent(1)
 
+for i in range(0,8):
+    labels["wg+jets"]["samples"][0]["nweightedevents_qcdscaleweight"+str(i)]=labels["wg+jets"]["samples"][0]["file"].Get("nWeightedEvents_QCDScaleWeight"+str(i)).GetBinContent(1)
+
+for i in range(1,103):
+    labels["wg+jets"]["samples"][0]["nweightedevents_pdfweight"+str(i)]=labels["wg+jets"]["samples"][0]["file"].Get("nWeightedEvents_PDFWeight"+str(i)).GetBinContent(1)
+
+labels["wg+jets"]["samples"][0]["nweightedeventspassfiducial"]=labels["wg+jets"]["samples"][0]["file"].Get("nWeightedEventsPassFiducial").GetBinContent(1)
+
 data = {}
 fake_photon = {}
 fake_photon_syst = {}
@@ -720,10 +726,13 @@ def fillHistogramMC(label,sample):
 
         weight = sample["xs"]*1000*35.9/sample["nweightedevents"]
 
-#        if sample["filename"] == "/afs/cern.ch/work/a/amlevin/data/wg/wgjetsewdim6.root":
+#        if sample["filename"] == "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjetsewdim6.root":
 #            weight *= sample["tree"].LHEWeight_rwgt_3
 
         weight *= pu_weight_hist.GetBinContent(pu_weight_hist.FindFixBin(sample["tree"].npu))
+
+#        if sample["filename"] == "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjets.root" or sample["filename"] == "/afs/cern.ch/work/a/amlevin/data/wg/2016/zjets.root":
+        weight *= sample["tree"].L1PreFiringWeight 
 
         weight_photon_id_sf_variation = weight * eff_scale_factor.photon_efficiency_scale_factor(sample["tree"].photon_pt,sample["tree"].photon_eta,True)
         weight *= eff_scale_factor.photon_efficiency_scale_factor(sample["tree"].photon_pt,sample["tree"].photon_eta)
@@ -1404,7 +1413,11 @@ print "(number of selected wg+jets events) * (data/MC eff scale factor) = "+str(
 
 print "(number of wg+jets events run over) = "+str(labels["wg+jets"]["samples"][0]["nweightedevents"])
 
-fiducial_region_cuts_efficiency = 0.51649677698712206047032474804031
+fiducial_region_cuts_efficiency = labels["wg+jets"]["samples"][0]["nweightedeventspassfiducial"]/labels["wg+jets"]["samples"][0]["nweightedevents"]
+
+print "fiducial_region_cuts_efficiency = "+str(fiducial_region_cuts_efficiency)
+
+#fiducial_region_cuts_efficiency = 0.51649677698712206047032474804031
 
 Aepsilon = labels["wg+jets"]["hists"][mlg_index].Integral()/(labels["wg+jets"]["samples"][0]["xs"]*fiducial_region_cuts_efficiency*1000*35.9)
 
