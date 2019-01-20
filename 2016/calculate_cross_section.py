@@ -1,6 +1,7 @@
 import math
 
-fiducial_region_cuts_efficiency = 0.51649677698712206047032474804031
+#fiducial_region_cuts_efficiency = 0.51649677698712206047032474804031
+fiducial_region_cuts_efficiency = 0.161004869008
 #fiducial_region_cuts_efficiency = 1
 
 n_signal_electron = 9485.58976681
