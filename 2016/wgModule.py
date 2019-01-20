@@ -41,6 +41,7 @@ class exampleProducer(Module):
         self.out.branch("npvs","I")
         self.out.branch("njets","I")
         self.out.branch("pass_fiducial",  "B");
+        self.out.branch("pass_lhe_selection",  "B");
         self.out.branch("is_lepton_tight",  "B");
         self.out.branch("gen_weight",  "F");
         self.out.branch("is_lepton_real",  "B");
@@ -562,18 +563,32 @@ class exampleProducer(Module):
             pass
 
         try:
-            n_w_plus = 0
-            n_w_minus = 0
+            n_lhe_w_plus = 0
+            n_lhe_w_minus = 0
+            n_lhe_photons = 0
+
             
             for i in range(0,len(lheparts)):
-                if lheparts[i].pdgId == -11 or lheparts[i].pdgId == -13 or lheparts[i].pdgId == -15:
-                    n_w_plus+=1
-                elif lheparts[i].pdgId == 11 or lheparts[i].pdgId == 13 or lheparts[i].pdgId == 15:
-                    n_w_minus+=1
+                if lheparts[i].pdgId == 22:
+                    lhe_photon_index=i
+                    n_lhe_photons+=1
 
-            assert(n_w_plus == 1 or n_w_minus == 1)        
+                if lheparts[i].pdgId == -11 or lheparts[i].pdgId == -13 or lheparts[i].pdgId == -15:
+                    n_lhe_w_plus+=1
+                    lhe_lepton_index=i
+                elif lheparts[i].pdgId == 11 or lheparts[i].pdgId == 13 or lheparts[i].pdgId == 15:
+                    n_lhe_w_minus+=1
+                    lhe_lepton_index=i
+
+            assert((n_lhe_w_plus == 1 and n_lhe_w_minus == 0) or (n_lhe_w_minus == 1 and n_lhe_w_plus == 0))        
+
             
-            self.out.fillBranch("lhe_lepton_charge",bool(n_w_plus))
+            if deltaR(lheparts[lhe_lepton_index].eta,lheparts[lhe_lepton_index].phi,lheparts[lhe_photon_index].eta,lheparts[lhe_photon_index].phi) > 0.1 and lheparts[lhe_lepton_index].pt > 15 and lheparts[lhe_photon_index].pt > 15 and abs(lheparts[lhe_photon_index].eta) < 2.6:       
+                self.out.fillBranch("pass_lhe_selection",1)
+            else:    
+                self.out.fillBranch("pass_lhe_selection",0)
+     
+            self.out.fillBranch("lhe_lepton_charge",bool(n_lhe_w_plus))
         except:
             pass
 

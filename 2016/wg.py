@@ -640,6 +640,8 @@ for i in range(1,103):
 
 labels["wg+jets"]["samples"][0]["nweightedeventspassfiducial"]=labels["wg+jets"]["samples"][0]["file"].Get("nWeightedEventsPassFiducial").GetBinContent(1)
 
+fiducial_region_cuts_efficiency = float(labels["wg+jets"]["samples"][0]["nweightedeventspassfiducial"])/float(labels["wg+jets"]["samples"][0]["nweightedevents"])
+
 data = {}
 fake_photon = {}
 fake_photon_syst = {}
@@ -1412,8 +1414,6 @@ if labels["wg+jets"]["syst-scale"]:
 print "(number of selected wg+jets events) * (data/MC eff scale factor) = "+str(labels["wg+jets"]["hists"][mlg_index].Integral()*labels["wg+jets"]["samples"][0]["nweightedevents"]/(labels["wg+jets"]["samples"][0]["xs"]*1000*35.9))
 
 print "(number of wg+jets events run over) = "+str(labels["wg+jets"]["samples"][0]["nweightedevents"])
-
-fiducial_region_cuts_efficiency = labels["wg+jets"]["samples"][0]["nweightedeventspassfiducial"]/labels["wg+jets"]["samples"][0]["nweightedevents"]
 
 print "fiducial_region_cuts_efficiency = "+str(fiducial_region_cuts_efficiency)
 
