@@ -131,6 +131,12 @@ for lepton_name in lepton_names:
     fake_photon_template_file1_nweightedevents = fake_photon_template_file1.Get("nWeightedEvents").GetBinContent(1)
     fake_photon_template_file2_nweightedevents = fake_photon_template_file2.Get("nWeightedEvents").GetBinContent(1)
     
+    print "fake_photon_template_file1_nweightedevents = "+str(fake_photon_template_file1_nweightedevents)
+    print "fake_photon_template_file2_nweightedevents = "+str(fake_photon_template_file2_nweightedevents)
+
+    print "total_sieie_for_fake_photon_fraction_file1_nweightedevents = "+str(total_sieie_for_fake_photon_fraction_file1_nweightedevents)
+    print "total_sieie_for_fake_photon_fraction_file2_nweightedevents = "+str(total_sieie_for_fake_photon_fraction_file2_nweightedevents)
+
     for eta_range in eta_ranges:
         for photon_pt_range_cutstring in photon_pt_range_cutstrings:
 
@@ -414,54 +420,50 @@ for lepton_name in lepton_names:
 
             total_sieie_for_fake_photon_fraction_control_photon_selection_nweightedentries = total_sieie_for_fake_photon_fraction_file1_tree.GetEntries(eta_range+" && "+lepton_pdg_id_cut_string+" && (photon_selection == 0 || photon_selection == 1) && "+ photon_pt_range_cutstring + " && gen_weight > 0  && photon_gen_matching == 0")*total_sieie_for_fake_photon_fraction_file1_xs*35.9*1000/total_sieie_for_fake_photon_fraction_file1_nweightedevents-total_sieie_for_fake_photon_fraction_file1_tree.GetEntries(eta_range+" && "+lepton_pdg_id_cut_string+" && (photon_selection == 0 || photon_selection == 1) && "+ photon_pt_range_cutstring + " && gen_weight < 0 && photon_gen_matching == 0")*total_sieie_for_fake_photon_fraction_file1_xs*35.9*1000/total_sieie_for_fake_photon_fraction_file1_nweightedevents+total_sieie_for_fake_photon_fraction_file2_tree.GetEntries(eta_range+" && "+lepton_pdg_id_cut_string+" && (photon_selection == 0 || photon_selection == 1) && "+ photon_pt_range_cutstring + " && gen_weight > 0 && photon_gen_matching > 0")*total_sieie_for_fake_photon_fraction_file2_xs*35.9*1000/total_sieie_for_fake_photon_fraction_file2_nweightedevents+total_sieie_for_fake_photon_fraction_file2_tree.GetEntries(eta_range+" && "+lepton_pdg_id_cut_string+" && (photon_selection == 0 || photon_selection == 1) && "+ photon_pt_range_cutstring + " && gen_weight < 0 && photon_gen_matching > 0")*total_sieie_for_fake_photon_fraction_file2_xs*35.9*1000/total_sieie_for_fake_photon_fraction_file2_nweightedevents
 
-            print value*fake_photon_template_hist.Integral(1,fake_photon_template_hist.GetXaxis().FindFixBin( sieie_cut ))*total_sieie_for_fake_photon_fraction_hist.Integral()/total_sieie_for_fake_photon_fraction_hist.Integral(1,total_sieie_for_fake_photon_fraction_hist.GetXaxis().FindFixBin( sieie_cut ))/fake_photon_template_hist.Integral()
-
             sieie_cut_upper_bin_edge = total_sieie_for_fake_photon_fraction_hist.GetBinLowEdge(total_sieie_for_fake_photon_fraction_hist.GetXaxis().FindFixBin( sieie_cut ))+total_sieie_for_fake_photon_fraction_hist.GetBinWidth(total_sieie_for_fake_photon_fraction_hist.GetXaxis().FindFixBin( sieie_cut ))
             
             print "sieie_cut_upper_bin_edge = "+str(sieie_cut_upper_bin_edge)
 
             print "sieie_cut = "+str(sieie_cut)
 
-            total_sieie_for_fake_photon_fraction_control_photon_selection_pass_sieie_nweightedentries_fake = total_sieie_for_fake_photon_fraction_file1_tree.GetEntries(eta_range+" && "+lepton_pdg_id_cut_string+" && (photon_selection == 0 || photon_selection == 1) && "+ photon_pt_range_cutstring + " && gen_weight > 0  && photon_gen_matching == 0")*total_sieie_for_fake_photon_fraction_file1_xs*35.9*1000/total_sieie_for_fake_photon_fraction_file1_nweightedevents-total_sieie_for_fake_photon_fraction_file1_tree.GetEntries(eta_range+" && "+lepton_pdg_id_cut_string+" && (photon_selection == 0 || photon_selection == 1) && "+ photon_pt_range_cutstring + " && gen_weight < 0 && photon_gen_matching == 0")*total_sieie_for_fake_photon_fraction_file1_xs*35.9*1000/total_sieie_for_fake_photon_fraction_file1_nweightedevents
+            total_sieie_for_fake_photon_fraction_control_photon_selection_nweightedentries_fake = total_sieie_for_fake_photon_fraction_file1_tree.GetEntries(eta_range+" && "+lepton_pdg_id_cut_string+" && (photon_selection == 0 || photon_selection == 1) && "+ photon_pt_range_cutstring + " && gen_weight > 0  && photon_gen_matching == 0")*total_sieie_for_fake_photon_fraction_file1_xs*35.9*1000/total_sieie_for_fake_photon_fraction_file1_nweightedevents-total_sieie_for_fake_photon_fraction_file1_tree.GetEntries(eta_range+" && "+lepton_pdg_id_cut_string+" && (photon_selection == 0 || photon_selection == 1) && "+ photon_pt_range_cutstring + " && gen_weight < 0 && photon_gen_matching == 0")*total_sieie_for_fake_photon_fraction_file1_xs*35.9*1000/total_sieie_for_fake_photon_fraction_file1_nweightedevents
 
             total_sieie_for_fake_photon_fraction_control_photon_selection_pass_sieie_nweightedentries_real = total_sieie_for_fake_photon_fraction_file2_tree.GetEntries(eta_range+" && "+lepton_pdg_id_cut_string+" && (photon_selection == 0 || photon_selection == 1) && "+ photon_pt_range_cutstring + " && gen_weight > 0 && photon_gen_matching > 0")*total_sieie_for_fake_photon_fraction_file2_xs*35.9*1000/total_sieie_for_fake_photon_fraction_file2_nweightedevents+total_sieie_for_fake_photon_fraction_file2_tree.GetEntries(eta_range+" && "+lepton_pdg_id_cut_string+" && (photon_selection == 0 || photon_selection == 1) && "+ photon_pt_range_cutstring + " && gen_weight < 0 && photon_gen_matching > 0")*total_sieie_for_fake_photon_fraction_file2_xs*35.9*1000/total_sieie_for_fake_photon_fraction_file2_nweightedevents
 
-            total_sieie_for_fake_photon_fraction_tight_photon_selection_pass_sieie_nweightedentries_fake = total_sieie_for_fake_photon_fraction_file1_tree.GetEntries(eta_range+" && "+lepton_pdg_id_cut_string+" && photon_selection == 2 && "+ photon_pt_range_cutstring + " && gen_weight > 0  && photon_gen_matching == 0 && photon_sieie < "+str(sieie_cut_upper_bin_edge))*total_sieie_for_fake_photon_fraction_file1_xs*35.9*1000/total_sieie_for_fake_photon_fraction_file1_nweightedevents-total_sieie_for_fake_photon_fraction_file1_tree.GetEntries(eta_range+" && "+lepton_pdg_id_cut_string+" && photon_selection == 2 && "+ photon_pt_range_cutstring + " && gen_weight < 0 && photon_gen_matching == 0 && photon_sieie < "+str(sieie_cut_upper_bin_edge))*total_sieie_for_fake_photon_fraction_file1_xs*35.9*1000/total_sieie_for_fake_photon_fraction_file1_nweightedevents
+            #the sieie cut should have no effect, since the tight photon selection should already include the sieie cut
+            total_sieie_for_fake_photon_fraction_tight_photon_selection_nweightedentries_fake = total_sieie_for_fake_photon_fraction_file1_tree.GetEntries(eta_range+" && "+lepton_pdg_id_cut_string+" && photon_selection == 2 && "+ photon_pt_range_cutstring + " && gen_weight > 0  && photon_gen_matching == 0 && photon_sieie < "+str(sieie_cut_upper_bin_edge))*total_sieie_for_fake_photon_fraction_file1_xs*35.9*1000/total_sieie_for_fake_photon_fraction_file1_nweightedevents-total_sieie_for_fake_photon_fraction_file1_tree.GetEntries(eta_range+" && "+lepton_pdg_id_cut_string+" && photon_selection == 2 && "+ photon_pt_range_cutstring + " && gen_weight < 0 && photon_gen_matching == 0 && photon_sieie < "+str(sieie_cut_upper_bin_edge))*total_sieie_for_fake_photon_fraction_file1_xs*35.9*1000/total_sieie_for_fake_photon_fraction_file1_nweightedevents
 
-            total_sieie_for_fake_photon_fraction_tight_photon_selection_pass_sieie_nweightedentries_real = total_sieie_for_fake_photon_fraction_file2_tree.GetEntries(eta_range+" && "+lepton_pdg_id_cut_string+" && photon_selection == 2 && "+ photon_pt_range_cutstring + " && gen_weight > 0 && photon_gen_matching > 0 && photon_sieie < "+str(sieie_cut_upper_bin_edge))*total_sieie_for_fake_photon_fraction_file2_xs*35.9*1000/total_sieie_for_fake_photon_fraction_file2_nweightedevents+total_sieie_for_fake_photon_fraction_file2_tree.GetEntries(eta_range+" && "+lepton_pdg_id_cut_string+" && photon_selection == 2 && "+ photon_pt_range_cutstring + " && gen_weight < 0 && photon_gen_matching > 0 && photon_sieie < "+str(sieie_cut_upper_bin_edge))*total_sieie_for_fake_photon_fraction_file2_xs*35.9*1000/total_sieie_for_fake_photon_fraction_file2_nweightedevents
+            total_sieie_for_fake_photon_fraction_tight_photon_selection_nweightedentries_real = total_sieie_for_fake_photon_fraction_file2_tree.GetEntries(eta_range+" && "+lepton_pdg_id_cut_string+" && photon_selection == 2 && "+ photon_pt_range_cutstring + " && gen_weight > 0 && photon_gen_matching > 0 && photon_sieie < "+str(sieie_cut_upper_bin_edge))*total_sieie_for_fake_photon_fraction_file2_xs*35.9*1000/total_sieie_for_fake_photon_fraction_file2_nweightedevents+total_sieie_for_fake_photon_fraction_file2_tree.GetEntries(eta_range+" && "+lepton_pdg_id_cut_string+" && photon_selection == 2 && "+ photon_pt_range_cutstring + " && gen_weight < 0 && photon_gen_matching > 0 && photon_sieie < "+str(sieie_cut_upper_bin_edge))*total_sieie_for_fake_photon_fraction_file2_xs*35.9*1000/total_sieie_for_fake_photon_fraction_file2_nweightedevents
 
-            print "total_sieie_for_fake_photon_fraction_tight_photon_selection_pass_sieie_nweightedentries_fake = "+str(total_sieie_for_fake_photon_fraction_tight_photon_selection_pass_sieie_nweightedentries_fake)
+            print "total_sieie_for_fake_photon_fraction_tight_photon_selection_pass_sieie_nweightedentries_fake = "+str(total_sieie_for_fake_photon_fraction_tight_photon_selection_nweightedentries_fake)
 
-            print "total_sieie_for_fake_photon_fraction_control_photon_selection_pass_sieie_nweightedentries_fake = "+str(total_sieie_for_fake_photon_fraction_control_photon_selection_pass_sieie_nweightedentries_fake)
+            print "total_sieie_for_fake_photon_fraction_control_photon_selection_pass_sieie_nweightedentries_fake = "+str(total_sieie_for_fake_photon_fraction_control_photon_selection_nweightedentries_fake)
 
-            print "fake fraction = "+str(total_sieie_for_fake_photon_fraction_tight_photon_selection_pass_sieie_nweightedentries_fake/(total_sieie_for_fake_photon_fraction_tight_photon_selection_pass_sieie_nweightedentries_real+total_sieie_for_fake_photon_fraction_tight_photon_selection_pass_sieie_nweightedentries_fake))
+            print "correct fake fraction = "+str(total_sieie_for_fake_photon_fraction_tight_photon_selection_nweightedentries_fake/(total_sieie_for_fake_photon_fraction_tight_photon_selection_nweightedentries_real+total_sieie_for_fake_photon_fraction_tight_photon_selection_nweightedentries_fake))
 
-            print "fake event weight = "+str(total_sieie_for_fake_photon_fraction_tight_photon_selection_pass_sieie_nweightedentries_fake/total_sieie_for_fake_photon_fraction_control_photon_selection_pass_sieie_nweightedentries_fake)
+            print "correct fake event weight = "+str(total_sieie_for_fake_photon_fraction_tight_photon_selection_nweightedentries_fake/total_sieie_for_fake_photon_fraction_control_photon_selection_nweightedentries_fake)
+
+            print "fake fraction = "+str(value*fake_photon_template_hist.Integral(1,fake_photon_template_hist.GetXaxis().FindFixBin( sieie_cut ))*total_sieie_for_fake_photon_fraction_hist.Integral()/total_sieie_for_fake_photon_fraction_hist.Integral(1,total_sieie_for_fake_photon_fraction_hist.GetXaxis().FindFixBin( sieie_cut ))/fake_photon_template_hist.Integral())
+
+            print "numerator_of_fake_event_weight = "+str(value*fake_photon_template_hist.Integral(1,fake_photon_template_hist.GetXaxis().FindFixBin( sieie_cut ))*total_sieie_for_fake_photon_fraction_hist.Integral()/fake_photon_template_hist.Integral())
+
+            print "denominator_of_fake_event_weight = "+str(total_sieie_for_fake_photon_fraction_control_photon_selection_nweightedentries)
+
+            print "fake event weight = "+str(value*fake_photon_template_hist.Integral(1,fake_photon_template_hist.GetXaxis().FindFixBin( sieie_cut ))*total_sieie_for_fake_photon_fraction_hist.Integral()/fake_photon_template_hist.Integral()/total_sieie_for_fake_photon_fraction_control_photon_selection_nweightedentries)
 
             if eta_range == "abs(photon_eta) < 1.4442":
-
                 fake_fractions[lepton_name+ "_barrel"].append(value*fake_photon_template_hist.Integral(1,fake_photon_template_hist.GetXaxis().FindFixBin( sieie_cut ))*total_sieie_for_fake_photon_fraction_hist.Integral()/total_sieie_for_fake_photon_fraction_hist.Integral(1,total_sieie_for_fake_photon_fraction_hist.GetXaxis().FindFixBin( sieie_cut ))/fake_photon_template_hist.Integral())
-
-                correct_fake_fractions[lepton_name+ "_barrel"].append(total_sieie_for_fake_photon_fraction_tight_photon_selection_pass_sieie_nweightedentries_fake/(total_sieie_for_fake_photon_fraction_tight_photon_selection_pass_sieie_nweightedentries_real+total_sieie_for_fake_photon_fraction_tight_photon_selection_pass_sieie_nweightedentries_fake))
-
+                correct_fake_fractions[lepton_name+ "_barrel"].append(total_sieie_for_fake_photon_fraction_tight_photon_selection_nweightedentries_fake/(total_sieie_for_fake_photon_fraction_tight_photon_selection_nweightedentries_real+total_sieie_for_fake_photon_fraction_tight_photon_selection_nweightedentries_fake))
             else:    
-
                 fake_fractions[lepton_name+ "_endcap"].append(value*fake_photon_template_hist.Integral(1,fake_photon_template_hist.GetXaxis().FindFixBin( sieie_cut ))*total_sieie_for_fake_photon_fraction_hist.Integral()/total_sieie_for_fake_photon_fraction_hist.Integral(1,total_sieie_for_fake_photon_fraction_hist.GetXaxis().FindFixBin( sieie_cut ))/fake_photon_template_hist.Integral())
-
-                correct_fake_fractions[lepton_name+ "_endcap"].append(total_sieie_for_fake_photon_fraction_tight_photon_selection_pass_sieie_nweightedentries_fake/(total_sieie_for_fake_photon_fraction_tight_photon_selection_pass_sieie_nweightedentries_real+total_sieie_for_fake_photon_fraction_tight_photon_selection_pass_sieie_nweightedentries_fake))
-
-
-            print value*fake_photon_template_hist.Integral(1,fake_photon_template_hist.GetXaxis().FindFixBin( sieie_cut ))*total_sieie_for_fake_photon_fraction_hist.Integral()/fake_photon_template_hist.Integral()/total_sieie_for_fake_photon_fraction_control_photon_selection_nweightedentries
-
+                correct_fake_fractions[lepton_name+ "_endcap"].append(total_sieie_for_fake_photon_fraction_tight_photon_selection_nweightedentries_fake/(total_sieie_for_fake_photon_fraction_tight_photon_selection_nweightedentries_real+total_sieie_for_fake_photon_fraction_tight_photon_selection_nweightedentries_fake))
 
             if eta_range == "abs(photon_eta) < 1.4442":
                 fake_event_weights[lepton_name+"_barrel"].append(value*fake_photon_template_hist.Integral(1,fake_photon_template_hist.GetXaxis().FindFixBin( sieie_cut ))*total_sieie_for_fake_photon_fraction_hist.Integral()/fake_photon_template_hist.Integral()/total_sieie_for_fake_photon_fraction_control_photon_selection_nweightedentries)
-                correct_fake_event_weights[lepton_name+"_barrel"].append(total_sieie_for_fake_photon_fraction_tight_photon_selection_pass_sieie_nweightedentries_fake/total_sieie_for_fake_photon_fraction_control_photon_selection_pass_sieie_nweightedentries_fake)
-
+                correct_fake_event_weights[lepton_name+"_barrel"].append(total_sieie_for_fake_photon_fraction_tight_photon_selection_nweightedentries_fake/total_sieie_for_fake_photon_fraction_control_photon_selection_nweightedentries_fake)
             else:
                 fake_event_weights[lepton_name+"_endcap"].append(value*fake_photon_template_hist.Integral(1,fake_photon_template_hist.GetXaxis().FindFixBin( sieie_cut ))*total_sieie_for_fake_photon_fraction_hist.Integral()/fake_photon_template_hist.Integral()/total_sieie_for_fake_photon_fraction_control_photon_selection_nweightedentries)
-
-                correct_fake_event_weights[lepton_name+"_endcap"].append(total_sieie_for_fake_photon_fraction_tight_photon_selection_pass_sieie_nweightedentries_fake/total_sieie_for_fake_photon_fraction_control_photon_selection_pass_sieie_nweightedentries_fake)
+                correct_fake_event_weights[lepton_name+"_endcap"].append(total_sieie_for_fake_photon_fraction_tight_photon_selection_nweightedentries_fake/total_sieie_for_fake_photon_fraction_control_photon_selection_nweightedentries_fake)
                 
 print fake_fractions
 
