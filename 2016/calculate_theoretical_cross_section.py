@@ -21,7 +21,7 @@ mg5amc_wgjets_file =  ROOT.TFile(mg5amc_wgjets_filename)
 n_weighted_mg5amc_pass_lhe_selection = mg5amc_wgjets_file.Get("nWeightedEventsPassLHESelection").GetBinContent(1)
 n_weighted_mg5amc_pass_lhe_and_gen_selection = mg5amc_wgjets_file.Get("nWeightedEventsPassLHEAndGenSelection").GetBinContent(1)
 
-lhe_to_gen_efficiency = n_weighted_mg5amc_pass_gen_selection/n_weighted_mg5amc_pass_lhe_and_gen_selection
+lhe_to_gen_efficiency = n_weighted_mg5amc_pass_lhe_and_gen_selection/n_weighted_mg5amc_pass_lhe_selection
 
 print "lhe_to_gen_efficiency = "+str(lhe_to_gen_efficiency)
 
