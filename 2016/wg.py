@@ -392,10 +392,19 @@ fake_photon_event_weights_muon_endcap = [0.2084973866790522, 0.17098260300188028
 
 fake_photon_event_weights_electron_endcap = [0.19848704149567134, 0.15927761402175133, 0.1259625150980935, 0.1024070694786739, 0.07696444018690847, 0.06278537807297754, 0.002814088634222858]
 
-fake_photon_event_weights_muon_endcap_MC = [0.1806019035114771, 0.15311103027403922, 0.15233748095550786, 0.10218335724427745, 0.08042243448043745, 0.055938368551824685, 0.050546201223890336]
-fake_photon_event_weights_electron_endcap_MC = [0.18332860514318766, 0.1616009980967483, 0.12983990825613295, 0.0981657727656512, 0.060477729032748916, 0.07938848306929441, 0.06301416429185958]
-fake_photon_event_weights_electron_barrel_MC = [0.1302818647040204, 0.0965989567886929, 0.07417185775597872, 0.06789639958741521, 0.058415672189706405, 0.04557617137218626, 0.03559569695093213]
-fake_photon_event_weights_muon_barrel_MC = [0.144381599700443, 0.10333082134361173, 0.09148841286300782, 0.06344235311379792, 0.05953962237263142, 0.06388880919077376, 0.04631086033174329]
+fake_photon_event_weights_muon_endcap_MC = [0.22152183701035566, 0.24900596421471177, 0.16889804325437693, 0.15710382513661203, 0.12937062937062935, 0.02797202797202797, 0.09433962264150941]
+
+fake_photon_event_weights_electron_endcap_MC = [0.22152183701035566, 0.24900596421471177, 0.16889804325437693, 0.15710382513661203, 0.12937062937062935, 0.02797202797202797, 0.09433962264150941]
+
+fake_photon_event_weights_electron_barrel_MC = [0.18481737081299443, 0.1506375227686703, 0.10285053929121728, 0.09019607843137253, 0.06699029126213593, 0.07356948228882833, 0.08629441624365482]
+
+fake_photon_event_weights_muon_barrel_MC = [0.18481737081299443, 0.1506375227686703, 0.10285053929121728, 0.09019607843137253, 0.06699029126213593, 0.07356948228882833, 0.08629441624365482]
+
+
+#fake_photon_event_weights_muon_endcap_MC = [0.1806019035114771, 0.15311103027403922, 0.15233748095550786, 0.10218335724427745, 0.08042243448043745, 0.055938368551824685, 0.050546201223890336]
+#fake_photon_event_weights_electron_endcap_MC = [0.18332860514318766, 0.1616009980967483, 0.12983990825613295, 0.0981657727656512, 0.060477729032748916, 0.07938848306929441, 0.06301416429185958]
+#fake_photon_event_weights_electron_barrel_MC = [0.1302818647040204, 0.0965989567886929, 0.07417185775597872, 0.06789639958741521, 0.058415672189706405, 0.04557617137218626, 0.03559569695093213]
+#fake_photon_event_weights_muon_barrel_MC = [0.144381599700443, 0.10333082134361173, 0.09148841286300782, 0.06344235311379792, 0.05953962237263142, 0.06388880919077376, 0.04631086033174329]
 
 fake_photon_event_weights_muon_barrel_hist=ROOT.TH1F("fake_photon_event_weights_muon_barrel_hist","fake_photon_event_weights_muon_barrel_hist",len(photon_ptbins)-1,photon_ptbins)
 fake_photon_event_weights_electron_barrel_hist=ROOT.TH1F("fake_photon_event_weights_electron_barrel_hist","fake_photon_event_weights_electron_barrel_hist",len(photon_ptbins)-1,photon_ptbins)
@@ -638,9 +647,9 @@ for i in range(0,8):
 for i in range(1,103):
     labels["wg+jets"]["samples"][0]["nweightedevents_pdfweight"+str(i)]=labels["wg+jets"]["samples"][0]["file"].Get("nWeightedEvents_PDFWeight"+str(i)).GetBinContent(1)
 
-labels["wg+jets"]["samples"][0]["nweightedeventspassfiducial"]=labels["wg+jets"]["samples"][0]["file"].Get("nWeightedEventsPassFiducial").GetBinContent(1)
+labels["wg+jets"]["samples"][0]["nweightedeventspassgenselection"]=labels["wg+jets"]["samples"][0]["file"].Get("nWeightedEventsPassGenSelection").GetBinContent(1)
 
-fiducial_region_cuts_efficiency = float(labels["wg+jets"]["samples"][0]["nweightedeventspassfiducial"])/float(labels["wg+jets"]["samples"][0]["nweightedevents"])
+fiducial_region_cuts_efficiency = float(labels["wg+jets"]["samples"][0]["nweightedeventspassgenselection"])/float(labels["wg+jets"]["samples"][0]["nweightedevents"])
 
 data = {}
 fake_photon = {}
@@ -1613,6 +1622,60 @@ for i in range(len(variables)):
 
 c1.Close()
 
+if lepton_name == "muon":
+
+    xs_inputs_muon = {
+        "fiducial_region_cuts_efficiency":fiducial_region_cuts_efficiency,
+        "n_weighted_run_over" : labels["wg+jets"]["samples"][0]["nweightedevents"],
+        "n_signal_muon" : wg_norm_val,
+        "n_signal_syst_unc_due_to_fake_photon_muon" : abs(wg_norm_fake_photon_syst_val-wg_norm_val),
+        "n_signal_syst_unc_due_to_fake_lepton_muon" : abs(wg_norm_fake_lepton_syst_val-wg_norm_val),
+        "n_signal_stat_unc_muon" : wg_norm_stat_unc,
+        "n_weighted_selected_data_mc_sf_muon" : labels["wg+jets"]["hists"][mlg_index].Integral()*labels["wg+jets"]["samples"][0]["nweightedevents"]/(labels["wg+jets"]["samples"][0]["xs"]*1000*35.9),
+        "n_weighted_selected_data_mc_sf_syst_unc_due_to_muon_id_sf_muon" : muon_id_sf_unc,
+        "n_weighted_selected_data_mc_sf_syst_unc_due_to_muon_iso_sf_muon" : muon_iso_sf_unc,
+        "n_weighted_selected_data_mc_sf_syst_unc_due_to_photon_id_sf_muon" : photon_id_sf_unc,
+        "n_weighted_selected_data_mc_sf_syst_unc_due_to_pdf_muon" : 0,
+        "n_weighted_selected_data_mc_sf_syst_unc_due_to_qcd_scale_muon" : 0,
+        }
+
+    from pprint import pprint
+
+    pprint(xs_inputs_muon)
+
+    import json
+
+    f_muon = open("xs_inputs_muon.txt","w")
+
+    json.dump(xs_inputs_muon,f_muon)
+
+elif lepton_name == "electron":
+
+    xs_inputs_electron = {
+        "fiducial_region_cuts_efficiency":fiducial_region_cuts_efficiency,
+        "n_weighted_run_over" : labels["wg+jets"]["samples"][0]["nweightedevents"],
+        "n_signal_electron" : wg_norm_val,
+        "n_signal_syst_unc_due_to_fake_photon_electron" : abs(wg_norm_fake_photon_syst_val-wg_norm_val),
+        "n_signal_syst_unc_due_to_fake_lepton_electron" : abs(wg_norm_fake_lepton_syst_val-wg_norm_val),
+        "n_signal_stat_unc_electron" : wg_norm_stat_unc,
+        "n_weighted_selected_data_mc_sf_electron" : labels["wg+jets"]["hists"][mlg_index].Integral()*labels["wg+jets"]["samples"][0]["nweightedevents"]/(labels["wg+jets"]["samples"][0]["xs"]*1000*35.9), 
+        "n_weighted_selected_data_mc_sf_syst_unc_due_to_electron_id_sf_electron" : electron_id_sf_unc,
+        "n_weighted_selected_data_mc_sf_syst_unc_due_to_electron_reco_sf_electron" : electron_reco_sf_unc,
+        "n_weighted_selected_data_mc_sf_syst_unc_due_to_photon_id_sf_electron" : photon_id_sf_unc,
+        "n_weighted_selected_data_mc_sf_syst_unc_due_to_pdf_electron" : 0,
+        "n_weighted_selected_data_mc_sf_syst_unc_due_to_qcd_scale_electron" : 0
+        }
+
+    from pprint import pprint
+
+    pprint(xs_inputs_electron)
+
+    import json
+
+    f_electron = open("xs_inputs_electron.txt","w")
+
+    json.dump(xs_inputs_electron,f_electron)
+
 if not options.ewdim6:
     sys.exit(0)
 
@@ -1751,3 +1814,5 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
         dcard.write(" -")                
         dcard.write(" -")                
         dcard.write("\n")  
+
+
