@@ -80,15 +80,15 @@ syst_err_acc_electron = n_signal_electron/((n_weighted_selected_data_mc_sf_elect
 
 syst_err_n_signal_fake_photon = (n_signal+n_signal_syst_unc_due_to_fake_photon)/(n_weighted_selected_data_mc_sf*35.9*1000/n_weighted_run_over/fiducial_region_cuts_efficiency) - xs
 
-syst_err_n_signal_muon_fake_photon = (n_signal+n_signal_syst_unc_due_to_fake_photon_muon)/(n_weighted_selected_data_mc_sf*35.9*1000/n_weighted_run_over/fiducial_region_cuts_efficiency) - xs
+syst_err_n_signal_muon_fake_photon = (n_signal_muon+n_signal_syst_unc_due_to_fake_photon_muon)/(n_weighted_selected_data_mc_sf_muon*35.9*1000/n_weighted_run_over/fiducial_region_cuts_efficiency) - xs
 
-syst_err_n_signal_electron_fake_photon = (n_signal+n_signal_syst_unc_due_to_fake_photon_electron)/(n_weighted_selected_data_mc_sf*35.9*1000/n_weighted_run_over/fiducial_region_cuts_efficiency) - xs
+syst_err_n_signal_electron_fake_photon = (n_signal_electron+n_signal_syst_unc_due_to_fake_photon_electron)/(n_weighted_selected_data_mc_sf_electron*35.9*1000/n_weighted_run_over/fiducial_region_cuts_efficiency) - xs
 
 syst_err_n_signal_fake_lepton = (n_signal+n_signal_syst_unc_due_to_fake_lepton)/(n_weighted_selected_data_mc_sf*35.9*1000/n_weighted_run_over/fiducial_region_cuts_efficiency) - xs
 
-syst_err_n_signal_muon_fake_lepton = (n_signal+n_signal_syst_unc_due_to_fake_lepton_muon)/(n_weighted_selected_data_mc_sf*35.9*1000/n_weighted_run_over/fiducial_region_cuts_efficiency) - xs
+syst_err_n_signal_muon_fake_lepton = (n_signal_muon+n_signal_syst_unc_due_to_fake_lepton_muon)/(n_weighted_selected_data_mc_sf_muon*35.9*1000/n_weighted_run_over/fiducial_region_cuts_efficiency) - xs
 
-syst_err_n_signal_electron_fake_lepton = (n_signal+n_signal_syst_unc_due_to_fake_lepton_electron)/(n_weighted_selected_data_mc_sf*35.9*1000/n_weighted_run_over/fiducial_region_cuts_efficiency) - xs
+syst_err_n_signal_electron_fake_lepton = (n_signal_electron+n_signal_syst_unc_due_to_fake_lepton_electron)/(n_weighted_selected_data_mc_sf_electron*35.9*1000/n_weighted_run_over/fiducial_region_cuts_efficiency) - xs
 
 syst_err = math.sqrt(pow(syst_err_n_signal_fake_photon,2)+pow(syst_err_n_signal_fake_lepton,2)+pow(syst_err_acc,2))
 
