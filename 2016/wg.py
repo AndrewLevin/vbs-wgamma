@@ -96,12 +96,12 @@ labels = { "tt2l2nu+jets" : {"syst-pdf" : False, "syst-scale" : False, "color" :
 
 #labels = { "tt2l2nu+jets" : {"syst-pdf" : False, "syst-scale" : False, "color" : ROOT.kRed, "samples" : [{'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/2016/tt2l2nujets.root', 'xs' : 88.28, "non_fsr" : False , "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True } ] }, "ttsemi+jets" : {"syst-pdf" : False, "syst-scale" : False, "color" : ROOT.kSpring, "samples" : [{'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/2016/ttsemijets.root', 'xs' : 365.4, "non_fsr" : False , "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True } ] }, "wg+jets" : {"syst-pdf": True, "syst-scale": True, "color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjetsewdim6.root", "xs" : 178.6, "non_fsr" : True , "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True } ] }, "zg+jets" : {"syst-pdf" : False, "syst-scale" : False, "color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/2016/zglowmlljets.root", "xs" : 96.75, "non_fsr" : True , "e_to_p" : False, "fsr" : True, "e_to_p_for_fake" : True } ] }, "no label" : {"syst-pdf" : False, "syst-scale" : False, "color" : None, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/2016/zjets.root", "xs" : 4963.0, "non_fsr" : False , "e_to_p" : False, "fsr" : False, "e_to_p_for_fake" : True }] }, "ttg+jets" : {"syst-pdf" : False, "syst-scale" : False,  "color" : ROOT.kGreen+2, "samples" : [ {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/ttgjets.root", "xs" : 3.795, "non_fsr" : True , "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True } ] } }
 
-
+mlg_fit_upper_bound = 400
 
 #the first variable is for the ewdim6 analysis
 variables = ["photon_pt","dphilg","met","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","lepton_phi","photon_phi","njets","mt","npvs","drlg"]
 
-histogram_templates = [ROOT.TH1F('', '', 5, 100., 600 ),ROOT.TH1F('','',8,pi/2,pi), ROOT.TH1F("met", "", 15 , 0., 300 ), ROOT.TH1F('lepton_pt', '', 8, 20., 180 ), ROOT.TH1F('lepton_eta', '', 10, -2.5, 2.5 ), ROOT.TH1F('photon_pt', '', 3, 300., 600 ), ROOT.TH1F('photon_eta', '', 10, -2.5, 2.5 ), ROOT.TH1F("mlg","",100,0,200) , ROOT.TH1F("lepton_phi","",14,-3.5,3.5), ROOT.TH1F("photon_phi","",14,-3.5,3.5), ROOT.TH1F("njets","",7,-0.5,6.5), ROOT.TH1F("mt","",20,0,200), ROOT.TH1F("npvs","",51,-0.5,50.5), ROOT.TH1F("drlg","",60,0,6)] 
+histogram_templates = [ROOT.TH1F('', '', 5, 100., 600 ),ROOT.TH1F('','',8,pi/2,pi), ROOT.TH1F("met", "", 15 , 0., 300 ), ROOT.TH1F('lepton_pt', '', 8, 20., 180 ), ROOT.TH1F('lepton_eta', '', 10, -2.5, 2.5 ), ROOT.TH1F('photon_pt', '', 3, 300., 600 ), ROOT.TH1F('photon_eta', '', 10, -2.5, 2.5 ), ROOT.TH1F("mlg","",mlg_fit_upper_bound/2,0,mlg_fit_upper_bound) , ROOT.TH1F("lepton_phi","",14,-3.5,3.5), ROOT.TH1F("photon_phi","",14,-3.5,3.5), ROOT.TH1F("njets","",7,-0.5,6.5), ROOT.TH1F("mt","",20,0,200), ROOT.TH1F("npvs","",51,-0.5,50.5), ROOT.TH1F("drlg","",60,0,6)] 
 
 assert(len(variables) == len(histogram_templates))
 
@@ -1035,6 +1035,12 @@ if options.ewdim6:
 if options.ewdim6_scaling_only:
     sys.exit(1)
 
+data_mlg_tree = ROOT.TTree()
+
+array_data_mlg=array('f',[0])
+
+data_mlg_tree.Branch('m',array_data_mlg,'m/F')
+
 for i in range(data_events_tree.GetEntries()):
     data_events_tree.GetEntry(i)
 
@@ -1055,6 +1061,9 @@ for i in range(data_events_tree.GetEntries()):
         for j in range(len(variables)):
             fillHistogram(fake_lepton["hists"][j],getVariable(variables[j],data_events_tree),weight)
 
+        array_data_mlg[0] = getVariable("mlg",data_events_tree)
+        data_mlg_tree.Fill()
+
     if pass_selection(data_events_tree,options.phoeta,False,True):
 
         weight = photonfakerate(data_events_tree.photon_eta, data_events_tree.photon_pt,data_events_tree.lepton_pdg_id )
@@ -1073,6 +1082,10 @@ for i in range(data_events_tree.GetEntries()):
             fillHistogram(fake_lepton["hists"][j],getVariable(variables[j],data_events_tree),-weight)
             fillHistogram(fake_photon["hists"][j],getVariable(variables[j],data_events_tree),-weight)
             fillHistogram(fake_photon_syst["hists"][j],getVariable(variables[j],data_events_tree),-weight_fake_photon_syst)
+
+#data_mlg_tree.Scan("*")
+
+#sys.exit()
 
 for label in labels.keys():
 
@@ -1114,7 +1127,7 @@ fake_photon_syst["hists"][mlg_index].Print("all")
 
 #        print (ndata - nprediction + nzjets)/nzjets
 
-m= ROOT.RooRealVar("m","m",0,200)
+m= ROOT.RooRealVar("m","m",0,mlg_fit_upper_bound)
 m0=ROOT.RooRealVar("m0",    "m0",0,-10,10)
 sigma=ROOT.RooRealVar("sigma",  "sigma",1,0.1,5)
 alpha=ROOT.RooRealVar("alpha",  "alpha",5,0,20)
@@ -1128,6 +1141,8 @@ width = ROOT.RooRealVar("width","width",5,0.1,10);
 bw = ROOT.RooBreitWigner("bw","Breit Wigner",m,mass,width)
 
 RooFFTConvPdf_bwcb = ROOT.RooFFTConvPdf("bwcb","Breit Wigner convolved with a Crystal Ball",m,bw,cb)
+
+RooDataSet_mlg_data = ROOT.RooDataSet("data","dataset",data_mlg_tree,ROOT.RooArgSet(m))
 
 RooDataHist_mlg_data = ROOT.RooDataHist("data","dataset",ROOT.RooArgList(m),data["hists"][mlg_index])
 
@@ -1171,9 +1186,10 @@ RooHistPdf_fake_lepton = ROOT.RooHistPdf("fake lepton","fake lepton",ROOT.RooArg
 TH1F_fake_lepton_mlg_syst=fake_lepton["hists"][mlg_index].Clone("fake lepton syst")
 
 if lepton_name == "electron":
-    TH1F_fake_lepton_mlg_syst.Scale(1.48)
+#    TH1F_fake_lepton_mlg_syst.Scale(1.48)
+    TH1F_fake_lepton_mlg_syst.Scale(1.4)
 elif lepton_name == "muon":
-    TH1F_fake_lepton_mlg_syst.Scale(1.12)
+    TH1F_fake_lepton_mlg_syst.Scale(1.3)
 
 RooDataHist_mlg_fake_lepton_syst = ROOT.RooDataHist("zg data hist","zg data hist",ROOT.RooArgList(m),TH1F_fake_lepton_mlg_syst)
 
@@ -1238,11 +1254,13 @@ else:
     assert(0)
 
 sum.fitTo(RooDataHist_mlg_data,ROOT.RooFit.Extended())
+#sum.fitTo(RooDataSet_mlg_data,ROOT.RooFit.Extended())
 
-
+#frame1 = m.frame(Range(0,200))
 frame1 = m.frame()
 
 RooDataHist_mlg_data.plotOn(frame1)
+#RooDataSet_mlg_data.plotOn(frame1)
 sum.plotOn(frame1)
 #sum.plotOn(frame, ROOT.RooFit.Components(ROOT.RooArgSet(sum.getComponents()["zg"])),ROOT.RooFit.LineStyle(ROOT.kDashed)) 
 #sum.plotOn(frame, ROOT.RooFit.Components("zg,wg,bwcb"),ROOT.RooFit.LineStyle(ROOT.kDashed)) 
