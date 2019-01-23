@@ -61,7 +61,20 @@ f_pu_weights = ROOT.TFile("/afs/cern.ch/user/a/amlevin/PileupWeights2016.root")
 
 pu_weight_hist = f_pu_weights.Get("ratio")
 
-samples = [{ 'filename' : '/afs/cern.ch/work/a/amlevin/data/wg/gjets_ht40100.root', 'xs' : 20660.0},{ 'filename' : '/afs/cern.ch/work/a/amlevin/data/wg/gjets_ht100200.root'  , 'xs' : 9249.0},{ 'filename' : '/afs/cern.ch/work/a/amlevin/data/wg/gjets_ht200400.root' , 'xs' : 2321.0},{ 'filename' : '/afs/cern.ch/work/a/amlevin/data/wg/gjets_ht400600.root', 'xs' : 275.2},{ 'filename' : '/afs/cern.ch/work/a/amlevin/data/wg/gjets_ht600.root', 'xs' : 93.19}]
+samples = [{ 'filename' : '/afs/cern.ch/work/a/amlevin/data/wg/2016/gjets_ht40100.root', 'xs' : 20660.0},{ 'filename' : '/afs/cern.ch/work/a/amlevin/data/wg/2016/gjets_ht100200.root'  , 'xs' : 9249.0},{ 'filename' : '/afs/cern.ch/work/a/amlevin/data/wg/2016/gjets_ht200400.root' , 'xs' : 2321.0},{ 'filename' : '/afs/cern.ch/work/a/amlevin/data/wg/2016/gjets_ht400600.root', 'xs' : 275.2},{ 'filename' : '/afs/cern.ch/work/a/amlevin/data/wg/2016/gjets_ht600.root', 'xs' : 93.19}]
+
+#samples = [{ 'filename' : '/afs/cern.ch/work/a/amlevin/data/wg/2016/gjets_ht40100.root', 'xs' : 20660.0}]
+
+#samples = [{ 'filename' : '/afs/cern.ch/work/a/amlevin/data/wg/2016/gjets_ht100200.root'  , 'xs' : 9249.0}]
+
+#samples = [{ 'filename' : '/afs/cern.ch/work/a/amlevin/data/wg/2016/gjets_ht200400.root' , 'xs' : 2321.0}]
+
+#samples = [{ 'filename' : '/afs/cern.ch/work/a/amlevin/data/wg/2016/gjets_ht400600.root', 'xs' : 275.2}]
+
+#samples = [{ 'filename' : '/afs/cern.ch/work/a/amlevin/data/wg/2016/gjets_ht600.root', 'xs' : 93.19}]
+
+
+
 
 variables = ["met","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","lepton_phi","photon_phi","njets","mt","npvs","drlg"]
 
@@ -160,7 +173,7 @@ def pass_selection(tree, barrel_or_endcap_or_both = "both", fake_lepton = False 
         else:
             pass_mlg = False
 
-#    if tree.met > 35:
+#    if tree.met > 70:
 #    if tree.met > 70:
     if tree.met > 0:
         pass_met = True
@@ -201,7 +214,11 @@ def pass_selection(tree, barrel_or_endcap_or_both = "both", fake_lepton = False 
     else:
         pass_photon_pt = False
 
-    if pass_photon_pt and pass_lepton_selection and pass_photon_selection and pass_mlg and pass_photon_eta and pass_lepton_flavor and pass_met and pass_mt:
+    pass_lepton_gen_matching = tree.is_lepton_real == '\x00'
+
+    pass_photon_gen_matching = tree.photon_gen_matching == 4
+
+    if pass_photon_pt and pass_lepton_selection and pass_photon_selection and pass_mlg and pass_photon_eta and pass_lepton_flavor and pass_met and pass_mt and pass_lepton_gen_matching and pass_photon_gen_matching:
         return True
     else:
         return False
@@ -220,8 +237,8 @@ ypositions = [0,1,2,3,0,1,2,3,0,1,2,3]
 
 style.GoodStyle().cd()
 
-muon_fr_file = ROOT.TFile("/afs/cern.ch/user/a/amlevin/wg/muon_frs.root")
-electron_fr_file = ROOT.TFile("/afs/cern.ch/user/a/amlevin/wg/electron_frs.root")
+muon_fr_file = ROOT.TFile("/afs/cern.ch/user/a/amlevin/wg/2016/muon_frs_data_subtract_wjets_zjets.root")
+electron_fr_file = ROOT.TFile("/afs/cern.ch/user/a/amlevin/wg/2016/electron_frs_data_subtract_wjets_zjets.root")
 #electron_fr_file = ROOT.TFile("/afs/cern.ch/user/a/amlevin/wg/electron_closure_test_frs.root")
 
 muon_fr_hist=muon_fr_file.Get("muon_frs")
@@ -343,12 +360,11 @@ for sample in samples:
 
         if pass_selection(sample["tree"],options.phoeta):
             for variable in variables:
-                gjets["hists"][variable].Fill(getVariable(variable,sample["tree"]))        
+                weight = sample["xs"]/sample["nweightedevents"]
+                gjets["hists"][variable].Fill(getVariable(variable,sample["tree"]),weight)
 
         if pass_selection(sample["tree"],options.phoeta,True,False):
-
-            weight = leptonfakerate(sample["tree"].lepton_pdg_id,sample["tree"].lepton_eta,sample["tree"].lepton_pt,"nominal")
-
+            weight = leptonfakerate(sample["tree"].lepton_pdg_id,sample["tree"].lepton_eta,sample["tree"].lepton_pt,"nominal")*sample["xs"]/sample["nweightedevents"]
             for variable in variables:
                 gjets_data_fr["hists"][variable].Fill(getVariable(variable,sample["tree"]),weight)
 
