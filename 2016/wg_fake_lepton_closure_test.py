@@ -380,7 +380,7 @@ integral_gjets_data_fr =  gjets_data_fr["hists"]["lepton_pt"].IntegralAndError(1
 print str(integral_gjets) + " +/- " +str(integral_gjets_error)
 print str(integral_gjets_data_fr) + " +/- " +str(integral_gjets_data_fr_error)
 
-print str(integral_gjets/integral_gjets_data_fr) + " +/- " + str(sqrt(pow(integral_gjets_error,2)/pow(integral_gjets_data_fr,2) + pow(integral_gjets_data_fr_error,2)*pow(integral_gjets,2)/pow(integral_gjets_data_fr,2)))
+print str(integral_gjets/integral_gjets_data_fr) + " +/- " + str(sqrt(pow(integral_gjets_error,2)/pow(integral_gjets_data_fr,2) + pow(integral_gjets_data_fr_error,2)*pow(integral_gjets,2)/pow(integral_gjets_data_fr,4)))
 
 c1 = ROOT.TCanvas("c1", "c1",5,50,500,500);
 
