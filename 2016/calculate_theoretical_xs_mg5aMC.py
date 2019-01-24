@@ -171,7 +171,7 @@ nlo_xs = sample_xs
 pass_fiducial_nlo_xs = sample_xs * n_weighted_pass_fiducial.GetBinContent(1) / n_weighted.GetBinContent(1)
 
 pdf_unc = pdf_stddev * sample_xs / n_weighted.GetBinContent(1)
-pdf_pass_fiducial_unc = pdf_pass_fiducial_stddev * nominal_xs / n_weighted.GetBinContent(1)
+pdf_pass_fiducial_unc = pdf_pass_fiducial_stddev * sample_xs / n_weighted.GetBinContent(1)
 
 scale_unc = scale_stddev * sample_xs / n_weighted.GetBinContent(1)
 scale_pass_fiducial_unc = scale_pass_fiducial_stddev * sample_xs / n_weighted.GetBinContent(1)
