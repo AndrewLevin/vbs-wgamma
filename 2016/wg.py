@@ -103,7 +103,11 @@ mlg_fit_upper_bound = 400
 #the first variable is for the ewdim6 analysis
 variables = ["photon_pt","dphilg","met","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","lepton_phi","photon_phi","njets","mt","npvs","drlg"]
 
-histogram_templates = [ROOT.TH1F('', '', 5, 100., 600 ),ROOT.TH1F('','',8,pi/2,pi), ROOT.TH1F("met", "", 15 , 0., 300 ), ROOT.TH1F('lepton_pt', '', 8, 20., 180 ), ROOT.TH1F('lepton_eta', '', 10, -2.5, 2.5 ), ROOT.TH1F('photon_pt', '', 3, 300., 600 ), ROOT.TH1F('photon_eta', '', 10, -2.5, 2.5 ), ROOT.TH1F("mlg","",mlg_fit_upper_bound/2,0,mlg_fit_upper_bound) , ROOT.TH1F("lepton_phi","",14,-3.5,3.5), ROOT.TH1F("photon_phi","",14,-3.5,3.5), ROOT.TH1F("njets","",7,-0.5,6.5), ROOT.TH1F("mt","",20,0,200), ROOT.TH1F("npvs","",51,-0.5,50.5), ROOT.TH1F("drlg","",60,0,6)] 
+from array import array
+
+binning_photon_pt = array('f',[300,500,750,1000,1500])
+
+histogram_templates = [ROOT.TH1F('', '', 4, binning_photon_pt ),ROOT.TH1F('','',8,pi/2,pi), ROOT.TH1F("met", "", 15 , 0., 300 ), ROOT.TH1F('lepton_pt', '', 8, 20., 180 ), ROOT.TH1F('lepton_eta', '', 10, -2.5, 2.5 ), ROOT.TH1F('photon_pt', '', 4, binning_photon_pt ), ROOT.TH1F('photon_eta', '', 10, -2.5, 2.5 ), ROOT.TH1F("mlg","",mlg_fit_upper_bound/2,0,mlg_fit_upper_bound) , ROOT.TH1F("lepton_phi","",14,-3.5,3.5), ROOT.TH1F("photon_phi","",14,-3.5,3.5), ROOT.TH1F("njets","",7,-0.5,6.5), ROOT.TH1F("mt","",20,0,200), ROOT.TH1F("npvs","",51,-0.5,50.5), ROOT.TH1F("drlg","",60,0,6)] 
 
 assert(len(variables) == len(histogram_templates))
 
@@ -379,7 +383,6 @@ electron_fr_file = ROOT.TFile("/afs/cern.ch/user/a/amlevin/wg/2016/electron_frs_
 muon_fr_hist=muon_fr_file.Get("muon_frs")
 electron_fr_hist=electron_fr_file.Get("electron_frs")
 
-from array import array
 
 photon_ptbins=array('d', [25,30,40,50,70,100,135,400])
 
@@ -397,27 +400,13 @@ fake_photon_event_weights_electron_barrel = fake_photon_event_weights["electron_
 
 fake_photon_event_weights_electron_endcap = fake_photon_event_weights["electron_endcap"]
 
-fake_photon_event_weights_muon_endcap_wjets_wgjets_diff = [(fake_photon_event_weights_wjets_wgjets["both_endcap"][i] - fake_photon_event_weights_wjets_wgjets_as_data["both_endcap"][i]) for i in range(0,len(fake_photon_event_weights_wjets_wgjets["both_endcap"])) ]
+fake_photon_event_weights_muon_endcap_syst = [(fake_photon_event_weights_wjets_wgjets["both_endcap"][i] - fake_photon_event_weights_wjets_wgjets_as_data["both_endcap"][i] + fake_photon_event_weights_muon_endcap[i]) for i in range(0,len(fake_photon_event_weights_wjets_wgjets["both_endcap"])) ]
 
-fake_photon_event_weights_electron_endcap_wjets_wgjets_diff = [(fake_photon_event_weights_wjets_wgjets["both_endcap"][i] - fake_photon_event_weights_wjets_wgjets_as_data["both_endcap"][i]) for i in range(0,len(fake_photon_event_weights_wjets_wgjets["both_endcap"])) ]
+fake_photon_event_weights_electron_endcap_syst = [(fake_photon_event_weights_wjets_wgjets["both_endcap"][i] - fake_photon_event_weights_wjets_wgjets_as_data["both_endcap"][i] + fake_photon_event_weights_electron_endcap[i]) for i in range(0,len(fake_photon_event_weights_wjets_wgjets["both_endcap"])) ]
 
-fake_photon_event_weights_muon_barrel_wjets_wgjets_diff = [(fake_photon_event_weights_wjets_wgjets["both_barrel"][i] - fake_photon_event_weights_wjets_wgjets_as_data["both_barrel"][i]) for i in range(0,len(fake_photon_event_weights_wjets_wgjets["both_barrel"])) ]
+fake_photon_event_weights_muon_barrel_syst = [(fake_photon_event_weights_wjets_wgjets["both_barrel"][i] - fake_photon_event_weights_wjets_wgjets_as_data["both_barrel"][i] + fake_photon_event_weights_muon_barrel[i]) for i in range(0,len(fake_photon_event_weights_wjets_wgjets["both_barrel"])) ]
 
-fake_photon_event_weights_electron_barrel_wjets_wgjets_diff = [(fake_photon_event_weights_wjets_wgjets["both_barrel"][i] - fake_photon_event_weights_wjets_wgjets_as_data["both_barrel"][i]) for i in range(0,len(fake_photon_event_weights_wjets_wgjets["both_barrel"])) ]
-
-fake_photon_event_weights_muon_endcap_syst = [0.22152183701035566, 0.24900596421471177, 0.16889804325437693, 0.15710382513661203, 0.12937062937062935, 0.02797202797202797, 0.09433962264150941]
-
-fake_photon_event_weights_electron_endcap_syst = [0.22152183701035566, 0.24900596421471177, 0.16889804325437693, 0.15710382513661203, 0.12937062937062935, 0.02797202797202797, 0.09433962264150941]
-
-fake_photon_event_weights_electron_barrel_syst = [0.18481737081299443, 0.1506375227686703, 0.10285053929121728, 0.09019607843137253, 0.06699029126213593, 0.07356948228882833, 0.08629441624365482]
-
-fake_photon_event_weights_muon_barrel_syst = [0.18481737081299443, 0.1506375227686703, 0.10285053929121728, 0.09019607843137253, 0.06699029126213593, 0.07356948228882833, 0.08629441624365482]
-
-
-#fake_photon_event_weights_muon_endcap_syst = [0.1806019035114771, 0.15311103027403922, 0.15233748095550786, 0.10218335724427745, 0.08042243448043745, 0.055938368551824685, 0.050546201223890336]
-#fake_photon_event_weights_electron_endcap_syst = [0.18332860514318766, 0.1616009980967483, 0.12983990825613295, 0.0981657727656512, 0.060477729032748916, 0.07938848306929441, 0.06301416429185958]
-#fake_photon_event_weights_electron_barrel_syst = [0.1302818647040204, 0.0965989567886929, 0.07417185775597872, 0.06789639958741521, 0.058415672189706405, 0.04557617137218626, 0.03559569695093213]
-#fake_photon_event_weights_muon_barrel_syst = [0.144381599700443, 0.10333082134361173, 0.09148841286300782, 0.06344235311379792, 0.05953962237263142, 0.06388880919077376, 0.04631086033174329]
+fake_photon_event_weights_electron_barrel_syst = [(fake_photon_event_weights_wjets_wgjets["both_barrel"][i] - fake_photon_event_weights_wjets_wgjets_as_data["both_barrel"][i] + fake_photon_event_weights_electron_barrel[i]) for i in range(0,len(fake_photon_event_weights_wjets_wgjets["both_barrel"])) ]
 
 fake_photon_event_weights_muon_barrel_hist=ROOT.TH1F("fake_photon_event_weights_muon_barrel_hist","fake_photon_event_weights_muon_barrel_hist",len(photon_ptbins)-1,photon_ptbins)
 fake_photon_event_weights_electron_barrel_hist=ROOT.TH1F("fake_photon_event_weights_electron_barrel_hist","fake_photon_event_weights_electron_barrel_hist",len(photon_ptbins)-1,photon_ptbins)
@@ -657,7 +646,7 @@ for label in labels.keys():
 for i in range(0,8):
     labels["wg+jets"]["samples"][0]["nweightedevents_qcdscaleweight"+str(i)]=labels["wg+jets"]["samples"][0]["file"].Get("nWeightedEvents_QCDScaleWeight"+str(i)).GetBinContent(1)
 
-for i in range(1,103):
+for i in range(1,102):
     labels["wg+jets"]["samples"][0]["nweightedevents_pdfweight"+str(i)]=labels["wg+jets"]["samples"][0]["file"].Get("nWeightedEvents_PDFWeight"+str(i)).GetBinContent(1)
 
 labels["wg+jets"]["samples"][0]["nweightedeventspassgenselection"]=labels["wg+jets"]["samples"][0]["file"].Get("nWeightedEventsPassGenSelection").GetBinContent(1)
@@ -837,9 +826,9 @@ if options.ewdim6:
 
     sm_lhe_weight = 373
 
-    sm_lhe_weight_hist = ROOT.TH1F('', '', 5, 100., 600 )
+    sm_lhe_weight_hist = ROOT.TH1F('', '', 4, binning_photon_pt )
 
-    sm_hist = ROOT.TH1F('', '', 5, 100., 600 )
+    sm_hist = ROOT.TH1F('', '', 4, binning_photon_pt )
 
     cwww_reweights = [373,1,2,3,4,5,6]
 
@@ -882,19 +871,19 @@ if options.ewdim6:
     cpw_hists = []
 
     for i in range(0,len(cwww_reweights)):
-        cwww_hists.append(ROOT.TH1F('', '', 5, 100., 600 ))
+        cwww_hists.append(ROOT.TH1F('', '', 4, binning_photon_pt ))
 
     for i in range(0,len(cw_reweights)):
-        cw_hists.append(ROOT.TH1F('', '', 5, 100., 600 ))
+        cw_hists.append(ROOT.TH1F('', '', 4, binning_photon_pt ))
 
     for i in range(0,len(cb_reweights)):
-        cb_hists.append(ROOT.TH1F('', '', 5, 100., 600 ))
+        cb_hists.append(ROOT.TH1F('', '', 4, binning_photon_pt ))
 
     for i in range(0,len(cpwww_reweights)):
-        cpwww_hists.append(ROOT.TH1F('', '', 5, 100., 600 ))
+        cpwww_hists.append(ROOT.TH1F('', '', 4, binning_photon_pt ))
 
     for i in range(0,len(cpw_reweights)):
-        cpw_hists.append(ROOT.TH1F('', '', 5, 100., 600 ))
+        cpw_hists.append(ROOT.TH1F('', '', 4, binning_photon_pt ))
 
     for i in range(labels["wg+jets"]["samples"][0]["tree"].GetEntries()):
         labels["wg+jets"]["samples"][0]["tree"].GetEntry(i)
@@ -1061,15 +1050,16 @@ for i in range(data_events_tree.GetEntries()):
 #        continue
 
     if pass_selection(data_events_tree,options.phoeta):
+
+        if data_events_tree.photon_pt > blinding_cut:
+            continue
+
         for j in range(len(variables)):
             fillHistogram(data["hists"][j],getVariable(variables[j],data_events_tree))
 
     if pass_selection(data_events_tree,options.phoeta,True,False):
 
         weight = leptonfakerate(data_events_tree.lepton_pdg_id,data_events_tree.lepton_eta, data_events_tree.lepton_pt,"nominal")
-
-        if data_events_tree.photon_pt > blinding_cut:
-            continue
 
         for j in range(len(variables)):
             fillHistogram(fake_lepton["hists"][j],getVariable(variables[j],data_events_tree),weight)
@@ -1448,6 +1438,102 @@ sum_fake_photon_syst.fitTo(RooDataHist_mlg_data,ROOT.RooFit.Extended())
 wg_norm_fake_photon_syst_val = wg_norm.getVal()
 wg_norm_fake_photon_syst_stat_unc = wg_norm.getError()
 
+frame1_fake_photon_syst = m.frame()
+frame2_fake_photon_syst = m.frame(ROOT.RooFit.Range(0,200))
+frame3_fake_photon_syst = m.frame()
+frame4_fake_photon_syst = m.frame(ROOT.RooFit.Range(0,200))
+RooDataHist_mlg_data.plotOn(frame1_fake_photon_syst)
+RooDataHist_mlg_data.plotOn(frame2_fake_photon_syst)
+RooDataHist_mlg_data.plotOn(frame3_fake_photon_syst)
+RooDataHist_mlg_data.plotOn(frame4_fake_photon_syst)
+
+sum_fake_photon_syst.plotOn(frame1_fake_photon_syst)
+sum_fake_photon_syst.plotOn(frame2_fake_photon_syst)
+sum_fake_photon_syst.plotOn(frame3_fake_photon_syst)
+sum_fake_photon_syst.plotOn(frame4_fake_photon_syst)
+
+if lepton_name == "both" or lepton_name == "electron":
+    sum.plotOn(frame1_fake_photon_syst, ROOT.RooFit.Components("wg"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kRed)) 
+    sum.plotOn(frame1_fake_photon_syst, ROOT.RooFit.Components("zg"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kGreen)) 
+    sum.plotOn(frame1_fake_photon_syst, ROOT.RooFit.Components("bwcb"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kMagenta)) 
+    sum.plotOn(frame2_fake_photon_syst, ROOT.RooFit.Components("wg"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kRed)) 
+    sum.plotOn(frame2_fake_photon_syst, ROOT.RooFit.Components("zg"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kGreen)) 
+    sum.plotOn(frame2_fake_photon_syst, ROOT.RooFit.Components("bwcb"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kMagenta)) 
+elif lepton_name == "muon":
+    sum.plotOn(frame1_fake_photon_syst, ROOT.RooFit.Components("wg"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kRed)) 
+    sum.plotOn(frame1_fake_photon_syst, ROOT.RooFit.Components("zg"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kGreen)) 
+    sum.plotOn(frame2_fake_photon_syst, ROOT.RooFit.Components("wg"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kRed)) 
+    sum.plotOn(frame2_fake_photon_syst, ROOT.RooFit.Components("zg"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kGreen)) 
+else:
+    assert(0)
+
+sum_fake_photon_syst.plotOn(frame3_fake_photon_syst, ROOT.RooFit.Components("fake photon"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kRed)) 
+sum_fake_photon_syst.plotOn(frame3_fake_photon_syst, ROOT.RooFit.Components("fake lepton"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kGreen)) 
+sum_fake_photon_syst.plotOn(frame3_fake_photon_syst, ROOT.RooFit.Components("double fake"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kMagenta)) 
+sum_fake_photon_syst.plotOn(frame4_fake_photon_syst, ROOT.RooFit.Components("fake photon"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kRed)) 
+sum_fake_photon_syst.plotOn(frame4_fake_photon_syst, ROOT.RooFit.Components("fake lepton"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kGreen)) 
+sum_fake_photon_syst.plotOn(frame4_fake_photon_syst, ROOT.RooFit.Components("double fake"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kMagenta)) 
+
+if lepton_name == "electron" or lepton_name == "both":
+    sum.plotOn(frame3_fake_photon_syst, ROOT.RooFit.Components("etog"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kOrange-1)) 
+    sum.plotOn(frame4_fake_photon_syst, ROOT.RooFit.Components("etog"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kOrange-1)) 
+
+c6 = ROOT.TCanvas("c6", "c6",5,50,500,500)
+
+frame1_fake_photon_syst.Draw()
+
+legend1.Draw("same")
+
+c6.Update()
+c6.ForceUpdate()
+c6.Modified()
+
+c6.SaveAs(options.outputdir + "/" +"frame1_fake_photon_syst.png")
+
+c6.Close()
+
+c7 = ROOT.TCanvas("c7", "c7",5,50,500,500)
+
+frame2_fake_photon_syst.Draw()
+
+legend1.Draw("same")
+
+c7.Update()
+c7.ForceUpdate()
+c7.Modified()
+
+c7.SaveAs(options.outputdir + "/" +"frame2_fake_photon_syst.png")
+
+c7.Close()
+
+c8 = ROOT.TCanvas("c8", "c8",5,50,500,500)
+
+frame3_fake_photon_syst.Draw()
+
+legend2.Draw("same")
+
+c8.Update()
+c8.ForceUpdate()
+c8.Modified()
+
+c8.SaveAs(options.outputdir + "/" +"frame3_fake_photon_syst.png")
+
+c8.Close()
+
+c9 = ROOT.TCanvas("c9", "c9",5,50,500,500)
+
+frame4_fake_photon_syst.Draw()
+
+legend2.Draw("same")
+
+c9.Update()
+c9.ForceUpdate()
+c9.Modified()
+
+c9.SaveAs(options.outputdir + "/" +"frame4_fake_photon_syst.png")
+
+c9.Close()
+
 print "wg_norm_fake_photon_syst_val = " + str(wg_norm_fake_photon_syst_val)
 print "wg_norm_fake_photon_syst_stat_unc = " + str(wg_norm_fake_photon_syst_stat_unc)
 print "wg_norm_syst_unc_due_to_fake_photon_unc = " + str(wg_norm_fake_photon_syst_val-wg_norm_val)
@@ -1457,27 +1543,107 @@ sum_fake_lepton_syst.fitTo(RooDataHist_mlg_data,ROOT.RooFit.Extended())
 wg_norm_fake_lepton_syst_val = wg_norm.getVal()
 wg_norm_fake_lepton_syst_stat_unc = wg_norm.getError()
 
+frame1_fake_lepton_syst = m.frame()
+frame2_fake_lepton_syst = m.frame(ROOT.RooFit.Range(0,200))
+frame3_fake_lepton_syst = m.frame()
+frame4_fake_lepton_syst = m.frame(ROOT.RooFit.Range(0,200))
+RooDataHist_mlg_data.plotOn(frame1_fake_lepton_syst)
+RooDataHist_mlg_data.plotOn(frame2_fake_lepton_syst)
+RooDataHist_mlg_data.plotOn(frame3_fake_lepton_syst)
+RooDataHist_mlg_data.plotOn(frame4_fake_lepton_syst)
+
+sum_fake_lepton_syst.plotOn(frame1_fake_lepton_syst)
+sum_fake_lepton_syst.plotOn(frame2_fake_lepton_syst)
+sum_fake_lepton_syst.plotOn(frame3_fake_lepton_syst)
+sum_fake_lepton_syst.plotOn(frame4_fake_lepton_syst)
+
+if lepton_name == "both" or lepton_name == "electron":
+    sum.plotOn(frame1_fake_lepton_syst, ROOT.RooFit.Components("wg"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kRed)) 
+    sum.plotOn(frame1_fake_lepton_syst, ROOT.RooFit.Components("zg"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kGreen)) 
+    sum.plotOn(frame1_fake_lepton_syst, ROOT.RooFit.Components("bwcb"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kMagenta)) 
+    sum.plotOn(frame2_fake_lepton_syst, ROOT.RooFit.Components("wg"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kRed)) 
+    sum.plotOn(frame2_fake_lepton_syst, ROOT.RooFit.Components("zg"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kGreen)) 
+    sum.plotOn(frame2_fake_lepton_syst, ROOT.RooFit.Components("bwcb"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kMagenta)) 
+elif lepton_name == "muon":
+    sum.plotOn(frame1_fake_lepton_syst, ROOT.RooFit.Components("wg"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kRed)) 
+    sum.plotOn(frame1_fake_lepton_syst, ROOT.RooFit.Components("zg"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kGreen)) 
+    sum.plotOn(frame2_fake_lepton_syst, ROOT.RooFit.Components("wg"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kRed)) 
+    sum.plotOn(frame2_fake_lepton_syst, ROOT.RooFit.Components("zg"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kGreen)) 
+else:
+    assert(0)
+
+sum_fake_lepton_syst.plotOn(frame3_fake_lepton_syst, ROOT.RooFit.Components("fake photon"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kRed)) 
+sum_fake_lepton_syst.plotOn(frame3_fake_lepton_syst, ROOT.RooFit.Components("fake lepton"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kGreen)) 
+sum_fake_lepton_syst.plotOn(frame3_fake_lepton_syst, ROOT.RooFit.Components("double fake"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kMagenta)) 
+sum_fake_lepton_syst.plotOn(frame4_fake_lepton_syst, ROOT.RooFit.Components("fake photon"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kRed)) 
+sum_fake_lepton_syst.plotOn(frame4_fake_lepton_syst, ROOT.RooFit.Components("fake lepton"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kGreen)) 
+sum_fake_lepton_syst.plotOn(frame4_fake_lepton_syst, ROOT.RooFit.Components("double fake"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kMagenta)) 
+
+if lepton_name == "electron" or lepton_name == "both":
+    sum.plotOn(frame3_fake_lepton_syst, ROOT.RooFit.Components("etog"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kOrange-1)) 
+    sum.plotOn(frame4_fake_lepton_syst, ROOT.RooFit.Components("etog"),ROOT.RooFit.LineStyle(ROOT.kDashed),ROOT.RooFit.LineColor(ROOT.kOrange-1)) 
+
+c10 = ROOT.TCanvas("c10", "c10",5,50,500,500)
+
+frame1_fake_lepton_syst.Draw()
+
+legend1.Draw("same")
+
+c10.Update()
+c10.ForceUpdate()
+c10.Modified()
+
+c10.SaveAs(options.outputdir + "/" +"frame1_fake_lepton_syst.png")
+
+c10.Close()
+
+c11 = ROOT.TCanvas("c11", "c11",5,50,500,500)
+
+frame2_fake_lepton_syst.Draw()
+
+legend1.Draw("same")
+
+c11.Update()
+c11.ForceUpdate()
+c11.Modified()
+
+c11.SaveAs(options.outputdir + "/" +"frame2_fake_lepton_syst.png")
+
+c11.Close()
+
+c12 = ROOT.TCanvas("c12", "c12",5,50,500,500)
+
+frame3_fake_lepton_syst.Draw()
+
+legend2.Draw("same")
+
+c12.Update()
+c12.ForceUpdate()
+c12.Modified()
+
+c12.SaveAs(options.outputdir + "/" +"frame3_fake_lepton_syst.png")
+
+c12.Close()
+
+c13 = ROOT.TCanvas("c13", "c13",5,50,500,500)
+
+frame4_fake_lepton_syst.Draw()
+
+legend2.Draw("same")
+
+c13.Update()
+c13.ForceUpdate()
+c13.Modified()
+
+c13.SaveAs(options.outputdir + "/" +"frame4_fake_lepton_syst.png")
+
+c13.Close()
+
 print "wg_norm_fake_lepton_syst_val = " + str(wg_norm_fake_lepton_syst_val)
 print "wg_norm_fake_lepton_syst_stat_unc = " + str(wg_norm_fake_lepton_syst_stat_unc)
 print "wg_norm_syst_unc_due_to_fake_lepton_unc = " + str(wg_norm_val-wg_norm_fake_lepton_syst_val)
 
 print "(number of selected wg+jets events) * (data/MC eff scale factor) * (wg+jets xs) * (2016 integrated luminosity) / (number of wg+jets events run over) = "+str(labels["wg+jets"]["hists"][mlg_index].Integral())
-
-mean_pdf=0
-for i in range(0,102):
-    mean_pdf += labels["wg+jets"]["hists-pdf-variation"+str(i)][mlg_index].Integral() 
-
-mean_pdf = mean_pdf/102.0
-
-print "mean_pdf = "+str(mean_pdf)
-
-stddev_pdf = 0
-for i in range(0,102):
-    stddev_pdf += pow((labels["wg+jets"]["hists-pdf-variation"+str(i)][mlg_index].Integral() - mean_pdf),2)
-
-stddev_pdf = sqrt(stddev_pdf/(102-1))
-
-print "stddev_pdf = "+str(mean_pdf/102.0)
 
 electron_id_sf_unc = labels["wg+jets"]["hists-electron-id-sf-variation"][mlg_index].Integral() - labels["wg+jets"]["hists"][mlg_index].Integral()
 electron_reco_sf_unc = labels["wg+jets"]["hists-electron-reco-sf-variation"][mlg_index].Integral() - labels["wg+jets"]["hists"][mlg_index].Integral()
@@ -1491,15 +1657,6 @@ print "muon_id_sf_unc = "+str(muon_id_sf_unc)
 print "muon_iso_sf_unc = "+str(muon_iso_sf_unc)
 print "photon_id_sf_unc = "+str(photon_id_sf_unc)
 
-if labels["wg+jets"]["syst-scale"]:
-    qcd_up = labels["wg+jets"]["hists-scale-variation3"][mlg_index].Integral()
-    qcd_nom = labels["wg+jets"]["hists"][mlg_index].Integral()
-    qcd_down = labels["wg+jets"]["hists-scale-variation7"][mlg_index].Integral()
-
-    qcd_unc=0.5*max(abs(qcd_up - qcd_nom),abs(qcd_up-qcd_down),abs(qcd_nom-qcd_down))
-
-    print "qcd_unc = " + str(qcd_unc)
-
 print "(number of selected wg+jets events) * (data/MC eff scale factor) = "+str(labels["wg+jets"]["hists"][mlg_index].Integral()*labels["wg+jets"]["samples"][0]["nweightedevents"]/(labels["wg+jets"]["samples"][0]["xs"]*1000*35.9))
 
 print "(number of wg+jets events run over) = "+str(labels["wg+jets"]["samples"][0]["nweightedevents"])
@@ -1509,11 +1666,6 @@ print "fiducial_region_cuts_efficiency = "+str(fiducial_region_cuts_efficiency)
 #fiducial_region_cuts_efficiency = 0.51649677698712206047032474804031
 
 Aepsilon = labels["wg+jets"]["hists"][mlg_index].Integral()/(labels["wg+jets"]["samples"][0]["xs"]*fiducial_region_cuts_efficiency*1000*35.9)
-
-Aepsilon_pdf = (labels["wg+jets"]["hists"][mlg_index].Integral()-stddev_pdf)/(labels["wg+jets"]["samples"][0]["xs"]*fiducial_region_cuts_efficiency*1000*35.9)
-
-if labels["wg+jets"]["syst-scale"]:
-    Aepsilon_scale = (labels["wg+jets"]["hists"][mlg_index].Integral()-qcd_unc)/(labels["wg+jets"]["samples"][0]["xs"]*fiducial_region_cuts_efficiency*1000*35.9)
 
 Aepsilon_electron_id_sf = (labels["wg+jets"]["hists"][mlg_index].Integral()-electron_id_sf_unc)/(labels["wg+jets"]["samples"][0]["xs"]*fiducial_region_cuts_efficiency*1000*35.9)
 
@@ -1532,11 +1684,6 @@ print "wg_norm_val/Aepsilon/35.9/1000.0 = " + str(wg_norm_val/Aepsilon/35.9/1000
 print "stat uncertainty = " + str(wg_norm_stat_unc/Aepsilon/35.9/1000.0)
 
 print "lumi uncertainty = " + str(wg_norm_val/Aepsilon/(35.9*0.975)/1000.0 - wg_norm_val/Aepsilon/35.9/1000.0)
-
-print "pdf uncertainty   = " + str(wg_norm_val/Aepsilon_pdf/35.9/1000.0 - wg_norm_val/Aepsilon/35.9/1000.0)
-
-if labels["wg+jets"]["syst-scale"]:
-    print "scale uncertainty = " + str(wg_norm_val/Aepsilon_scale/35.9/1000.0 - wg_norm_val/Aepsilon/35.9/1000.0)
 
 print "electron id sf uncertainty = " + str(wg_norm_val/Aepsilon_electron_id_sf/35.9/1000.0 - wg_norm_val/Aepsilon/35.9/1000.0)
 
@@ -1719,6 +1866,14 @@ if lepton_name == "muon":
         "n_weighted_selected_data_mc_sf_syst_unc_due_to_qcd_scale_muon" : 0,
         }
 
+    for i in range(1,102):
+        xs_inputs_muon["n_weighted_selected_data_mc_sf_pdf_variation"+str(i)] = labels["wg+jets"]["hists-pdf-variation"+str(i)][mlg_index].Integral()*labels["wg+jets"]["samples"][0]["nweightedevents"]/(labels["wg+jets"]["samples"][0]["xs"]*1000*35.9)
+        xs_inputs_muon["n_weighted_run_over_pdf_variation"+str(i)] = labels["wg+jets"]["samples"][0]["nweightedevents_pdfweight"+str(i)]
+
+    for i in range(0,8):
+        xs_inputs_muon["n_weighted_selected_data_mc_sf_scale_variation"+str(i)] = labels["wg+jets"]["hists-scale-variation"+str(i)][mlg_index].Integral()*labels["wg+jets"]["samples"][0]["nweightedevents"]/(labels["wg+jets"]["samples"][0]["xs"]*1000*35.9) 
+        xs_inputs_muon["n_weighted_run_over_scale_variation"+str(i)] = labels["wg+jets"]["samples"][0]["nweightedevents_qcdscaleweight"+str(i)]
+
     pprint(xs_inputs_muon)
 
     import json
@@ -1743,6 +1898,14 @@ elif lepton_name == "electron":
         "n_weighted_selected_data_mc_sf_syst_unc_due_to_pdf_electron" : 0,
         "n_weighted_selected_data_mc_sf_syst_unc_due_to_qcd_scale_electron" : 0
         }
+
+    for i in range(1,102):
+        xs_inputs_electron["n_weighted_selected_data_mc_sf_pdf_variation"+str(i)] = labels["wg+jets"]["hists-pdf-variation"+str(i)][mlg_index].Integral()*labels["wg+jets"]["samples"][0]["nweightedevents"]/(labels["wg+jets"]["samples"][0]["xs"]*1000*35.9) 
+        xs_inputs_electron["n_weighted_run_over_pdf_variation"+str(i)] = labels["wg+jets"]["samples"][0]["nweightedevents_pdfweight"+str(i)]
+
+    for i in range(0,8):
+        xs_inputs_electron["n_weighted_selected_data_mc_sf_scale_variation"+str(i)] = labels["wg+jets"]["hists-scale-variation"+str(i)][mlg_index].Integral()*labels["wg+jets"]["samples"][0]["nweightedevents"]/(labels["wg+jets"]["samples"][0]["xs"]*1000*35.9) 
+        xs_inputs_electron["n_weighted_run_over_scale_variation"+str(i)] = labels["wg+jets"]["samples"][0]["nweightedevents_qcdscaleweight"+str(i)]
 
     pprint(xs_inputs_electron)
 
