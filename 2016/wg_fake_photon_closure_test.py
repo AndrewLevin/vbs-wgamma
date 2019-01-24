@@ -1,3 +1,4 @@
+
 #there is a bug which causes a crash inside of the TFractionFitter destructor: https://sft.its.cern.ch/jira/browse/ROOT-9414
 #I think this makes it necessary to create the tfractionfitters only once for each set of input files that are used, and then reuse the tfractionfitters
 
@@ -15,57 +16,40 @@ correct_fake_fractions = {}
 
 correct_fake_event_weights = {}
 
-fake_fractions["both_barrel"] = []
-
-fake_fractions["both_endcap"] = []
-
-fake_fractions["muon_barrel"] = []
-
-fake_fractions["muon_endcap"] = []
-
-fake_fractions["electron_barrel"] = []
-
-fake_fractions["electron_endcap"] = []
-
-fake_event_weights["both_barrel"] = []
-
-fake_event_weights["both_endcap"] = []
-
-fake_event_weights["muon_barrel"] = []
-
-fake_event_weights["muon_endcap"] = []
-
-fake_event_weights["electron_barrel"] = []
-
-fake_event_weights["electron_endcap"] = []
-
-correct_fake_fractions["both_barrel"] = []
-
-correct_fake_fractions["both_endcap"] = []
-
-correct_fake_fractions["muon_barrel"] = []
-
-correct_fake_fractions["muon_endcap"] = []
-
-correct_fake_fractions["electron_barrel"] = []
-
-correct_fake_fractions["electron_endcap"] = []
-
-correct_fake_event_weights["both_barrel"] = []
-
-correct_fake_event_weights["both_endcap"] = []
-
-correct_fake_event_weights["muon_barrel"] = []
-
-correct_fake_event_weights["muon_endcap"] = []
-
-correct_fake_event_weights["electron_barrel"] = []
-
-correct_fake_event_weights["electron_endcap"] = []
-
 #lepton_names =["muon","electron"]
 #lepton_names =["electron","muon"]
 lepton_names =["both"]
+
+if "both" in lepton_names: 
+    fake_fractions["both_barrel"] = []
+    fake_fractions["both_endcap"] = []
+    fake_event_weights["both_barrel"] = []
+    fake_event_weights["both_endcap"] = []
+    correct_fake_fractions["both_barrel"] = []
+    correct_fake_fractions["both_endcap"] = []
+    correct_fake_event_weights["both_barrel"] = []
+    correct_fake_event_weights["both_endcap"] = []
+
+if "muon" in lepton_names:
+
+    fake_fractions["muon_barrel"] = []
+    fake_fractions["muon_endcap"] = []
+    fake_event_weights["muon_barrel"] = []
+    fake_event_weights["muon_endcap"] = []
+    correct_fake_fractions["muon_barrel"] = []
+    correct_fake_fractions["muon_endcap"] = []
+    correct_fake_event_weights["muon_barrel"] = []
+    correct_fake_event_weights["muon_endcap"] = []
+
+if "electron" in lepton_names:
+    fake_fractions["electron_barrel"] = []
+    fake_fractions["electron_endcap"] = []
+    fake_event_weights["electron_barrel"] = []
+    fake_event_weights["electron_endcap"] = []
+    correct_fake_fractions["electron_barrel"] = []
+    correct_fake_fractions["electron_endcap"] = []
+    correct_fake_event_weights["electron_barrel"] = []
+    correct_fake_event_weights["electron_endcap"] = []
 
 eta_ranges = ["abs(photon_eta) < 1.4442","abs(photon_eta) > 1.566 && abs(photon_eta) < 2.5"]
 
@@ -158,7 +142,8 @@ for lepton_name in lepton_names:
                 sieie_cut = 0.03001
                 #n_bins = 160
                 #n_bins = 80
-                n_bins = 40
+                #n_bins = 40
+                n_bins = 20
                 sieie_lower = 0.01
                 sieie_upper = 0.06
              
@@ -207,10 +192,13 @@ for lepton_name in lepton_names:
             fake_photon_template_file1_negative_weight_hist.Sumw2()
             fake_photon_template_file2_negative_weight_hist.Sumw2()
 
-            fake_photon_template_file1_tree.Draw("photon_sieie >> fake_photon_template_file1_positive_weight_hist",eta_range + " && "+lepton_pdg_id_cut_string+" && "+photon_pt_range_cutstring + " && gen_weight > 0 && photon_gen_matching == 0")
-            fake_photon_template_file2_tree.Draw("photon_sieie >> fake_photon_template_file2_positive_weight_hist",eta_range + " && "+lepton_pdg_id_cut_string+" && "+photon_pt_range_cutstring + " && gen_weight > 0  && photon_gen_matching > 0")
-            fake_photon_template_file1_tree.Draw("photon_sieie >> fake_photon_template_file1_negative_weight_hist",eta_range + " && "+lepton_pdg_id_cut_string+" && "+photon_pt_range_cutstring + " && gen_weight < 0 && photon_gen_matching == 0")      
-            fake_photon_template_file2_tree.Draw("photon_sieie >> fake_photon_template_file2_negative_weight_hist",eta_range + " && "+lepton_pdg_id_cut_string+" && "+photon_pt_range_cutstring + " && gen_weight < 0 && photon_gen_matching > 0")
+#            fake_photon_template_file1_tree.Draw("photon_sieie >> fake_photon_template_file1_positive_weight_hist",eta_range + " && "+lepton_pdg_id_cut_string+" && "+photon_pt_range_cutstring + " && gen_weight > 0 && photon_gen_matching == 0")
+#            fake_photon_template_file2_tree.Draw("photon_sieie >> fake_photon_template_file2_positive_weight_hist",eta_range + " && "+lepton_pdg_id_cut_string+" && "+photon_pt_range_cutstring + " && gen_weight > 0  && photon_gen_matching > 0")
+#            fake_photon_template_file1_tree.Draw("photon_sieie >> fake_photon_template_file1_negative_weight_hist",eta_range + " && "+lepton_pdg_id_cut_string+" && "+photon_pt_range_cutstring + " && gen_weight < 0 && photon_gen_matching == 0")      
+#            fake_photon_template_file2_tree.Draw("photon_sieie >> fake_photon_template_file2_negative_weight_hist",eta_range + " && "+lepton_pdg_id_cut_string+" && "+photon_pt_range_cutstring + " && gen_weight < 0 && photon_gen_matching > 0")
+
+            total_sieie_for_fake_photon_fraction_file1_tree.Draw("photon_sieie >> fake_photon_template_file1_positive_weight_hist",eta_range + " && "+lepton_pdg_id_cut_string+" && "+photon_pt_range_cutstring + " && gen_weight > 0 && photon_gen_matching == 0 && (photon_selection == 1 || photon_selection == 2)")
+            total_sieie_for_fake_photon_fraction_file1_tree.Draw("photon_sieie >> fake_photon_template_file1_negative_weight_hist",eta_range + " && "+lepton_pdg_id_cut_string+" && "+photon_pt_range_cutstring + " && gen_weight < 0 && photon_gen_matching == 0 && (photon_selection == 1 || photon_selection == 2)")      
 
             fake_photon_template_file1_positive_weight_hist.Scale(fake_photon_template_file1_xs*35.9*1000/fake_photon_template_file1_nweightedevents)
             fake_photon_template_file2_positive_weight_hist.Scale(fake_photon_template_file2_xs*35.9*1000/fake_photon_template_file2_nweightedevents)
@@ -368,6 +356,13 @@ for lepton_name in lepton_names:
             
             ffitter.Fit()
 
+            value = ROOT.Double(-1)
+            error = ROOT.Double(-1)
+                
+            ffitter.GetResult(0,value,error)
+
+            print str(value) + "+/-" + str(error)
+
             total_sieie_for_fake_photon_fraction_hist.GetXaxis().SetTitle("\sigma_{i \eta i \eta}")            
             total_sieie_for_fake_photon_fraction_hist.SetLineWidth(2)            
             total_sieie_for_fake_photon_fraction_hist.Draw()
@@ -385,6 +380,10 @@ for lepton_name in lepton_names:
 
             ffitter.GetPlot().SetOption("")
             ffitter.GetPlot().Draw("hist same l")
+            
+            fake_photon_template_hist.SetLineColor(ROOT.kBlue)
+            fake_photon_template_hist.Scale(value*total_sieie_for_fake_photon_fraction_hist.Integral()/fake_photon_template_hist.Integral())
+            fake_photon_template_hist.Draw("same l")
 
             red_th1f=ROOT.TH1F("red_th1f","red_th1f",1,0,1)
             red_th1f.SetLineColor(ROOT.kRed)
@@ -407,13 +406,6 @@ for lepton_name in lepton_names:
             c1.ForceUpdate()
             c1.Modified()
                 
-            value = ROOT.Double(-1)
-            error = ROOT.Double(-1)
-                
-            ffitter.GetResult(0,value,error)
-
-            print str(value) + "+/-" + str(error)
-
             print total_sieie_for_fake_photon_fraction_hist.GetXaxis().FindFixBin(sieie_cut)
 
             print value*fake_photon_template_hist.Integral()/total_sieie_for_fake_photon_fraction_hist.Integral()
@@ -469,11 +461,23 @@ for lepton_name in lepton_names:
             else:
                 fake_event_weights[lepton_name+"_endcap"].append(value*fake_photon_template_hist.Integral(1,fake_photon_template_hist.GetXaxis().FindFixBin( sieie_cut )-1)*total_sieie_for_fake_photon_fraction_hist.Integral()/fake_photon_template_hist.Integral()/total_sieie_for_fake_photon_fraction_control_photon_selection_nweightedentries)
                 correct_fake_event_weights[lepton_name+"_endcap"].append(total_sieie_for_fake_photon_fraction_tight_photon_selection_nweightedentries_fake/total_sieie_for_fake_photon_fraction_control_photon_selection_nweightedentries_fake)
+
+from pprint import pprint
                 
-print fake_fractions
+pprint(fake_fractions)
 
-print correct_fake_fractions
+pprint(correct_fake_fractions)
 
-print fake_event_weights
+pprint(fake_event_weights)
 
-print correct_fake_event_weights
+pprint(correct_fake_event_weights)
+
+import json
+
+json.dump(correct_fake_event_weights,open("fake_photon_event_weights_wjets_wgjets.txt","w"))
+
+json.dump(fake_event_weights,open("fake_photon_event_weights_wjets_wgjets_as_data.txt","w"))
+
+pprint(correct_fake_event_weights  - fake_event_weights)
+
+json.dump(correct_fake_event_weights  - fake_event_weights,open("fake_photon_event_weights_wjets_wgjets_diff.txt","w"))

@@ -9,6 +9,14 @@ import optparse
 
 from math import hypot, pi, sqrt
 
+xoffsetstart = 0.0;
+yoffsetstart = 0.0;
+xoffset = 0.20;
+yoffset = 0.05;
+
+xpositions = [0.55,0.55,0.55,0.55,0.55,0.55,0.30,0.30,0.30]
+ypositions = [0,1,2,3,4,5,0,1,2]
+
 def deltaPhi(phi1,phi2):
     ## Catch if being called with two objects                                                                                                                        
     if type(phi1) != float and type(phi1) != int:
@@ -28,15 +36,48 @@ def deltaR(eta1,phi1,eta2=None,phi2=None):
     ## otherwise                                                                                                                                                     
     return hypot(eta1-eta2, deltaPhi(phi1,phi2))
 
+def set_axis_fonts(th1, coordinate, title):
+
+    if coordinate == "x":
+        axis = th1.GetXaxis();
+    elif coordinate == "y":
+        axis = th1.GetYaxis();
+    else:
+        assert(0)
+
+    axis.SetLabelFont  (   42)
+    axis.SetLabelOffset(0.015)
+    axis.SetLabelSize  (0.050)
+    axis.SetNdivisions (  505)
+    axis.SetTitleFont  (   42)
+    axis.SetTitleOffset(  1.5)
+    axis.SetTitleSize  (0.050)
+    if (coordinate == "y"):
+        axis.SetTitleOffset(1.6)
+    axis.SetTitle(title)
+
+def draw_legend(x1,y1,hist,label,options):
+
+    legend = TLegend(x1+xoffsetstart,y1+yoffsetstart,x1+xoffsetstart + xoffset,y1+yoffsetstart + yoffset)
+
+    legend.SetBorderSize(     0)
+    legend.SetFillColor (     0)
+    legend.SetTextAlign (    12)
+    legend.SetTextFont  (    42)
+    legend.SetTextSize  ( 0.040)
+
+    legend.AddEntry(hist,label,options)
+
+    legend.Draw("same")
+
+    #otherwise the legend goes out of scope and is deleted once the function finishes
+    hist.label = legend
+
 
 parser = optparse.OptionParser()
 
 parser.add_option('--lep',dest='lep',default='both')
 parser.add_option('--phoeta',dest='phoeta',default='both')
-
-parser.add_option('--lumi',dest='lumi')
-parser.add_option('--variable',dest='variable')
-parser.add_option('--xaxislabel',dest='xaxislabel',default='m_{jj} (GeV)')
 
 parser.add_option('-i',dest='inputfile')
 parser.add_option('-o',dest='outputdir',default="/eos/user/a/amlevin/www/tmp/")
@@ -225,16 +266,6 @@ def pass_selection(tree, barrel_or_endcap_or_both = "both", fake_lepton = False 
 
 #def fillHistograms(tree,hists):
 
-xoffsetstart = 0.0;
-yoffsetstart = 0.0;
-xoffset = 0.20;
-yoffset = 0.05;
-
-#xpositions = [0.60,0.60,0.60,0.60,0.60,0.60,0.40,0.40,0.40]
-xpositions = [0.68,0.68,0.68,0.68,0.445,0.445,0.445,0.445,0.21,0.21,0.21,0.21]
-#ypositions = [0,1,2,3,4,5,0,1,2]
-ypositions = [0,1,2,3,0,1,2,3,0,1,2,3]
-
 style.GoodStyle().cd()
 
 muon_fr_file = ROOT.TFile("/afs/cern.ch/user/a/amlevin/wg/2016/muon_frs_data_subtract_wjets_zjets.root")
@@ -360,11 +391,11 @@ for sample in samples:
 
         if pass_selection(sample["tree"],options.phoeta):
             for variable in variables:
-                weight = sample["xs"]/sample["nweightedevents"]
+                weight = 35.9*1000*sample["xs"]/sample["nweightedevents"]
                 gjets["hists"][variable].Fill(getVariable(variable,sample["tree"]),weight)
 
         if pass_selection(sample["tree"],options.phoeta,True,False):
-            weight = leptonfakerate(sample["tree"].lepton_pdg_id,sample["tree"].lepton_eta,sample["tree"].lepton_pt,"nominal")*sample["xs"]/sample["nweightedevents"]
+            weight = 35.9*1000*leptonfakerate(sample["tree"].lepton_pdg_id,sample["tree"].lepton_eta,sample["tree"].lepton_pt,"nominal")*sample["xs"]/sample["nweightedevents"]
             for variable in variables:
                 gjets_data_fr["hists"][variable].Fill(getVariable(variable,sample["tree"]),weight)
 
@@ -384,10 +415,29 @@ print str(integral_gjets/integral_gjets_data_fr) + " +/- " + str(sqrt(pow(integr
 
 c1 = ROOT.TCanvas("c1", "c1",5,50,500,500);
 
-gjets["hists"]["lepton_pt"].SetLineColor(ROOT.kRed)
-gjets_data_fr["hists"]["lepton_pt"].SetLineColor(ROOT.kBlue)
+set_axis_fonts(gjets["hists"]["lepton_pt"],"x","lepton p_{T} (GeV)")
+set_axis_fonts(gjets["hists"]["lepton_pt"],"y","")
 
-gjets["hists"]["lepton_pt"].Draw()
-gjets_data_fr["hists"]["lepton_pt"].Draw("same")
+set_axis_fonts(gjets_data_fr["hists"]["lepton_pt"],"x","lepton p_{T} (GeV)")
+set_axis_fonts(gjets_data_fr["hists"]["lepton_pt"],"y","")
 
-c1.SaveAs("/eos/user/a/amlevin/www/tmp/delete_this.png")
+gjets["hists"]["lepton_pt"].SetLineColor(ROOT.kBlack)
+gjets_data_fr["hists"]["lepton_pt"].SetLineColor(ROOT.kMagenta)
+
+gjets["hists"]["lepton_pt"].SetLineWidth(3)
+gjets_data_fr["hists"]["lepton_pt"].SetLineWidth(3)
+
+if gjets["hists"]["lepton_pt"].GetMaximum() > gjets_data_fr["hists"]["lepton_pt"].GetMaximum():
+    gjets["hists"]["lepton_pt"].Draw()
+    gjets_data_fr["hists"]["lepton_pt"].Draw("same")
+else:
+    gjets_data_fr["hists"]["lepton_pt"].Draw()
+    gjets["hists"]["lepton_pt"].Draw("same")
+
+j=0
+draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,gjets["hists"]["lepton_pt"],"#gamma+jets","l")
+j=j+1
+draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,gjets_data_fr["hists"]["lepton_pt"],"#gamma+jets with data FR","l")
+
+
+c1.SaveAs("/eos/user/a/amlevin/www/tmp/fake_lepton_closure_test.png")
