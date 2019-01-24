@@ -66,7 +66,7 @@ lumi_err_electron =  n_signal_electron/(n_weighted_selected_data_mc_sf_electron*
 
 lumi_err_muon =  n_signal_muon/(n_weighted_selected_data_mc_sf_muon*35.9*0.975*1000/n_weighted_run_over/fiducial_region_cuts_efficiency) - xs_muon
 
-stat_err = (n_signal+n_signal_stat_unc)/(n_weighted_selected_data_mc_sf*35.9*1000/n_weighted_run_over/fiducial_region_cuts_efficiency) - xs_muon
+stat_err = (n_signal+n_signal_stat_unc)/(n_weighted_selected_data_mc_sf*35.9*1000/n_weighted_run_over/fiducial_region_cuts_efficiency) - xs
 
 stat_err_electron = (n_signal_electron+n_signal_stat_unc_electron)/(n_weighted_selected_data_mc_sf_electron*35.9*1000/n_weighted_run_over/fiducial_region_cuts_efficiency) - xs_electron
 
@@ -102,39 +102,123 @@ acc_electron = n_weighted_selected_data_mc_sf_electron/n_weighted_run_over/fiduc
 
 acc_muon = n_weighted_selected_data_mc_sf_muon/n_weighted_run_over/fiducial_region_cuts_efficiency
 
-fractional_err_on_acc_due_to_pdf = (((n_weighted_selected_data_mc_sf + n_weighted_selected_data_mc_sf_syst_unc_due_to_pdf_electron + n_weighted_selected_data_mc_sf_syst_unc_due_to_pdf_muon)/n_weighted_run_over) - acc)/acc
+for i in range(1,102):
+    assert(xs_inputs_muon["n_weighted_run_over_pdf_variation"+str(i)] == xs_inputs_electron["n_weighted_run_over_pdf_variation"+str(i)])
 
-fractional_err_on_acc_due_to_pdf_electron = (((n_weighted_selected_data_mc_sf_electron + n_weighted_selected_data_mc_sf_syst_unc_due_to_pdf_electron)/n_weighted_run_over/fiducial_region_cuts_efficiency) - acc_electron)/acc_electron
+mean_pdf_acc=0
+for i in range(1,102):
+    mean_pdf_acc += (xs_inputs_muon["n_weighted_selected_data_mc_sf_pdf_variation"+str(i)]+xs_inputs_electron["n_weighted_selected_data_mc_sf_pdf_variation"+str(i)])/xs_inputs_muon["n_weighted_run_over_pdf_variation"+str(i)]/fiducial_region_cuts_efficiency
 
-fractional_err_on_acc_due_to_pdf_muon = (((n_weighted_selected_data_mc_sf_muon + n_weighted_selected_data_mc_sf_syst_unc_due_to_pdf_muon)/n_weighted_run_over/fiducial_region_cuts_efficiency) - acc_muon)/acc_muon
+mean_pdf_acc = mean_pdf_acc/101.0
 
-fractional_err_on_acc_due_to_qcd_scale = (((n_weighted_selected_data_mc_sf + n_weighted_selected_data_mc_sf_syst_unc_due_to_qcd_scale_electron + n_weighted_selected_data_mc_sf_syst_unc_due_to_qcd_scale_muon)/n_weighted_run_over/fiducial_region_cuts_efficiency) - acc)/acc
+stddev_pdf_acc = 0
 
-fractional_err_on_acc_due_to_qcd_scale_electron = (((n_weighted_selected_data_mc_sf_electron + n_weighted_selected_data_mc_sf_syst_unc_due_to_qcd_scale_electron)/n_weighted_run_over/fiducial_region_cuts_efficiency) - acc_electron)/acc_electron
+for i in range(1,102):
+    stddev_pdf_acc += pow(((xs_inputs_muon["n_weighted_selected_data_mc_sf_pdf_variation"+str(i)]+xs_inputs_electron["n_weighted_selected_data_mc_sf_pdf_variation"+str(i)])/xs_inputs_muon["n_weighted_run_over_pdf_variation"+str(i)]/fiducial_region_cuts_efficiency - mean_pdf_acc),2)
 
-fractional_err_on_acc_due_to_qcd_scale_muon = (((n_weighted_selected_data_mc_sf_muon + n_weighted_selected_data_mc_sf_syst_unc_due_to_qcd_scale_muon)/n_weighted_run_over/fiducial_region_cuts_efficiency) - acc_muon)/acc_muon
+stddev_pdf_acc = math.sqrt(stddev_pdf_acc/(101-1))
 
-fractional_err_on_acc_due_to_photon_id_sf = (((n_weighted_selected_data_mc_sf + n_weighted_selected_data_mc_sf_syst_unc_due_to_photon_id_sf_electron + n_weighted_selected_data_mc_sf_syst_unc_due_to_photon_id_sf_muon)/n_weighted_run_over/fiducial_region_cuts_efficiency) - acc)/acc
+qcd_up_acc = (xs_inputs_muon["n_weighted_selected_data_mc_sf_scale_variation3"]+xs_inputs_electron["n_weighted_selected_data_mc_sf_scale_variation3"])/xs_inputs_muon["n_weighted_run_over_scale_variation3"]/fiducial_region_cuts_efficiency
+qcd_down_acc = (xs_inputs_muon["n_weighted_selected_data_mc_sf_scale_variation7"]+xs_inputs_electron["n_weighted_selected_data_mc_sf_scale_variation7"])/xs_inputs_muon["n_weighted_run_over_scale_variation7"]/fiducial_region_cuts_efficiency
 
-fractional_err_on_acc_due_to_photon_id_sf_electron = (((n_weighted_selected_data_mc_sf_electron + n_weighted_selected_data_mc_sf_syst_unc_due_to_photon_id_sf_electron)/n_weighted_run_over/fiducial_region_cuts_efficiency) - acc_electron)/acc_electron
+qcd_unc_acc=0.5*max(abs(qcd_up_acc - acc),abs(qcd_up_acc-qcd_down_acc),abs(acc-qcd_down_acc))
 
-fractional_err_on_acc_due_to_photon_id_sf_muon = (((n_weighted_selected_data_mc_sf_muon +n_weighted_selected_data_mc_sf_syst_unc_due_to_photon_id_sf_muon)/n_weighted_run_over/fiducial_region_cuts_efficiency) - acc_muon)/acc_muon
 
-fractional_err_on_acc_due_to_electron_reco_sf = (((n_weighted_selected_data_mc_sf + n_weighted_selected_data_mc_sf_syst_unc_due_to_electron_reco_sf_electron)/n_weighted_run_over/fiducial_region_cuts_efficiency) - acc)/acc
 
-fractional_err_on_acc_due_to_electron_reco_sf_electron = (((n_weighted_selected_data_mc_sf_electron + n_weighted_selected_data_mc_sf_syst_unc_due_to_electron_reco_sf_electron)/n_weighted_run_over/fiducial_region_cuts_efficiency) - acc_electron)/acc_electron
 
-fractional_err_on_acc_due_to_electron_id_sf = (((n_weighted_selected_data_mc_sf + n_weighted_selected_data_mc_sf_syst_unc_due_to_electron_id_sf_electron)/n_weighted_run_over/fiducial_region_cuts_efficiency) - acc)/acc
 
-fractional_err_on_acc_due_to_electron_id_sf_electron = (((n_weighted_selected_data_mc_sf_electron + n_weighted_selected_data_mc_sf_syst_unc_due_to_electron_id_sf_electron)/n_weighted_run_over/fiducial_region_cuts_efficiency) - acc_electron)/acc_electron
 
-fractional_err_on_acc_due_to_muon_id_sf = (((n_weighted_selected_data_mc_sf + n_weighted_selected_data_mc_sf_syst_unc_due_to_muon_id_sf_muon)/n_weighted_run_over/fiducial_region_cuts_efficiency) - acc)/acc
+mean_pdf_acc_muon=0
+for i in range(1,102):
+    mean_pdf_acc_muon += (xs_inputs_muon["n_weighted_selected_data_mc_sf_pdf_variation"+str(i)])/xs_inputs_muon["n_weighted_run_over_pdf_variation"+str(i)]/fiducial_region_cuts_efficiency
 
-fractional_err_on_acc_due_to_muon_id_sf_muon = (((n_weighted_selected_data_mc_sf_muon + n_weighted_selected_data_mc_sf_syst_unc_due_to_muon_id_sf_muon)/n_weighted_run_over/fiducial_region_cuts_efficiency) - acc_muon)/acc_muon
+mean_pdf_acc_muon = mean_pdf_acc_muon/101.0
 
-fractional_err_on_acc_due_to_muon_iso_sf = (((n_weighted_selected_data_mc_sf + n_weighted_selected_data_mc_sf_syst_unc_due_to_muon_iso_sf_muon)/n_weighted_run_over/fiducial_region_cuts_efficiency) - acc)/acc
+stddev_pdf_acc_muon = 0
 
-fractional_err_on_acc_due_to_muon_iso_sf_muon = (((n_weighted_selected_data_mc_sf_muon + n_weighted_selected_data_mc_sf_syst_unc_due_to_muon_iso_sf_muon)/n_weighted_run_over/fiducial_region_cuts_efficiency) - acc_muon)/acc_muon
+for i in range(1,102):
+    stddev_pdf_acc_muon += pow(((xs_inputs_muon["n_weighted_selected_data_mc_sf_pdf_variation"+str(i)])/xs_inputs_muon["n_weighted_run_over_pdf_variation"+str(i)]/fiducial_region_cuts_efficiency - mean_pdf_acc_muon),2)
+
+stddev_pdf_acc_muon = math.sqrt(stddev_pdf_acc_muon/(101-1))
+
+
+qcd_up_acc_muon = (xs_inputs_muon["n_weighted_selected_data_mc_sf_scale_variation3"])/xs_inputs_muon["n_weighted_run_over_scale_variation3"]/fiducial_region_cuts_efficiency
+qcd_down_acc_muon = (xs_inputs_muon["n_weighted_selected_data_mc_sf_scale_variation7"])/xs_inputs_muon["n_weighted_run_over_scale_variation7"]/fiducial_region_cuts_efficiency
+
+qcd_unc_acc_muon=0.5*max(abs(qcd_up_acc_muon - acc_muon),abs(qcd_up_acc_muon-qcd_down_acc_muon),abs(acc_muon-qcd_down_acc_muon))
+
+
+
+
+
+
+mean_pdf_acc_electron=0
+for i in range(1,102):
+    mean_pdf_acc_electron += (xs_inputs_electron["n_weighted_selected_data_mc_sf_pdf_variation"+str(i)])/xs_inputs_electron["n_weighted_run_over_pdf_variation"+str(i)]/fiducial_region_cuts_efficiency
+
+mean_pdf_acc_electron = mean_pdf_acc_electron/101.0
+
+stddev_pdf_acc_electron = 0
+
+for i in range(1,102):
+    stddev_pdf_acc_electron += pow(((xs_inputs_electron["n_weighted_selected_data_mc_sf_pdf_variation"+str(i)])/xs_inputs_electron["n_weighted_run_over_pdf_variation"+str(i)]/fiducial_region_cuts_efficiency - mean_pdf_acc_electron),2)
+
+stddev_pdf_acc_electron = math.sqrt(stddev_pdf_acc_electron/(101-1))
+
+
+qcd_up_acc_electron = (xs_inputs_electron["n_weighted_selected_data_mc_sf_scale_variation3"])/xs_inputs_electron["n_weighted_run_over_scale_variation3"]/fiducial_region_cuts_efficiency
+qcd_down_acc_electron = (xs_inputs_electron["n_weighted_selected_data_mc_sf_scale_variation7"])/xs_inputs_electron["n_weighted_run_over_scale_variation7"]/fiducial_region_cuts_efficiency
+
+qcd_unc_acc_electron=0.5*max(abs(qcd_up_acc_electron - acc_electron),abs(qcd_up_acc_electron-qcd_down_acc_electron),abs(acc_electron-qcd_down_acc_electron))
+
+
+print qcd_unc_acc
+print qcd_unc_acc_muon
+print qcd_unc_acc_electron
+
+print stddev_pdf_acc
+print stddev_pdf_acc_muon
+print stddev_pdf_acc_electron
+
+err_on_acc_due_to_qcd_scale = qcd_unc_acc
+err_on_acc_due_to_qcd_scale_muon = qcd_unc_acc_muon
+err_on_acc_due_to_qcd_scale_electron = qcd_unc_acc_electron
+
+err_on_acc_due_to_pdf = stddev_pdf_acc
+err_on_acc_due_to_pdf_muon = stddev_pdf_acc_muon
+err_on_acc_due_to_pdf_electron = stddev_pdf_acc_electron
+
+err_on_acc_due_to_photon_id_sf = (((n_weighted_selected_data_mc_sf + n_weighted_selected_data_mc_sf_syst_unc_due_to_photon_id_sf_electron + n_weighted_selected_data_mc_sf_syst_unc_due_to_photon_id_sf_muon)/n_weighted_run_over/fiducial_region_cuts_efficiency) - acc)
+
+err_on_acc_due_to_photon_id_sf_electron = (((n_weighted_selected_data_mc_sf_electron + n_weighted_selected_data_mc_sf_syst_unc_due_to_photon_id_sf_electron)/n_weighted_run_over/fiducial_region_cuts_efficiency) - acc_electron)
+
+err_on_acc_due_to_photon_id_sf_muon = (((n_weighted_selected_data_mc_sf_muon +n_weighted_selected_data_mc_sf_syst_unc_due_to_photon_id_sf_muon)/n_weighted_run_over/fiducial_region_cuts_efficiency) - acc_muon)
+
+err_on_acc_due_to_electron_reco_sf = (((n_weighted_selected_data_mc_sf + n_weighted_selected_data_mc_sf_syst_unc_due_to_electron_reco_sf_electron)/n_weighted_run_over/fiducial_region_cuts_efficiency) - acc)
+
+err_on_acc_due_to_electron_reco_sf_electron = (((n_weighted_selected_data_mc_sf_electron + n_weighted_selected_data_mc_sf_syst_unc_due_to_electron_reco_sf_electron)/n_weighted_run_over/fiducial_region_cuts_efficiency) - acc_electron)
+
+err_on_acc_due_to_electron_id_sf = (((n_weighted_selected_data_mc_sf + n_weighted_selected_data_mc_sf_syst_unc_due_to_electron_id_sf_electron)/n_weighted_run_over/fiducial_region_cuts_efficiency) - acc)
+
+err_on_acc_due_to_electron_id_sf_electron = (((n_weighted_selected_data_mc_sf_electron + n_weighted_selected_data_mc_sf_syst_unc_due_to_electron_id_sf_electron)/n_weighted_run_over/fiducial_region_cuts_efficiency) - acc_electron)
+
+err_on_acc_due_to_muon_id_sf = (((n_weighted_selected_data_mc_sf + n_weighted_selected_data_mc_sf_syst_unc_due_to_muon_id_sf_muon)/n_weighted_run_over/fiducial_region_cuts_efficiency) - acc)
+
+err_on_acc_due_to_muon_id_sf_muon = (((n_weighted_selected_data_mc_sf_muon + n_weighted_selected_data_mc_sf_syst_unc_due_to_muon_id_sf_muon)/n_weighted_run_over/fiducial_region_cuts_efficiency) - acc_muon)
+
+err_on_acc_due_to_muon_iso_sf = (((n_weighted_selected_data_mc_sf + n_weighted_selected_data_mc_sf_syst_unc_due_to_muon_iso_sf_muon)/n_weighted_run_over/fiducial_region_cuts_efficiency) - acc)
+
+err_on_acc_due_to_muon_iso_sf_muon = (((n_weighted_selected_data_mc_sf_muon + n_weighted_selected_data_mc_sf_syst_unc_due_to_muon_iso_sf_muon)/n_weighted_run_over/fiducial_region_cuts_efficiency) - acc_muon)
+
+err_on_acc = math.sqrt(pow(err_on_acc_due_to_qcd_scale,2)+pow(err_on_acc_due_to_pdf,2)+pow(err_on_acc_due_to_electron_id_sf,2) + pow(err_on_acc_due_to_electron_reco_sf,2)+pow(err_on_acc_due_to_muon_id_sf,2)+pow(err_on_acc_due_to_muon_iso_sf,2)+pow(err_on_acc_due_to_photon_id_sf,2))
+
+err_on_acc_muon = math.sqrt(pow(err_on_acc_due_to_qcd_scale_muon,2)+pow(err_on_acc_due_to_pdf_muon,2)+pow(err_on_acc_due_to_muon_id_sf_muon,2)+pow(err_on_acc_due_to_muon_iso_sf_muon,2)+pow(err_on_acc_due_to_photon_id_sf_muon,2))
+
+err_on_acc_electron = math.sqrt(pow(err_on_acc_due_to_qcd_scale_electron,2)+pow(err_on_acc_due_to_pdf_electron,2)+pow(err_on_acc_due_to_electron_id_sf_electron,2) + pow(err_on_acc_due_to_electron_reco_sf_electron,2)+pow(err_on_acc_due_to_photon_id_sf_electron,2))
+
+print "acc = "+ str(acc) + " +/- " + str(err_on_acc) 
+print "acc_muon = "+ str(acc_muon) + " +/- " + str(err_on_acc_muon) 
+print "acc_electron = "+ str(acc_electron) + " +/- " + str(err_on_acc_electron) 
 
 print "xs = " +str(xs) + " +/- " + str(stat_err) + " (stat) +/- " + str(syst_err) + " (syst) +/- " + str(lumi_err) + " (lumi)"
 
@@ -154,36 +238,88 @@ print "acc_muon = "+str(acc_muon)
 
 print "acc_electron = "+str(acc_electron)
 
-print "fractional_err_on_acc_due_to_pdf = " + str(fractional_err_on_acc_due_to_pdf)
+print "err_on_acc_due_to_pdf = " + str(err_on_acc_due_to_pdf)
 
-print "fractional_err_on_acc_due_to_pdf_muon = " + str(fractional_err_on_acc_due_to_pdf_muon)
+print "err_on_acc_due_to_pdf_muon = " + str(err_on_acc_due_to_pdf_muon)
 
-print "fractional_err_on_acc_due_to_pdf_electron = " + str(fractional_err_on_acc_due_to_pdf_electron)
+print "err_on_acc_due_to_pdf_electron = " + str(err_on_acc_due_to_pdf_electron)
 
-print "fractional_err_on_acc_due_to_qcd_scale = " + str(fractional_err_on_acc_due_to_qcd_scale)
+print "err_on_acc_due_to_qcd_scale = " + str(err_on_acc_due_to_qcd_scale)
 
-print "fractional_err_on_acc_due_to_qcd_scale_electron = " + str(fractional_err_on_acc_due_to_qcd_scale_electron)
+print "err_on_acc_due_to_qcd_scale_electron = " + str(err_on_acc_due_to_qcd_scale_electron)
 
-print "fractional_err_on_acc_due_to_qcd_scale_muon = " + str(fractional_err_on_acc_due_to_qcd_scale_muon)
+print "err_on_acc_due_to_qcd_scale_muon = " + str(err_on_acc_due_to_qcd_scale_muon)
 
-print "fractional_err_on_acc_due_to_photon_id_sf = "+ str(fractional_err_on_acc_due_to_photon_id_sf)
+print "err_on_acc_due_to_photon_id_sf = "+ str(err_on_acc_due_to_photon_id_sf)
 
-print "fractional_err_on_acc_due_to_photon_id_sf_electron = "+ str(fractional_err_on_acc_due_to_photon_id_sf_electron)
+print "err_on_acc_due_to_photon_id_sf_electron = "+ str(err_on_acc_due_to_photon_id_sf_electron)
 
-print "fractional_err_on_acc_due_to_photon_id_sf_muon = "+ str(fractional_err_on_acc_due_to_photon_id_sf_muon)
+print "err_on_acc_due_to_photon_id_sf_muon = "+ str(err_on_acc_due_to_photon_id_sf_muon)
 
-print "fractional_err_on_acc_due_to_electron_reco_sf = " + str(fractional_err_on_acc_due_to_electron_reco_sf)
+print "err_on_acc_due_to_electron_reco_sf = " + str(err_on_acc_due_to_electron_reco_sf)
 
-print "fractional_err_on_acc_due_to_electron_reco_sf_electron = " + str(fractional_err_on_acc_due_to_electron_reco_sf_electron)
+print "err_on_acc_due_to_electron_reco_sf_electron = " + str(err_on_acc_due_to_electron_reco_sf_electron)
 
-print "fractional_err_on_acc_due_to_electron_id_sf = " + str(fractional_err_on_acc_due_to_electron_id_sf)
+print "err_on_acc_due_to_electron_id_sf = " + str(err_on_acc_due_to_electron_id_sf)
 
-print "fractional_err_on_acc_due_to_electron_id_sf_electron = " + str(fractional_err_on_acc_due_to_electron_id_sf_electron)
+print "err_on_acc_due_to_electron_id_sf_electron = " + str(err_on_acc_due_to_electron_id_sf_electron)
 
-print "fractional_err_on_acc_due_to_muon_id_sf = " + str(fractional_err_on_acc_due_to_muon_id_sf)
+print "err_on_acc_due_to_muon_id_sf = " + str(err_on_acc_due_to_muon_id_sf)
 
-print "fractional_err_on_acc_due_to_muon_id_sf_muon = " + str(fractional_err_on_acc_due_to_muon_id_sf_muon)
+print "err_on_acc_due_to_muon_id_sf_muon = " + str(err_on_acc_due_to_muon_id_sf_muon)
 
-print "fractional_err_on_acc_due_to_muon_iso_sf = " + str(fractional_err_on_acc_due_to_muon_iso_sf)
+print "err_on_acc_due_to_muon_iso_sf = " + str(err_on_acc_due_to_muon_iso_sf)
 
-print "fractional_err_on_acc_due_to_muon_iso_sf_muon = " + str(fractional_err_on_acc_due_to_muon_iso_sf_muon)
+print "err_on_acc_due_to_muon_iso_sf_muon = " + str(err_on_acc_due_to_muon_iso_sf_muon)
+
+print "xs: \\sigma = %.2f \pm %.2f \\text{ (stat)} \pm %.2f \\text{ (syst)} \pm %.2f \\text{ (lumi) pb}" % (xs,stat_err,syst_err,lumi_err)
+
+print "xs based on electron channel: \\sigma = %.2f \pm %.2f \\text{ (stat)} \pm %.2f \\text{ (syst)} \pm %.2f \\text{ (lumi) pb}" % (xs_electron,stat_err_electron,syst_err_electron,lumi_err_electron)
+
+print "xs based on muon channel: \\sigma = %.2f \pm %.2f \\text{ (stat)} \pm %.2f \\text{ (syst)} \pm %.2f \\text{ (lumi) pb}" % (xs_muon,stat_err_muon,syst_err_muon,lumi_err_muon)
+
+print """
+\\begin{table}[htbp]
+\\begin{center}
+\\begin{tabular}{|c|c|c|c|}
+\\hline
+   & total & muon & electron  \\\\
+\\hline \\hline
+electron ID SF & %0.2f & 0 &  %0.2f \\\\
+\\hline
+electron reconstruction SF & %0.2f & 0 & %0.2f \\\\
+\\hline
+muon ID SF & %0.2f & %0.2f & 0 \\\\
+\\hline
+muon isolation SF &  %0.2f & %0.2f & 0 \\\\
+\\hline
+photon ID SF & %0.2f & %0.2f & %0.2f \\\\
+\\hline
+PDF & %0.2f & %0.2f & %0.2f \\\\
+\\hline
+QCD Scale & %0.2f & %0.2f & %0.2f \\\\
+\\hline
+\\end{tabular}
+\\end{center}
+\\caption{Uncertainties on the acceptance times efficiency (in percent).}
+\\label{tab:wg_acc_eff_unc}
+\\end{table}
+"""%(
+100*err_on_acc_due_to_electron_id_sf/acc,
+100*err_on_acc_due_to_electron_id_sf_electron/acc_electron,
+100*err_on_acc_due_to_electron_reco_sf/acc,
+100*err_on_acc_due_to_electron_reco_sf_electron/acc_electron,
+100*err_on_acc_due_to_muon_id_sf/acc,
+100*err_on_acc_due_to_muon_id_sf_muon/acc_muon,
+100*err_on_acc_due_to_muon_iso_sf/acc,
+100*err_on_acc_due_to_muon_iso_sf_muon/acc_muon,
+100*err_on_acc_due_to_photon_id_sf/acc,
+100*err_on_acc_due_to_photon_id_sf_muon/acc_muon,
+100*err_on_acc_due_to_photon_id_sf_electron/acc_electron,
+100*err_on_acc_due_to_pdf/acc,
+100*err_on_acc_due_to_pdf_muon/acc_muon,
+100*err_on_acc_due_to_pdf_electron/acc_electron,
+100*err_on_acc_due_to_qcd_scale/acc,
+100*err_on_acc_due_to_qcd_scale_muon/acc_muon,
+100*err_on_acc_due_to_qcd_scale_electron/acc_electron,
+)
