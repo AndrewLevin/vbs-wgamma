@@ -17,7 +17,8 @@ from math import hypot, pi, sqrt
 
 from pprint import pprint
 
-from wg_photon_fake_event_weight import photon_fake_event_weight
+from wg_fake_photon_event_weight import fake_photon_event_weight
+from wg_fake_lepton_event_weight import fake_lepton_event_weight
 
 def deltaPhi(phi1,phi2):
     ## Catch if being called with two objects                                                                                                                        
@@ -388,61 +389,6 @@ ypositions = [0,1,2,3,0,1,2,3,0,1,2,3]
 
 style.GoodStyle().cd()
 
-muon_fr_file = ROOT.TFile("/afs/cern.ch/user/a/amlevin/wg/2016/muon_frs_data_subtract_wjets_zjets.root")
-electron_fr_file = ROOT.TFile("/afs/cern.ch/user/a/amlevin/wg/2016/electron_frs_data_subtract_wjets_zjets.root")
-
-muon_fr_hist=muon_fr_file.Get("muon_frs")
-electron_fr_hist=electron_fr_file.Get("electron_frs")
-
-def muonfakerate(eta,pt,syst):
-
-    myeta  = min(abs(eta),2.4999)
-    #mypt   = min(pt,69.999)
-    mypt   = min(pt,44.999)
-
-    etabin = muon_fr_hist.GetXaxis().FindFixBin(myeta)
-    ptbin = muon_fr_hist.GetYaxis().FindFixBin(mypt)
-
-    prob = muon_fr_hist.GetBinContent(etabin,ptbin)
-
-    if syst == "up":
-        prob+=muon_fr_hist.GetBinError(etabin,ptbin)
-    elif syst == "down":
-        prob-=muon_fr_hist.GetBinError(etabin,ptbin)
-    else:
-        if syst != "nominal":
-            sys.exit(0)
-
-    return prob/(1-prob)
-
-def electronfakerate(eta,pt,syst):
-    
-    myeta  = min(abs(eta),2.4999)
-    mypt   = min(pt,44.999)
-
-    etabin = electron_fr_hist.GetXaxis().FindFixBin(myeta)
-    ptbin = electron_fr_hist.GetYaxis().FindFixBin(mypt)
-
-    prob = electron_fr_hist.GetBinContent(etabin,ptbin)
-
-    if syst == "up":
-        prob+=electron_fr_hist.GetBinError(etabin,ptbin)
-    elif syst == "down":
-        prob-=electron_fr_hist.GetBinError(etabin,ptbin)
-    else:
-        if syst != "nominal":
-            sys.exit(0)
-            
-    return prob/(1-prob)
-
-def leptonfakerate(lepton_abs_pdg_id,eta,pt,syst):
-    if lepton_abs_pdg_id == 11:
-        return electronfakerate(eta,pt,syst)
-    elif lepton_abs_pdg_id == 13:
-        return muonfakerate(eta,pt,syst)
-    else:
-        assert(0)
-
 def set_axis_fonts(thstack, coordinate, title):
 
     if coordinate == "x":
@@ -635,9 +581,9 @@ def fillHistogramMC(label,sample):
         if pass_photon_gen_matching_for_fake and pass_is_lepton_real:
             if pass_selection(sample["tree"],options.phoeta,True,False):
 
-                weight =-leptonfakerate(sample["tree"].lepton_pdg_id,sample["tree"].lepton_eta, sample["tree"].lepton_pt,"nominal")* sample["xs"] * 1000 * 35.9 / sample["nweightedevents"]
-                weight_fake_lepton_stat_up =-leptonfakerate(sample["tree"].lepton_pdg_id,sample["tree"].lepton_eta, sample["tree"].lepton_pt,"up")* sample["xs"] * 1000 * 35.9 / sample["nweightedevents"]
-                weight_fake_lepton_stat_down =-leptonfakerate(sample["tree"].lepton_pdg_id,sample["tree"].lepton_eta, sample["tree"].lepton_pt,"down")* sample["xs"] * 1000 * 35.9 / sample["nweightedevents"]
+                weight =-fake_lepton_event_weight(sample["tree"].lepton_pdg_id,sample["tree"].lepton_eta, sample["tree"].lepton_pt,"nominal")* sample["xs"] * 1000 * 35.9 / sample["nweightedevents"]
+                weight_fake_lepton_stat_up =-fake_lepton_event_weight(sample["tree"].lepton_pdg_id,sample["tree"].lepton_eta, sample["tree"].lepton_pt,"up")* sample["xs"] * 1000 * 35.9 / sample["nweightedevents"]
+                weight_fake_lepton_stat_down =-fake_lepton_event_weight(sample["tree"].lepton_pdg_id,sample["tree"].lepton_eta, sample["tree"].lepton_pt,"down")* sample["xs"] * 1000 * 35.9 / sample["nweightedevents"]
 
                 if sample["tree"].gen_weight < 0:
                     weight = -weight
@@ -651,10 +597,10 @@ def fillHistogramMC(label,sample):
 
             if pass_selection(sample["tree"],options.phoeta,False,True):
 
-                weight = -photon_fake_event_weight(sample["tree"].photon_eta, sample["tree"].photon_pt,sample["tree"].lepton_pdg_id)* sample["xs"] * 1000 * 35.9 / sample["nweightedevents"]
-                weight_fake_photon_alt = -photon_fake_event_weight(sample["tree"].photon_eta, sample["tree"].photon_pt,sample["tree"].lepton_pdg_id, True)* sample["xs"] * 1000 * 35.9 / sample["nweightedevents"]
+                weight = -fake_photon_event_weight(sample["tree"].photon_eta, sample["tree"].photon_pt,sample["tree"].lepton_pdg_id)* sample["xs"] * 1000 * 35.9 / sample["nweightedevents"]
+                weight_fake_photon_alt = -fake_photon_event_weight(sample["tree"].photon_eta, sample["tree"].photon_pt,sample["tree"].lepton_pdg_id, True)* sample["xs"] * 1000 * 35.9 / sample["nweightedevents"]
 
-                weight_fake_photon_stat_up = -photon_fake_event_weight(sample["tree"].photon_eta, sample["tree"].photon_pt,sample["tree"].lepton_pdg_id, False,True)* sample["xs"] * 1000 * 35.9 / sample["nweightedevents"]
+                weight_fake_photon_stat_up = -fake_photon_event_weight(sample["tree"].photon_eta, sample["tree"].photon_pt,sample["tree"].lepton_pdg_id, False,True)* sample["xs"] * 1000 * 35.9 / sample["nweightedevents"]
 
                 if sample["tree"].gen_weight < 0:
                     weight = -weight
@@ -1003,9 +949,9 @@ for i in range(data_events_tree.GetEntries()):
 
     if pass_selection(data_events_tree,options.phoeta,True,False):
 
-        weight = leptonfakerate(data_events_tree.lepton_pdg_id,data_events_tree.lepton_eta, data_events_tree.lepton_pt,"nominal")
-        weight_fake_lepton_stat_up = leptonfakerate(data_events_tree.lepton_pdg_id,data_events_tree.lepton_eta, data_events_tree.lepton_pt,"up")
-        weight_fake_lepton_stat_down = leptonfakerate(data_events_tree.lepton_pdg_id,data_events_tree.lepton_eta, data_events_tree.lepton_pt,"down")
+        weight = fake_lepton_event_weight(data_events_tree.lepton_pdg_id,data_events_tree.lepton_eta, data_events_tree.lepton_pt,"nominal")
+        weight_fake_lepton_stat_up = fake_lepton_event_weight(data_events_tree.lepton_pdg_id,data_events_tree.lepton_eta, data_events_tree.lepton_pt,"up")
+        weight_fake_lepton_stat_down = fake_lepton_event_weight(data_events_tree.lepton_pdg_id,data_events_tree.lepton_eta, data_events_tree.lepton_pt,"down")
 
         for j in range(len(variables)):
             fillHistogram(fake_lepton["hists"][j],getVariable(variables[j],data_events_tree),weight)
@@ -1014,9 +960,9 @@ for i in range(data_events_tree.GetEntries()):
 
     if pass_selection(data_events_tree,options.phoeta,False,True):
 
-        weight = photon_fake_event_weight(data_events_tree.photon_eta, data_events_tree.photon_pt,data_events_tree.lepton_pdg_id )
-        weight_fake_photon_alt = photon_fake_event_weight(data_events_tree.photon_eta, data_events_tree.photon_pt,data_events_tree.lepton_pdg_id, True)
-        weight_fake_photon_stat_up = photon_fake_event_weight(data_events_tree.photon_eta, data_events_tree.photon_pt,data_events_tree.lepton_pdg_id, False, True)
+        weight = fake_photon_event_weight(data_events_tree.photon_eta, data_events_tree.photon_pt,data_events_tree.lepton_pdg_id )
+        weight_fake_photon_alt = fake_photon_event_weight(data_events_tree.photon_eta, data_events_tree.photon_pt,data_events_tree.lepton_pdg_id, True)
+        weight_fake_photon_stat_up = fake_photon_event_weight(data_events_tree.photon_eta, data_events_tree.photon_pt,data_events_tree.lepton_pdg_id, False, True)
 
         for j in range(len(variables)):
             fillHistogram(fake_photon["hists"][j],getVariable(variables[j],data_events_tree),weight)
@@ -1024,9 +970,9 @@ for i in range(data_events_tree.GetEntries()):
             fillHistogram(fake_photon_stat_up["hists"][j],getVariable(variables[j],data_events_tree),weight_fake_photon_stat_up)
     if pass_selection(data_events_tree,options.phoeta,True,True):
 
-        weight = leptonfakerate(data_events_tree.lepton_pdg_id,data_events_tree.lepton_eta, data_events_tree.lepton_pt,"nominal")*photon_fake_event_weight(data_events_tree.photon_eta, data_events_tree.photon_pt,data_events_tree.lepton_pdg_id)
-        weight_fake_photon_alt = leptonfakerate(data_events_tree.lepton_pdg_id,data_events_tree.lepton_eta, data_events_tree.lepton_pt,"nominal")*photon_fake_event_weight(data_events_tree.photon_eta, data_events_tree.photon_pt,data_events_tree.lepton_pdg_id, True)
-        weight_fake_photon_stat_up = leptonfakerate(data_events_tree.lepton_pdg_id,data_events_tree.lepton_eta, data_events_tree.lepton_pt,"nominal")*photon_fake_event_weight(data_events_tree.photon_eta, data_events_tree.photon_pt,data_events_tree.lepton_pdg_id, False,True)
+        weight = fake_lepton_event_weight(data_events_tree.lepton_pdg_id,data_events_tree.lepton_eta, data_events_tree.lepton_pt,"nominal")*fake_photon_event_weight(data_events_tree.photon_eta, data_events_tree.photon_pt,data_events_tree.lepton_pdg_id)
+        weight_fake_photon_alt = fake_lepton_event_weight(data_events_tree.lepton_pdg_id,data_events_tree.lepton_eta, data_events_tree.lepton_pt,"nominal")*fake_photon_event_weight(data_events_tree.photon_eta, data_events_tree.photon_pt,data_events_tree.lepton_pdg_id, True)
+        weight_fake_photon_stat_up = fake_lepton_event_weight(data_events_tree.lepton_pdg_id,data_events_tree.lepton_eta, data_events_tree.lepton_pt,"nominal")*fake_photon_event_weight(data_events_tree.photon_eta, data_events_tree.photon_pt,data_events_tree.lepton_pdg_id, False,True)
 
         for j in range(len(variables)):
             fillHistogram(double_fake["hists"][j],getVariable(variables[j],data_events_tree),weight)
