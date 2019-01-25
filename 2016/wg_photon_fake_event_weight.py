@@ -96,7 +96,7 @@ def photon_fake_event_weight(eta,pt,lepton_pdg_id,use_alt=False,stat_err_up = Fa
             else:
                 fr = fake_photon_event_weights_electron_endcap_syst_hist.GetBinContent(fake_photon_event_weights_electron_endcap_syst_hist.GetXaxis().FindFixBin(mypt))
                 if stat_err_up:
-                    fr += fake_photon_event_weights_electron_endcap_syst_hist.GetBinContent(fake_photon_event_weights_electron_endcap_syst_hist.GetXaxis().FindFixBin(mypt))
+                    fr += fake_photon_event_weights_electron_endcap_syst_hist.GetBinError(fake_photon_event_weights_electron_endcap_syst_hist.GetXaxis().FindFixBin(mypt))
             return fr
 
         else:
