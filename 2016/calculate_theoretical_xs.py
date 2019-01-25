@@ -14,6 +14,10 @@ matrix_lo_xs=3*(matrix_lo_xs_eplus+matrix_lo_xs_eminus)
 matrix_nlo_xs=3*(matrix_nlo_xs_eplus+matrix_nlo_xs_eminus)
 matrix_nnlo_xs=3*(matrix_nnlo_xs_eplus+matrix_nnlo_xs_eminus)
 
+print "matrix_lo_xs = " + str(matrix_lo_xs)
+print "matrix_nlo_xs = " + str(matrix_nlo_xs)
+print "matrix_nnlo_xs = " + str(matrix_nnlo_xs)
+
 mg5amc_wgjets_filename = "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjets.root"
 
 mg5amc_wgjets_file =  ROOT.TFile(mg5amc_wgjets_filename)
@@ -32,3 +36,38 @@ fiducial_nnlo_xs = matrix_nnlo_xs*lhe_to_gen_efficiency
 print "fiducial_lo_xs = "+str(fiducial_lo_xs/1000.) + " pb"
 print "fiducial_nlo_xs = "+str(fiducial_nlo_xs/1000.)+ " pb"
 print "fiducial_nnlo_xs = "+str(fiducial_nnlo_xs/1000.)+ " pb"
+
+matrix_nnlo_xs_eplus_scale_up=3.0 #in percent  
+matrix_nnlo_xs_eplus_scale_down=2.8 #in percent
+
+matrix_nnlo_xs_eminus_scale_up = 4.0 #in percent
+matrix_nnlo_xs_eminus_scale_down = 3.5 #in percent
+
+matrix_nnlo_xs_eplus_rcut_extrapolation_unc = 2.2*pow(10,3) #in fb
+matrix_nnlo_xs_eminus_rcut_extrapolation_unc = 1.9*pow(10,3) #in fb
+
+from math import sqrt
+
+matrix_nnlo_xs_err_due_to_rcut_extrapolation = 3*sqrt(pow(matrix_nnlo_xs_eplus_rcut_extrapolation_unc,2) + pow(matrix_nnlo_xs_eminus_rcut_extrapolation_unc,2) )
+
+matrix_nnlo_xs_err_due_to_scale_up = 3*sqrt(pow(matrix_nnlo_xs_eplus*matrix_nnlo_xs_eplus_scale_up/100,2) + pow(matrix_nnlo_xs_eminus*matrix_nnlo_xs_eminus_scale_up/100,2))
+
+matrix_nnlo_xs_err_due_to_scale_down = 3*sqrt(pow(matrix_nnlo_xs_eplus*matrix_nnlo_xs_eplus_scale_down/100,2) + pow(matrix_nnlo_xs_eminus*matrix_nnlo_xs_eminus_scale_down/100,2) )
+
+print "xs: \\sigma = %.2f \pm %.2f \\text{ (rcut)} \pm ^{%.2f}_{%.2f} \\text{ (scale) pb}"%(matrix_nnlo_xs/1000.,matrix_nnlo_xs_err_due_to_rcut_extrapolation/1000,matrix_nnlo_xs_err_due_to_scale_up/1000.,matrix_nnlo_xs_err_due_to_scale_down/1000.)
+
+pdf_unc_from_mg5aMC_sample = 1.51454829623 #in percent
+
+fiducial_nnlo_xs_err_due_to_scale_up = matrix_nnlo_xs_err_due_to_scale_up*lhe_to_gen_efficiency
+
+fiducial_nnlo_xs_err_due_to_scale_down = matrix_nnlo_xs_err_due_to_scale_down*lhe_to_gen_efficiency
+
+print "fiducial_nnlo_xs_err_due_to_scale_up = " + str(fiducial_nnlo_xs_err_due_to_scale_up)
+
+print "fiducial_nnlo_xs_err_due_to_scale_down = " + str(fiducial_nnlo_xs_err_due_to_scale_down)
+
+fiducial_nnlo_xs_err_due_to_rcut_extrapolation = matrix_nnlo_xs_err_due_to_rcut_extrapolation*lhe_to_gen_efficiency
+
+print "fiducial_nnlo_xs_err_due_to_rcut_extrapolation = "+ str(fiducial_nnlo_xs_err_due_to_rcut_extrapolation)
+
+print "xs: \\sigma = %.2f \pm %.2f \\text{ (rcut)} \pm ^{%.2f}_{%.2f} \\text{ (scale)} \pm %.2f \\text{ (PDF) pb}"%(fiducial_nnlo_xs/1000.,fiducial_nnlo_xs_err_due_to_rcut_extrapolation/1000,fiducial_nnlo_xs_err_due_to_scale_up/1000.,fiducial_nnlo_xs_err_due_to_scale_down/1000.,pdf_unc_from_mg5aMC_sample*fiducial_nnlo_xs/100./1000.)

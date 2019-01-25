@@ -216,9 +216,9 @@ err_on_acc_muon = math.sqrt(pow(err_on_acc_due_to_qcd_scale_muon,2)+pow(err_on_a
 
 err_on_acc_electron = math.sqrt(pow(err_on_acc_due_to_qcd_scale_electron,2)+pow(err_on_acc_due_to_pdf_electron,2)+pow(err_on_acc_due_to_electron_id_sf_electron,2) + pow(err_on_acc_due_to_electron_reco_sf_electron,2)+pow(err_on_acc_due_to_photon_id_sf_electron,2))
 
-print "acc = "+ str(acc) + " +/- " + str(err_on_acc) 
-print "acc_muon = "+ str(acc_muon) + " +/- " + str(err_on_acc_muon) 
-print "acc_electron = "+ str(acc_electron) + " +/- " + str(err_on_acc_electron) 
+print "acc = %.6f \pm %.6f "%(acc,err_on_acc)
+print "acc_muon = %.6f \pm %.6f "%(acc_muon,err_on_acc_muon)
+print "acc_electron = %.6f \pm %.6f "%(acc_electron,err_on_acc_electron)
 
 print "xs = " +str(xs) + " +/- " + str(stat_err) + " (stat) +/- " + str(syst_err) + " (syst) +/- " + str(lumi_err) + " (lumi)"
 

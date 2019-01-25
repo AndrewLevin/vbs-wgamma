@@ -180,4 +180,8 @@ print "efficiency of fiducal region cuts = " + str(n_weighted_pass_fiducial.GetB
 
 print "nlo xs = " + str(nlo_xs) + " +/- " + str(scale_unc) + " (scale) +/- " + str(pdf_unc) + " (pdf)" 
 
-print "pass fiducial nlo xs = " + str(pass_fiducial_nlo_xs) + " +/- " + str(scale_pass_fiducial_sunc) + " (scale) +/- " + str(pdf_pass_fiducial_unc) + " (pdf)" 
+print "pass fiducial nlo xs = " + str(pass_fiducial_nlo_xs) + " +/- " + str(scale_pass_fiducial_unc) + " (scale) +/- " + str(pdf_pass_fiducial_unc) + " (pdf)" 
+
+print "100*scale_pass_fiducial_unc/pass_fiducial_nlo_xs = "+str(100*scale_pass_fiducial_unc/pass_fiducial_nlo_xs)
+
+print "100*pdf_pass_fiducial_unc/pass_fiducial_nlo_xs = "+str(100*pdf_pass_fiducial_unc/pass_fiducial_nlo_xs)
