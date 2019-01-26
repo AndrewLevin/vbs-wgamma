@@ -69,7 +69,7 @@ for i in range(fake_photon_event_weights_electron_endcap_hist.GetNbinsX()):
     fake_photon_event_weights_electron_endcap_hist.SetBinError(i+1,fake_photon_event_weights_electron_endcap_stat_err[i])
     fake_photon_event_weights_electron_endcap_syst_hist.SetBinContent(i+1,fake_photon_event_weights_electron_endcap_syst[i])
 
-def photon_fake_event_weight(eta,pt,lepton_pdg_id,use_alt=False,stat_err_up = False):
+def fake_photon_event_weight(eta,pt,lepton_pdg_id,use_alt=False,stat_err_up = False):
 
     if abs(lepton_pdg_id) == 11:
         if abs(eta) < 1.4442:
