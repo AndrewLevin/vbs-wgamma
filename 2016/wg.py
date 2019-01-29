@@ -98,7 +98,129 @@ f_pu_weights = ROOT.TFile("/afs/cern.ch/user/a/amlevin/PileupWeights2016.root")
 
 pu_weight_hist = f_pu_weights.Get("ratio")
 
-labels = { "tt2l2nu+jets" : {"syst-pdf" : False, "syst-scale" : False, "color" : ROOT.kRed, "samples" : [{'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/2016/tt2l2nujets.root', 'xs' : 88.28, "non_fsr" : False , "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True } ] }, "ttsemi+jets" : {"syst-pdf" : False, "syst-scale" : False, "color" : ROOT.kSpring, "samples" : [{'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/2016/ttsemijets.root', 'xs' : 365.4, "non_fsr" : False , "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True } ] }, "wg+jets" : {"syst-pdf": True, "syst-scale": True, "color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjets.root", "xs" : 178.6, "non_fsr" : True , "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True } ] }, "zg+jets" : {"syst-pdf" : False, "syst-scale" : False, "color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/2016/zglowmlljets.root", "xs" : 96.75, "non_fsr" : True , "e_to_p" : False, "fsr" : True, "e_to_p_for_fake" : True } ] }, "no label" : {"syst-pdf" : False, "syst-scale" : False, "color" : None, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/2016/zjets.root", "xs" : 4963.0, "non_fsr" : False , "e_to_p" : False, "fsr" : False, "e_to_p_for_fake" : True }] }, "ttg+jets" : {"syst-pdf" : False, "syst-scale" : False,  "color" : ROOT.kGreen+2, "samples" : [ {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/ttgjets.root", "xs" : 3.795, "non_fsr" : True , "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True } ] } }
+labels = { 
+    "ttw+jets" : {
+        "syst-pdf" : False, 
+        "syst-scale" : False, 
+        "color" : ROOT.kOrange+3, 
+        "samples" : [
+            { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/ttwjets.root", "xs" : 0.2001, "non_fsr" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True }
+            ]
+        },
+    "ww+jets" : {
+        "syst-pdf" : False, 
+        "syst-scale" : False, 
+        "color" : ROOT.kOrange+3, 
+        "samples" : [
+            { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wwjets.root", "xs" : 64.3, "non_fsr" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True }
+            ]
+        },
+    "wz+jets" : {
+        "syst-pdf" : False, 
+        "syst-scale" : False, 
+        "color" : ROOT.kOrange+3, 
+        "samples" : [
+            { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wzjets.root", "xs" : 23.43, "non_fsr" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True }
+            ]
+        },
+    "zz+jets" : {
+        "syst-pdf" : False, 
+        "syst-scale" : False, 
+        "color" : ROOT.kOrange+3, 
+        "samples" : [
+            { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/zzjets.root", "xs" : 10.16, "non_fsr" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True }
+            ]
+        },
+    "stschannel+jets" : {
+        "syst-pdf" : False, 
+        "syst-scale" : False, 
+        "color" : ROOT.kOrange+3, 
+        "samples" : [
+            { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/stschanneljets.root", "xs" : 6.35, "non_fsr" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True }
+            ]
+        },
+    "sttchanneltop+jets" : {
+        "syst-pdf" : False, 
+        "syst-scale" : False, 
+        "color" : ROOT.kOrange+3, 
+        "samples" : [
+            { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/sttchanneltopjets.root", "xs" : 136.02, "non_fsr" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True }
+            ]
+        },
+    "sttchannelantitop+jets" : {
+        "syst-pdf" : False, 
+        "syst-scale" : False, 
+        "color" : ROOT.kOrange+3, 
+        "samples" : [
+            { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/sttchannelantitopjets.root", "xs" : 80.95, "non_fsr" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True }
+            ]
+        },
+    "sttwtop+jets" : {
+        "syst-pdf" : False, 
+        "syst-scale" : False, 
+        "color" : ROOT.kOrange+3, 
+        "samples" : [
+            { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/sttwtopjets.root", "xs" : 71.7/2, "non_fsr" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True }
+            ]
+        },
+    "sttwantitop+jets" : {
+        "syst-pdf" : False, 
+        "syst-scale" : False, 
+        "color" : ROOT.kOrange+3, 
+        "samples" : [
+            { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/sttwantitopjets.root", "xs" : 71.7/2, "non_fsr" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True }
+            ]
+        },
+
+    "tt2l2nu+jets" : {
+        "syst-pdf" : False, 
+        "syst-scale" : False, 
+        "color" : ROOT.kRed, 
+        "samples" : [
+            { 'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/2016/tt2l2nujets.root', 'xs' : 88.28, "non_fsr" : False, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True } 
+            ]
+     }, 
+    "ttsemi+jets" : {
+        "syst-pdf" : False, 
+        "syst-scale" : False, 
+        "color" : ROOT.kSpring, 
+        "samples" : [
+            {'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/2016/ttsemijets.root', 'xs' : 365.4, "non_fsr" : False, "e_to_p" : True, "fsr" : True,  "e_to_p_for_fake" : True } 
+            ] 
+        }, 
+    "wg+jets" : {
+        "syst-pdf": True, 
+        "syst-scale": True, 
+        "color": ROOT.kCyan, 
+        "samples" : [
+            {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjets.root", "xs" : 178.6, "non_fsr" : True, "e_to_p" : True,"fsr" : True, "e_to_p_for_fake" : True} 
+            ] 
+        }, 
+    "zg+jets" : {
+        "syst-pdf" : False, 
+        "syst-scale" : False, 
+        "color" : ROOT.kOrange, 
+        "samples" : [
+            {"filename": "/afs/cern.ch/work/a/amlevin/data/wg/2016/zglowmlljets.root", "xs" : 96.75, "non_fsr" : True, "e_to_p" : False, "fsr" : True, "e_to_p_for_fake" : True} 
+            ] 
+        }, 
+    "no label" : {
+        "syst-pdf" : False, 
+        "syst-scale" : False, 
+        "color" : None, 
+        "samples" : [
+            {"filename": "/afs/cern.ch/work/a/amlevin/data/wg/2016/zjets.root", "xs" : 4963.0, "non_fsr" : False, "e_to_p" : False, "fsr" : False, "e_to_p_for_fake" : True}
+            ] 
+        }, 
+    "ttg+jets" : {
+        "syst-pdf" : False, 
+        "syst-scale" : False,  
+        "color" : ROOT.kGreen+2, 
+        "samples" : [ 
+            {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/ttgjets.root", "xs" : 3.795, "non_fsr" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True} 
+            ] 
+        } 
+    }
 
 #labels = { "tt2l2nu+jets" : {"syst-pdf" : False, "syst-scale" : False, "color" : ROOT.kRed, "samples" : [{'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/2016/tt2l2nujets.root', 'xs' : 88.28, "non_fsr" : False , "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True } ] }, "ttsemi+jets" : {"syst-pdf" : False, "syst-scale" : False, "color" : ROOT.kSpring, "samples" : [{'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/2016/ttsemijets.root', 'xs' : 365.4, "non_fsr" : False , "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True } ] }, "wg+jets" : {"syst-pdf": True, "syst-scale": True, "color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjetsewdim6.root", "xs" : 178.6, "non_fsr" : True , "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True } ] }, "zg+jets" : {"syst-pdf" : False, "syst-scale" : False, "color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/2016/zglowmlljets.root", "xs" : 96.75, "non_fsr" : True , "e_to_p" : False, "fsr" : True, "e_to_p_for_fake" : True } ] }, "no label" : {"syst-pdf" : False, "syst-scale" : False, "color" : None, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/2016/zjets.root", "xs" : 4963.0, "non_fsr" : False , "e_to_p" : False, "fsr" : False, "e_to_p_for_fake" : True }] }, "ttg+jets" : {"syst-pdf" : False, "syst-scale" : False,  "color" : ROOT.kGreen+2, "samples" : [ {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/ttgjets.root", "xs" : 3.795, "non_fsr" : True , "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True } ] } }
 
@@ -382,10 +504,11 @@ yoffsetstart = 0.0;
 xoffset = 0.20;
 yoffset = 0.05;
 
-#xpositions = [0.60,0.60,0.60,0.60,0.60,0.60,0.40,0.40,0.40]
-xpositions = [0.68,0.68,0.68,0.68,0.445,0.445,0.445,0.445,0.21,0.21,0.21,0.21]
-#ypositions = [0,1,2,3,4,5,0,1,2]
-ypositions = [0,1,2,3,0,1,2,3,0,1,2,3]
+#xpositions = [0.68,0.68,0.68,0.68,0.445,0.445,0.445,0.445,0.21,0.21,0.21,0.21]
+#ypositions = [0,1,2,3,0,1,2,3,0,1,2,3]
+
+xpositions = [0.68,0.68,0.68,0.68,0.68,0.68,0.68,0.445,0.445,0.445,0.445,0.445,0.445,0.445,0.21,0.21,0.21,0.21,0.21,0.21,0.21]
+ypositions = [0,1,2,3,4,5,6,0,1,2,3,4,5,6,0,1,2,3,4,5,6]
 
 style.GoodStyle().cd()
 
@@ -1407,9 +1530,11 @@ for i in range(len(variables)):
 
 
     if data["hists"][i].GetMaximum() < hsum.GetMaximum():
-        data["hists"][i].SetMaximum(hsum.GetMaximum()*1.55)
+#        data["hists"][i].SetMaximum(hsum.GetMaximum()*1.55)
+        data["hists"][i].SetMaximum(hsum.GetMaximum()*2.55)
     else:
-        data["hists"][i].SetMaximum(data["hists"][i].GetMaximum()*1.55)
+#        data["hists"][i].SetMaximum(data["hists"][i].GetMaximum()*1.55)
+        data["hists"][i].SetMaximum(data["hists"][i].GetMaximum()*2.55)
         
 
     data["hists"][i].SetMinimum(0)
@@ -1467,10 +1592,16 @@ for i in range(len(variables)):
         if labels[label]["color"] == None:
             continue
         j=j+1    
-        draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,labels[label]["hists"][i],label,"f")
-    
-    j=j+1    
-    draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,ewdim6["hists"][i],"C_{WWW} = 2.0","l")
+#        draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,labels[label]["hists"][i],label,"f")
+        if len(labels[label]["hists"][i]) > 10:
+            print "Warning: truncating the legend label "+str(label) + " to "+str(label[0:10]) 
+            draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,labels[label]["hists"][i],label[0:10],"f")
+        else:    
+            draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,labels[label]["hists"][i],label,"f")
+
+    if options.draw_ewdim6:
+        j=j+1
+        draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,ewdim6["hists"][i],"C_{WWW} = 2.0","l")
 
 #set_axis_fonts(hstack,"x","m_{ll} (GeV)")
 #set_axis_fonts(hstack,"x","|\Delta \eta_{jj}|")
