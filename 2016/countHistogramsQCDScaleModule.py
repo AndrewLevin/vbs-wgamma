@@ -11,14 +11,14 @@ class countHistogramsQCDScaleProducer(Module):
     def endJob(self):
         pass
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
-        self.h_nweightedevents_qcdscaleweight0=ROOT.TH1F('nWeightedEvents_QCDScaleWeight0',   'nWeightedEvents_QCDScaleWeight0',   1, 0, 1)
-        self.h_nweightedevents_qcdscaleweight1=ROOT.TH1F('nWeightedEvents_QCDScaleWeight1',   'nWeightedEvents_QCDScaleWeight1',   1, 0, 1)
-        self.h_nweightedevents_qcdscaleweight2=ROOT.TH1F('nWeightedEvents_QCDScaleWeight2',   'nWeightedEvents_QCDScaleWeight2',   1, 0, 1)
-        self.h_nweightedevents_qcdscaleweight3=ROOT.TH1F('nWeightedEvents_QCDScaleWeight3',   'nWeightedEvents_QCDScaleWeight3',   1, 0, 1)
-        self.h_nweightedevents_qcdscaleweight4=ROOT.TH1F('nWeightedEvents_QCDScaleWeight4',   'nWeightedEvents_QCDScaleWeight4',   1, 0, 1)
-        self.h_nweightedevents_qcdscaleweight5=ROOT.TH1F('nWeightedEvents_QCDScaleWeight5',   'nWeightedEvents_QCDScaleWeight5',   1, 0, 1)
-        self.h_nweightedevents_qcdscaleweight6=ROOT.TH1F('nWeightedEvents_QCDScaleWeight6',   'nWeightedEvents_QCDScaleWeight6',   1, 0, 1)
-        self.h_nweightedevents_qcdscaleweight7=ROOT.TH1F('nWeightedEvents_QCDScaleWeight7',   'nWeightedEvents_QCDScaleWeight7',   1, 0, 1)
+        self.h_nweightedevents_qcdscaleweight0=ROOT.TH1D('nWeightedEvents_QCDScaleWeight0',   'nWeightedEvents_QCDScaleWeight0',   1, 0, 1)
+        self.h_nweightedevents_qcdscaleweight1=ROOT.TH1D('nWeightedEvents_QCDScaleWeight1',   'nWeightedEvents_QCDScaleWeight1',   1, 0, 1)
+        self.h_nweightedevents_qcdscaleweight2=ROOT.TH1D('nWeightedEvents_QCDScaleWeight2',   'nWeightedEvents_QCDScaleWeight2',   1, 0, 1)
+        self.h_nweightedevents_qcdscaleweight3=ROOT.TH1D('nWeightedEvents_QCDScaleWeight3',   'nWeightedEvents_QCDScaleWeight3',   1, 0, 1)
+        self.h_nweightedevents_qcdscaleweight4=ROOT.TH1D('nWeightedEvents_QCDScaleWeight4',   'nWeightedEvents_QCDScaleWeight4',   1, 0, 1)
+        self.h_nweightedevents_qcdscaleweight5=ROOT.TH1D('nWeightedEvents_QCDScaleWeight5',   'nWeightedEvents_QCDScaleWeight5',   1, 0, 1)
+        self.h_nweightedevents_qcdscaleweight6=ROOT.TH1D('nWeightedEvents_QCDScaleWeight6',   'nWeightedEvents_QCDScaleWeight6',   1, 0, 1)
+        self.h_nweightedevents_qcdscaleweight7=ROOT.TH1D('nWeightedEvents_QCDScaleWeight7',   'nWeightedEvents_QCDScaleWeight7',   1, 0, 1)
 
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         prevdir = ROOT.gDirectory

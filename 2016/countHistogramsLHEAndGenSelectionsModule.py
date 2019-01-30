@@ -14,9 +14,9 @@ class countHistogramsLHEAndGenSelectionsProducer(Module):
     def endJob(self):
         pass
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
-        self.h_nweightedeventspassgenselection=ROOT.TH1F('nWeightedEventsPassGenSelection',   'nWeightedEventsPassGenSelection',   1, 0, 1)
-        self.h_nweightedeventspasslheselection=ROOT.TH1F('nWeightedEventsPassLHESelection',   'nWeightedEventsPassLHESelection',   1, 0, 1)
-        self.h_nweightedeventspasslheandgenselection=ROOT.TH1F('nWeightedEventsPassLHEAndGenSelection',   'nWeightedEventsPassLHEAndGenSelection',   1, 0, 1)
+        self.h_nweightedeventspassgenselection=ROOT.TH1D('nWeightedEventsPassGenSelection',   'nWeightedEventsPassGenSelection',   1, 0, 1)
+        self.h_nweightedeventspasslheselection=ROOT.TH1D('nWeightedEventsPassLHESelection',   'nWeightedEventsPassLHESelection',   1, 0, 1)
+        self.h_nweightedeventspasslheandgenselection=ROOT.TH1D('nWeightedEventsPassLHEAndGenSelection',   'nWeightedEventsPassLHEAndGenSelection',   1, 0, 1)
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         prevdir = ROOT.gDirectory
         outputFile.cd()
@@ -64,35 +64,33 @@ class countHistogramsLHEAndGenSelectionsProducer(Module):
                     lhe_lepton_index=i
                     n_lhe_leptons+=1
 
-            assert(n_lhe_leptons == 1 and n_lhe_photons == 1)  
+            #n_lhe_photons may be 0 for POWHEG        
+            assert((n_lhe_leptons == 1 and n_lhe_photons == 1) or (n_lhe_leptons == 1 and n_lhe_photons == 0))  
 
-            if deltaR(lheparts[lhe_lepton_index].eta,lheparts[lhe_lepton_index].phi,lheparts[lhe_photon_index].eta,lheparts[lhe_photon_index].phi) > 0.1 and lheparts[lhe_lepton_index].pt > 15 and lheparts[lhe_photon_index].pt > 15 and abs(lheparts[lhe_photon_index].eta) < 2.6:
-                pass_lhe_selection = True
-            else:
-                pass_lhe_selection = False
 
-            if pass_lhe_selection:    
-                if event.Generator_weight > 0:
-                    self.h_nweightedeventspasslheselection.Fill(0.5)
+            if n_lhe_leptons == 1 and n_lhe_photons == 1:
+                if deltaR(lheparts[lhe_lepton_index].eta,lheparts[lhe_lepton_index].phi,lheparts[lhe_photon_index].eta,lheparts[lhe_photon_index].phi) > 0.1 and lheparts[lhe_lepton_index].pt > 15 and lheparts[lhe_photon_index].pt > 15 and abs(lheparts[lhe_photon_index].eta) < 2.6:
+                    pass_lhe_selection = True
                 else:
-                    self.h_nweightedeventspasslheselection.Fill(0.5,-1)
+                    pass_lhe_selection = False
 
-            if pass_gen_selection:    
-                if event.Generator_weight > 0:
-                    self.h_nweightedeventspassgenselection.Fill(0.5)
-                else:
-                    self.h_nweightedeventspassgenselection.Fill(0.5,-1)
+                if pass_lhe_selection:    
+                    if event.Generator_weight > 0:
+                        self.h_nweightedeventspasslheselection.Fill(0.5)
+                    else:
+                        self.h_nweightedeventspasslheselection.Fill(0.5,-1)
+
+                if pass_gen_selection:    
+                    if event.Generator_weight > 0:
+                        self.h_nweightedeventspassgenselection.Fill(0.5)
+                    else:
+                        self.h_nweightedeventspassgenselection.Fill(0.5,-1)
                 
-            if pass_lhe_selection and pass_gen_selection:        
-                if event.Generator_weight > 0:
-                    self.h_nweightedeventspasslheandgenselection.Fill(0.5)
-                else:
-                    self.h_nweightedeventspasslheandgenselection.Fill(0.5,-1)
-
-        else:
-            pass
-
-
+                if pass_lhe_selection and pass_gen_selection:        
+                    if event.Generator_weight > 0:
+                        self.h_nweightedeventspasslheandgenselection.Fill(0.5)
+                    else:
+                        self.h_nweightedeventspasslheandgenselection.Fill(0.5,-1)
 
         return True
 
