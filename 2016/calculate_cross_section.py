@@ -77,27 +77,27 @@ stat_err_muon = (n_signal_muon+n_signal_stat_unc_muon)/(n_weighted_selected_data
 
 syst_err_acc = n_signal/((n_weighted_selected_data_mc_sf - n_weighted_selected_data_mc_sf_syst_unc)*35.9*1000/n_weighted_run_over/fiducial_region_cuts_efficiency) - xs
 
-syst_err_acc_muon = n_signal_muon/((n_weighted_selected_data_mc_sf_muon - n_weighted_selected_data_mc_sf_syst_unc_muon)*35.9*1000/n_weighted_run_over/fiducial_region_cuts_efficiency) - xs
+syst_err_acc_muon = n_signal_muon/((n_weighted_selected_data_mc_sf_muon - n_weighted_selected_data_mc_sf_syst_unc_muon)*35.9*1000/n_weighted_run_over/fiducial_region_cuts_efficiency) - xs_muon
 
-syst_err_acc_electron = n_signal_electron/((n_weighted_selected_data_mc_sf_electron - n_weighted_selected_data_mc_sf_syst_unc_electron)*35.9*1000/n_weighted_run_over/fiducial_region_cuts_efficiency) - xs
+syst_err_acc_electron = n_signal_electron/((n_weighted_selected_data_mc_sf_electron - n_weighted_selected_data_mc_sf_syst_unc_electron)*35.9*1000/n_weighted_run_over/fiducial_region_cuts_efficiency) - xs_electron
 
 syst_err_n_signal_fake_photon = (n_signal+n_signal_syst_unc_due_to_fake_photon)/(n_weighted_selected_data_mc_sf*35.9*1000/n_weighted_run_over/fiducial_region_cuts_efficiency) - xs
 
-syst_err_n_signal_muon_fake_photon = (n_signal_muon+n_signal_syst_unc_due_to_fake_photon_muon)/(n_weighted_selected_data_mc_sf_muon*35.9*1000/n_weighted_run_over/fiducial_region_cuts_efficiency) - xs
+syst_err_n_signal_fake_photon_muon = (n_signal_muon+n_signal_syst_unc_due_to_fake_photon_muon)/(n_weighted_selected_data_mc_sf_muon*35.9*1000/n_weighted_run_over/fiducial_region_cuts_efficiency) - xs_muon
 
-syst_err_n_signal_electron_fake_photon = (n_signal_electron+n_signal_syst_unc_due_to_fake_photon_electron)/(n_weighted_selected_data_mc_sf_electron*35.9*1000/n_weighted_run_over/fiducial_region_cuts_efficiency) - xs
+syst_err_n_signal_fake_photon_electron = (n_signal_electron+n_signal_syst_unc_due_to_fake_photon_electron)/(n_weighted_selected_data_mc_sf_electron*35.9*1000/n_weighted_run_over/fiducial_region_cuts_efficiency) - xs_electron
 
 syst_err_n_signal_fake_lepton = (n_signal+n_signal_syst_unc_due_to_fake_lepton)/(n_weighted_selected_data_mc_sf*35.9*1000/n_weighted_run_over/fiducial_region_cuts_efficiency) - xs
 
-syst_err_n_signal_muon_fake_lepton = (n_signal_muon+n_signal_syst_unc_due_to_fake_lepton_muon)/(n_weighted_selected_data_mc_sf_muon*35.9*1000/n_weighted_run_over/fiducial_region_cuts_efficiency) - xs
+syst_err_n_signal_fake_lepton_muon = (n_signal_muon+n_signal_syst_unc_due_to_fake_lepton_muon)/(n_weighted_selected_data_mc_sf_muon*35.9*1000/n_weighted_run_over/fiducial_region_cuts_efficiency) - xs_muon
 
-syst_err_n_signal_electron_fake_lepton = (n_signal_electron+n_signal_syst_unc_due_to_fake_lepton_electron)/(n_weighted_selected_data_mc_sf_electron*35.9*1000/n_weighted_run_over/fiducial_region_cuts_efficiency) - xs
+syst_err_n_signal_fake_lepton_electron = (n_signal_electron+n_signal_syst_unc_due_to_fake_lepton_electron)/(n_weighted_selected_data_mc_sf_electron*35.9*1000/n_weighted_run_over/fiducial_region_cuts_efficiency) - xs_electron
 
 syst_err = math.sqrt(pow(syst_err_n_signal_fake_photon,2)+pow(syst_err_n_signal_fake_lepton,2)+pow(syst_err_acc,2))
 
-syst_err_electron = math.sqrt(pow(syst_err_n_signal_electron_fake_photon,2)+pow(syst_err_n_signal_electron_fake_lepton,2)+pow(syst_err_acc_electron,2))
+syst_err_electron = math.sqrt(pow(syst_err_n_signal_fake_photon_electron,2)+pow(syst_err_n_signal_fake_lepton_electron,2)+pow(syst_err_acc_electron,2))
 
-syst_err_muon = math.sqrt(pow(syst_err_n_signal_muon_fake_photon,2)+pow(syst_err_n_signal_muon_fake_lepton,2)+pow(syst_err_acc_muon,2))
+syst_err_muon = math.sqrt(pow(syst_err_n_signal_fake_photon_muon,2)+pow(syst_err_n_signal_fake_lepton_muon,2)+pow(syst_err_acc_muon,2))
 
 acc = n_weighted_selected_data_mc_sf/n_weighted_run_over/fiducial_region_cuts_efficiency
 
@@ -228,52 +228,6 @@ print "xs = " +str(xs) + " +/- " + str(stat_err) + " (stat) +/- " + str(syst_err
 print "xs based on electron channel = " +str(xs_electron) + " +/- " + str(stat_err_electron) + " (stat) +/- " + str(syst_err_electron) + " (syst) +/- "  + str(lumi_err_electron) + " (lumi)"
 
 print "xs based on muon channel = " +str(xs_muon) + " +/- "+ str(stat_err_muon) + " (stat) +/- " + str(syst_err_muon) + " (syst) +/- "  + str(lumi_err_muon) + " (lumi)" 
-
-print "syst_err_n_signal_fake_photon = "+str(syst_err_n_signal_fake_photon)
-
-print "syst_err_n_signal_electron_fake_photon = "+str(syst_err_n_signal_electron_fake_photon)
-
-print "syst_err_n_signal_muon_fake_photon = "+str(syst_err_n_signal_muon_fake_photon)
-
-print "acc = "+str(acc)
-
-print "acc_muon = "+str(acc_muon)
-
-print "acc_electron = "+str(acc_electron)
-
-print "err_on_acc_due_to_pdf = " + str(err_on_acc_due_to_pdf)
-
-print "err_on_acc_due_to_pdf_muon = " + str(err_on_acc_due_to_pdf_muon)
-
-print "err_on_acc_due_to_pdf_electron = " + str(err_on_acc_due_to_pdf_electron)
-
-print "err_on_acc_due_to_qcd_scale = " + str(err_on_acc_due_to_qcd_scale)
-
-print "err_on_acc_due_to_qcd_scale_electron = " + str(err_on_acc_due_to_qcd_scale_electron)
-
-print "err_on_acc_due_to_qcd_scale_muon = " + str(err_on_acc_due_to_qcd_scale_muon)
-
-print "err_on_acc_due_to_photon_id_sf = "+ str(err_on_acc_due_to_photon_id_sf)
-
-print "err_on_acc_due_to_photon_id_sf_electron = "+ str(err_on_acc_due_to_photon_id_sf_electron)
-
-print "err_on_acc_due_to_photon_id_sf_muon = "+ str(err_on_acc_due_to_photon_id_sf_muon)
-
-print "err_on_acc_due_to_electron_reco_sf = " + str(err_on_acc_due_to_electron_reco_sf)
-
-print "err_on_acc_due_to_electron_reco_sf_electron = " + str(err_on_acc_due_to_electron_reco_sf_electron)
-
-print "err_on_acc_due_to_electron_id_sf = " + str(err_on_acc_due_to_electron_id_sf)
-
-print "err_on_acc_due_to_electron_id_sf_electron = " + str(err_on_acc_due_to_electron_id_sf_electron)
-
-print "err_on_acc_due_to_muon_id_sf = " + str(err_on_acc_due_to_muon_id_sf)
-
-print "err_on_acc_due_to_muon_id_sf_muon = " + str(err_on_acc_due_to_muon_id_sf_muon)
-
-print "err_on_acc_due_to_muon_iso_sf = " + str(err_on_acc_due_to_muon_iso_sf)
-
-print "err_on_acc_due_to_muon_iso_sf_muon = " + str(err_on_acc_due_to_muon_iso_sf_muon)
 
 print "xs: \\sigma = %.2f \pm %.2f \\text{ (stat)} \pm %.2f \\text{ (syst)} \pm %.2f \\text{ (lumi) pb}" % (xs,stat_err,syst_err,lumi_err)
 
