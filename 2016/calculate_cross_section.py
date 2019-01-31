@@ -1,7 +1,10 @@
 import json
 
-xs_inputs_muon = json.load(open("xs_inputs/xs_inputs_muon.txt"))
-xs_inputs_electron = json.load(open("xs_inputs/xs_inputs_electron.txt"))
+#xs_inputs_muon = json.load(open("xs_inputs/xs_inputs_muon.txt"))
+#xs_inputs_electron = json.load(open("xs_inputs/xs_inputs_electron.txt"))
+
+xs_inputs_muon = json.load(open("xs_inputs_muon.txt"))
+xs_inputs_electron = json.load(open("xs_inputs_electron.txt"))
 
 from pprint import pprint
 
@@ -22,8 +25,8 @@ n_weighted_selected_data_mc_sf_muon  =  xs_inputs_muon["n_weighted_selected_data
 n_weighted_selected_data_mc_sf_syst_unc_due_to_muon_id_sf_muon  =  xs_inputs_muon["n_weighted_selected_data_mc_sf_syst_unc_due_to_muon_id_sf_muon"]
 n_weighted_selected_data_mc_sf_syst_unc_due_to_muon_iso_sf_muon  =  xs_inputs_muon["n_weighted_selected_data_mc_sf_syst_unc_due_to_muon_iso_sf_muon"]
 n_weighted_selected_data_mc_sf_syst_unc_due_to_photon_id_sf_muon  =  xs_inputs_muon["n_weighted_selected_data_mc_sf_syst_unc_due_to_photon_id_sf_muon"]
-n_weighted_selected_data_mc_sf_syst_unc_due_to_pdf_muon  =  xs_inputs_muon["n_weighted_selected_data_mc_sf_syst_unc_due_to_pdf_muon"]
-n_weighted_selected_data_mc_sf_syst_unc_due_to_qcd_scale_muon  =  xs_inputs_muon["n_weighted_selected_data_mc_sf_syst_unc_due_to_qcd_scale_muon"]
+n_weighted_selected_data_mc_sf_syst_unc_due_to_pdf_muon  =  0
+n_weighted_selected_data_mc_sf_syst_unc_due_to_qcd_scale_muon  =  0
 
 n_signal_electron  =  xs_inputs_electron["n_signal_electron"]
 n_signal_syst_unc_due_to_fake_photon_electron  =  xs_inputs_electron["n_signal_syst_unc_due_to_fake_photon_electron"]
@@ -33,8 +36,8 @@ n_weighted_selected_data_mc_sf_electron  =  xs_inputs_electron["n_weighted_selec
 n_weighted_selected_data_mc_sf_syst_unc_due_to_electron_id_sf_electron  =  xs_inputs_electron["n_weighted_selected_data_mc_sf_syst_unc_due_to_electron_id_sf_electron"]
 n_weighted_selected_data_mc_sf_syst_unc_due_to_electron_reco_sf_electron  =  xs_inputs_electron["n_weighted_selected_data_mc_sf_syst_unc_due_to_electron_reco_sf_electron"]
 n_weighted_selected_data_mc_sf_syst_unc_due_to_photon_id_sf_electron =   xs_inputs_electron["n_weighted_selected_data_mc_sf_syst_unc_due_to_photon_id_sf_electron"]
-n_weighted_selected_data_mc_sf_syst_unc_due_to_pdf_electron  =  xs_inputs_electron["n_weighted_selected_data_mc_sf_syst_unc_due_to_pdf_electron"]
-n_weighted_selected_data_mc_sf_syst_unc_due_to_qcd_scale_electron  =  xs_inputs_electron["n_weighted_selected_data_mc_sf_syst_unc_due_to_qcd_scale_electron"]
+n_weighted_selected_data_mc_sf_syst_unc_due_to_pdf_electron  =  0
+n_weighted_selected_data_mc_sf_syst_unc_due_to_qcd_scale_electron  =  0
 
 import math
 
