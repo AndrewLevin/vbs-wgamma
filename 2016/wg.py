@@ -99,101 +99,42 @@ f_pu_weights = ROOT.TFile("/afs/cern.ch/user/a/amlevin/PileupWeights2016.root")
 pu_weight_hist = f_pu_weights.Get("ratio")
 
 labels = { 
-    "ttw+jets" : {
-        "syst-pdf" : False, 
-        "syst-scale" : False, 
-        "color" : ROOT.kOrange+3, 
-        "samples" : [
-            { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/ttwjets.root", "xs" : 0.2001, "non_fsr" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True }
-            ]
-        },
-    "ww+jets" : {
-        "syst-pdf" : False, 
-        "syst-scale" : False, 
-        "color" : ROOT.kOrange+3, 
-        "samples" : [
-            { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wwjets.root", "xs" : 64.3, "non_fsr" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True }
-            ]
-        },
-    "wz+jets" : {
-        "syst-pdf" : False, 
-        "syst-scale" : False, 
-        "color" : ROOT.kOrange+3, 
-        "samples" : [
-            { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wzjets.root", "xs" : 23.43, "non_fsr" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True }
-            ]
-        },
-    "zz+jets" : {
-        "syst-pdf" : False, 
-        "syst-scale" : False, 
-        "color" : ROOT.kOrange+3, 
-        "samples" : [
-            { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/zzjets.root", "xs" : 10.16, "non_fsr" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True }
-            ]
-        },
-    "stschannel+jets" : {
-        "syst-pdf" : False, 
-        "syst-scale" : False, 
-        "color" : ROOT.kOrange+3, 
-        "samples" : [
-            { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/stschanneljets.root", "xs" : 6.35, "non_fsr" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True }
-            ]
-        },
-    "sttchanneltop+jets" : {
-        "syst-pdf" : False, 
-        "syst-scale" : False, 
-        "color" : ROOT.kOrange+3, 
-        "samples" : [
-            { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/sttchanneltopjets.root", "xs" : 136.02, "non_fsr" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True }
-            ]
-        },
-    "sttchannelantitop+jets" : {
-        "syst-pdf" : False, 
-        "syst-scale" : False, 
-        "color" : ROOT.kOrange+3, 
-        "samples" : [
-            { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/sttchannelantitopjets.root", "xs" : 80.95, "non_fsr" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True }
-            ]
-        },
-    "sttwtop+jets" : {
-        "syst-pdf" : False, 
-        "syst-scale" : False, 
-        "color" : ROOT.kOrange+3, 
-        "samples" : [
-            { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/sttwtopjets.root", "xs" : 71.7/2, "non_fsr" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True }
-            ]
-        },
-    "sttwantitop+jets" : {
-        "syst-pdf" : False, 
-        "syst-scale" : False, 
-        "color" : ROOT.kOrange+3, 
-        "samples" : [
-            { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/sttwantitopjets.root", "xs" : 71.7/2, "non_fsr" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True }
-            ]
-        },
-
-    "tt2l2nu+jets" : {
+    "top+jets" : {
         "syst-pdf" : False, 
         "syst-scale" : False, 
         "color" : ROOT.kRed, 
         "samples" : [
-            { 'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/2016/tt2l2nujets.root', 'xs' : 88.28, "non_fsr" : False, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True } 
+            { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/ttwjets.root", "xs" : 0.2001, "non_fsr" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True},
+            { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/stschanneljets.root", "xs" : 6.35, "non_fsr" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True},
+            { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/sttchanneltopjets.root", "xs" : 136.02, "non_fsr" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True},             { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/sttchannelantitopjets.root", "xs" : 80.95, "non_fsr" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True },           
+            { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/sttwtopjets.root", "xs" : 71.7/2, "non_fsr" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True },
+            { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/sttwantitopjets.root", "xs" : 71.7/2, "non_fsr" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True },
+            { "filename":  '/afs/cern.ch/work/a/amlevin/data/wg/2016/ttsemijets.root', 'xs' : 365.4, "non_fsr" : False, "e_to_p" : True, "fsr" : True,  "e_to_p_for_fake" : True },
+            { "filename":  '/afs/cern.ch/work/a/amlevin/data/wg/2016/tt2l2nujets.root', 'xs' : 88.28, "non_fsr" : False, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True },
+            {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/ttgjets.root", "xs" : 3.795, "non_fsr" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True} 
+  
             ]
-     }, 
-    "ttsemi+jets" : {
+        },
+    "vv+jets" : {
         "syst-pdf" : False, 
         "syst-scale" : False, 
         "color" : ROOT.kSpring, 
         "samples" : [
-            {'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/2016/ttsemijets.root', 'xs' : 365.4, "non_fsr" : False, "e_to_p" : True, "fsr" : True,  "e_to_p_for_fake" : True } 
-            ] 
-        }, 
+            { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wwjets.root", "xs" : 64.3, "non_fsr" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True },
+            { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wzjets.root", "xs" : 23.43, "non_fsr" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True },
+            { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/zzjets.root", "xs" : 10.16, "non_fsr" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True }
+            ]
+        },
+
     "wg+jets" : {
         "syst-pdf": True, 
         "syst-scale": True, 
+#        "syst-pdf": False, 
+#        "syst-scale": False, 
         "color": ROOT.kCyan, 
         "samples" : [
             {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjets.root", "xs" : 178.6, "non_fsr" : True, "e_to_p" : True,"fsr" : True, "e_to_p_for_fake" : True} 
+#            {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/powhegwplusg.root", "xs" : 33420., "non_fsr" : True, "e_to_p" : True,"fsr" : True, "e_to_p_for_fake" : True} 
             ] 
         }, 
     "zg+jets" : {
@@ -212,15 +153,131 @@ labels = {
             {"filename": "/afs/cern.ch/work/a/amlevin/data/wg/2016/zjets.root", "xs" : 4963.0, "non_fsr" : False, "e_to_p" : False, "fsr" : False, "e_to_p_for_fake" : True}
             ] 
         }, 
-    "ttg+jets" : {
-        "syst-pdf" : False, 
-        "syst-scale" : False,  
-        "color" : ROOT.kGreen+2, 
-        "samples" : [ 
-            {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/ttgjets.root", "xs" : 3.795, "non_fsr" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True} 
-            ] 
-        } 
     }
+
+#labels = { 
+#    "ttw+jets" : {
+#        "syst-pdf" : False, 
+#        "syst-scale" : False, 
+#        "color" : ROOT.kOrange+3, 
+#        "samples" : [
+#            { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/ttwjets.root", "xs" : 0.2001, "non_fsr" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True }
+#            ]
+#        },
+#    "ww+jets" : {
+#        "syst-pdf" : False, 
+#        "syst-scale" : False, 
+#        "color" : ROOT.kOrange+3, 
+#        "samples" : [
+#            { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wwjets.root", "xs" : 64.3, "non_fsr" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True }
+#            ]
+#        },
+#    "wz+jets" : {
+#        "syst-pdf" : False, 
+#        "syst-scale" : False, 
+#        "color" : ROOT.kOrange+3, 
+#        "samples" : [
+#            { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wzjets.root", "xs" : 23.43, "non_fsr" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True }
+#            ]
+#        },
+#    "zz+jets" : {
+#        "syst-pdf" : False, 
+#        "syst-scale" : False, 
+#        "color" : ROOT.kOrange+3, 
+#        "samples" : [
+#            { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/zzjets.root", "xs" : 10.16, "non_fsr" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True }
+#            ]
+#        },
+#    "stschannel+jets" : {
+#        "syst-pdf" : False, 
+#        "syst-scale" : False, 
+#        "color" : ROOT.kOrange+3, 
+#        "samples" : [
+#            { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/stschanneljets.root", "xs" : 6.35, "non_fsr" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True }
+#            ]
+#        },
+#    "sttchanneltop+jets" : {
+#        "syst-pdf" : False, 
+#        "syst-scale" : False, 
+#        "color" : ROOT.kOrange+3, 
+#        "samples" : [
+#            { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/sttchanneltopjets.root", "xs" : 136.02, "non_fsr" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True }
+#            ]
+#        },
+#    "sttchannelantitop+jets" : {
+#        "syst-pdf" : False, 
+#        "syst-scale" : False, 
+#        "color" : ROOT.kOrange+3, 
+#        "samples" : [
+#            { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/sttchannelantitopjets.root", "xs" : 80.95, "non_fsr" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True }
+#            ]
+#        },
+#    "sttwtop+jets" : {
+#        "syst-pdf" : False, 
+#        "syst-scale" : False, 
+#        "color" : ROOT.kOrange+3, 
+#        "samples" : [
+#            { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/sttwtopjets.root", "xs" : 71.7/2, "non_fsr" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True }
+#            ]
+#        },
+#    "sttwantitop+jets" : {
+#        "syst-pdf" : False, 
+#        "syst-scale" : False, 
+#        "color" : ROOT.kOrange+3, 
+#        "samples" : [
+#            { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/sttwantitopjets.root", "xs" : 71.7/2, "non_fsr" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True }
+#            ]
+#        },
+#
+#    "tt2l2nu+jets" : {
+#        "syst-pdf" : False, 
+#        "syst-scale" : False, 
+#        "color" : ROOT.kRed, 
+#        "samples" : [
+#            { 'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/2016/tt2l2nujets.root', 'xs' : 88.28, "non_fsr" : False, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True } 
+#            ]
+#     }, 
+#    "ttsemi+jets" : {
+#        "syst-pdf" : False, 
+#        "syst-scale" : False, 
+#        "color" : ROOT.kSpring, 
+#        "samples" : [
+#            {'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/2016/ttsemijets.root', 'xs' : 365.4, "non_fsr" : False, "e_to_p" : True, "fsr" : True,  "e_to_p_for_fake" : True } 
+#            ] 
+#        }, 
+#    "wg+jets" : {
+#        "syst-pdf": True, 
+#        "syst-scale": True, 
+#        "color": ROOT.kCyan, 
+#        "samples" : [
+#            {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjets.root", "xs" : 178.6, "non_fsr" : True, "e_to_p" : True,"fsr" : True, "e_to_p_for_fake" : True} 
+#            ] 
+#        }, 
+#    "zg+jets" : {
+#        "syst-pdf" : False, 
+#        "syst-scale" : False, 
+#        "color" : ROOT.kOrange, 
+#        "samples" : [
+#            {"filename": "/afs/cern.ch/work/a/amlevin/data/wg/2016/zglowmlljets.root", "xs" : 96.75, "non_fsr" : True, "e_to_p" : False, "fsr" : True, "e_to_p_for_fake" : True} 
+#            ] 
+#        }, 
+#    "no label" : {
+#        "syst-pdf" : False, 
+#        "syst-scale" : False, 
+#        "color" : None, 
+#        "samples" : [
+#            {"filename": "/afs/cern.ch/work/a/amlevin/data/wg/2016/zjets.root", "xs" : 4963.0, "non_fsr" : False, "e_to_p" : False, "fsr" : False, "e_to_p_for_fake" : True}
+#            ] 
+#        }, 
+#    "ttg+jets" : {
+#        "syst-pdf" : False, 
+#        "syst-scale" : False,  
+#        "color" : ROOT.kGreen+2, 
+#        "samples" : [ 
+#            {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/ttgjets.root", "xs" : 3.795, "non_fsr" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True} 
+#            ] 
+#        } 
+#    }
 
 #labels = { "tt2l2nu+jets" : {"syst-pdf" : False, "syst-scale" : False, "color" : ROOT.kRed, "samples" : [{'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/2016/tt2l2nujets.root', 'xs' : 88.28, "non_fsr" : False , "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True } ] }, "ttsemi+jets" : {"syst-pdf" : False, "syst-scale" : False, "color" : ROOT.kSpring, "samples" : [{'filename':  '/afs/cern.ch/work/a/amlevin/data/wg/2016/ttsemijets.root', 'xs' : 365.4, "non_fsr" : False , "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True } ] }, "wg+jets" : {"syst-pdf": True, "syst-scale": True, "color": ROOT.kCyan, "samples" : [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjetsewdim6.root", "xs" : 178.6, "non_fsr" : True , "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True } ] }, "zg+jets" : {"syst-pdf" : False, "syst-scale" : False, "color" : ROOT.kOrange, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/2016/zglowmlljets.root", "xs" : 96.75, "non_fsr" : True , "e_to_p" : False, "fsr" : True, "e_to_p_for_fake" : True } ] }, "no label" : {"syst-pdf" : False, "syst-scale" : False, "color" : None, "samples" : [{"filename": "/afs/cern.ch/work/a/amlevin/data/wg/2016/zjets.root", "xs" : 4963.0, "non_fsr" : False , "e_to_p" : False, "fsr" : False, "e_to_p_for_fake" : True }] }, "ttg+jets" : {"syst-pdf" : False, "syst-scale" : False,  "color" : ROOT.kGreen+2, "samples" : [ {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/ttgjets.root", "xs" : 3.795, "non_fsr" : True , "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True } ] } }
 
@@ -612,11 +669,14 @@ for label in labels.keys():
         sample["tree"] = sample["file"].Get("Events")
         sample["nweightedevents"] = sample["file"].Get("nWeightedEvents").GetBinContent(1)
 
-for i in range(0,8):
-    labels["wg+jets"]["samples"][0]["nweightedevents_qcdscaleweight"+str(i)]=labels["wg+jets"]["samples"][0]["file"].Get("nWeightedEvents_QCDScaleWeight"+str(i)).GetBinContent(1)
 
-for i in range(1,102):
-    labels["wg+jets"]["samples"][0]["nweightedevents_pdfweight"+str(i)]=labels["wg+jets"]["samples"][0]["file"].Get("nWeightedEvents_PDFWeight"+str(i)).GetBinContent(1)
+if labels["wg+jets"]["syst-scale"]:
+    for i in range(0,8):
+        labels["wg+jets"]["samples"][0]["nweightedevents_qcdscaleweight"+str(i)]=labels["wg+jets"]["samples"][0]["file"].Get("nWeightedEvents_QCDScaleWeight"+str(i)).GetBinContent(1)
+
+if labels["wg+jets"]["syst-pdf"]:
+    for i in range(1,102):
+        labels["wg+jets"]["samples"][0]["nweightedevents_pdfweight"+str(i)]=labels["wg+jets"]["samples"][0]["file"].Get("nWeightedEvents_PDFWeight"+str(i)).GetBinContent(1)
 
 labels["wg+jets"]["samples"][0]["nweightedeventspassgenselection"]=labels["wg+jets"]["samples"][0]["file"].Get("nWeightedEventsPassGenSelection").GetBinContent(1)
 
@@ -1135,9 +1195,9 @@ fake_photon["hists"][mlg_index].Print("all")
 fake_photon_alt["hists"][mlg_index].Print("all")
 fake_photon_stat_up["hists"][mlg_index].Print("all")
 
-top_mlg_hist = labels["ttg+jets"]["hists"][mlg_index].Clone("top")
-top_mlg_hist.Add(labels["tt2l2nu+jets"]["hists"][mlg_index])
-top_mlg_hist.Add(labels["ttsemi+jets"]["hists"][mlg_index])
+top_mlg_hist = labels["top+jets"]["hists"][mlg_index].Clone("top")
+#top_mlg_hist.Add(labels["tt2l2nu+jets"]["hists"][mlg_index])
+#top_mlg_hist.Add(labels["ttsemi+jets"]["hists"][mlg_index])
 
 def mlg_fit(inputs):
 
@@ -1388,27 +1448,40 @@ if lepton_name == "electron" or lepton_name == "both":
 
     fit_results = mlg_fit(fit_inputs)
     
-    fit_inputs_fake_lepton_syst = fit_inputs
+    fit_inputs_fake_lepton_syst = dict(fit_inputs)
     fake_lepton_mlg_syst = fake_lepton["hists"][mlg_index].Clone("fake lepton syst")
     fake_lepton_mlg_syst.Scale(1.4)
     fit_inputs_fake_lepton_syst["label"] = "fake_lepton_syst"
     fit_inputs_fake_lepton_syst["fake_lepton"] = fake_lepton_mlg_syst
     fit_results_fake_lepton_syst = mlg_fit(fit_inputs_fake_lepton_syst)
     
-    fit_inputs_fake_lepton_stat_up = fit_inputs
+    fit_inputs_fake_lepton_stat_up = dict(fit_inputs)
     fit_inputs_fake_lepton_stat_up["label"] = "fake_lepton_stat_up"
     fit_inputs_fake_lepton_stat_up["fake_lepton"] = fake_lepton_stat_up["hists"][mlg_index]
     fit_results_fake_lepton_stat_up = mlg_fit(fit_inputs_fake_lepton_stat_up)
 
-    fit_inputs_fake_lepton_stat_down = fit_inputs
+    fit_inputs_fake_lepton_stat_down = dict(fit_inputs)
     fit_inputs_fake_lepton_stat_down["label"] = "fake_lepton_stat_down"
     fit_inputs_fake_lepton_stat_down["fake_lepton"] = fake_lepton_stat_down["hists"][mlg_index]
     fit_results_fake_lepton_stat_down = mlg_fit(fit_inputs_fake_lepton_stat_down)
 
-    fit_inputs_fake_photon_alt = fit_inputs
+    fit_inputs_fake_photon_alt = dict(fit_inputs)
     fit_inputs_fake_photon_alt["fake_photon"] = fake_photon_alt["hists"][mlg_index]
     fit_inputs_fake_photon_alt["label"] = "fake_photon_alt"
-    fit_results_fake_photon_alt = mlg_fit(fit_inputs)
+    fit_results_fake_photon_alt = mlg_fit(fit_inputs_fake_photon_alt)
+
+    fit_results_fake_photon_stat_up = []
+
+    for i in range(1,fake_photon["hists"][mlg_index].GetNbinsX()+1):
+        fake_photon_mlg_stat_up = fake_photon["hists"][mlg_index].Clone("fake photon stat up bin "+ str(i))
+        print str(fake_photon_mlg_stat_up.GetBinContent(i)) + " --> " + str(fake_photon_mlg_stat_up.GetBinContent(i)+fake_photon_mlg_stat_up.GetBinError(i))
+        fake_photon_mlg_stat_up.SetBinContent(i,fake_photon_mlg_stat_up.GetBinContent(i)+fake_photon_mlg_stat_up.GetBinError(i))
+        fit_inputs_fake_photon_stat_up = dict(fit_inputs)
+        fit_inputs_fake_photon_stat_up["label"] = "fake_photon_stat_up_bin_"+str(i)
+        fit_inputs_fake_photon_stat_up["fake_photon"] = fake_photon_mlg_stat_up
+        fit_results_fake_photon_stat_up.append(mlg_fit(fit_inputs_fake_photon_stat_up))
+
+    print fit_results_fake_photon_stat_up
 
 elif lepton_name == "muon":
 
@@ -1428,27 +1501,41 @@ elif lepton_name == "muon":
 
     fit_results = mlg_fit(fit_inputs)
     
-    fit_inputs_fake_lepton_syst = fit_inputs
+    fit_inputs_fake_lepton_syst = dict(fit_inputs)
     fake_lepton_mlg_syst = fake_lepton["hists"][mlg_index].Clone("fake lepton syst")
     fake_lepton_mlg_syst.Scale(1.3)
     fit_inputs_fake_lepton_syst["label"] = "fake_lepton_syst"
     fit_inputs_fake_lepton_syst["fake_lepton"] = fake_lepton_mlg_syst
     fit_results_fake_lepton_syst = mlg_fit(fit_inputs_fake_lepton_syst)
     
-    fit_inputs_fake_lepton_stat_up = fit_inputs
+    fit_inputs_fake_lepton_stat_up = dict(fit_inputs)
     fit_inputs_fake_lepton_stat_up["label"] = "fake_lepton_stat_up"
     fit_inputs_fake_lepton_stat_up["fake_lepton"] = fake_lepton_stat_up["hists"][mlg_index]
     fit_results_fake_lepton_stat_up = mlg_fit(fit_inputs_fake_lepton_stat_up)
 
-    fit_inputs_fake_lepton_stat_down = fit_inputs
+    fit_inputs_fake_lepton_stat_down = dict(fit_inputs)
     fit_inputs_fake_lepton_stat_down["label"] = "fake_lepton_stat_down"
     fit_inputs_fake_lepton_stat_down["fake_lepton"] = fake_lepton_stat_down["hists"][mlg_index]
     fit_results_fake_lepton_stat_down = mlg_fit(fit_inputs_fake_lepton_stat_down)
 
-    fit_inputs_fake_photon_alt = fit_inputs
+    fit_inputs_fake_photon_alt = dict(fit_inputs)
     fit_inputs_fake_photon_alt["fake_photon"] = fake_photon_alt["hists"][mlg_index]
     fit_inputs_fake_photon_alt["label"] = "fake_photon_alt"
-    fit_results_fake_photon_alt = mlg_fit(fit_inputs)
+    fit_results_fake_photon_alt = mlg_fit(fit_inputs_fake_photon_alt)
+
+    fit_results_fake_photon_stat_up = []
+
+    for i in range(1,fake_photon["hists"][mlg_index].GetNbinsX()+1):
+        fake_photon_mlg_stat_up = fake_photon["hists"][mlg_index].Clone("fake photon stat up bin "+ str(i))
+        print str(fake_photon_mlg_stat_up.GetBinContent(i)) + " --> " + str(fake_photon_mlg_stat_up.GetBinContent(i)+fake_photon_mlg_stat_up.GetBinError(i))
+        fake_photon_mlg_stat_up.SetBinContent(i,fake_photon_mlg_stat_up.GetBinContent(i)+fake_photon_mlg_stat_up.GetBinError(i))
+        fit_inputs_fake_photon_stat_up = dict(fit_inputs)
+        fit_inputs_fake_photon_stat_up["label"] = "fake_photon_stat_up_bin_"+str(i)
+        fit_inputs_fake_photon_stat_up["fake_photon"] = fake_photon_mlg_stat_up
+        fit_results_fake_photon_stat_up.append(mlg_fit(fit_inputs_fake_photon_stat_up))
+
+    print fit_results_fake_photon_stat_up
+
 else:
     assert(0)
 
@@ -1593,7 +1680,7 @@ for i in range(len(variables)):
             continue
         j=j+1    
 #        draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,labels[label]["hists"][i],label,"f")
-        if len(labels[label]["hists"][i]) > 10:
+        if len(label) > 10:
             print "Warning: truncating the legend label "+str(label) + " to "+str(label[0:10]) 
             draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,labels[label]["hists"][i],label[0:10],"f")
         else:    
@@ -1656,6 +1743,9 @@ if lepton_name == "muon":
     for i in range(0,8):
         xs_inputs_muon["n_weighted_selected_data_mc_sf_scale_variation"+str(i)] = labels["wg+jets"]["hists-scale-variation"+str(i)][mlg_index].Integral()*labels["wg+jets"]["samples"][0]["nweightedevents"]/(labels["wg+jets"]["samples"][0]["xs"]*1000*35.9) 
         xs_inputs_muon["n_weighted_run_over_scale_variation"+str(i)] = labels["wg+jets"]["samples"][0]["nweightedevents_qcdscaleweight"+str(i)]
+        
+    for i in range(1,fake_photon["hists"][mlg_index].GetNbinsX()+1): 
+        xs_inputs_muon["n_signal_syst_unc_due_to_fake_photon_stat_up_bin"+str(i)] = abs(fit_results_fake_photon_stat_up[i-1]["wg_norm"] - fit_results["wg_norm"])
 
     pprint(xs_inputs_muon)
 
@@ -1687,6 +1777,9 @@ elif lepton_name == "electron":
     for i in range(0,8):
         xs_inputs_electron["n_weighted_selected_data_mc_sf_scale_variation"+str(i)] = labels["wg+jets"]["hists-scale-variation"+str(i)][mlg_index].Integral()*labels["wg+jets"]["samples"][0]["nweightedevents"]/(labels["wg+jets"]["samples"][0]["xs"]*1000*35.9) 
         xs_inputs_electron["n_weighted_run_over_scale_variation"+str(i)] = labels["wg+jets"]["samples"][0]["nweightedevents_qcdscaleweight"+str(i)]
+
+    for i in range(1,fake_photon["hists"][mlg_index].GetNbinsX()+1): 
+        xs_inputs_electron["n_signal_syst_unc_due_to_fake_photon_stat_up_bin"+str(i)] = abs(fit_results_fake_photon_stat_up[i-1]["wg_norm"] - fit_results["wg_norm"])
 
     pprint(xs_inputs_electron)
 
