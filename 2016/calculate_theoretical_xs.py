@@ -1,14 +1,14 @@
 import ROOT
 
-#/afs/cern.ch/work/a/amlevin/matrix_generation/CMSSW_9_3_0/src/MATRIX_v1.0.2/run/ppexnea03_MATRIX/result/run_214/summary/result_summary.dat   
-matrix_lo_xs_eplus = 1.614*pow(10,4)
+#/uscms_data/d3/qliphy/andrew/CMSSW_9_3_0/src/MATRIX_v1.0.2/run/ppexnea03_MATRIX/result/run_03/summary/result_summary.dat
+matrix_lo_xs_eplus = 1.613*pow(10,4)
 matrix_nlo_xs_eplus = 2.643*pow(10,4)
-matrix_nnlo_xs_eplus = 3.000*pow(10,4)
+matrix_nnlo_xs_eplus = 2.992*pow(10,4)
 
-#/afs/cern.ch/work/a/amlevin/matrix_generation/CMSSW_9_3_0/src/MATRIX_v1.0.2/run/ppenexa03_MATRIX/result/run_213/summary/result_summary.dat  
-matrix_lo_xs_eminus = 1.368*pow(10,4)
-matrix_nlo_xs_eminus = 2.338*pow(10,4)
-matrix_nnlo_xs_eminus = 2.676*pow(10,4)
+#/uscms_data/d3/qliphy/andrew/CMSSW_9_3_0/src/MATRIX_v1.0.2/run/ppenexa03_MATRIX/result/run_03/summary/result_summary.dat
+matrix_lo_xs_eminus = 1.366*pow(10,4)
+matrix_nlo_xs_eminus = 2.336*pow(10,4)
+matrix_nnlo_xs_eminus = 2.638*pow(10,4)
 
 matrix_lo_xs=3*(matrix_lo_xs_eplus+matrix_lo_xs_eminus)
 matrix_nlo_xs=3*(matrix_nlo_xs_eplus+matrix_nlo_xs_eminus)
@@ -37,14 +37,14 @@ print "fiducial_lo_xs = "+str(fiducial_lo_xs/1000.) + " pb"
 print "fiducial_nlo_xs = "+str(fiducial_nlo_xs/1000.)+ " pb"
 print "fiducial_nnlo_xs = "+str(fiducial_nnlo_xs/1000.)+ " pb"
 
-matrix_nnlo_xs_eplus_scale_up=2.4 #in percent  
+matrix_nnlo_xs_eplus_scale_up=2.7 #in percent  
 matrix_nnlo_xs_eplus_scale_down=2.6 #in percent
 
-matrix_nnlo_xs_eminus_scale_up = 2.9 #in percent
-matrix_nnlo_xs_eminus_scale_down = 2.8 #in percent
+matrix_nnlo_xs_eminus_scale_up = 2.6 #in percent
+matrix_nnlo_xs_eminus_scale_down = 2.6 #in percent
 
-matrix_nnlo_xs_eplus_rcut_extrapolation_unc = 3.7*pow(10,2) #in fb
-matrix_nnlo_xs_eminus_rcut_extrapolation_unc = 4.4*pow(10,2) #in fb
+matrix_nnlo_xs_eplus_rcut_extrapolation_unc = 2.0*pow(10,2) #in fb
+matrix_nnlo_xs_eminus_rcut_extrapolation_unc = 1.7*pow(10,2) #in fb
 
 from math import sqrt
 
