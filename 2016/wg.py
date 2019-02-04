@@ -103,9 +103,11 @@ from wg_labels import labels
 mlg_fit_upper_bound = 400
 
 #the first variable is for the ewdim6 analysis
-variables = ["photon_pt","dphilg","met","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","lepton_phi","photon_phi","njets","mt","npvs","drlg"]
+#variables = ["photon_pt","dphilg","met","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","lepton_phi","photon_phi","njets","mt","npvs","drlg"]
+#variables_labels = ["ewdim6_photon_pt","dphilg","met","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","lepton_phi","photon_phi","njets","mt","npvs","drlg"]
 
-variables_labels = ["ewdim6_photon_pt","dphilg","met","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","lepton_phi","photon_phi","njets","mt","npvs","drlg"]
+variables = ["photon_pt","dphilg","met","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","mlg","lepton_phi","photon_phi","njets","mt","npvs","drlg"]
+variables_labels = ["ewdim6_photon_pt","dphilg","met","lepton_pt","lepton_eta","photon_pt","photon_eta","fit_mlg","mlg","lepton_phi","photon_phi","njets","mt","npvs","drlg"]
 
 assert(len(variables) == len(variables_labels))
 
@@ -117,7 +119,7 @@ binning_photon_pt = array('f',[400,500,600,900,1500])
 
 n_photon_pt_bins = len(binning_photon_pt)-1
 
-histogram_templates = [ROOT.TH1F('', '', n_photon_pt_bins, binning_photon_pt ),ROOT.TH1F('','',8,pi/2,pi), ROOT.TH1F("met", "", 15 , 0., 300 ), ROOT.TH1F('lepton_pt', '', 8, 20., 180 ), ROOT.TH1F('lepton_eta', '', 10, -2.5, 2.5 ), ROOT.TH1F('photon_pt', '', n_photon_pt_bins, binning_photon_pt ), ROOT.TH1F('photon_eta', '', 10, -2.5, 2.5 ), ROOT.TH1F("mlg","",mlg_fit_upper_bound/2,0,mlg_fit_upper_bound) , ROOT.TH1F("lepton_phi","",14,-3.5,3.5), ROOT.TH1F("photon_phi","",14,-3.5,3.5), ROOT.TH1F("njets","",7,-0.5,6.5), ROOT.TH1F("mt","",20,0,200), ROOT.TH1F("npvs","",51,-0.5,50.5), ROOT.TH1F("drlg","",60,0,6)] 
+histogram_templates = [ROOT.TH1F('', '', n_photon_pt_bins, binning_photon_pt ),ROOT.TH1F('','',8,pi/2,pi), ROOT.TH1F("met", "", 15 , 0., 300 ), ROOT.TH1F('lepton_pt', '', 8, 20., 180 ), ROOT.TH1F('lepton_eta', '', 10, -2.5, 2.5 ), ROOT.TH1F('photon_pt', '', n_photon_pt_bins, binning_photon_pt ), ROOT.TH1F('photon_eta', '', 10, -2.5, 2.5 ), ROOT.TH1F("mlg","",mlg_fit_upper_bound/2,0,mlg_fit_upper_bound), ROOT.TH1F("mlg","",100,0,200),ROOT.TH1F("lepton_phi","",14,-3.5,3.5), ROOT.TH1F("photon_phi","",14,-3.5,3.5), ROOT.TH1F("njets","",7,-0.5,6.5), ROOT.TH1F("mt","",20,0,200), ROOT.TH1F("npvs","",51,-0.5,50.5), ROOT.TH1F("drlg","",60,0,6)] 
 
 assert(len(variables) == len(histogram_templates))
 
@@ -252,7 +254,7 @@ def pass_selection(tree, barrel_or_endcap_or_both = "both", fake_lepton = False 
 
     if barrel_or_endcap_or_both == "both":
         pass_photon_eta = True    
-    elif barrel_or_endcap == "barrel":        
+    elif barrel_or_endcap_or_both == "barrel":        
         if abs(tree.photon_eta) < 1.4442:
             pass_photon_eta = True
         else:
@@ -380,11 +382,11 @@ yoffsetstart = 0.0;
 xoffset = 0.20;
 yoffset = 0.05;
 
-#xpositions = [0.68,0.68,0.68,0.68,0.445,0.445,0.445,0.445,0.21,0.21,0.21,0.21]
-#ypositions = [0,1,2,3,0,1,2,3,0,1,2,3]
+xpositions = [0.68,0.68,0.68,0.68,0.445,0.445,0.445,0.445,0.21,0.21,0.21,0.21]
+ypositions = [0,1,2,3,0,1,2,3,0,1,2,3]
 
-xpositions = [0.68,0.68,0.68,0.68,0.68,0.68,0.68,0.445,0.445,0.445,0.445,0.445,0.445,0.445,0.21,0.21,0.21,0.21,0.21,0.21,0.21]
-ypositions = [0,1,2,3,4,5,6,0,1,2,3,4,5,6,0,1,2,3,4,5,6]
+#xpositions = [0.68,0.68,0.68,0.68,0.68,0.68,0.68,0.445,0.445,0.445,0.445,0.445,0.445,0.445,0.21,0.21,0.21,0.21,0.21,0.21,0.21]
+#ypositions = [0,1,2,3,4,5,6,0,1,2,3,4,5,6,0,1,2,3,4,5,6]
 
 style.GoodStyle().cd()
 
@@ -509,7 +511,8 @@ fake_lepton = {}
 fake_lepton_stat_down = {}
 fake_lepton_stat_up = {}
 double_fake = {}
-electron_to_photon = {}
+e_to_p = {}
+e_to_p_non_res = {}
 ewdim6 = {}
 
 data["hists"] = []
@@ -520,7 +523,8 @@ fake_lepton["hists"] = []
 fake_lepton_stat_down["hists"] = []
 fake_lepton_stat_up["hists"] = []
 double_fake["hists"] = []
-electron_to_photon["hists"] = []
+e_to_p_non_res["hists"] = []
+e_to_p["hists"] = []
 ewdim6["hists"] = []
 
 for i in range(len(variables)):
@@ -532,7 +536,8 @@ for i in range(len(variables)):
     fake_lepton_stat_up["hists"].append(histogram_templates[i].Clone("fake lepton stat up" + variables[i]))
     fake_lepton_stat_down["hists"].append(histogram_templates[i].Clone("fake lepton stat down" + variables[i]))
     double_fake["hists"].append(histogram_templates[i].Clone("double fake " + variables[i]))
-    electron_to_photon["hists"].append(histogram_templates[i].Clone("electron to photon " + variables[i]))
+    e_to_p_non_res["hists"].append(histogram_templates[i].Clone("electron to photon " + variables[i]))
+    e_to_p["hists"].append(histogram_templates[i].Clone("electron to photon " + variables[i]))
     ewdim6["hists"].append(histogram_templates[i].Clone("ewdim6 " + variables[i]))
 
 for i in range(len(variables)):
@@ -544,7 +549,8 @@ for i in range(len(variables)):
     fake_lepton_stat_up["hists"][i].Sumw2()
     fake_lepton_stat_down["hists"][i].Sumw2()
     double_fake["hists"][i].Sumw2()
-    electron_to_photon["hists"][i].Sumw2()
+    e_to_p_non_res["hists"][i].Sumw2()
+    e_to_p["hists"][i].Sumw2()
     ewdim6["hists"][i].Sumw2()
 
 data_events_tree = data_file.Get("Events")
@@ -667,9 +673,12 @@ def fillHistogramMC(label,sample):
         if pass_is_lepton_real:
 
             if bool(sample["tree"].photon_gen_matching & int('0010',2)):
+                if sample["e_to_p_non_res"]:
+                    for j in range(len(variables)):
+                        e_to_p_non_res["hists"][j].Fill(getVariable(variables[j],sample["tree"]),weight)
                 if sample["e_to_p"]:
                     for j in range(len(variables)):
-                        electron_to_photon["hists"][j].Fill(getVariable(variables[j],sample["tree"]),weight)
+                        e_to_p["hists"][j].Fill(getVariable(variables[j],sample["tree"]),weight)
             elif bool(sample["tree"].photon_gen_matching & int('1000',2)):
                 if sample["fsr"]:
                     for j in range(len(variables)):
@@ -1007,14 +1016,38 @@ for label in labels.keys():
         labels[label]["hists"][i].SetFillStyle(1001)
         labels[label]["hists"][i].SetLineColor(labels[label]["color"])
 
-print "wg+jets = "+str(labels["wg+jets"]["hists"][mlg_index].Integral())
-print "zg+jets = "+str(labels["zg+jets"]["hists"][mlg_index].Integral())
-print "top+jets = "+str(labels["top+jets"]["hists"][mlg_index].Integral())
-print "vv+jets = "+str(labels["vv+jets"]["hists"][mlg_index].Integral())
-print "fake photon = "+str(fake_photon["hists"][mlg_index].Integral())
-print "fake lepton = "+str(fake_lepton["hists"][mlg_index].Integral())
-print "double fake = "+str(double_fake["hists"][mlg_index].Integral())
-print "data = "+str(data["hists"][mlg_index].Integral())
+wg_jets_integral_error = ROOT.Double()
+wg_jets_integral = labels["wg+jets"]["hists"][mlg_index].IntegralAndError(1,labels["wg+jets"]["hists"][mlg_index].GetXaxis().GetNbins(),wg_jets_integral_error)
+
+zg_jets_integral_error = ROOT.Double()
+zg_jets_integral = labels["zg+jets"]["hists"][mlg_index].IntegralAndError(1,labels["zg+jets"]["hists"][mlg_index].GetXaxis().GetNbins(),zg_jets_integral_error)
+
+vv_jets_integral_error = ROOT.Double()
+vv_jets_integral = labels["vv+jets"]["hists"][mlg_index].IntegralAndError(1,labels["vv+jets"]["hists"][mlg_index].GetXaxis().GetNbins(),vv_jets_integral_error)
+
+top_jets_integral_error = ROOT.Double()
+top_jets_integral = labels["top+jets"]["hists"][mlg_index].IntegralAndError(1,labels["top+jets"]["hists"][mlg_index].GetXaxis().GetNbins(),top_jets_integral_error)
+
+fake_lepton_integral_error = ROOT.Double()
+fake_lepton_integral = fake_lepton["hists"][mlg_index].IntegralAndError(1,fake_lepton["hists"][mlg_index].GetXaxis().GetNbins(),fake_lepton_integral_error)
+
+fake_photon_integral_error = ROOT.Double()
+fake_photon_integral = fake_photon["hists"][mlg_index].IntegralAndError(1,fake_photon["hists"][mlg_index].GetXaxis().GetNbins(),fake_photon_integral_error)
+
+double_fake_integral_error = ROOT.Double()
+double_fake_integral = double_fake["hists"][mlg_index].IntegralAndError(1,double_fake["hists"][mlg_index].GetXaxis().GetNbins(),double_fake_integral_error)
+
+data_integral_error = ROOT.Double()
+data_integral = data["hists"][mlg_index].IntegralAndError(1,data["hists"][mlg_index].GetXaxis().GetNbins(),data_integral_error)
+
+print "wg+jets = "+str(wg_jets_integral)+" +/- "+str(wg_jets_integral_error)
+print "zg+jets = "+str(zg_jets_integral)+" +/- "+str(zg_jets_integral_error)
+print "vv+jets = "+str(vv_jets_integral)+" +/- "+str(vv_jets_integral_error)
+print "top+jets = "+str(top_jets_integral)+" +/- "+str(top_jets_integral_error)
+print "fake photon = "+str(fake_photon_integral)+" +/- "+str(fake_photon_integral_error)
+print "fake lepton = "+str(fake_lepton_integral)+" +/- "+str(fake_lepton_integral_error)
+print "double fake = "+str(double_fake_integral)+" +/- "+str(double_fake_integral_error)
+print "data = "+str(data_integral)+" +/- "+str(data_integral_error)
 
 #labels["wg+jets"]["hists"]["photon_pt"].Print("all")
 
@@ -1047,6 +1080,9 @@ def mlg_fit(inputs):
     RooDataHist_mlg_wg = ROOT.RooDataHist("wg data hist","wg data hist",ROOT.RooArgList(m),inputs["wg"])
     RooHistPdf_wg = ROOT.RooHistPdf("wg","wg",ROOT.RooArgSet(m),RooDataHist_mlg_wg)
 
+    RooDataHist_mlg_vv = ROOT.RooDataHist("vv data hist","vv data hist",ROOT.RooArgList(m),inputs["vv"])
+    RooHistPdf_vv = ROOT.RooHistPdf("vv","vv",ROOT.RooArgSet(m),RooDataHist_mlg_vv)
+
     RooDataHist_mlg_top = ROOT.RooDataHist("top data hist","top data hist",ROOT.RooArgList(m),inputs["top"])
     RooHistPdf_top = ROOT.RooHistPdf("top","top",ROOT.RooArgSet(m),RooDataHist_mlg_top)
 
@@ -1063,18 +1099,20 @@ def mlg_fit(inputs):
     RooHistPdf_double_fake = ROOT.RooHistPdf("double fake","double fake",ROOT.RooArgSet(m),RooDataHist_mlg_double_fake)
 
     if inputs["lepton"] == "electron":
-        RooDataHist_mlg_etog = ROOT.RooDataHist("etog data hist","etog data hist",ROOT.RooArgList(m),inputs["electron_to_photon"])
+        RooDataHist_mlg_etog = ROOT.RooDataHist("etog data hist","etog data hist",ROOT.RooArgList(m),inputs["e_to_p_non_res"])
         RooHistPdf_etog = ROOT.RooHistPdf("etog","etog",ROOT.RooArgSet(m),RooDataHist_mlg_etog)
 
     top_norm = ROOT.RooRealVar("top_norm","top_norm",top_mlg_hist.Integral(),top_mlg_hist.Integral())    
     wg_norm = ROOT.RooRealVar("wg_norm","wg_norm",0,1000000);    
-    zg_norm = ROOT.RooRealVar("zg_norm","zg_norm",0,1000000);    
+#    zg_norm = ROOT.RooRealVar("zg_norm","zg_norm",0,1000000);    
+    zg_norm = ROOT.RooRealVar("zg_norm","zg_norm",inputs["zg"].Integral(),inputs["zg"].Integral());    
+    vv_norm = ROOT.RooRealVar("vv_norm","vv_norm",inputs["vv"].Integral(),inputs["vv"].Integral());    
     bwcb_norm = ROOT.RooRealVar("bwcb_norm","bwcb_norm",0,1000000);    
     fake_lepton_norm = ROOT.RooRealVar("fake_lepton_norm","fake_lepton_norm",inputs["fake_lepton"].Integral(),inputs["fake_lepton"].Integral());    
     fake_photon_norm = ROOT.RooRealVar("fake_photon_norm","fake_photon_norm",inputs["fake_photon"].Integral(),inputs["fake_photon"].Integral());    
     double_fake_norm = ROOT.RooRealVar("double_fake_norm","double_fake_norm",inputs["double_fake"].Integral(),inputs["double_fake"].Integral());    
     if inputs["lepton"] == "electron":
-        etog_norm = ROOT.RooRealVar("etog_norm","etog_norm",inputs["electron_to_photon"].Integral(),inputs["electron_to_photon"].Integral())
+        etog_norm = ROOT.RooRealVar("etog_norm","etog_norm",inputs["e_to_p_non_res"].Integral(),inputs["e_to_p_non_res"].Integral())
 
     n1=ROOT.RooRealVar("n1","n1",0.1,0.01,100000)
     n2=ROOT.RooRealVar("n2","n2",0.1,0.01,100000)
@@ -1082,9 +1120,9 @@ def mlg_fit(inputs):
     f= ROOT.RooRealVar("f","f",0.5,0.,1.) ;
 
     if inputs["lepton"] == "electron" or inputs["lepton"] == "both":
-        sum=ROOT.RooAddPdf("sum","sum",ROOT.RooArgList(RooHistPdf_wg,RooHistPdf_zg,RooFFTConvPdf_bwcb,RooHistPdf_fake_lepton,RooHistPdf_fake_photon,RooHistPdf_double_fake,RooHistPdf_top,RooHistPdf_etog),ROOT.RooArgList(wg_norm,zg_norm,bwcb_norm,fake_lepton_norm,fake_photon_norm,double_fake_norm,top_norm,etog_norm))
+        sum=ROOT.RooAddPdf("sum","sum",ROOT.RooArgList(RooHistPdf_wg,RooHistPdf_zg,RooHistPdf_vv,RooFFTConvPdf_bwcb,RooHistPdf_fake_lepton,RooHistPdf_fake_photon,RooHistPdf_double_fake,RooHistPdf_top,RooHistPdf_etog),ROOT.RooArgList(wg_norm,zg_norm,vv_norm,bwcb_norm,fake_lepton_norm,fake_photon_norm,double_fake_norm,top_norm,etog_norm))
     elif inputs["lepton"] == "muon":
-        sum=ROOT.RooAddPdf("sum","sum",ROOT.RooArgList(RooHistPdf_wg,RooHistPdf_zg,RooHistPdf_fake_lepton,RooHistPdf_fake_photon,RooHistPdf_double_fake,RooHistPdf_top),ROOT.RooArgList(wg_norm,zg_norm,fake_lepton_norm,fake_photon_norm,double_fake_norm,top_norm))
+        sum=ROOT.RooAddPdf("sum","sum",ROOT.RooArgList(RooHistPdf_wg,RooHistPdf_zg,RooHistPdf_vv,RooHistPdf_fake_lepton,RooHistPdf_fake_photon,RooHistPdf_double_fake,RooHistPdf_top),ROOT.RooArgList(wg_norm,zg_norm,vv_norm,fake_lepton_norm,fake_photon_norm,double_fake_norm,top_norm))
     else:
         assert(0)
 
@@ -1269,8 +1307,9 @@ if lepton_name == "electron" or lepton_name == "both":
         "data" : data["hists"][mlg_index],
         "top" : top_mlg_hist,
         "zg" : labels["zg+jets"]["hists"][mlg_index],
+        "vv" : labels["vv+jets"]["hists"][mlg_index],
         "wg" : labels["wg+jets"]["hists"][mlg_index],
-        "electron_to_photon" : electron_to_photon["hists"][mlg_index],
+        "e_to_p_non_res" : e_to_p_non_res["hists"][mlg_index],
         "fake_photon" : fake_photon["hists"][mlg_index],
         "fake_lepton" : fake_lepton["hists"][mlg_index],
         "double_fake" : double_fake["hists"][mlg_index]
@@ -1321,6 +1360,7 @@ elif lepton_name == "muon":
         "data" : data["hists"][mlg_index],
         "top" : top_mlg_hist,
         "zg" : labels["zg+jets"]["hists"][mlg_index],
+        "vv" : labels["vv+jets"]["hists"][mlg_index],
         "wg" : labels["wg+jets"]["hists"][mlg_index],
         "fake_photon" : fake_photon["hists"][mlg_index],
         "fake_lepton" : fake_lepton["hists"][mlg_index],
@@ -1398,19 +1438,19 @@ for i in range(len(variables)):
     fake_photon["hists"][i].SetFillColor(ROOT.kGray+1)
     fake_lepton["hists"][i].SetFillColor(ROOT.kAzure-1)
     double_fake["hists"][i].SetFillColor(ROOT.kMagenta)
-    electron_to_photon["hists"][i].SetFillColor(ROOT.kYellow)
+    e_to_p["hists"][i].SetFillColor(ROOT.kYellow)
 
 
     fake_photon["hists"][i].SetLineColor(ROOT.kGray+1)
     fake_lepton["hists"][i].SetLineColor(ROOT.kAzure-1)
     double_fake["hists"][i].SetLineColor(ROOT.kMagenta)
-    electron_to_photon["hists"][i].SetLineColor(ROOT.kYellow)
+    e_to_p["hists"][i].SetLineColor(ROOT.kYellow)
 
 
     fake_photon["hists"][i].SetFillStyle(1001)
     fake_lepton["hists"][i].SetFillStyle(1001)
     double_fake["hists"][i].SetFillStyle(1001)
-    electron_to_photon["hists"][i].SetFillStyle(1001)
+    e_to_p["hists"][i].SetFillStyle(1001)
 
     s=str(options.lumi)+" fb^{-1} (13 TeV)"
     lumilabel = ROOT.TLatex (0.95, 0.93, s)
@@ -1426,8 +1466,8 @@ for i in range(len(variables)):
     hstack = ROOT.THStack()
 
     if lepton_name == "electron" or lepton_name == "both": 
-        hsum.Add(electron_to_photon["hists"][i])
-        hstack.Add(electron_to_photon["hists"][i])
+        hsum.Add(e_to_p["hists"][i])
+        hstack.Add(e_to_p["hists"][i])
 
     for label in labels.keys():
         if labels[label]["color"] == None:
@@ -1447,11 +1487,11 @@ for i in range(len(variables)):
 
 
     if data["hists"][i].GetMaximum() < hsum.GetMaximum():
-#        data["hists"][i].SetMaximum(hsum.GetMaximum()*1.55)
-        data["hists"][i].SetMaximum(hsum.GetMaximum()*2.55)
+        data["hists"][i].SetMaximum(hsum.GetMaximum()*1.55)
+#        data["hists"][i].SetMaximum(hsum.GetMaximum()*2.55)
     else:
-#        data["hists"][i].SetMaximum(data["hists"][i].GetMaximum()*1.55)
-        data["hists"][i].SetMaximum(data["hists"][i].GetMaximum()*2.55)
+        data["hists"][i].SetMaximum(data["hists"][i].GetMaximum()*1.55)
+#        data["hists"][i].SetMaximum(data["hists"][i].GetMaximum()*2.55)
         
 
     data["hists"][i].SetMinimum(0)
@@ -1503,7 +1543,7 @@ for i in range(len(variables)):
 
     if lepton_name == "electron" or lepton_name == "both":
         j=j+1
-        draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,electron_to_photon["hists"][i],"e->g","f")
+        draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,e_to_p["hists"][i],"e->#gamma","f")
 
     for label in labels.keys():
         if labels[label]["color"] == None:
@@ -1655,7 +1695,7 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
     dcard.write(" fake_photon")
     dcard.write(" fake_lepton")
     dcard.write(" double_fake")
-    dcard.write(" electron_to_photon")
+    dcard.write(" e_to_p_non_res")
     dcard.write('\n')    
     dcard.write("process")
     dcard.write(" 0")
@@ -1696,8 +1736,8 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
             print "Warning: double fake estimate is "+str(double_fake["hists"][0].GetBinContent(i))+ " for bin " + str(i) + ". It will be replaced with 0.0001"
         dcard.write(" 0.0001") 
 
-    if electron_to_photon["hists"][0].GetBinContent(i) > 0:        
-        dcard.write(" "+str(electron_to_photon["hists"][0].GetBinContent(i))) 
+    if e_to_p_non_res["hists"][0].GetBinContent(i) > 0:        
+        dcard.write(" "+str(e_to_p_non_res["hists"][0].GetBinContent(i))) 
     else:
         dcard.write(" 0.0001") 
    
