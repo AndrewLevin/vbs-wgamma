@@ -1736,8 +1736,8 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
             print "Warning: double fake estimate is "+str(double_fake["hists"][0].GetBinContent(i))+ " for bin " + str(i) + ". It will be replaced with 0.0001"
         dcard.write(" 0.0001") 
 
-    if e_to_p_non_res["hists"][0].GetBinContent(i) > 0:        
-        dcard.write(" "+str(e_to_p_non_res["hists"][0].GetBinContent(i))) 
+    if e_to_p["hists"][0].GetBinContent(i) > 0:        
+        dcard.write(" "+str(e_to_p["hists"][0].GetBinContent(i))) 
     else:
         dcard.write(" 0.0001") 
    
