@@ -41,8 +41,8 @@ labels = {
             ] 
         }, 
     "zg+jets" : {
-        "syst-pdf" : False, 
-        "syst-scale" : False, 
+        "syst-pdf" : True, 
+        "syst-scale" : True, 
         "color" : ROOT.kOrange, 
         "samples" : [
             {"filename": "/afs/cern.ch/work/a/amlevin/data/wg/2016/zglowmlljets.root", "xs" : 96.75, "non_fsr" : True, "e_to_p_non_res" : False, "e_to_p" : False, "fsr" : True, "e_to_p_for_fake" : True} 
