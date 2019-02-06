@@ -54,7 +54,7 @@ matrix_nnlo_xs_err_due_to_scale_up = 3*sqrt(pow(matrix_nnlo_xs_eplus*matrix_nnlo
 
 matrix_nnlo_xs_err_due_to_scale_down = 3*sqrt(pow(matrix_nnlo_xs_eplus*matrix_nnlo_xs_eplus_scale_down/100,2) + pow(matrix_nnlo_xs_eminus*matrix_nnlo_xs_eminus_scale_down/100,2) )
 
-print "xs: \\sigma = %.2f \pm %.2f \\text{ (rcut)} \pm ^{%.2f}_{%.2f} \\text{ (scale) pb}"%(matrix_nnlo_xs/1000.,matrix_nnlo_xs_err_due_to_rcut_extrapolation/1000,matrix_nnlo_xs_err_due_to_scale_up/1000.,matrix_nnlo_xs_err_due_to_scale_down/1000.)
+print "xs: \\sigma = %.2f \pm %.2f \\text{ (rcut/stat)} \pm ^{%.2f}_{%.2f} \\text{ (scale) pb}"%(matrix_nnlo_xs/1000.,matrix_nnlo_xs_err_due_to_rcut_extrapolation/1000,matrix_nnlo_xs_err_due_to_scale_up/1000.,matrix_nnlo_xs_err_due_to_scale_down/1000.)
 
 pdf_unc_from_mg5aMC_sample = 1.51454829623 #in percent
 

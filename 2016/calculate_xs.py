@@ -1,20 +1,20 @@
 import json
 import math
 
-xs_inputs_muon = json.load(open("xs_inputs_muon.txt"))
-xs_inputs_electron = json.load(open("xs_inputs_electron.txt"))
+#xs_inputs_muon = json.load(open("xs_inputs_muon.txt"))
+#xs_inputs_electron = json.load(open("xs_inputs_electron.txt"))
 
 #xs_inputs_muon = json.load(open("xs_inputs_muon.txt.bak"))
 #xs_inputs_electron = json.load(open("xs_inputs_electron.txt.bak"))
-
-#xs_inputs_muon = json.load(open("xs_inputs/xs_inputs_muon.txt"))
-#xs_inputs_electron = json.load(open("xs_inputs/xs_inputs_electron.txt"))
 
 #xs_inputs_muon = json.load(open("xs_inputs/xs_inputs_muon.binned.txt"))
 #xs_inputs_electron = json.load(open("xs_inputs/xs_inputs_electron.binned.txt"))
 
 #xs_inputs_muon = json.load(open("xs_inputs/xs_inputs_muon.unbinned.txt"))
 #xs_inputs_electron = json.load(open("xs_inputs/xs_inputs_electron.unbinned.txt"))
+
+xs_inputs_muon = json.load(open("xs_inputs/xs_inputs_muon.txt"))
+xs_inputs_electron = json.load(open("xs_inputs/xs_inputs_electron.txt"))
 
 from pprint import pprint
 
@@ -113,44 +113,44 @@ for i in range(1,201):
 
 
 mean_pdf=0
-for i in range(1,32):
+for i in range(1,102):
     mean_pdf += xs_inputs_muon["n_signal_syst_unc_due_to_zg_pdf_variation"+str(i)]+xs_inputs_muon["n_signal_muon"]+xs_inputs_electron["n_signal_syst_unc_due_to_zg_pdf_variation"+str(i)]+xs_inputs_electron["n_signal_electron"]
 
-mean_pdf = mean_pdf/31
+mean_pdf = mean_pdf/101
 
 stddev_pdf = 0
 
-for i in range(1,32):
+for i in range(1,102):
     stddev_pdf += pow(xs_inputs_muon["n_signal_syst_unc_due_to_zg_pdf_variation"+str(i)]+xs_inputs_muon["n_signal_muon"]+xs_inputs_electron["n_signal_syst_unc_due_to_zg_pdf_variation"+str(i)]+xs_inputs_electron["n_signal_electron"] - mean_pdf,2)
 
-stddev_pdf = math.sqrt(stddev_pdf/(31-1))
+stddev_pdf = math.sqrt(stddev_pdf/(101-1))
 
 mean_pdf_muon=0
-for i in range(1,32):
+for i in range(1,102):
     mean_pdf_muon += xs_inputs_muon["n_signal_syst_unc_due_to_zg_pdf_variation"+str(i)]+xs_inputs_muon["n_signal_muon"]
 
-mean_pdf_muon = mean_pdf_muon/31
+mean_pdf_muon = mean_pdf_muon/101
 
 stddev_pdf_muon = 0
 
-for i in range(1,32):
+for i in range(1,102):
     stddev_pdf_muon += pow(xs_inputs_muon["n_signal_syst_unc_due_to_zg_pdf_variation"+str(i)]+xs_inputs_muon["n_signal_muon"]- mean_pdf_muon,2)
 
-stddev_pdf_muon = math.sqrt(stddev_pdf_muon/(31-1))
+stddev_pdf_muon = math.sqrt(stddev_pdf_muon/(101-1))
 
 
 mean_pdf_electron=0
-for i in range(1,32):
+for i in range(1,102):
     mean_pdf_electron += xs_inputs_electron["n_signal_syst_unc_due_to_zg_pdf_variation"+str(i)]+xs_inputs_electron["n_signal_electron"]
 
-mean_pdf_electron = mean_pdf_electron/31
+mean_pdf_electron = mean_pdf_electron/101
 
 stddev_pdf_electron = 0
 
-for i in range(1,32):
+for i in range(1,102):
     stddev_pdf_electron += pow(xs_inputs_electron["n_signal_syst_unc_due_to_zg_pdf_variation"+str(i)]+xs_inputs_electron["n_signal_electron"]- mean_pdf_electron,2)
 
-stddev_pdf_electron = math.sqrt(stddev_pdf_electron/(31-1))
+stddev_pdf_electron = math.sqrt(stddev_pdf_electron/(101-1))
 
 unc_due_to_fake_photon_stat_electron = math.sqrt(sum_electron_photon_stat)
 unc_due_to_fake_photon_stat_muon = math.sqrt(sum_muon_photon_stat)
@@ -494,9 +494,9 @@ muon isolation SF &  %0.2f & %0.2f & 0 \\\\
 \\hline
 photon ID SF & %0.2f & %0.2f & %0.2f \\\\
 \\hline
-PDF & %0.2f & %0.2f & %0.2f \\\\
-\\hline
 QCD Scale & %0.2f & %0.2f & %0.2f \\\\
+\\hline
+PDF & %0.2f & %0.2f & %0.2f \\\\
 \\hline
 \\end{tabular}
 \\end{center}
@@ -515,14 +515,13 @@ QCD Scale & %0.2f & %0.2f & %0.2f \\\\
 100*err_on_acc_due_to_photon_id_sf/acc,
 100*err_on_acc_due_to_photon_id_sf_muon/acc_muon,
 100*err_on_acc_due_to_photon_id_sf_electron/acc_electron,
-100*err_on_acc_due_to_pdf/acc,
-100*err_on_acc_due_to_pdf_muon/acc_muon,
-100*err_on_acc_due_to_pdf_electron/acc_electron,
 100*err_on_acc_due_to_qcd_scale/acc,
 100*err_on_acc_due_to_qcd_scale_muon/acc_muon,
 100*err_on_acc_due_to_qcd_scale_electron/acc_electron,
+100*err_on_acc_due_to_pdf/acc,
+100*err_on_acc_due_to_pdf_muon/acc_muon,
+100*err_on_acc_due_to_pdf_electron/acc_electron,
 )
-
 
 print """
 \\begin{table}[htbp]

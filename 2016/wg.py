@@ -638,9 +638,6 @@ def fillHistogramMC(label,sample):
                         fillHistogram(label["hists-photon-id-sf-variation"][j],getVariable(variables[j],sample["tree"]),weight_photon_id_sf_variation)
                         if label["syst-pdf"]:
                             for k in range(0,102):
-                                if k > 31 and sample["filename"] == "/afs/cern.ch/work/a/amlevin/data/wg/2016/zglowmlljets.root":
-                                    continue
-
                                 fillHistogram(label["hists-pdf-variation"+str(k)][j],getVariable(variables[j],sample["tree"]),weight*sample["tree"].LHEPdfWeight[k+1])
                         if label["syst-scale"]:
                             for k in range(0,8):
@@ -661,8 +658,6 @@ def fillHistogramMC(label,sample):
                         fillHistogram(label["hists-photon-id-sf-variation"][j],getVariable(variables[j],sample["tree"]),weight_photon_id_sf_variation)
                         if label["syst-pdf"]:
                             for k in range(0,102):
-                                if k > 31 and sample["filename"] == "/afs/cern.ch/work/a/amlevin/data/wg/2016/zglowmlljets.root":
-                                    continue
                                 fillHistogram(label["hists-pdf-variation"+str(k)][j],getVariable(variables[j],sample["tree"]),weight*sample["tree"].LHEPdfWeight[k+1])
                         if label["syst-scale"]:
                             for k in range(0,8):
@@ -1009,6 +1004,12 @@ print "fake photon = "+str(fake_photon_integral)+" +/- "+str(fake_photon_integra
 print "fake lepton = "+str(fake_lepton_integral)+" +/- "+str(fake_lepton_integral_error)
 print "double fake = "+str(double_fake_integral)+" +/- "+str(double_fake_integral_error)
 print "data = "+str(data_integral)+" +/- "+str(data_integral_error)
+
+n_signal = data_integral - double_fake_integral - fake_photon_integral - fake_lepton_integral - top_jets_integral - vv_jets_integral - zg_jets_integral
+
+n_signal_error = sqrt(pow(data_integral_error,2) + pow(double_fake_integral_error,2) + pow(fake_lepton_integral_error,2)+ pow(fake_photon_integral_error,2)+pow(top_jets_integral_error,2)+ pow(vv_jets_integral_error,2)+ pow(zg_jets_integral_error,2))
+
+print "n_signal = "+str(n_signal) + " +/- " + str(n_signal_error)
 
 #labels["wg+jets"]["hists"]["photon_pt"].Print("all")
 
@@ -1378,132 +1379,6 @@ if lepton_name == "electron" or lepton_name == "both":
         fit_inputs_zg_pdf_variation["zg"] = labels["zg+jets"]["hists-pdf-variation"+str(i)][mlg_index]
         fit_results_zg_pdf_variation.append(mlg_fit(fit_inputs_zg_pdf_variation))
 
-elif lepton_name == "muon":
-
-    fit_inputs = {
-        "label" : None,
-        "lepton" : "muon",
-        "data" : data["hists"][mlg_index],
-        "top" : labels["top+jets"]["hists"][mlg_index],
-        "zg" : labels["zg+jets"]["hists"][mlg_index],
-        "vv" : labels["vv+jets"]["hists"][mlg_index],
-        "wg" : labels["wg+jets"]["hists"][mlg_index],
-        "fake_photon" : fake_photon["hists"][mlg_index],
-        "fake_lepton" : fake_lepton["hists"][mlg_index],
-        "double_fake" : double_fake["hists"][mlg_index]
-        }
-
-
-
-    fit_results = mlg_fit(fit_inputs)
-    
-    fit_inputs_fake_lepton_syst = dict(fit_inputs)
-    fake_lepton_mlg_syst = fake_lepton["hists"][mlg_index].Clone("fake lepton syst")
-    fake_lepton_mlg_syst.Scale(1.3)
-    fit_inputs_fake_lepton_syst["label"] = "fake_lepton_syst"
-    fit_inputs_fake_lepton_syst["fake_lepton"] = fake_lepton_mlg_syst
-    fit_results_fake_lepton_syst = mlg_fit(fit_inputs_fake_lepton_syst)
-    
-    fit_inputs_fake_lepton_stat_up = dict(fit_inputs)
-    fit_inputs_fake_lepton_stat_up["label"] = "fake_lepton_stat_up"
-    fit_inputs_fake_lepton_stat_up["fake_lepton"] = fake_lepton_stat_up["hists"][mlg_index]
-    fit_results_fake_lepton_stat_up = mlg_fit(fit_inputs_fake_lepton_stat_up)
-
-    fit_inputs_fake_lepton_stat_down = dict(fit_inputs)
-    fit_inputs_fake_lepton_stat_down["label"] = "fake_lepton_stat_down"
-    fit_inputs_fake_lepton_stat_down["fake_lepton"] = fake_lepton_stat_down["hists"][mlg_index]
-    fit_results_fake_lepton_stat_down = mlg_fit(fit_inputs_fake_lepton_stat_down)
-
-    fit_inputs_fake_photon_alt = dict(fit_inputs)
-    fit_inputs_fake_photon_alt["fake_photon"] = fake_photon_alt["hists"][mlg_index]
-    fit_inputs_fake_photon_alt["label"] = "fake_photon_alt"
-    fit_results_fake_photon_alt = mlg_fit(fit_inputs_fake_photon_alt)
-
-    fit_results_fake_photon_stat_up = []
-
-    for i in range(1,fake_photon["hists"][mlg_index].GetNbinsX()+1):
-        fake_photon_mlg_stat_up = fake_photon["hists"][mlg_index].Clone("fake photon stat up bin "+ str(i))
-        print str(fake_photon_mlg_stat_up.GetBinContent(i)) + " --> " + str(fake_photon_mlg_stat_up.GetBinContent(i)+fake_photon_mlg_stat_up.GetBinError(i))
-        fake_photon_mlg_stat_up.SetBinContent(i,fake_photon_mlg_stat_up.GetBinContent(i)+fake_photon_mlg_stat_up.GetBinError(i))
-        fit_inputs_fake_photon_stat_up = dict(fit_inputs)
-        fit_inputs_fake_photon_stat_up["label"] = "fake_photon_stat_up_bin_"+str(i)
-        fit_inputs_fake_photon_stat_up["fake_photon"] = fake_photon_mlg_stat_up
-        fit_results_fake_photon_stat_up.append(mlg_fit(fit_inputs_fake_photon_stat_up))
-
-    fit_results_fake_lepton_stat_up = []
-
-    for i in range(1,fake_lepton["hists"][mlg_index].GetNbinsX()+1):
-        fake_lepton_mlg_stat_up = fake_lepton["hists"][mlg_index].Clone("fake lepton stat up bin "+ str(i))
-        print str(fake_lepton_mlg_stat_up.GetBinContent(i)) + " --> " + str(fake_lepton_mlg_stat_up.GetBinContent(i)+fake_lepton_mlg_stat_up.GetBinError(i))
-        fake_lepton_mlg_stat_up.SetBinContent(i,fake_lepton_mlg_stat_up.GetBinContent(i)+fake_lepton_mlg_stat_up.GetBinError(i))
-        fit_inputs_fake_lepton_stat_up = dict(fit_inputs)
-        fit_inputs_fake_lepton_stat_up["label"] = "fake_lepton_stat_up_bin_"+str(i)
-        fit_inputs_fake_lepton_stat_up["fake_lepton"] = fake_lepton_mlg_stat_up
-        fit_results_fake_lepton_stat_up.append(mlg_fit(fit_inputs_fake_lepton_stat_up))
-
-    fit_results_double_fake_stat_up = []
-
-    for i in range(1,double_fake["hists"][mlg_index].GetNbinsX()+1):
-        double_fake_mlg_stat_up = double_fake["hists"][mlg_index].Clone("fake lepton stat up bin "+ str(i))
-        print str(double_fake_mlg_stat_up.GetBinContent(i)) + " --> " + str(double_fake_mlg_stat_up.GetBinContent(i)+double_fake_mlg_stat_up.GetBinError(i))
-        double_fake_mlg_stat_up.SetBinContent(i,double_fake_mlg_stat_up.GetBinContent(i)+double_fake_mlg_stat_up.GetBinError(i))
-        fit_inputs_double_fake_stat_up = dict(fit_inputs)
-        fit_inputs_double_fake_stat_up["label"] = "double_fake_stat_up_bin_"+str(i)
-        fit_inputs_double_fake_stat_up["double_fake"] = double_fake_mlg_stat_up
-        fit_results_double_fake_stat_up.append(mlg_fit(fit_inputs_double_fake_stat_up))
-
-    fit_results_zg_stat_up = []
-
-    for i in range(1,labels["zg+jets"]["hists"][mlg_index].GetNbinsX()+1):
-        zg_mlg_stat_up = labels["zg+jets"]["hists"][mlg_index].Clone("zg stat up bin "+ str(i))
-        print str(zg_mlg_stat_up.GetBinContent(i)) + " --> " + str(zg_mlg_stat_up.GetBinContent(i)+zg_mlg_stat_up.GetBinError(i))
-        zg_mlg_stat_up.SetBinContent(i,zg_mlg_stat_up.GetBinContent(i)+zg_mlg_stat_up.GetBinError(i))
-        fit_inputs_zg_stat_up = dict(fit_inputs)
-        fit_inputs_zg_stat_up["label"] = "zg_stat_up_bin_"+str(i)
-        fit_inputs_zg_stat_up["zg"] = zg_mlg_stat_up
-        fit_results_zg_stat_up.append(mlg_fit(fit_inputs_zg_stat_up))
-
-    fit_results_vv_stat_up = []
-
-    for i in range(1,labels["vv+jets"]["hists"][mlg_index].GetNbinsX()+1):
-        vv_mlg_stat_up = labels["vv+jets"]["hists"][mlg_index].Clone("vv stat up bin "+ str(i))
-        print str(vv_mlg_stat_up.GetBinContent(i)) + " --> " + str(vv_mlg_stat_up.GetBinContent(i)+vv_mlg_stat_up.GetBinError(i))
-        vv_mlg_stat_up.SetBinContent(i,vv_mlg_stat_up.GetBinContent(i)+vv_mlg_stat_up.GetBinError(i))
-        fit_inputs_vv_stat_up = dict(fit_inputs)
-        fit_inputs_vv_stat_up["label"] = "vv_stat_up_bin_"+str(i)
-        fit_inputs_vv_stat_up["vv"] = vv_mlg_stat_up
-        fit_results_vv_stat_up.append(mlg_fit(fit_inputs_vv_stat_up))
-
-    fit_results_top_stat_up = []
-
-    for i in range(1,labels["top+jets"]["hists"][mlg_index].GetNbinsX()+1):
-        top_mlg_stat_up = labels["top+jets"]["hists"][mlg_index].Clone("top stat up bin "+ str(i))
-        print str(top_mlg_stat_up.GetBinContent(i)) + " --> " + str(top_mlg_stat_up.GetBinContent(i)+top_mlg_stat_up.GetBinError(i))
-        top_mlg_stat_up.SetBinContent(i,top_mlg_stat_up.GetBinContent(i)+top_mlg_stat_up.GetBinError(i))
-        fit_inputs_top_stat_up = dict(fit_inputs)
-        fit_inputs_top_stat_up["label"] = "top_stat_up_bin_"+str(i)
-        fit_inputs_top_stat_up["top"] = top_mlg_stat_up
-        fit_results_top_stat_up.append(mlg_fit(fit_inputs_top_stat_up))
-
-    fit_results_zg_scale_variation = []
-
-    for i in range(0,8): 
-        fit_inputs_zg_scale_variation = dict(fit_inputs)
-        fit_inputs_zg_scale_variation["label"] = "zg_scale_variation_"+str(i)
-        fit_inputs_zg_scale_variation["zg"] = labels["zg+jets"]["hists-scale-variation"+str(i)][mlg_index]
-        fit_results_zg_scale_variation.append(mlg_fit(fit_inputs_zg_scale_variation))
-
-    fit_results_zg_pdf_variation = []
-
-    for i in range(1,102): 
-        fit_inputs_zg_pdf_variation = dict(fit_inputs)
-        fit_inputs_zg_pdf_variation["label"] = "zg_pdf_variation_"+str(i)
-        fit_inputs_zg_pdf_variation["zg"] = labels["zg+jets"]["hists-pdf-variation"+str(i)][mlg_index]
-        fit_results_zg_pdf_variation.append(mlg_fit(fit_inputs_zg_pdf_variation))
-        
-else:
-    assert(0)
-
 electron_id_sf_unc = labels["wg+jets"]["hists-electron-id-sf-variation"][mlg_index].Integral() - labels["wg+jets"]["hists"][mlg_index].Integral()
 electron_reco_sf_unc = labels["wg+jets"]["hists-electron-reco-sf-variation"][mlg_index].Integral() - labels["wg+jets"]["hists"][mlg_index].Integral()
 muon_id_sf_unc = labels["wg+jets"]["hists-muon-id-sf-variation"][mlg_index].Integral() - labels["wg+jets"]["hists"][mlg_index].Integral()
@@ -1691,10 +1566,10 @@ if lepton_name == "muon":
     xs_inputs_muon = {
         "fiducial_region_cuts_efficiency":fiducial_region_cuts_efficiency,
         "n_weighted_run_over" : labels["wg+jets"]["samples"][0]["nweightedevents"],
-        "n_signal_muon" : fit_results["wg_norm"],
-        "n_signal_syst_unc_due_to_fake_photon_muon" : abs(fit_results_fake_photon_alt["wg_norm"]-fit_results["wg_norm"]),
-        "n_signal_syst_unc_due_to_fake_lepton_muon" : abs(fit_results_fake_lepton_syst["wg_norm"]-fit_results["wg_norm"]),
-        "n_signal_stat_unc_muon" : fit_results["wg_norm_err"],
+        "n_signal_muon" : n_signal,
+        "n_signal_syst_unc_due_to_fake_photon_muon" : abs(fake_photon_alt["hists"][mlg_index].Integral() - fake_photon["hists"][mlg_index].Integral()),
+        "n_signal_syst_unc_due_to_fake_lepton_muon" : abs(fake_lepton["hists"][mlg_index].Integral()*1.3 - fake_lepton["hists"][mlg_index].Integral()),
+        "n_signal_stat_unc_muon" : n_signal_error,
         "n_weighted_selected_data_mc_sf_muon" : labels["wg+jets"]["hists"][mlg_index].Integral()*labels["wg+jets"]["samples"][0]["nweightedevents"]/(labels["wg+jets"]["samples"][0]["xs"]*1000*35.9),
         "n_weighted_selected_data_mc_sf_syst_unc_due_to_muon_id_sf_muon" : muon_id_sf_unc,
         "n_weighted_selected_data_mc_sf_syst_unc_due_to_muon_iso_sf_muon" : muon_iso_sf_unc,
@@ -1710,28 +1585,28 @@ if lepton_name == "muon":
         xs_inputs_muon["n_weighted_run_over_scale_variation"+str(i)] = labels["wg+jets"]["samples"][0]["nweightedevents_qcdscaleweight"+str(i)]
         
     for i in range(1,fake_photon["hists"][mlg_index].GetNbinsX()+1): 
-        xs_inputs_muon["n_signal_syst_unc_due_to_fake_photon_stat_up_bin"+str(i)] = abs(fit_results_fake_photon_stat_up[i-1]["wg_norm"] - fit_results["wg_norm"])
+        xs_inputs_muon["n_signal_syst_unc_due_to_fake_photon_stat_up_bin"+str(i)] = fake_photon["hists"][mlg_index].GetBinError(i)
 
     for i in range(1,fake_lepton["hists"][mlg_index].GetNbinsX()+1): 
-        xs_inputs_muon["n_signal_syst_unc_due_to_fake_lepton_stat_up_bin"+str(i)] = abs(fit_results_fake_lepton_stat_up[i-1]["wg_norm"] - fit_results["wg_norm"])
+        xs_inputs_muon["n_signal_syst_unc_due_to_fake_lepton_stat_up_bin"+str(i)] = fake_lepton["hists"][mlg_index].GetBinError(i)
 
     for i in range(1,double_fake["hists"][mlg_index].GetNbinsX()+1): 
-        xs_inputs_muon["n_signal_syst_unc_due_to_double_fake_stat_up_bin"+str(i)] = abs(fit_results_double_fake_stat_up[i-1]["wg_norm"] - fit_results["wg_norm"])
+        xs_inputs_muon["n_signal_syst_unc_due_to_double_fake_stat_up_bin"+str(i)] = double_fake["hists"][mlg_index].GetBinError(i)
 
     for i in range(1,labels["zg+jets"]["hists"][mlg_index].GetNbinsX()+1): 
-        xs_inputs_muon["n_signal_syst_unc_due_to_zg_stat_up_bin"+str(i)] = abs(fit_results_zg_stat_up[i-1]["wg_norm"] - fit_results["wg_norm"])
+        xs_inputs_muon["n_signal_syst_unc_due_to_zg_stat_up_bin"+str(i)] = labels["zg+jets"]["hists"][mlg_index].GetBinError(i)
 
     for i in range(1,labels["vv+jets"]["hists"][mlg_index].GetNbinsX()+1): 
-        xs_inputs_muon["n_signal_syst_unc_due_to_vv_stat_up_bin"+str(i)] = abs(fit_results_vv_stat_up[i-1]["wg_norm"] - fit_results["wg_norm"])
+        xs_inputs_muon["n_signal_syst_unc_due_to_vv_stat_up_bin"+str(i)] = labels["vv+jets"]["hists"][mlg_index].GetBinError(i)
 
     for i in range(1,labels["top+jets"]["hists"][mlg_index].GetNbinsX()+1): 
-        xs_inputs_muon["n_signal_syst_unc_due_to_top_stat_up_bin"+str(i)] = abs(fit_results_top_stat_up[i-1]["wg_norm"] - fit_results["wg_norm"])
+        xs_inputs_muon["n_signal_syst_unc_due_to_top_stat_up_bin"+str(i)] = labels["top+jets"]["hists"][mlg_index].GetBinError(i)
 
     for i in range(0,8): 
-        xs_inputs_muon["n_signal_syst_unc_due_to_zg_scale_variation"+str(i)] = fit_results_zg_scale_variation[i]["wg_norm"] - fit_results["wg_norm"]
+        xs_inputs_muon["n_signal_syst_unc_due_to_zg_scale_variation"+str(i)] = labels["zg+jets"]["hists"][mlg_index].Integral() - labels["zg+jets"]["hists-scale-variation"+str(i)][mlg_index].Integral()
 
     for i in range(1,102): 
-        xs_inputs_muon["n_signal_syst_unc_due_to_zg_pdf_variation"+str(i)] = fit_results_zg_pdf_variation[i-1]["wg_norm"] - fit_results["wg_norm"]
+        xs_inputs_muon["n_signal_syst_unc_due_to_zg_pdf_variation"+str(i)] = labels["zg+jets"]["hists"][mlg_index].Integral() - labels["zg+jets"]["hists-pdf-variation"+str(i)][mlg_index].Integral()
 
     pprint(xs_inputs_muon)
 
