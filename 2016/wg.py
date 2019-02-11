@@ -6,6 +6,8 @@ def fillHistogram(hist,value,weight=1):
             value = hist.GetBinCenter(hist.GetNbinsX())
     hist.Fill(value,weight)
 
+import ctypes
+
 import json
 
 import sys
@@ -94,6 +96,8 @@ import eff_scale_factor
 
 import ROOT
 
+
+#when the TMinuit object is reused, the random seed is not reset after each fit, so the fit result can change when it is run on the same input 
 ROOT.TMinuitMinimizer.UseStaticMinuit(False)
 
 f_pu_weights = ROOT.TFile("/afs/cern.ch/user/a/amlevin/PileupWeights2016.root")
@@ -539,89 +543,72 @@ def fillHistogramMC(label,sample):
         else:
             pass_photon_gen_matching_for_fake = False    
 
+        weight = sample["xs"] * 1000 * 35.9 / sample["nweightedevents"]
+        weight *= pu_weight_hist.GetBinContent(pu_weight_hist.FindFixBin(sample["tree"].npu))    
+        weight *= sample["tree"].L1PreFiringWeight 
+
+#        if sample["filename"] == "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjetsewdim6.root":
+#            weight *= sample["tree"].LHEWeight_rwgt_373
+
+        if sample["tree"].gen_weight < 0:
+            weight = - weight
+
+        weight_double_fake = weight
+        weight_fake_lepton = weight
+        weight_fake_photon = weight
+        weight_fake_lepton_stat_up = weight
+        weight_fake_lepton_stat_down = weight
+        weight_fake_photon_alt = weight
+        weight_fake_photon_stat_up = weight 
+        weight_photon_id_sf_variation = weight
+        weight_electron_id_sf_variation = weight
+        weight_electron_reco_sf_variation = weight
+        weight_muon_id_sf_variation = weight 
+        weight_muon_iso_sf_variation = weight
+        
         if pass_photon_gen_matching_for_fake and pass_is_lepton_real:
             if pass_selection(sample["tree"],options.phoeta,True,False):
 
-                weight =-fake_lepton_event_weight(sample["tree"].lepton_pdg_id,sample["tree"].lepton_eta, sample["tree"].lepton_pt,"nominal")* sample["xs"] * 1000 * 35.9 / sample["nweightedevents"]
-                weight_fake_lepton_stat_up =-fake_lepton_event_weight(sample["tree"].lepton_pdg_id,sample["tree"].lepton_eta, sample["tree"].lepton_pt,"up")* sample["xs"] * 1000 * 35.9 / sample["nweightedevents"]
-                weight_fake_lepton_stat_down =-fake_lepton_event_weight(sample["tree"].lepton_pdg_id,sample["tree"].lepton_eta, sample["tree"].lepton_pt,"down")* sample["xs"] * 1000 * 35.9 / sample["nweightedevents"]
-
-                if sample["tree"].gen_weight < 0:
-                    weight = -weight
-                    weight_fake_lepton_stat_up = -weight_fake_lepton_stat_up 
-                    weight_fake_lepton_stat_down = -weight_fake_lepton_stat_down 
+                weight_fake_lepton *= -fake_lepton_event_weight(sample["tree"].lepton_pdg_id,sample["tree"].lepton_eta, sample["tree"].lepton_pt,"nominal")
+                weight_fake_lepton_stat_up *= -fake_lepton_event_weight(sample["tree"].lepton_pdg_id,sample["tree"].lepton_eta, sample["tree"].lepton_pt,"up")
+                weight_fake_lepton_stat_down *= -fake_lepton_event_weight(sample["tree"].lepton_pdg_id,sample["tree"].lepton_eta, sample["tree"].lepton_pt,"down")
 
                 for j in range(len(variables)):
-                    fillHistogram(fake_lepton["hists"][j],getVariable(variables[j],sample["tree"]),weight)
+                    fillHistogram(fake_lepton["hists"][j],getVariable(variables[j],sample["tree"]),weight_fake_lepton)
                     fillHistogram(fake_lepton_stat_up["hists"][j],getVariable(variables[j],sample["tree"]),weight_fake_lepton_stat_up)
                     fillHistogram(fake_lepton_stat_down["hists"][j],getVariable(variables[j],sample["tree"]),weight_fake_lepton_stat_down)
 
             if pass_selection(sample["tree"],options.phoeta,False,True):
 
-                weight = -fake_photon_event_weight(sample["tree"].photon_eta, sample["tree"].photon_pt,sample["tree"].lepton_pdg_id)* sample["xs"] * 1000 * 35.9 / sample["nweightedevents"]
-                weight_fake_photon_alt = -fake_photon_event_weight(sample["tree"].photon_eta, sample["tree"].photon_pt,sample["tree"].lepton_pdg_id, True)* sample["xs"] * 1000 * 35.9 / sample["nweightedevents"]
-
-                weight_fake_photon_stat_up = -fake_photon_event_weight(sample["tree"].photon_eta, sample["tree"].photon_pt,sample["tree"].lepton_pdg_id, False,True)* sample["xs"] * 1000 * 35.9 / sample["nweightedevents"]
-
-                if sample["tree"].gen_weight < 0:
-                    weight = -weight
-                    weight_fake_photon_alt = -weight_fake_photon_alt
-                    weight_fake_photon_stat_up = -weight_fake_photon_stat_up
+                weight_fake_photon *= -fake_photon_event_weight(sample["tree"].photon_eta, sample["tree"].photon_pt,sample["tree"].lepton_pdg_id)
+                weight_fake_photon_alt *= -fake_photon_event_weight(sample["tree"].photon_eta, sample["tree"].photon_pt,sample["tree"].lepton_pdg_id, True)
+                weight_fake_photon_stat_up *= -fake_photon_event_weight(sample["tree"].photon_eta, sample["tree"].photon_pt,sample["tree"].lepton_pdg_id, False,True)
 
                 for j in range(len(variables)):
-                    fillHistogram(fake_photon["hists"][j],getVariable(variables[j],sample["tree"]),weight)
+                    fillHistogram(fake_photon["hists"][j],getVariable(variables[j],sample["tree"]),weight_fake_photon)
                     fillHistogram(fake_photon_alt["hists"][j],getVariable(variables[j],sample["tree"]),weight_fake_photon_alt)
                     fillHistogram(fake_photon_stat_up["hists"][j],getVariable(variables[j],sample["tree"]),weight_fake_photon_stat_up)
 
         if not pass_selection(sample["tree"],options.phoeta,False,False):
             continue
 
-        weight = sample["xs"]*1000*35.9/sample["nweightedevents"]
-
-#        if sample["filename"] == "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjetsewdim6.root":
-#            weight *= sample["tree"].LHEWeight_rwgt_3
-
-        weight *= pu_weight_hist.GetBinContent(pu_weight_hist.FindFixBin(sample["tree"].npu))
-
-#        if sample["filename"] == "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjets.root" or sample["filename"] == "/afs/cern.ch/work/a/amlevin/data/wg/2016/zjets.root":
-        weight *= sample["tree"].L1PreFiringWeight 
-
-        weight_photon_id_sf_variation = weight * eff_scale_factor.photon_efficiency_scale_factor(sample["tree"].photon_pt,sample["tree"].photon_eta,True)
+        weight_photon_id_sf_variation *= eff_scale_factor.photon_efficiency_scale_factor(sample["tree"].photon_pt,sample["tree"].photon_eta,True)
         weight *= eff_scale_factor.photon_efficiency_scale_factor(sample["tree"].photon_pt,sample["tree"].photon_eta)
-
          
         if sample["tree"].lepton_pdg_id == 11:
-            weight_electron_id_sf_variation = weight * eff_scale_factor.electron_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta,True,False)
-            weight_electron_reco_sf_variation = weight * eff_scale_factor.electron_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta,False,True)
             weight *= eff_scale_factor.electron_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta)
+            weight_electron_id_sf_variation *= eff_scale_factor.electron_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta,True,False)
+            weight_electron_reco_sf_variation *= eff_scale_factor.electron_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta,False,True)
             weight_photon_id_sf_variation *= eff_scale_factor.electron_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta)
-            weight_muon_id_sf_variation = weight
-            weight_muon_iso_sf_variation = weight
         elif sample["tree"].lepton_pdg_id == 13:
-            weight_muon_id_sf_variation = weight * eff_scale_factor.muon_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta,False,True)
-            weight_muon_iso_sf_variation = weight * eff_scale_factor.muon_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta,True,False)
             weight *= eff_scale_factor.muon_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta)
+            weight_muon_id_sf_variation *= eff_scale_factor.muon_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta,False,True)
+            weight_muon_iso_sf_variation *= eff_scale_factor.muon_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta,True,False)
             weight_photon_id_sf_variation *= eff_scale_factor.muon_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta)
-            weight_electron_id_sf_variation = weight
-            weight_electron_reco_sf_variation = weight
         else:
             assert(0)
 
-        if sample["tree"].gen_weight < 0:
-            weight = -weight
-            weight_electron_id_sf_variation = -weight_electron_id_sf_variation
-            weight_electron_reco_sf_variation = -weight_electron_reco_sf_variation
-            weight_muon_id_sf_variation = -weight_muon_id_sf_variation
-            weight_muon_iso_sf_variation = -weight_muon_iso_sf_variation
-            weight_photon_id_sf_variation = -weight_photon_id_sf_variation
-
-#        if sample["filename"] == "/afs/cern.ch/work/a/amlevin/data/wg/wgjets.root":
-#            weight = weight * nnlo_scale_factor(sample["tree"].photon_pt,sample["tree"].photon_eta)
-
-#        pass_is_lepton_real = True    
-
         if pass_is_lepton_real:
-
             if bool(sample["tree"].photon_gen_matching & int('0010',2)):
                 if sample["e_to_p_non_res"]:
                     for j in range(len(variables)):
@@ -1257,6 +1244,10 @@ def mlg_fit(inputs):
     mlg_fit_results["wg_norm"] = wg_norm.getVal()
     mlg_fit_results["wg_norm_err"] = wg_norm.getError()
 
+#instead of resetting after each fit, turn the static minuit feature off (see above near "import ROOT")
+#    ROOT.gMinuit.mncler()
+#    ROOT.gMinuit.mnrn15(ROOT.Double(3),ctypes.c_int(12345))
+
     return mlg_fit_results
 
 if lepton_name == "electron" or lepton_name == "both":
@@ -1718,7 +1709,8 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
         dcard.write(" " + str(j))
     dcard.write('\n')    
     dcard.write('rate')
-    dcard.write(' '+str(sm_lhe_weight_hist.GetBinContent(i)))
+#    dcard.write(' '+str(sm_lhe_weight_hist.GetBinContent(i)))
+    dcard.write(' '+str(labels["wg+jets"]["hists"][0].GetBinContent(i)))
     for label in labels.keys():
         if label == "no label" or label == "wg+jets":
             continue
@@ -1773,7 +1765,8 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
     dcard.write('\n')    
 
     if sm_lhe_weight_hist.GetBinContent(i) > 0:
-        dcard.write("mcstat_ewdim6_bin"+str(i)+" lnN "+str(1+sm_lhe_weight_hist.GetBinError(i)/sm_lhe_weight_hist.GetBinContent(i)))
+#        dcard.write("mcstat_ewdim6_bin"+str(i)+" lnN "+str(1+sm_lhe_weight_hist.GetBinError(i)/sm_lhe_weight_hist.GetBinContent(i)))
+        dcard.write("mcstat_ewdim6_bin"+str(i)+" lnN "+str(1+labels["wg+jets"]["hists"][0].GetBinError(i)/labels["wg+jets"]["hists"][0].GetBinContent(i)))
         for label in labels.keys():
             if label == "no label" or label == "wg+jets":
                 continue
@@ -1820,4 +1813,28 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
         dcard.write(" -")                
         dcard.write("\n")  
 
+    if fake_lepton["hists"][0].GetBinContent(i) > 0:        
+        dcard.write("fake_lepton_stat lnN -")
+        for label in labels.keys():
+            if label == "no label" or label == "wg+jets":
+                continue
+            dcard.write(" -")
 
+        dcard.write(" -")                
+        dcard.write(" "+str(1+fake_lepton["hists"][0].GetBinError(i)/fake_lepton["hists"][0].GetBinContent(i)))
+        dcard.write(" -")                
+        dcard.write(" -")                
+        dcard.write("\n")  
+
+    if fake_photon["hists"][0].GetBinContent(i) > 0:        
+        dcard.write("fake_photon_stat lnN -")
+        for label in labels.keys():
+            if label == "no label" or label == "wg+jets":
+                continue
+            dcard.write(" -")
+
+        dcard.write(" "+str(1+fake_photon["hists"][0].GetBinError(i)/fake_photon["hists"][0].GetBinContent(i)))
+        dcard.write(" -")                
+        dcard.write(" -")                
+        dcard.write(" -")                
+        dcard.write("\n")  
