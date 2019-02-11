@@ -94,6 +94,8 @@ import eff_scale_factor
 
 import ROOT
 
+ROOT.TMinuitMinimizer.UseStaticMinuit(False)
+
 f_pu_weights = ROOT.TFile("/afs/cern.ch/user/a/amlevin/PileupWeights2016.root")
 
 pu_weight_hist = f_pu_weights.Get("ratio")
