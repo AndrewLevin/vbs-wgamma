@@ -37,6 +37,7 @@ labels = {
         "color": ROOT.kCyan, 
         "samples" : [
             {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjets.root", "xs" : 178.6, "non_fsr" : True, "e_to_p_non_res" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True} 
+#            {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjetsewdim6.root", "xs" : 4.138, "non_fsr" : True, "e_to_p_non_res" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True} 
 #            {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/powhegwplusg.root", "xs" : 33420., "non_fsr" : True, "e_to_p_non_res" : True,"fsr" : True, "e_to_p_for_fake" : True} 
             ] 
         }, 
@@ -53,7 +54,7 @@ labels = {
         "syst-scale" : False, 
         "color" : None, 
         "samples" : [
-            {"filename": "/afs/cern.ch/work/a/amlevin/data/wg/2016/zjets.root", "xs" : 4963.0, "non_fsr" : False, "e_to_p_non_res" : False, "e_to_p" : True, "fsr" : False, "e_to_p_for_fake" : True}
+            {"filename": "/afs/cern.ch/work/a/amlevin/data/wg/2016/zjets.root", "xs" : 6225.42, "non_fsr" : False, "e_to_p_non_res" : False, "e_to_p" : True, "fsr" : False, "e_to_p_for_fake" : True} ##6225.42 is the nnlo cross-section
             ] 
         }, 
     }
