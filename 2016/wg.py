@@ -1009,14 +1009,14 @@ fake_photon_stat_up["hists"][mlg_index].Print("all")
 def mlg_fit(inputs):
 
     m= ROOT.RooRealVar("m","m",0,mlg_fit_upper_bound)
-    m0=ROOT.RooRealVar("m0",    "m0",0,-10,10)
-    sigma=ROOT.RooRealVar("sigma",  "sigma",1,0.1,5)
-    alpha=ROOT.RooRealVar("alpha",  "alpha",5,0,20)
-    n=ROOT.RooRealVar("n",          "n",1,0,10)
+    m0=ROOT.RooRealVar("m0",    "m0",0.564706,-5,5)
+    sigma=ROOT.RooRealVar("sigma",  "sigma",1.48775,0.1,3)
+    alpha=ROOT.RooRealVar("alpha",  "alpha",4.45779,4.45779-2,4.45779+2)
+    n=ROOT.RooRealVar("n",          "n",2.11960,1,3)
     cb = ROOT.RooCBShape("cb", "Crystal Ball", m, m0, sigma, alpha, n)
 
-    mass = ROOT.RooRealVar("mass","mass",90,0,200)
-    width = ROOT.RooRealVar("width","width",5,0.1,10);
+    mass = ROOT.RooRealVar("mass","mass",90.2963,90.2963-5,90.2963+5)
+    width = ROOT.RooRealVar("width","width",4.48990,4.48990/2,4.48990*2);
     bw = ROOT.RooBreitWigner("bw","Breit Wigner",m,mass,width)
 
     RooFFTConvPdf_bwcb = ROOT.RooFFTConvPdf("bwcb","Breit Wigner convolved with a Crystal Ball",m,bw,cb)
@@ -1050,11 +1050,11 @@ def mlg_fit(inputs):
         RooHistPdf_etog = ROOT.RooHistPdf("etog","etog",ROOT.RooArgSet(m),RooDataHist_mlg_etog)
 
     top_norm = ROOT.RooRealVar("top_norm","top_norm",inputs["top"].Integral(),inputs["top"].Integral())    
-    wg_norm = ROOT.RooRealVar("wg_norm","wg_norm",0,1000000);    
+    wg_norm = ROOT.RooRealVar("wg_norm","wg_norm",9840.51,0.5*9840.51,2*9840.51);    
 #    zg_norm = ROOT.RooRealVar("zg_norm","zg_norm",0,1000000);    
     zg_norm = ROOT.RooRealVar("zg_norm","zg_norm",inputs["zg"].Integral(),inputs["zg"].Integral());    
     vv_norm = ROOT.RooRealVar("vv_norm","vv_norm",inputs["vv"].Integral(),inputs["vv"].Integral());    
-    bwcb_norm = ROOT.RooRealVar("bwcb_norm","bwcb_norm",0,1000000);    
+    bwcb_norm = ROOT.RooRealVar("bwcb_norm","bwcb_norm",4714.96,0.5*4714.96,2*4714.96);    
     fake_lepton_norm = ROOT.RooRealVar("fake_lepton_norm","fake_lepton_norm",inputs["fake_lepton"].Integral(),inputs["fake_lepton"].Integral());    
     fake_photon_norm = ROOT.RooRealVar("fake_photon_norm","fake_photon_norm",inputs["fake_photon"].Integral(),inputs["fake_photon"].Integral());    
     double_fake_norm = ROOT.RooRealVar("double_fake_norm","double_fake_norm",inputs["double_fake"].Integral(),inputs["double_fake"].Integral());    
@@ -1073,7 +1073,7 @@ def mlg_fit(inputs):
     else:
         assert(0)
 
-    sum.fitTo(RooDataHist_mlg_data,ROOT.RooFit.Extended())
+    sum.fitTo(RooDataHist_mlg_data,ROOT.RooFit.Extended(),ROOT.RooFit.Strategy(2))
     #sum.fitTo(RooDataSet_mlg_data,ROOT.RooFit.Extended())
 
     frame1 = m.frame()
@@ -1250,7 +1250,7 @@ def mlg_fit(inputs):
 
     return mlg_fit_results
 
-if lepton_name == "electron" or lepton_name == "both":
+if lepton_name == "electron":
 
     fit_inputs = {
         "label" : None,
