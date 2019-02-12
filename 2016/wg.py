@@ -1002,6 +1002,8 @@ print "n_signal = "+str(n_signal) + " +/- " + str(n_signal_error)
 
 #labels["wg+jets"]["hists"]["photon_pt"].Print("all")
 
+double_fake["hists"][mlg_index].Print("all")
+fake_lepton["hists"][mlg_index].Print("all")
 fake_photon["hists"][mlg_index].Print("all")
 fake_photon_alt["hists"][mlg_index].Print("all")
 fake_photon_stat_up["hists"][mlg_index].Print("all")
