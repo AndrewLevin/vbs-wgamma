@@ -1,7 +1,8 @@
 import ROOT
 
 fmc = ROOT.TFile("PileupWeights2016.root","NEW")
-fdata = ROOT.TFile("/afs/cern.ch/user/a/amlevin/PileupData2016Observed.root","READ")
+fdata = ROOT.TFile("/afs/cern.ch/user/a/amlevin/PileupData2016Observed.root","READ") #pileupCalc.py -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/ReReco/Final/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt --inputLumiJSON /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/PileUp/pileup_latest.txt  --calcMode observed --minBiasXsec 69200 --maxPileupBin 70 --numPileupBins 70  PileupData2016Observed.root
+
 
 data_hist = fdata.Get("pileup") 
 
