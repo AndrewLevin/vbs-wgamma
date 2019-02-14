@@ -4,6 +4,16 @@ keep run
 keep luminosityBlock
 keep event
 keep Generator_weight
+keep GenPart_eta
+keep GenPart_phi
+keep GenPart_mass
+keep GenPart_pt
+keep GenPart_pdgId
+keep GenPart_statusFlags
+keep GenPart_status
+keep GenPart_genPartIdxMother
+keep PuppiMET_pt
+keep PuppiMET_phi
 keep MET_pt
 keep MET_phi
 keep Electron_pt
