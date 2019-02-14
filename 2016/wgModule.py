@@ -37,6 +37,8 @@ class exampleProducer(Module):
         self.out.branch("btagging_selection",  "I");
         self.out.branch("met",  "F");
         self.out.branch("mt",  "F");
+        self.out.branch("puppimet",  "F");
+        self.out.branch("puppimt",  "F");
         self.out.branch("mjj","F")
         self.out.branch("npvs","I")
         self.out.branch("njets","I")
@@ -343,12 +345,13 @@ class exampleProducer(Module):
                 pass
 
             self.out.fillBranch("mt",sqrt(2*muons[tight_muons[0]].pt*event.MET_pt*(1 - cos(event.MET_phi - muons[tight_muons[0]].phi))))
+            self.out.fillBranch("puppimt",sqrt(2*muons[tight_muons[0]].pt*event.PuppiMET_pt*(1 - cos(event.PuppiMET_phi - muons[tight_muons[0]].phi))))
             self.out.fillBranch("is_lepton_real",is_lepton_real)
             self.out.fillBranch("lepton_pdg_id",13)
             self.out.fillBranch("lepton_pt",muons[tight_muons[0]].pt)
             self.out.fillBranch("lepton_eta",muons[tight_muons[0]].eta)
             self.out.fillBranch("lepton_phi",muons[tight_muons[0]].phi)
-            self.out.fillBranch("met",event.MET_pt)
+
             self.out.fillBranch("photon_pt",photons[tight_photons[0]].pt)
             self.out.fillBranch("photon_eta",photons[tight_photons[0]].eta)
             self.out.fillBranch("photon_phi",photons[tight_photons[0]].phi)
@@ -401,12 +404,13 @@ class exampleProducer(Module):
 
 
             self.out.fillBranch("mt",sqrt(2*muons[loose_but_not_tight_muons[0]].pt*event.MET_pt*(1 - cos(event.MET_phi - muons[loose_but_not_tight_muons[0]].phi))))
+            self.out.fillBranch("puppimt",sqrt(2*muons[loose_but_not_tight_muons[0]].pt*event.PuppiMET_pt*(1 - cos(event.PuppiMET_phi - muons[loose_but_not_tight_muons[0]].phi))))
             self.out.fillBranch("is_lepton_real",is_lepton_real)
             self.out.fillBranch("lepton_pdg_id",13)
             self.out.fillBranch("lepton_pt",muons[loose_but_not_tight_muons[0]].pt)
             self.out.fillBranch("lepton_eta",muons[loose_but_not_tight_muons[0]].eta)
             self.out.fillBranch("lepton_phi",muons[loose_but_not_tight_muons[0]].phi)
-            self.out.fillBranch("met",event.MET_pt)
+
             self.out.fillBranch("photon_pt",photons[tight_photons[0]].pt)
             self.out.fillBranch("photon_eta",photons[tight_photons[0]].eta)
             self.out.fillBranch("photon_phi",photons[tight_photons[0]].phi)
@@ -459,12 +463,13 @@ class exampleProducer(Module):
                 pass
 
             self.out.fillBranch("mt",sqrt(2*electrons[tight_electrons[0]].pt*event.MET_pt*(1 - cos(event.MET_phi - electrons[tight_electrons[0]].phi))))
+            self.out.fillBranch("puppimt",sqrt(2*electrons[tight_electrons[0]].pt*event.PuppiMET_pt*(1 - cos(event.PuppiMET_phi - electrons[tight_electrons[0]].phi))))
             self.out.fillBranch("is_lepton_real",is_lepton_real)
             self.out.fillBranch("lepton_pdg_id",11)
             self.out.fillBranch("lepton_pt",electrons[tight_electrons[0]].pt)
             self.out.fillBranch("lepton_eta",electrons[tight_electrons[0]].eta)
             self.out.fillBranch("lepton_phi",electrons[tight_electrons[0]].phi)
-            self.out.fillBranch("met",event.MET_pt)
+
             self.out.fillBranch("photon_pt",photons[tight_photons[0]].pt)
             self.out.fillBranch("photon_eta",photons[tight_photons[0]].eta)
             self.out.fillBranch("photon_phi",photons[tight_photons[0]].phi)
@@ -513,13 +518,14 @@ class exampleProducer(Module):
 
                 pass
 
-            self.out.fillBranch("mt",sqrt(2*electrons[loose_but_not_tight_electrons[0]].pt*event.MET_pt*(1 - cos(event.MET_phi - electrons[loose_but_not_tight_electrons[0]].phi))))                    
+            self.out.fillBranch("mt",sqrt(2*electrons[loose_but_not_tight_electrons[0]].pt*event.MET_pt*(1 - cos(event.MET_phi - electrons[loose_but_not_tight_electrons[0]].phi))))
+            self.out.fillBranch("puppimt",sqrt(2*electrons[loose_but_not_tight_electrons[0]].pt*event.PuppiMET_pt*(1 - cos(event.PuppiMET_phi - electrons[loose_but_not_tight_electrons[0]].phi))))
             self.out.fillBranch("is_lepton_real",is_lepton_real)
             self.out.fillBranch("lepton_pdg_id",11)
             self.out.fillBranch("lepton_pt",electrons[loose_but_not_tight_electrons[0]].pt)
             self.out.fillBranch("lepton_eta",electrons[loose_but_not_tight_electrons[0]].eta)
             self.out.fillBranch("lepton_phi",electrons[loose_but_not_tight_electrons[0]].phi)
-            self.out.fillBranch("met",event.MET_pt)
+
             self.out.fillBranch("photon_pt",photons[tight_photons[0]].pt)
             self.out.fillBranch("photon_eta",photons[tight_photons[0]].eta)
             self.out.fillBranch("photon_phi",photons[tight_photons[0]].phi)
@@ -622,6 +628,8 @@ class exampleProducer(Module):
         self.out.fillBranch("event",event.event)
         self.out.fillBranch("lumi",event.luminosityBlock)
         self.out.fillBranch("run",event.run)
+        self.out.fillBranch("met",event.MET_pt)
+        self.out.fillBranch("puppimet",event.PuppiMET_pt)
 
         return True
 
