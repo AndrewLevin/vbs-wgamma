@@ -20,15 +20,21 @@ class exampleProducer(Module):
         pass
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = wrappedOutputTree
-        self.out.branch("run",  "i");
-        self.out.branch("lumi",  "i");
-        self.out.branch("event",  "l");
-        self.out.branch("photon_sieie",  "F");
-        self.out.branch("photon_selection",  "I");
-        self.out.branch("photon_pt",  "F");
-        self.out.branch("photon_eta",  "F");
-        self.out.branch("gen_weight",  "F");
-        self.out.branch("lepton_pdg_id",  "I");
+        self.out.branch("run",  "i")
+        self.out.branch("lumi",  "i")
+        self.out.branch("event",  "l")
+        self.out.branch("photon_sieie",  "F")
+        self.out.branch("photon_selection",  "I")
+        self.out.branch("photon_pt",  "F")
+        self.out.branch("photon_eta",  "F")
+        self.out.branch("gen_weight",  "F")
+        self.out.branch("lepton_pdg_id",  "I")
+        self.out.branch("lepton_pt",  "F")
+        self.out.branch("photon_gen_matching",  "I")
+        self.out.branch("mt",  "F")
+        self.out.branch("met",  "F")
+        self.out.branch("puppimt",  "F")
+        self.out.branch("puppimet",  "F")
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
     def analyze(self, event):
@@ -37,6 +43,11 @@ class exampleProducer(Module):
         muons = Collection(event, "Muon")
         jets = Collection(event, "Jet")
         photons = Collection(event, "Photon")
+
+        try:
+            genparts = Collection(event, "GenPart")
+        except:
+            pass
 
         tight_muons = []
 
@@ -149,6 +160,10 @@ class exampleProducer(Module):
             #if sqrt(2*muons[tight_muons[0]].pt*event.MET_pt*(1 - cos(event.MET_phi - muons[tight_muons[0]].phi))) < 30:
              #   return False
 
+            self.out.fillBranch("mt",sqrt(2*muons[tight_muons[0]].pt*event.MET_pt*(1 - cos(event.MET_phi - muons[tight_muons[0]].phi))))
+            self.out.fillBranch("puppimt",sqrt(2*muons[tight_muons[0]].pt*event.PuppiMET_pt*(1 - cos(event.PuppiMET_phi - muons[tight_muons[0]].phi))))
+            self.out.fillBranch("lepton_pt",muons[tight_muons[0]].pt)
+            
         elif len(tight_electrons) == 1:
 
             if not event.HLT_Ele27_WPTight_Gsf:
@@ -159,8 +174,10 @@ class exampleProducer(Module):
 
             self.out.fillBranch("lepton_pdg_id",11)
 
-            #if sqrt(2*electrons[tight_electrons[0]].pt*event.MET_pt*(1 - cos(event.MET_phi - muons[tight_electrons[0]].phi))) < 30:
-            #    return False
+            self.out.fillBranch("mt",sqrt(2*electrons[tight_electrons[0]].pt*event.MET_pt*(1 - cos(event.MET_phi - electrons[tight_electrons[0]].phi))))
+            self.out.fillBranch("puppimt",sqrt(2*electrons[tight_electrons[0]].pt*event.PuppiMET_pt*(1 - cos(event.PuppiMET_phi - electrons[tight_electrons[0]].phi))))
+
+            self.out.fillBranch("lepton_pt",electrons[tight_electrons[0]].pt)
 
         else:
             return False
@@ -185,11 +202,35 @@ class exampleProducer(Module):
         self.out.fillBranch("photon_sieie",photons[selected_photons[0]].sieie)
         self.out.fillBranch("photon_pt",photons[selected_photons[0]].pt)
         self.out.fillBranch("photon_eta",photons[selected_photons[0]].eta)
+        self.out.fillBranch("met",event.MET_pt)
+        self.out.fillBranch("met",event.PuppiMET_pt)
+
+        photon_gen_matching=0
 
         try:
+
             self.out.fillBranch("gen_weight",event.Generator_weight)
+
+            isprompt_mask = (1 << 0) #isPrompt
+            isfromhardprocess_mask = (1 << 8) #isFromHardProcess 
+            isprompttaudecayproduct_mask = (1 << 4) #isPromptTauDecayProduct
+
+            for i in range(0,len(genparts)):
+                if genparts[i].pt > 5 and genparts[i].status == 1 and abs(genparts[i].pdgId) == 13 and ((genparts[i].statusFlags & isprompt_mask == isprompt_mask) or (genparts[i].statusFlags & isprompttaudecayproduct_mask == isprompttaudecayproduct_mask)) and deltaR(photons[selected_photons[0]].eta,photons[selected_photons[0]].phi,genparts[i].eta,genparts[i].phi) < 0.3:
+                    photon_gen_matching += 1 #m -> g
+
+                if genparts[i].pt > 5 and genparts[i].status == 1 and abs(genparts[i].pdgId) == 11 and ((genparts[i].statusFlags & isprompt_mask == isprompt_mask) or (genparts[i].statusFlags & isprompttaudecayproduct_mask == isprompttaudecayproduct_mask)) and deltaR(photons[selected_photons[0]].eta,photons[selected_photons[0]].phi,genparts[i].eta,genparts[i].phi) < 0.3:
+                    photon_gen_matching += 2 #e -> g
+
+                if genparts[i].pt > 5 and genparts[i].status == 1 and genparts[i].pdgId == 22 and ((genparts[i].statusFlags & isprompt_mask == isprompt_mask) or (genparts[i].statusFlags & isprompttaudecayproduct_mask == isprompttaudecayproduct_mask)) and deltaR(photons[selected_photons[0]].eta,photons[selected_photons[0]].phi,genparts[i].eta,genparts[i].phi) < 0.3:
+                    if genparts[i].genPartIdxMother >= 0 and (abs(genparts[genparts[i].genPartIdxMother].pdgId) == 11 or abs(genparts[genparts[i].genPartIdxMother].pdgId) == 13 or abs(genparts[genparts[i].genPartIdxMother].pdgId) == 15):
+                        photon_gen_matching += 8 #fsr photon
+                    else:
+                        photon_gen_matching += 4 #non-fsr photon
         except:
             pass
+
+        self.out.fillBranch("photon_gen_matching",photon_gen_matching)
 
         self.out.fillBranch("event",event.event)
         self.out.fillBranch("lumi",event.luminosityBlock)
