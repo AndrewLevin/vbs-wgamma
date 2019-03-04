@@ -151,13 +151,13 @@ def getVariable(varname, tree):
     elif varname == "dphilg":
         return deltaPhi(tree.lepton_phi,tree.photon_phi)
     elif varname == "mt":
-        return tree.mt
+        return tree.puppimt
     elif varname == "njets":
         return float(tree.njets)
     elif varname == "npvs":
         return float(tree.npvs)
     elif varname == "met":
-        return tree.met
+        return tree.puppimet
     elif varname == "lepton_pt":
         return tree.lepton_pt
     elif varname == "lepton_eta":
@@ -282,15 +282,15 @@ def pass_selection(tree, barrel_or_endcap_or_both = "both", fake_lepton = False 
 #    else:
 #        pass_mlg = True
 
-#    if tree.met > 35:
-    if tree.met > 70:
-#    if tree.met > 0:
+#    if tree.puppimet > 35:
+    if tree.puppimet > 60:
+#    if tree.puppimet > 0:
         pass_met = True
     else:
         pass_met = False
 
-    if tree.mt > 30:
-#    if tree.mt > 0:
+    if tree.puppimt > 30:
+#    if tree.puppimt > 0:
         pass_mt = True
     else:
         pass_mt = False
@@ -525,7 +525,7 @@ def fillHistogramMC(label,sample):
 
         sample["tree"].GetEntry(i)
 
-        if sample["tree"].met < 70 or sample["tree"].mt < 30:
+        if sample["tree"].puppimet < 60 or sample["tree"].puppimt < 30:
             continue
 
         if sample["tree"].is_lepton_real == '\x01':
@@ -892,7 +892,7 @@ for i in range(data_events_tree.GetEntries()):
     if i > 0 and i % 100000 == 0:
         print "Processed " + str(i) + " out of " + str(data_events_tree.GetEntries()) + " events"
 
-    if data_events_tree.met < 70 or data_events_tree.mt < 30:
+    if data_events_tree.puppimet < 60 or data_events_tree.puppimt < 30:
         continue
 
 #    if not pass_json(data_events_tree.run,data_events_tree.lumi):
