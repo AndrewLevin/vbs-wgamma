@@ -34,12 +34,10 @@ class exampleProducer(Module):
         self.out.branch("photon_eta",  "F");
         self.out.branch("mlg",  "F");
         self.out.branch("photon_selection",  "I");
-        self.out.branch("btagging_selection",  "I");
         self.out.branch("met",  "F");
         self.out.branch("mt",  "F");
         self.out.branch("puppimet",  "F");
         self.out.branch("puppimt",  "F");
-        self.out.branch("mjj","F")
         self.out.branch("npvs","I")
         self.out.branch("njets","I")
         self.out.branch("pass_fiducial",  "B");
@@ -48,6 +46,8 @@ class exampleProducer(Module):
         self.out.branch("gen_weight",  "F");
         self.out.branch("is_lepton_real",  "B");
         self.out.branch("lhe_lepton_charge",  "B");
+        self.out.branch("n_lhe_partons",  "I");
+        self.out.branch("n_lhe_photons",  "I");
         self.out.branch("photon_gen_matching",  "I");
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
@@ -288,11 +288,10 @@ class exampleProducer(Module):
 
         isprompt_mask = (1 << 0) #isPrompt
         isfromhardprocess_mask = (1 << 8) #isFromHardProcess
-        isprompttaudecayproduct_mask = (1 << 4) #isPromptTauDecayProduct
-
-
+        isprompttaudecayproduct_mask = (1 << 3) #isPromptTauDecayProduct
+        isdirecthardprocesstaudecayproduct_mask = (1 << 10) #isDirectHardProcessTauDecayProduct
+        
         is_lepton_real=0
-
 
         if len(tight_muons) == 1:
 
@@ -572,12 +571,15 @@ class exampleProducer(Module):
             n_lhe_w_plus = 0
             n_lhe_w_minus = 0
             n_lhe_photons = 0
-
+            n_lhe_partons = 0
             
             for i in range(0,len(lheparts)):
                 if lheparts[i].pdgId == 22:
                     lhe_photon_index=i
                     n_lhe_photons+=1
+
+                if abs(lheparts[i].pdgId == 1) or abs(lheparts[i].pdgId) == 2 or abs(lheparts[i].pdgId) == 3 or abs(lheparts[i].pdgId) == 4 or abs(lheparts[i].pdgId) == 5 or abs(lheparts[i].pdgId) == 21:
+                    n_lhe_partons+=1
 
                 if lheparts[i].pdgId == -11 or lheparts[i].pdgId == -13 or lheparts[i].pdgId == -15:
                     n_lhe_w_plus+=1
@@ -585,6 +587,9 @@ class exampleProducer(Module):
                 elif lheparts[i].pdgId == 11 or lheparts[i].pdgId == 13 or lheparts[i].pdgId == 15:
                     n_lhe_w_minus+=1
                     lhe_lepton_index=i
+             
+            self.out.fillBranch("n_lhe_partons",n_lhe_partons)
+            self.out.fillBranch("n_lhe_photons",n_lhe_photons)
 
             assert((n_lhe_w_plus == 1 and n_lhe_w_minus == 0) or (n_lhe_w_minus == 1 and n_lhe_w_plus == 0))        
 
