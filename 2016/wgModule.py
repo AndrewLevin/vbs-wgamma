@@ -287,9 +287,7 @@ class exampleProducer(Module):
         #    return False
 
         isprompt_mask = (1 << 0) #isPrompt
-        isfromhardprocess_mask = (1 << 8) #isFromHardProcess
-        isprompttaudecayproduct_mask = (1 << 3) #isPromptTauDecayProduct
-        isdirecthardprocesstaudecayproduct_mask = (1 << 10) #isDirectHardProcessTauDecayProduct
+        isdirectprompttaudecayproduct_mask = (1 << 5) #isPromptTauDecayProduct
         
         is_lepton_real=0
 

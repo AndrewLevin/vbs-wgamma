@@ -31,12 +31,12 @@ class countHistogramsLHEAndGenSelectionsProducer(Module):
             lheparts = Collection(event, "LHEPart")
             
             isprompt_mask = (1 << 0) #isPrompt
-            isprompttaudecayproduct_mask = (1 << 3) #isPromptTauDecayProduct                                                                                                              
+            isdirectprompttaudecayproduct_mask = (1 << 5) #isDirectPromptTauDecayProduct                                                                                                              
             n_gen_leptons = 0
             n_gen_photons = 0
             for i in range(0,len(genparts)):
 
-                if genparts[i].pt > 20 and genparts[i].status == 1 and (abs(genparts[i].pdgId) == 11 or abs(genparts[i].pdgId) == 13) and ((genparts[i].statusFlags & isprompt_mask == isprompt_mask) or (genparts[i].statusFlags & isprompttaudecayproduct_mask == isprompttaudecayproduct_mask)):
+                if genparts[i].pt > 20 and genparts[i].status == 1 and (abs(genparts[i].pdgId) == 11 or abs(genparts[i].pdgId) == 13) and ((genparts[i].statusFlags & isprompt_mask == isprompt_mask) or (genparts[i].statusFlags & isdirectprompttaudecayproduct_mask == isdirectprompttaudecayproduct_mask)):
                     gen_lepton_index = i
                     n_gen_leptons +=  1
                 if genparts[i].pt > 20 and genparts[i].status == 1 and genparts[i].pdgId == 22 and abs(genparts[i].eta) < 2.5 and (genparts[i].statusFlags & isprompt_mask == isprompt_mask):
