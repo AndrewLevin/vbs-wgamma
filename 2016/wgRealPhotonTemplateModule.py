@@ -22,9 +22,14 @@ class exampleProducer(Module):
         self.out = wrappedOutputTree
         self.out.branch("photon_sieie",  "F");
         self.out.branch("photon_pt",  "F");
+        self.out.branch("lepton_pt",  "F");
         self.out.branch("photon_eta",  "F");
         self.out.branch("gen_weight",  "F");
         self.out.branch("lepton_pdg_id",  "I");
+        self.out.branch("met",  "F");
+        self.out.branch("mt",  "F");
+        self.out.branch("puppimet",  "F");
+        self.out.branch("puppimt",  "F");
         self.out.branch("run",  "i");
         self.out.branch("lumi",  "i");
         self.out.branch("event",  "l");
@@ -147,6 +152,9 @@ class exampleProducer(Module):
                 return False
 
             self.out.fillBranch("lepton_pdg_id",13)
+            self.out.fillBranch("mt",sqrt(2*muons[tight_muons[0]].pt*event.MET_pt*(1 - cos(event.MET_phi - muons[tight_muons[0]].phi))))
+            self.out.fillBranch("puppimt",sqrt(2*muons[tight_muons[0]].pt*event.PuppiMET_pt*(1 - cos(event.PuppiMET_phi - muons[tight_muons[0]].phi))))
+            self.out.fillBranch("lepton_pt",muons[tight_muons[0]].pt)
 
             #if sqrt(2*muons[tight_muons[0]].pt*event.MET_pt*(1 - cos(event.MET_phi - muons[tight_muons[0]].phi))) < 30:
              #   return False
@@ -163,6 +171,9 @@ class exampleProducer(Module):
                 return False
 
             self.out.fillBranch("lepton_pdg_id",11)
+            self.out.fillBranch("lepton_pt",electrons[tight_electrons[0]].pt)
+            self.out.fillBranch("mt",sqrt(2*electrons[tight_electrons[0]].pt*event.MET_pt*(1 - cos(event.MET_phi - electrons[tight_electrons[0]].phi))))
+            self.out.fillBranch("puppimt",sqrt(2*electrons[tight_electrons[0]].pt*event.PuppiMET_pt*(1 - cos(event.PuppiMET_phi - electrons[tight_electrons[0]].phi))))
 
             #if sqrt(2*electrons[tight_electrons[0]].pt*event.MET_pt*(1 - cos(event.MET_phi - muons[tight_electrons[0]].phi))) < 30:
             #    return False
@@ -173,6 +184,8 @@ class exampleProducer(Module):
         self.out.fillBranch("photon_sieie",photons[selected_photons[0]].sieie)
         self.out.fillBranch("photon_pt",photons[selected_photons[0]].pt)
         self.out.fillBranch("photon_eta",photons[selected_photons[0]].eta)
+        self.out.fillBranch("met",event.MET_pt)
+        self.out.fillBranch("puppimet",event.PuppiMET_pt)
 
         try:
             self.out.fillBranch("gen_weight",event.Generator_weight)

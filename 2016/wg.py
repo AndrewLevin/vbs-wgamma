@@ -112,8 +112,8 @@ mlg_fit_upper_bound = 400
 #variables = ["photon_pt","dphilg","met","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","lepton_phi","photon_phi","njets","mt","npvs","drlg"]
 #variables_labels = ["ewdim6_photon_pt","dphilg","met","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","lepton_phi","photon_phi","njets","mt","npvs","drlg"]
 
-variables = ["photon_pt","dphilg","met","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","mlg","lepton_phi","photon_phi","njets","mt","npvs","drlg"]
-variables_labels = ["ewdim6_photon_pt","dphilg","met","lepton_pt","lepton_eta","photon_pt","photon_eta","fit_mlg","mlg","lepton_phi","photon_phi","njets","mt","npvs","drlg"]
+variables = ["photon_pt","dphilg","met","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","mlg","lepton_phi","photon_phi","njets","mt","npvs","drlg","photon_pt"]
+variables_labels = ["ewdim6_photon_pt","dphilg","met","lepton_pt","lepton_eta","photon_pt","photon_eta","fit_mlg","mlg","lepton_phi","photon_phi","njets","mt","npvs","drlg","photon_pt_20to180"]
 
 assert(len(variables) == len(variables_labels))
 
@@ -125,7 +125,7 @@ binning_photon_pt = array('f',[400,500,600,900,1500])
 
 n_photon_pt_bins = len(binning_photon_pt)-1
 
-histogram_templates = [ROOT.TH1F('', '', n_photon_pt_bins, binning_photon_pt ),ROOT.TH1F('','',8,pi/2,pi), ROOT.TH1F("met", "", 15 , 0., 300 ), ROOT.TH1F('lepton_pt', '', 8, 20., 180 ), ROOT.TH1F('lepton_eta', '', 10, -2.5, 2.5 ), ROOT.TH1F('photon_pt', '', n_photon_pt_bins, binning_photon_pt ), ROOT.TH1F('photon_eta', '', 10, -2.5, 2.5 ), ROOT.TH1F("mlg","",mlg_fit_upper_bound/2,0,mlg_fit_upper_bound), ROOT.TH1F("mlg","",100,0,200),ROOT.TH1F("lepton_phi","",14,-3.5,3.5), ROOT.TH1F("photon_phi","",14,-3.5,3.5), ROOT.TH1F("njets","",7,-0.5,6.5), ROOT.TH1F("mt","",20,0,200), ROOT.TH1F("npvs","",51,-0.5,50.5), ROOT.TH1F("drlg","",60,0,6)] 
+histogram_templates = [ROOT.TH1F('', '', n_photon_pt_bins, binning_photon_pt ),ROOT.TH1F('','',8,pi/2,pi), ROOT.TH1F("met", "", 15 , 0., 300 ), ROOT.TH1F('lepton_pt', '', 8, 20., 180 ), ROOT.TH1F('lepton_eta', '', 10, -2.5, 2.5 ), ROOT.TH1F('photon_pt', '', n_photon_pt_bins, binning_photon_pt ), ROOT.TH1F('photon_eta', '', 10, -2.5, 2.5 ), ROOT.TH1F("mlg","",mlg_fit_upper_bound/2,0,mlg_fit_upper_bound), ROOT.TH1F("mlg","",100,0,200),ROOT.TH1F("lepton_phi","",14,-3.5,3.5), ROOT.TH1F("photon_phi","",14,-3.5,3.5), ROOT.TH1F("njets","",7,-0.5,6.5), ROOT.TH1F("mt","",20,0,200), ROOT.TH1F("npvs","",51,-0.5,50.5), ROOT.TH1F("drlg","",60,0,6), ROOT.TH1F('photon_pt', '', 8, 20., 180 )] 
 
 assert(len(variables) == len(histogram_templates))
 
