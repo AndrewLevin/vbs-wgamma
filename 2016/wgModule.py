@@ -608,19 +608,39 @@ class exampleProducer(Module):
             n_gen_leptons = 0
             n_gen_photons = 0
             for i in range(0,len(genparts)):
-                if genparts[i].pt > 5 and genparts[i].status == 1 and (abs(genparts[i].pdgId) == 11 or abs(genparts[i].pdgId) == 13 or abs(genparts[i].pdgId) == 15) and (genparts[i].statusFlags & isfromhardprocess_mask == isfromhardprocess_mask) and ((genparts[i].statusFlags & isprompt_mask == isprompt_mask) or (genparts[i].statusFlags & isprompttaudecayproduct_mask == isprompttaudecayproduct_mask)):
+
+                if genparts[i].pt > 20 and genparts[i].status == 1 and (abs(genparts[i].pdgId) == 11 or abs(genparts[i].pdgId) == 13) and ((genparts[i].statusFlags & isprompt_mask == isprompt_mask) or (genparts[i].statusFlags & isprompttaudecayproduct_mask == isprompttaudecayproduct_mask)):
                     gen_lepton_index = i
                     n_gen_leptons +=  1
-                if genparts[i].pt > 5 and genparts[i].status == 1 and genparts[i].pdgId == 22 and (genparts[i].statusFlags & isfromhardprocess_mask == isfromhardprocess_mask) and (genparts[i].statusFlags & isprompt_mask == isprompt_mask):
-                    gen_photon_index = i
-                    n_gen_photons +=1
+                if genparts[i].pt > 20 and genparts[i].status == 1 and genparts[i].pdgId == 22 and abs(genparts[i].eta) < 2.5 and (genparts[i].statusFlags & isprompt_mask == isprompt_mask):
+                    
+                    pho_iso=0
+                    for j in range(0,len(genparts)):
 
-            if n_gen_leptons == 1 and n_gen_photons == 1:
-                if deltaR(genparts[gen_lepton_index].eta,genparts[gen_lepton_index].phi,genparts[gen_photon_index].eta,genparts[gen_photon_index].phi) > 0.7 and genparts[gen_lepton_index].pt > 20 and genparts[gen_photon_index].pt > 20 and abs(genparts[gen_photon_index].eta) < 2.5:
-                    self.out.fillBranch("pass_fiducial",1)
-                else:
-                    self.out.fillBranch("pass_fiducial",0)
-            else:        
+                        if j == i:
+                            continue
+
+                        if genparts[j].status != 1:
+                            continue
+
+                        if abs(genparts[j].pdgId) == 12 or abs(genparts[j].pdgId) == 14 or abs(genparts[j].pdgId) == 16:
+                            continue
+
+                        if genparts[j].pt > 20 and genparts[j].status == 1 and (abs(genparts[j].pdgId) == 11 or abs(genparts[j].pdgId) == 13) and ((genparts[j].statusFlags & isprompt_mask == isprompt_mask) or (genparts[j].statusFlags & isprompttaudecayproduct_mask == isprompttaudecayproduct_mask)):
+                            continue
+
+                        if deltaR(genparts[j].eta,genparts[j].phi,genparts[i].eta,genparts[i].phi) < 0.4:
+                            pho_iso += genparts[j].pt
+
+                    pho_iso /= genparts[i].pt
+
+                    if pho_iso < 0.5:
+                        gen_photon_index = i
+                        n_gen_photons +=1
+
+            if n_gen_leptons == 1 and n_gen_photons == 1 and deltaR(genparts[gen_lepton_index].eta,genparts[gen_lepton_index].phi,genparts[gen_photon_index].eta,genparts[gen_photon_index].phi) > 0.7:
+                self.out.fillBranch("pass_fiducial",1)
+            else:
                 self.out.fillBranch("pass_fiducial",0)
         except: 
             pass
