@@ -1,6 +1,6 @@
 import ROOT
 
-lepton_pdgid = "13"
+lepton_pdgid = "11"
 
 #h_gen_photon_pt_powheg_plus_num_pos
 
@@ -47,25 +47,25 @@ wgjets_tree = wgjets_file.Get("Events")
 
 ROOT.gROOT.cd()
 
-wgjets_tree.Draw("gen_photon_pt >> h_gen_photon_pt_mg5amc_num_pos","pass_gen_selection && pass_selection && is_lepton_tight && photon_selection == 2 && abs(gen_lepton_pdgid) == "+str(lepton_pdgid)+" && photon_gen_matching > 0 && gen_weight > 0")
+wgjets_tree.Draw("gen_photon_pt >> h_gen_photon_pt_mg5amc_num_pos","pass_gen_selection && pass_selection && is_lepton_tight && photon_selection == 2 && abs(gen_lepton_pdgid) == "+str(lepton_pdgid)+" && photon_gen_matching > 0 && is_lepton_real && gen_weight > 0")
 
-wgjets_tree.Draw("gen_photon_pt >> h_gen_photon_pt_mg5amc_num_neg","pass_gen_selection && pass_selection && is_lepton_tight && photon_selection == 2 && abs(gen_lepton_pdgid) == "+str(lepton_pdgid)+" && photon_gen_matching > 0 && gen_weight < 0")
+wgjets_tree.Draw("gen_photon_pt >> h_gen_photon_pt_mg5amc_num_neg","pass_gen_selection && pass_selection && is_lepton_tight && photon_selection == 2 && abs(gen_lepton_pdgid) == "+str(lepton_pdgid)+" && photon_gen_matching > 0 && is_lepton_real && gen_weight < 0")
 
 wgjets_tree.Draw("gen_photon_pt >> h_gen_photon_pt_mg5amc_den_pos","abs(gen_lepton_pdgid) == "+str(lepton_pdgid)+" && pass_gen_selection && gen_weight > 0")
 
 wgjets_tree.Draw("gen_photon_pt >> h_gen_photon_pt_mg5amc_den_neg","abs(gen_lepton_pdgid) == "+str(lepton_pdgid)+" && pass_gen_selection && gen_weight < 0")
 
-powheg_wpgjets_tree.Draw("gen_photon_pt >> h_gen_photon_pt_powheg_plus_num_pos","pass_gen_selection && pass_selection && is_lepton_tight && photon_selection == 2 && abs(gen_lepton_pdgid) == "+str(lepton_pdgid)+" && photon_gen_matching > 0 && gen_weight > 0")
+powheg_wpgjets_tree.Draw("gen_photon_pt >> h_gen_photon_pt_powheg_plus_num_pos","pass_gen_selection && pass_selection && is_lepton_tight && photon_selection == 2 && abs(gen_lepton_pdgid) == "+str(lepton_pdgid)+" && photon_gen_matching > 0 && is_lepton_real && gen_weight > 0")
 
-powheg_wpgjets_tree.Draw("gen_photon_pt >> h_gen_photon_pt_powheg_plus_num_neg","pass_gen_selection && pass_selection && is_lepton_tight && photon_selection == 2 && abs(gen_lepton_pdgid) == "+str(lepton_pdgid)+" && photon_gen_matching > 0 && gen_weight < 0")
+powheg_wpgjets_tree.Draw("gen_photon_pt >> h_gen_photon_pt_powheg_plus_num_neg","pass_gen_selection && pass_selection && is_lepton_tight && photon_selection == 2 && abs(gen_lepton_pdgid) == "+str(lepton_pdgid)+" && photon_gen_matching > 0 && is_lepton_real && gen_weight < 0")
 
 powheg_wpgjets_tree.Draw("gen_photon_pt >> h_gen_photon_pt_powheg_plus_den_pos","abs(gen_lepton_pdgid) == "+str(lepton_pdgid)+" && pass_gen_selection && gen_weight > 0")
 
 powheg_wpgjets_tree.Draw("gen_photon_pt >> h_gen_photon_pt_powheg_plus_den_neg","abs(gen_lepton_pdgid) == "+str(lepton_pdgid)+" && pass_gen_selection && gen_weight < 0")
 
-powheg_wmgjets_tree.Draw("gen_photon_pt >> h_gen_photon_pt_powheg_minus_num_pos","pass_gen_selection && pass_selection && is_lepton_tight && photon_selection == 2 && abs(gen_lepton_pdgid) == "+str(lepton_pdgid)+" && photon_gen_matching > 0 && gen_weight > 0")
+powheg_wmgjets_tree.Draw("gen_photon_pt >> h_gen_photon_pt_powheg_minus_num_pos","pass_gen_selection && pass_selection && is_lepton_tight && photon_selection == 2 && abs(gen_lepton_pdgid) == "+str(lepton_pdgid)+" && photon_gen_matching > 0 && is_lepton_real && gen_weight > 0")
 
-powheg_wmgjets_tree.Draw("gen_photon_pt >> h_gen_photon_pt_powheg_minus_num_neg","pass_gen_selection && pass_selection && is_lepton_tight && photon_selection == 2 && abs(gen_lepton_pdgid) == "+str(lepton_pdgid)+" && photon_gen_matching > 0 && gen_weight < 0")
+powheg_wmgjets_tree.Draw("gen_photon_pt >> h_gen_photon_pt_powheg_minus_num_neg","pass_gen_selection && pass_selection && is_lepton_tight && photon_selection == 2 && abs(gen_lepton_pdgid) == "+str(lepton_pdgid)+" && photon_gen_matching > 0 && is_lepton_real && gen_weight < 0")
 
 powheg_wmgjets_tree.Draw("gen_photon_pt >> h_gen_photon_pt_powheg_minus_den_pos","abs(gen_lepton_pdgid) == "+str(lepton_pdgid)+" && pass_gen_selection && gen_weight > 0")
 
@@ -77,6 +77,14 @@ h_gen_photon_pt_powheg_minus_num_neg.Scale(-24780./33420.)
 h_gen_photon_pt_powheg_minus_den_neg.Scale(-24780./33420.)
 h_gen_photon_pt_powheg_plus_num_neg.Scale(-1)
 h_gen_photon_pt_powheg_plus_den_neg.Scale(-1)
+
+for i in range(1,h_gen_photon_pt_mg5amc_den_neg.GetNbinsX()+1):
+    h_gen_photon_pt_powheg_plus_den_neg.SetBinError(i,0)
+    h_gen_photon_pt_powheg_minus_den_neg.SetBinError(i,0)
+    h_gen_photon_pt_powheg_plus_den_pos.SetBinError(i,0)
+    h_gen_photon_pt_powheg_minus_den_pos.SetBinError(i,0)
+    h_gen_photon_pt_mg5amc_den_neg.SetBinError(i,0)
+    h_gen_photon_pt_mg5amc_den_pos.SetBinError(i,0)
 
 h_gen_photon_pt_mg5amc_num_pos.Add(h_gen_photon_pt_mg5amc_num_neg)
 h_gen_photon_pt_mg5amc_den_pos.Add(h_gen_photon_pt_mg5amc_den_neg)
