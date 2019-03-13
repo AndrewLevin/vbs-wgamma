@@ -129,7 +129,7 @@ class wgGenProducer(Module):
 
         #for processing speed-up
         if len(tight_muons) + len(loose_but_not_tight_muons) > 1:
-            return False
+            return pass_gen_selection
 
         for i in range (0,len(electrons)):
 
@@ -147,7 +147,7 @@ class wgGenProducer(Module):
                     loose_but_not_tight_electrons.append(i)
 
         if len(tight_muons) + len(loose_but_not_tight_muons) +  len(tight_electrons) + len(loose_but_not_tight_electrons) > 1:
-            return False
+            return pass_gen_selection
 
         for i in range (0,len(photons)):
 
@@ -248,10 +248,10 @@ class wgGenProducer(Module):
             tight_photons.append(i)
 
         if len(tight_photons) == 0:
-            return False
+            return pass_gen_selection
 
         if photons[tight_photons[0]].pt < 25:
-            return False
+            return pass_gen_selection
 
         isprompt_mask = (1 << 0) #isPrompt
         isdirectprompttaudecayproduct_mask = (1 << 5) #isDirectPromptTauDecayProduct
@@ -412,7 +412,7 @@ class wgGenProducer(Module):
             self.out.fillBranch("is_lepton_tight",0)
 
         else:
-            return False
+            return pass_gen_selection
 
 
         photon_gen_matching=0
