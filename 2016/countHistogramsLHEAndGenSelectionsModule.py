@@ -65,7 +65,7 @@ class countHistogramsLHEAndGenSelectionsProducer(Module):
                         gen_photon_index = i
                         n_gen_photons +=1
 
-            if n_gen_leptons == 1 and n_gen_photons == 1 and deltaR(genparts[gen_lepton_index].eta,genparts[gen_lepton_index].phi,genparts[gen_photon_index].eta,genparts[gen_photon_index].phi) > 0.7:
+            if n_gen_leptons == 1 and n_gen_photons == 1 and deltaR(genparts[gen_lepton_index].eta,genparts[gen_lepton_index].phi,genparts[gen_photon_index].eta,genparts[gen_photon_index].phi) > 0.5:
                 pass_gen_selection = True
             else:        
                 pass_gen_selection = False
