@@ -11,7 +11,7 @@ from PhysicsTools.NanoAODTools.postprocessing.tools import deltaR
 
 from PhysicsTools.NanoAODTools.postprocessing.tools import deltaPhi
 
-class exampleProducer(Module):
+class wgProducer(Module):
     def __init__(self):
         pass
     def beginJob(self):
@@ -656,4 +656,4 @@ class exampleProducer(Module):
 
         return True
 
-exampleModule = lambda : exampleProducer()
+wgModule = lambda : wgProducer()
