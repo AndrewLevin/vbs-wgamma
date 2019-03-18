@@ -48,6 +48,7 @@ class wgProducer(Module):
         self.out.branch("lhe_lepton_charge",  "B");
         self.out.branch("n_lhe_partons",  "I");
         self.out.branch("n_lhe_photons",  "I");
+        self.out.branch("n_lower_pt_leptons",  "I");
         self.out.branch("photon_gen_matching",  "I");
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
@@ -71,10 +72,14 @@ class wgProducer(Module):
             
         debug = False
 
-        tight_muons = []
+        lower_pt_muons = []
 
+        tight_muons = []
+        
         loose_but_not_tight_muons = []
         
+        lower_pt_electrons = []
+
         tight_electrons = []
 
         loose_but_not_tight_electrons = []
@@ -83,16 +88,16 @@ class wgProducer(Module):
 
         for i in range(0,len(muons)):
 
-            if muons[i].pt < 20:
-                continue
-
-            if abs(muons[i].eta) > 2.4:
-                continue
-
-            if muons[i].tightId and muons[i].pfRelIso04_all < 0.15:
-                tight_muons.append(i)
-            elif muons[i].pfRelIso04_all < 0.25:
-                loose_but_not_tight_muons.append(i)
+            if muons[i].pt > 20 and abs(muons[i].eta) < 2.4:
+                if muons[i].tightId and muons[i].pfRelIso04_all < 0.15:
+                    tight_muons.append(i)
+                elif muons[i].pfRelIso04_all < 0.25:
+                    loose_but_not_tight_muons.append(i)
+            elif muons[i].pt > 10 and abs(muons[i].eta) < 2.4:
+                if muons[i].tightId and muons[i].pfRelIso04_all < 0.15:
+                    lower_pt_muons.append(i)
+                elif muons[i].pfRelIso04_all < 0.25:
+                    lower_pt_muons.append(i)
 
         #for processing speed-up
         if len(tight_muons) + len(loose_but_not_tight_muons) > 1:
@@ -100,18 +105,18 @@ class wgProducer(Module):
 
         for i in range (0,len(electrons)):
 
-            if electrons[i].pt < 20:
-                continue
-            
-            if abs(electrons[i].eta + electrons[i].deltaEtaSC) > 2.5:
-                continue
-
-            if (abs(electrons[i].eta + electrons[i].deltaEtaSC) < 1.479 and abs(electrons[i].dz) < 0.1 and abs(electrons[i].dxy) < 0.05) or (abs(electrons[i].eta + electrons[i].deltaEtaSC) > 1.479 and abs(electrons[i].dz) < 0.2 and abs(electrons[i].dxy) < 0.1):
-                if electrons[i].cutBased >= 3:
-                    tight_electrons.append(i)
-
-                elif electrons[i].cutBased >= 1:
-                    loose_but_not_tight_electrons.append(i)
+            if electrons[i].pt > 20 and abs(electrons[i].eta + electrons[i].deltaEtaSC) < 2.5:
+                if (abs(electrons[i].eta + electrons[i].deltaEtaSC) < 1.479 and abs(electrons[i].dz) < 0.1 and abs(electrons[i].dxy) < 0.05) or (abs(electrons[i].eta + electrons[i].deltaEtaSC) > 1.479 and abs(electrons[i].dz) < 0.2 and abs(electrons[i].dxy) < 0.1):
+                    if electrons[i].cutBased >= 3:
+                        tight_electrons.append(i)
+                    elif electrons[i].cutBased >= 1:
+                        loose_but_not_tight_electrons.append(i)
+            elif electrons[i].pt > 10 and abs(electrons[i].eta + electrons[i].deltaEtaSC) < 2.5:
+                if (abs(electrons[i].eta + electrons[i].deltaEtaSC) < 1.479 and abs(electrons[i].dz) < 0.1 and abs(electrons[i].dxy) < 0.05) or (abs(electrons[i].eta + electrons[i].deltaEtaSC) > 1.479 and abs(electrons[i].dz) < 0.2 and abs(electrons[i].dxy) < 0.1):
+                    if electrons[i].cutBased >= 3:
+                        lower_pt_electrons.append(i)
+                    elif electrons[i].cutBased >= 1:
+                        lower_pt_electrons.append(i)
 
         if len(tight_muons) + len(loose_but_not_tight_muons) +  len(tight_electrons) + len(loose_but_not_tight_electrons) > 1:
             return False
@@ -646,6 +651,7 @@ class wgProducer(Module):
 #        assert(n_gen_leptons == 1 or n_gen_leptons == 0)        
 #        assert(n_gen_photons == 1 or n_gen_photons == 0)        
 
+        self.out.fillBranch("n_lower_pt_leptons",len(lower_pt_muons)+len(lower_pt_electrons))
         self.out.fillBranch("njets",njets)
         self.out.fillBranch("npvs",event.PV_npvs)
         self.out.fillBranch("event",event.event)

@@ -125,7 +125,7 @@ binning_photon_pt = array('f',[400,500,600,900,1500])
 
 n_photon_pt_bins = len(binning_photon_pt)-1
 
-histogram_templates = [ROOT.TH1F('', '', n_photon_pt_bins, binning_photon_pt ),ROOT.TH1F('','',8,pi/2,pi), ROOT.TH1F("met", "", 15 , 0., 300 ), ROOT.TH1F('lepton_pt', '', 8, 20., 180 ), ROOT.TH1F('lepton_eta', '', 10, -2.5, 2.5 ), ROOT.TH1F('photon_pt', '', n_photon_pt_bins, binning_photon_pt ), ROOT.TH1F('photon_eta', '', 10, -2.5, 2.5 ), ROOT.TH1F("mlg","",mlg_fit_upper_bound/2,0,mlg_fit_upper_bound), ROOT.TH1F("mlg","",100,0,200),ROOT.TH1F("lepton_phi","",14,-3.5,3.5), ROOT.TH1F("photon_phi","",14,-3.5,3.5), ROOT.TH1F("njets","",7,-0.5,6.5), ROOT.TH1F("mt","",20,0,200), ROOT.TH1F("npvs","",51,-0.5,50.5), ROOT.TH1F("drlg","",60,0,6), ROOT.TH1F('photon_pt', '', 8, 20., 180 )] 
+histogram_templates = [ROOT.TH1D('', '', n_photon_pt_bins, binning_photon_pt ),ROOT.TH1D('','',8,pi/2,pi), ROOT.TH1D("met", "", 15 , 0., 300 ), ROOT.TH1D('lepton_pt', '', 8, 20., 180 ), ROOT.TH1D('lepton_eta', '', 10, -2.5, 2.5 ), ROOT.TH1D('photon_pt', '', n_photon_pt_bins, binning_photon_pt ), ROOT.TH1D('photon_eta', '', 10, -2.5, 2.5 ), ROOT.TH1D("mlg","",mlg_fit_upper_bound/2,0,mlg_fit_upper_bound), ROOT.TH1D("mlg","",100,0,200),ROOT.TH1D("lepton_phi","",14,-3.5,3.5), ROOT.TH1D("photon_phi","",14,-3.5,3.5), ROOT.TH1D("njets","",7,-0.5,6.5), ROOT.TH1D("mt","",20,0,200), ROOT.TH1D("npvs","",51,-0.5,50.5), ROOT.TH1D("drlg","",60,0,6), ROOT.TH1D('photon_pt', '', 8, 20., 180 )] 
 
 assert(len(variables) == len(histogram_templates))
 
@@ -284,16 +284,23 @@ def pass_selection(tree, barrel_or_endcap_or_both = "both", fake_lepton = False 
 
 #    if tree.puppimet > 35:
     if tree.puppimet > 60:
+#    if tree.met > 70:
 #    if tree.puppimet > 0:
         pass_met = True
     else:
         pass_met = False
 
     if tree.puppimt > 30:
+#    if tree.mt > 30:
 #    if tree.puppimt > 0:
         pass_mt = True
     else:
         pass_mt = False
+
+    if deltaR(tree.lepton_eta,tree.lepton_phi,tree.photon_eta,tree.photon_phi) > 0.5:
+        pass_drlg = True
+    else:
+        pass_drlg = False
 
     if fake_photon:    
         if tree.photon_selection == 0 or tree.photon_selection == 1:
@@ -317,14 +324,15 @@ def pass_selection(tree, barrel_or_endcap_or_both = "both", fake_lepton = False 
         else:
             pass_lepton_selection = False
             
-    if tree.photon_pt > 25:
+#    if tree.photon_pt > 25 :
+    if tree.photon_pt > 25 and tree.lepton_pt > 30 :
 #    if tree.photon_pt > 25 and tree.photon_pt < 135:
         pass_photon_pt =True
     else:
         pass_photon_pt = False
 
 
-    if pass_photon_pt and pass_lepton_selection and pass_photon_selection and pass_mlg and pass_photon_eta and pass_lepton_flavor and pass_met and pass_mt:
+    if pass_drlg and pass_photon_pt and pass_lepton_selection and pass_photon_selection and pass_mlg and pass_photon_eta and pass_lepton_flavor and pass_met and pass_mt:
         return True
     else:
         return False
@@ -526,6 +534,7 @@ def fillHistogramMC(label,sample):
         sample["tree"].GetEntry(i)
 
         if sample["tree"].puppimet < 60 or sample["tree"].puppimt < 30:
+#        if sample["tree"].met < 70 or sample["tree"].mt < 30:
             continue
 
         if sample["tree"].is_lepton_real == '\x01':
@@ -618,6 +627,7 @@ def fillHistogramMC(label,sample):
                         e_to_p["hists"][j].Fill(getVariable(variables[j],sample["tree"]),weight)
             elif bool(sample["tree"].photon_gen_matching & int('1000',2)):
                 if sample["fsr"]:
+
                     for j in range(len(variables)):
                         fillHistogram(label["hists"][j],getVariable(variables[j],sample["tree"]),weight)
                         fillHistogram(label["hists-electron-id-sf-variation"][j],getVariable(variables[j],sample["tree"]),weight_electron_id_sf_variation)
@@ -638,6 +648,7 @@ def fillHistogramMC(label,sample):
                         
             elif bool(sample["tree"].photon_gen_matching & int('0100',2)):
                 if sample["non_fsr"]:
+
                     for j in range(len(variables)):
                         fillHistogram(label["hists"][j],getVariable(variables[j],sample["tree"]),weight)
                         fillHistogram(label["hists-electron-id-sf-variation"][j],getVariable(variables[j],sample["tree"]),weight_electron_id_sf_variation)
@@ -663,9 +674,9 @@ if options.ewdim6:
 
     sm_lhe_weight = 373
 
-    sm_lhe_weight_hist = ROOT.TH1F('', '', n_photon_pt_bins, binning_photon_pt )
+    sm_lhe_weight_hist = ROOT.TH1D('', '', n_photon_pt_bins, binning_photon_pt )
 
-    sm_hist = ROOT.TH1F('', '', n_photon_pt_bins, binning_photon_pt )
+    sm_hist = ROOT.TH1D('', '', n_photon_pt_bins, binning_photon_pt )
 
     cwww_reweights = [373,1,2,3,4,5,6]
 
@@ -708,19 +719,19 @@ if options.ewdim6:
     cpw_hists = []
 
     for i in range(0,len(cwww_reweights)):
-        cwww_hists.append(ROOT.TH1F('', '', n_photon_pt_bins, binning_photon_pt ))
+        cwww_hists.append(ROOT.TH1D('', '', n_photon_pt_bins, binning_photon_pt ))
 
     for i in range(0,len(cw_reweights)):
-        cw_hists.append(ROOT.TH1F('', '', n_photon_pt_bins, binning_photon_pt ))
+        cw_hists.append(ROOT.TH1D('', '', n_photon_pt_bins, binning_photon_pt ))
 
     for i in range(0,len(cb_reweights)):
-        cb_hists.append(ROOT.TH1F('', '', n_photon_pt_bins, binning_photon_pt ))
+        cb_hists.append(ROOT.TH1D('', '', n_photon_pt_bins, binning_photon_pt ))
 
     for i in range(0,len(cpwww_reweights)):
-        cpwww_hists.append(ROOT.TH1F('', '', n_photon_pt_bins, binning_photon_pt ))
+        cpwww_hists.append(ROOT.TH1D('', '', n_photon_pt_bins, binning_photon_pt ))
 
     for i in range(0,len(cpw_reweights)):
-        cpw_hists.append(ROOT.TH1F('', '', n_photon_pt_bins, binning_photon_pt ))
+        cpw_hists.append(ROOT.TH1D('', '', n_photon_pt_bins, binning_photon_pt ))
 
     for i in range(labels["wg+jets"]["samples"][0]["tree"].GetEntries()):
         labels["wg+jets"]["samples"][0]["tree"].GetEntry(i)
@@ -893,6 +904,7 @@ for i in range(data_events_tree.GetEntries()):
         print "Processed " + str(i) + " out of " + str(data_events_tree.GetEntries()) + " events"
 
     if data_events_tree.puppimet < 60 or data_events_tree.puppimt < 30:
+#    if data_events_tree.met < 70 or data_events_tree.mt < 30:
         continue
 
 #    if not pass_json(data_events_tree.run,data_events_tree.lumi):
@@ -1011,14 +1023,18 @@ fake_photon_stat_up["hists"][mlg_index].Print("all")
 def mlg_fit(inputs):
 
     m= ROOT.RooRealVar("m","m",0,mlg_fit_upper_bound)
-    m0=ROOT.RooRealVar("m0",    "m0",0.564706,-5,5)
-    sigma=ROOT.RooRealVar("sigma",  "sigma",1.48775,0.1,3)
-    alpha=ROOT.RooRealVar("alpha",  "alpha",4.45779,4.45779-2,4.45779+2)
-    n=ROOT.RooRealVar("n",          "n",2.11960,1,3)
+    m0=ROOT.RooRealVar("m0",    "m0",1.55915,-2.5,2.5)
+    sigma=ROOT.RooRealVar("sigma",  "sigma",1.31407,0.1,3)
+    alpha=ROOT.RooRealVar("alpha",  "alpha",1.51265,0,10)
+#    alpha=ROOT.RooRealVar("alpha",  "alpha",4.45779,4.45779-2,4.45779+2)
+#    alpha=ROOT.RooRealVar("alpha",  "alpha",,0,10)
+#    alpha=ROOT.RooRealVar("alpha",  "alpha",4.27560,4.27560,4.27560)
+#    n=ROOT.RooRealVar("n",          "n",2.11960,1,3)
+    n=ROOT.RooRealVar("n",          "n",2.11960,2.11960,2.11960)
     cb = ROOT.RooCBShape("cb", "Crystal Ball", m, m0, sigma, alpha, n)
 
-    mass = ROOT.RooRealVar("mass","mass",90.2963,90.2963-5,90.2963+5)
-    width = ROOT.RooRealVar("width","width",4.48990,4.48990/2,4.48990*2);
+    mass = ROOT.RooRealVar("mass","mass",90.6566,90.6566-5,90.6566+5)
+    width = ROOT.RooRealVar("width","width",4.01306,3.0*4.01306/4.0,5*4.01306/3.0);
     bw = ROOT.RooBreitWigner("bw","Breit Wigner",m,mass,width)
 
     RooFFTConvPdf_bwcb = ROOT.RooFFTConvPdf("bwcb","Breit Wigner convolved with a Crystal Ball",m,bw,cb)
@@ -1052,11 +1068,11 @@ def mlg_fit(inputs):
         RooHistPdf_etog = ROOT.RooHistPdf("etog","etog",ROOT.RooArgSet(m),RooDataHist_mlg_etog)
 
     top_norm = ROOT.RooRealVar("top_norm","top_norm",inputs["top"].Integral(),inputs["top"].Integral())    
-    wg_norm = ROOT.RooRealVar("wg_norm","wg_norm",9840.51,0.5*9840.51,2*9840.51);    
+    wg_norm = ROOT.RooRealVar("wg_norm","wg_norm",13403.7,0.5*13403.7,2*13403.7);    
 #    zg_norm = ROOT.RooRealVar("zg_norm","zg_norm",0,1000000);    
     zg_norm = ROOT.RooRealVar("zg_norm","zg_norm",inputs["zg"].Integral(),inputs["zg"].Integral());    
     vv_norm = ROOT.RooRealVar("vv_norm","vv_norm",inputs["vv"].Integral(),inputs["vv"].Integral());    
-    bwcb_norm = ROOT.RooRealVar("bwcb_norm","bwcb_norm",4714.96,0.5*4714.96,2*4714.96);    
+    bwcb_norm = ROOT.RooRealVar("bwcb_norm","bwcb_norm",3656.16,0.5*3656.16,2*3656.16);    
     fake_lepton_norm = ROOT.RooRealVar("fake_lepton_norm","fake_lepton_norm",inputs["fake_lepton"].Integral(),inputs["fake_lepton"].Integral());    
     fake_photon_norm = ROOT.RooRealVar("fake_photon_norm","fake_photon_norm",inputs["fake_photon"].Integral(),inputs["fake_photon"].Integral());    
     double_fake_norm = ROOT.RooRealVar("double_fake_norm","double_fake_norm",inputs["double_fake"].Integral(),inputs["double_fake"].Integral());    
@@ -1090,19 +1106,19 @@ def mlg_fit(inputs):
     #sum.plotOn(frame, ROOT.RooFit.Components(ROOT.RooArgSet(sum.getComponents()["zg"])),ROOT.RooFit.LineStyle(ROOT.kDashed)) 
     #sum.plotOn(frame, ROOT.RooFit.Components("zg,wg,bwcb"),ROOT.RooFit.LineStyle(ROOT.kDashed)) 
 
-    red_th1f=ROOT.TH1F("red_th1f","red_th1f",1,0,1)
+    red_th1f=ROOT.TH1D("red_th1f","red_th1f",1,0,1)
     red_th1f.SetLineColor(ROOT.kRed)
     red_th1f.SetLineWidth(3)
     red_th1f.SetLineStyle(ROOT.kDashed)
-    green_th1f=ROOT.TH1F("green_th1f","green_th1f",1,0,1)
+    green_th1f=ROOT.TH1D("green_th1f","green_th1f",1,0,1)
     green_th1f.SetLineColor(ROOT.kGreen)
     green_th1f.SetLineWidth(3)
     green_th1f.SetLineStyle(ROOT.kDashed)
-    magenta_th1f=ROOT.TH1F("magenta_th1f","magenta_th1f",1,0,1)
+    magenta_th1f=ROOT.TH1D("magenta_th1f","magenta_th1f",1,0,1)
     magenta_th1f.SetLineColor(ROOT.kMagenta)
     magenta_th1f.SetLineWidth(3)
     magenta_th1f.SetLineStyle(ROOT.kDashed)
-    orangeminus1_th1f=ROOT.TH1F("orangeminus1_th1f","orangeminus_th1f",1,0,1)
+    orangeminus1_th1f=ROOT.TH1D("orangeminus1_th1f","orangeminus_th1f",1,0,1)
     orangeminus1_th1f.SetLineColor(ROOT.kOrange-1)
     orangeminus1_th1f.SetLineWidth(3)
     orangeminus1_th1f.SetLineStyle(ROOT.kDashed)
