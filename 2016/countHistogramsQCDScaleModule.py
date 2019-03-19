@@ -35,23 +35,23 @@ class countHistogramsQCDScaleProducer(Module):
     def analyze(self, event):
         try:
             if event.Generator_weight > 0:
-                self.h_nweightedevents_qcdscaleweight0.Fill(0.5,event.LHEScaleWeight[0]*2)
-                self.h_nweightedevents_qcdscaleweight1.Fill(0.5,event.LHEScaleWeight[1]*2)
-                self.h_nweightedevents_qcdscaleweight2.Fill(0.5,event.LHEScaleWeight[2]*2)
-                self.h_nweightedevents_qcdscaleweight3.Fill(0.5,event.LHEScaleWeight[3]*2)
-                self.h_nweightedevents_qcdscaleweight4.Fill(0.5,event.LHEScaleWeight[4]*2)
-                self.h_nweightedevents_qcdscaleweight5.Fill(0.5,event.LHEScaleWeight[5]*2)
-                self.h_nweightedevents_qcdscaleweight6.Fill(0.5,event.LHEScaleWeight[6]*2)
-                self.h_nweightedevents_qcdscaleweight7.Fill(0.5,event.LHEScaleWeight[7]*2)
+                self.h_nweightedevents_qcdscaleweight0.Fill(0.5,event.LHEScaleWeight[0])
+                self.h_nweightedevents_qcdscaleweight1.Fill(0.5,event.LHEScaleWeight[1])
+                self.h_nweightedevents_qcdscaleweight2.Fill(0.5,event.LHEScaleWeight[2])
+                self.h_nweightedevents_qcdscaleweight3.Fill(0.5,event.LHEScaleWeight[3])
+                self.h_nweightedevents_qcdscaleweight4.Fill(0.5,event.LHEScaleWeight[4])
+                self.h_nweightedevents_qcdscaleweight5.Fill(0.5,event.LHEScaleWeight[5])
+                self.h_nweightedevents_qcdscaleweight6.Fill(0.5,event.LHEScaleWeight[6])
+                self.h_nweightedevents_qcdscaleweight7.Fill(0.5,event.LHEScaleWeight[7])
             else:
-                self.h_nweightedevents_qcdscaleweight0.Fill(0.5,-event.LHEScaleWeight[0]*2)
-                self.h_nweightedevents_qcdscaleweight1.Fill(0.5,-event.LHEScaleWeight[1]*2)
-                self.h_nweightedevents_qcdscaleweight2.Fill(0.5,-event.LHEScaleWeight[2]*2)
-                self.h_nweightedevents_qcdscaleweight3.Fill(0.5,-event.LHEScaleWeight[3]*2)
-                self.h_nweightedevents_qcdscaleweight4.Fill(0.5,-event.LHEScaleWeight[4]*2)
-                self.h_nweightedevents_qcdscaleweight5.Fill(0.5,-event.LHEScaleWeight[5]*2)
-                self.h_nweightedevents_qcdscaleweight6.Fill(0.5,-event.LHEScaleWeight[6]*2)
-                self.h_nweightedevents_qcdscaleweight7.Fill(0.5,-event.LHEScaleWeight[7]*2)
+                self.h_nweightedevents_qcdscaleweight0.Fill(0.5,-event.LHEScaleWeight[0])
+                self.h_nweightedevents_qcdscaleweight1.Fill(0.5,-event.LHEScaleWeight[1])
+                self.h_nweightedevents_qcdscaleweight2.Fill(0.5,-event.LHEScaleWeight[2])
+                self.h_nweightedevents_qcdscaleweight3.Fill(0.5,-event.LHEScaleWeight[3])
+                self.h_nweightedevents_qcdscaleweight4.Fill(0.5,-event.LHEScaleWeight[4])
+                self.h_nweightedevents_qcdscaleweight5.Fill(0.5,-event.LHEScaleWeight[5])
+                self.h_nweightedevents_qcdscaleweight6.Fill(0.5,-event.LHEScaleWeight[6])
+                self.h_nweightedevents_qcdscaleweight7.Fill(0.5,-event.LHEScaleWeight[7])
         except:
             pass
 
