@@ -50,7 +50,12 @@ class wgGenProducer(Module):
     def analyze(self, event):
         if True:
 
+            self.out.fillBranch("event",event.event)
+            self.out.fillBranch("lumi",event.luminosityBlock)
+            self.out.fillBranch("run",event.run)
+
             pass_gen_selection = False
+            pass_selection = False
 
             genparts = Collection(event, "GenPart")
             lheparts = Collection(event, "LHEPart")
@@ -93,7 +98,7 @@ class wgGenProducer(Module):
                         gen_photon_index = i
                         n_gen_photons +=1
 
-            if n_gen_leptons == 1 and n_gen_photons == 1 and deltaR(genparts[gen_lepton_index].eta,genparts[gen_lepton_index].phi,genparts[gen_photon_index].eta,genparts[gen_photon_index].phi) > 0.7:
+            if n_gen_leptons == 1 and n_gen_photons == 1 and deltaR(genparts[gen_lepton_index].eta,genparts[gen_lepton_index].phi,genparts[gen_photon_index].eta,genparts[gen_photon_index].phi) > 0.5:
                 self.out.fillBranch("gen_lepton_pt",genparts[gen_lepton_index].pt)
                 self.out.fillBranch("gen_lepton_eta",genparts[gen_lepton_index].eta)
                 self.out.fillBranch("gen_lepton_phi",genparts[gen_lepton_index].phi)
@@ -129,6 +134,8 @@ class wgGenProducer(Module):
 
         #for processing speed-up
         if len(tight_muons) + len(loose_but_not_tight_muons) > 1:
+            self.out.fillBranch("pass_selection",pass_selection)
+            self.out.fillBranch("pass_gen_selection",pass_gen_selection)
             return pass_gen_selection
 
         for i in range (0,len(electrons)):
@@ -147,6 +154,8 @@ class wgGenProducer(Module):
                     loose_but_not_tight_electrons.append(i)
 
         if len(tight_muons) + len(loose_but_not_tight_muons) +  len(tight_electrons) + len(loose_but_not_tight_electrons) > 1:
+            self.out.fillBranch("pass_selection",pass_selection)
+            self.out.fillBranch("pass_gen_selection",pass_gen_selection)
             return pass_gen_selection
 
         for i in range (0,len(photons)):
@@ -248,17 +257,19 @@ class wgGenProducer(Module):
             tight_photons.append(i)
 
         if len(tight_photons) == 0:
+            self.out.fillBranch("pass_selection",pass_selection)
+            self.out.fillBranch("pass_gen_selection",pass_gen_selection)
             return pass_gen_selection
 
         if photons[tight_photons[0]].pt < 25:
+            self.out.fillBranch("pass_selection",pass_selection)
+            self.out.fillBranch("pass_gen_selection",pass_gen_selection)
             return pass_gen_selection
 
         isprompt_mask = (1 << 0) #isPrompt
         isdirectprompttaudecayproduct_mask = (1 << 5) #isDirectPromptTauDecayProduct
         
         is_lepton_real=0
-
-        pass_selection = False
 
         if len(tight_muons) == 1:
 
@@ -412,6 +423,8 @@ class wgGenProducer(Module):
             self.out.fillBranch("is_lepton_tight",0)
 
         else:
+            self.out.fillBranch("pass_selection",pass_selection)
+            self.out.fillBranch("pass_gen_selection",pass_gen_selection)
             return pass_gen_selection
 
 
@@ -439,9 +452,6 @@ class wgGenProducer(Module):
         if pass_selection or pass_gen_selection:
             self.out.fillBranch("pass_selection",pass_selection)
             self.out.fillBranch("pass_gen_selection",pass_gen_selection)
-            self.out.fillBranch("event",event.event)
-            self.out.fillBranch("lumi",event.luminosityBlock)
-            self.out.fillBranch("run",event.run)
             return True
         else:
             return False

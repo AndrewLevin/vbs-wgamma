@@ -1,8 +1,8 @@
 import json
 import math
 
-#xs_inputs_muon = json.load(open("xs_inputs_muon.txt"))
-#xs_inputs_electron = json.load(open("xs_inputs_electron.txt"))
+xs_inputs_muon = json.load(open("xs_inputs_muon.txt"))
+xs_inputs_electron = json.load(open("xs_inputs_electron.txt"))
 
 #xs_inputs_muon = json.load(open("xs_inputs_muon.txt.bak"))
 #xs_inputs_electron = json.load(open("xs_inputs_electron.txt.bak"))
@@ -13,8 +13,8 @@ import math
 #xs_inputs_muon = json.load(open("xs_inputs/xs_inputs_muon.unbinned.txt"))
 #xs_inputs_electron = json.load(open("xs_inputs/xs_inputs_electron.unbinned.txt"))
 
-xs_inputs_muon = json.load(open("xs_inputs/xs_inputs_muon.txt"))
-xs_inputs_electron = json.load(open("xs_inputs/xs_inputs_electron.txt"))
+#xs_inputs_muon = json.load(open("xs_inputs/xs_inputs_muon.txt"))
+#xs_inputs_electron = json.load(open("xs_inputs/xs_inputs_electron.txt"))
 
 from pprint import pprint
 
@@ -42,73 +42,73 @@ for i in range(1,201):
     if xs_inputs_muon["n_signal_syst_unc_due_to_fake_photon_stat_up_bin"+str(i)] < 100:
         sum_muon_photon_stat = sum_muon_photon_stat + pow(xs_inputs_muon["n_signal_syst_unc_due_to_fake_photon_stat_up_bin"+str(i)],2)
     else:
-        print i
+        print "Muon fake photon bin "+str(i)+ " stat uncertainty causes n_signal to change by more than 100" 
         print xs_inputs_muon["n_signal_syst_unc_due_to_fake_photon_stat_up_bin"+str(i)]
 
     if xs_inputs_electron["n_signal_syst_unc_due_to_fake_photon_stat_up_bin"+str(i)] < 100:
         sum_electron_photon_stat = sum_electron_photon_stat + pow(xs_inputs_electron["n_signal_syst_unc_due_to_fake_photon_stat_up_bin"+str(i)],2)
     else:
-        print i
+        print "Electron fake photon bin "+str(i)+ " stat uncertainty causes n_signal to change by more than 100" 
         print xs_inputs_electron["n_signal_syst_unc_due_to_fake_photon_stat_up_bin"+str(i)]
 
     if xs_inputs_muon["n_signal_syst_unc_due_to_fake_lepton_stat_up_bin"+str(i)] < 100:
         sum_muon_lepton_stat = sum_muon_lepton_stat + pow(xs_inputs_muon["n_signal_syst_unc_due_to_fake_lepton_stat_up_bin"+str(i)],2)
     else:
-        print i
+        print "Fake muon bin "+str(i)+ " syst uncertainty causes n_signal to change by more than 100" 
         print xs_inputs_muon["n_signal_syst_unc_due_to_fake_lepton_stat_up_bin"+str(i)]
 
     if xs_inputs_electron["n_signal_syst_unc_due_to_fake_lepton_stat_up_bin"+str(i)] < 100:
         sum_electron_lepton_stat = sum_electron_lepton_stat + pow(xs_inputs_electron["n_signal_syst_unc_due_to_fake_lepton_stat_up_bin"+str(i)],2)
     else:
-        print i
+        print "Fake electron bin "+str(i)+ " syst uncertainty causes n_signal to change by more than 100" 
         print xs_inputs_electron["n_signal_syst_unc_due_to_fake_lepton_stat_up_bin"+str(i)]
 
     if xs_inputs_muon["n_signal_syst_unc_due_to_double_fake_stat_up_bin"+str(i)] < 100:
         sum_muon_double_stat = sum_muon_double_stat + pow(xs_inputs_muon["n_signal_syst_unc_due_to_double_fake_stat_up_bin"+str(i)],2)
     else:
-        print i
+        print "Muon double fake bin "+str(i)+ " syst uncertainty causes n_signal to change by more than 100" 
         print xs_inputs_muon["n_signal_syst_unc_due_to_double_fake_stat_up_bin"+str(i)]
 
     if xs_inputs_electron["n_signal_syst_unc_due_to_double_fake_stat_up_bin"+str(i)] < 100:
         sum_electron_double_stat = sum_electron_double_stat + pow(xs_inputs_electron["n_signal_syst_unc_due_to_double_fake_stat_up_bin"+str(i)],2)
     else:
-        print i
+        print "Electron double fake bin "+str(i)+ " syst uncertainty causes n_signal to change by more than 100" 
         print xs_inputs_electron["n_signal_syst_unc_due_to_double_fake_stat_up_bin"+str(i)]
 
     if xs_inputs_muon["n_signal_syst_unc_due_to_zg_stat_up_bin"+str(i)] < 100:
         sum_muon_zg_stat = sum_muon_zg_stat + pow(xs_inputs_muon["n_signal_syst_unc_due_to_zg_stat_up_bin"+str(i)],2)
     else:
-        print i
+        print "Muon ZG bin "+str(i)+" stat uncertainty causes n_signal to change by more than 100"
         print xs_inputs_muon["n_signal_syst_unc_due_to_zg_stat_up_bin"+str(i)]
 
     if xs_inputs_electron["n_signal_syst_unc_due_to_zg_stat_up_bin"+str(i)] < 100:
         sum_electron_zg_stat = sum_electron_zg_stat + pow(xs_inputs_electron["n_signal_syst_unc_due_to_zg_stat_up_bin"+str(i)],2)
     else:
-        print i
+        print "Electron ZG bin "+str(i)+" stat uncertainty causes n_signal to change by more than 100"
         print xs_inputs_electron["n_signal_syst_unc_due_to_zg_stat_up_bin"+str(i)]
 
     if xs_inputs_muon["n_signal_syst_unc_due_to_vv_stat_up_bin"+str(i)] < 100:
         sum_muon_vv_stat = sum_muon_vv_stat + pow(xs_inputs_muon["n_signal_syst_unc_due_to_vv_stat_up_bin"+str(i)],2)
     else:
-        print i
+        print "Muon VV bin "+str(i)+" stat uncertainty causes n_signal to change by more than 100"
         print xs_inputs_muon["n_signal_syst_unc_due_to_vv_stat_up_bin"+str(i)]
 
     if xs_inputs_electron["n_signal_syst_unc_due_to_vv_stat_up_bin"+str(i)] < 100:
         sum_electron_vv_stat = sum_electron_vv_stat + pow(xs_inputs_electron["n_signal_syst_unc_due_to_vv_stat_up_bin"+str(i)],2)
     else:
-        print i
+        print "Electron VV bin "+str(i)+" stat uncertainty causes n_signal to change by more than 100"
         print xs_inputs_electron["n_signal_syst_unc_due_to_vv_stat_up_bin"+str(i)]
 
     if xs_inputs_muon["n_signal_syst_unc_due_to_top_stat_up_bin"+str(i)] < 100:
         sum_muon_top_stat = sum_muon_top_stat + pow(xs_inputs_muon["n_signal_syst_unc_due_to_top_stat_up_bin"+str(i)],2)
     else:
-        print i
+        print "Muon Top bin "+str(i)+" stat uncertainty causes n_signal to change by more than 100"
         print xs_inputs_muon["n_signal_syst_unc_due_to_top_stat_up_bin"+str(i)]
 
     if xs_inputs_electron["n_signal_syst_unc_due_to_top_stat_up_bin"+str(i)] < 100:
         sum_electron_top_stat = sum_electron_top_stat + pow(xs_inputs_electron["n_signal_syst_unc_due_to_top_stat_up_bin"+str(i)],2)
     else:
-        print i
+        print "Electron Top bin "+str(i)+" stat uncertainty causes n_signal to change by more than 100"
         print xs_inputs_electron["n_signal_syst_unc_due_to_top_stat_up_bin"+str(i)]
 
 
@@ -465,17 +465,30 @@ print "acc = %.6f \pm %.6f "%(acc,err_on_acc)
 print "acc_muon = %.6f \pm %.6f "%(acc_muon,err_on_acc_muon)
 print "acc_electron = %.6f \pm %.6f "%(acc_electron,err_on_acc_electron)
 
-print "xs = " +str(xs) + " +/- " + str(stat_err) + " (stat) +/- " + str(syst_err) + " (syst) +/- " + str(lumi_err) + " (lumi)"
+print """
+\\begin{table}[htbp]
+\\begin{center}
+\\begin{tabular}{|c|c|}
+\\hline
+Category & $A\\epsilon$  \\\\
+\\hline \\hline
+total & $%0.3f$ \\%% \\\\
+\\hline
+electron & $%0.3f$ \\%% \\\\
+\\hline
+muon & $%0.3f$ \\%% \\\\
+\\hline
+\\end{tabular}
+\\end{center}
+\\caption{Acceptance times efficiency for the $W\\gamma$+jets process.}
+\\label{tab:wg_acc_eff}
+\\end{table}
+"""%(
+acc*100,
+acc_electron*100,
+acc_muon*100,
+)
 
-print "xs based on electron channel = " +str(xs_electron) + " +/- " + str(stat_err_electron) + " (stat) +/- " + str(syst_err_electron) + " (syst) +/- "  + str(lumi_err_electron) + " (lumi)"
-
-print "xs based on muon channel = " +str(xs_muon) + " +/- "+ str(stat_err_muon) + " (stat) +/- " + str(syst_err_muon) + " (syst) +/- "  + str(lumi_err_muon) + " (lumi)" 
-
-print "xs: \\sigma = %.2f \pm %.2f \\text{ (stat)} \pm %.2f \\text{ (syst)} \pm %.2f \\text{ (lumi) pb}" % (xs,stat_err,syst_err,lumi_err)
-
-print "xs based on electron channel: \\sigma = %.2f \pm %.2f \\text{ (stat)} \pm %.2f \\text{ (syst)} \pm %.2f \\text{ (lumi) pb}" % (xs_electron,stat_err_electron,syst_err_electron,lumi_err_electron)
-
-print "xs based on muon channel: \\sigma = %.2f \pm %.2f \\text{ (stat)} \pm %.2f \\text{ (syst)} \pm %.2f \\text{ (lumi) pb}" % (xs_muon,stat_err_muon,syst_err_muon,lumi_err_muon)
 
 print """
 \\begin{table}[htbp]
@@ -567,3 +580,16 @@ PDF &  %0.2f & %0.2f & %0.2f \\\\
 100*stddev_pdf_muon/n_signal_muon,
 100*stddev_pdf_electron/n_signal_electron,
 )
+
+print "xs = " +str(xs) + " +/- " + str(stat_err) + " (stat) +/- " + str(syst_err) + " (syst) +/- " + str(lumi_err) + " (lumi)"
+
+print "xs based on electron channel = " +str(xs_electron) + " +/- " + str(stat_err_electron) + " (stat) +/- " + str(syst_err_electron) + " (syst) +/- "  + str(lumi_err_electron) + " (lumi)"
+
+print "xs based on muon channel = " +str(xs_muon) + " +/- "+ str(stat_err_muon) + " (stat) +/- " + str(syst_err_muon) + " (syst) +/- "  + str(lumi_err_muon) + " (lumi)" 
+
+print "xs: \\sigma = %.2f \pm %.2f \\text{ (stat)} \pm %.2f \\text{ (syst)} \pm %.2f \\text{ (lumi) pb}" % (xs,stat_err,syst_err,lumi_err)
+
+print "xs based on electron channel: \\sigma = %.2f \pm %.2f \\text{ (stat)} \pm %.2f \\text{ (syst)} \pm %.2f \\text{ (lumi) pb}" % (xs_electron,stat_err_electron,syst_err_electron,lumi_err_electron)
+
+print "xs based on muon channel: \\sigma = %.2f \pm %.2f \\text{ (stat)} \pm %.2f \\text{ (syst)} \pm %.2f \\text{ (lumi) pb}" % (xs_muon,stat_err_muon,syst_err_muon,lumi_err_muon)
+

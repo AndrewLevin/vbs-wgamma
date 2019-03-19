@@ -457,6 +457,9 @@ if labels["wg+jets"]["syst-scale"]:
     for i in range(0,8):
         labels["wg+jets"]["samples"][0]["nweightedevents_qcdscaleweight"+str(i)]=labels["wg+jets"]["samples"][0]["file"].Get("nWeightedEvents_QCDScaleWeight"+str(i)).GetBinContent(1)
 
+        if labels["wg+jets"]["samples"][0]["filename"] == "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjets.root":
+            labels["wg+jets"]["samples"][0]["nweightedevents_qcdscaleweight"+str(i)] *= 2
+
 if labels["wg+jets"]["syst-pdf"]:
     for i in range(1,102):
         labels["wg+jets"]["samples"][0]["nweightedevents_pdfweight"+str(i)]=labels["wg+jets"]["samples"][0]["file"].Get("nWeightedEvents_PDFWeight"+str(i)).GetBinContent(1)
