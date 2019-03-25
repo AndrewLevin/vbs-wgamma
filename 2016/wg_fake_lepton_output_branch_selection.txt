@@ -1,0 +1,7 @@
+drop *
+keep LHEPdfWeight 
+keep LHEScaleWeight 
+keep LHEWeight_rwgt_*
+keep L1PreFiringWeight
+keep L1PreFiringWeightUp
+keep L1PreFiringWeightDn
