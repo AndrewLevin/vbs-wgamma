@@ -20,6 +20,10 @@ class exampleProducer(Module):
         pass
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = wrappedOutputTree
+        self.out.branch("met",  "F");
+        self.out.branch("mt",  "F");
+        self.out.branch("puppimet",  "F");
+        self.out.branch("puppimt",  "F");
         self.out.branch("lepton_pt",  "F");
         self.out.branch("lepton_eta",  "F");
         self.out.branch("is_lepton_tight",  "B");
@@ -49,8 +53,8 @@ class exampleProducer(Module):
         #if not (event.HLT_Mu17_TrkIsoVVL):
             return False
 
-        if event.MET_pt > 30:
-            return False
+        #if event.MET_pt > 30:
+        #    return False
 
         for i in range(0,len(muons)):
 
@@ -97,14 +101,18 @@ class exampleProducer(Module):
 
         self.out.fillBranch("lepton_pt",muons[muon_index].pt)
         self.out.fillBranch("lepton_eta",muons[muon_index].eta)
+        
 
         try:
             self.out.fillBranch("gen_weight",event.Generator_weight)
         except:
             pass
 
-        if sqrt(2*muons[muon_index].pt*event.MET_pt*(1 - cos(event.MET_phi - muons[muon_index].phi))) > 20:
-            return False
+        #if sqrt(2*muons[muon_index].pt*event.MET_pt*(1 - cos(event.MET_phi - muons[muon_index].phi))) > 20:
+        #    return False
+
+        self.out.fillBranch("mt",sqrt(2*muons[muon_index].pt*event.MET_pt*(1 - cos(event.MET_phi - muons[muon_index].phi))))
+        self.out.fillBranch("puppimt",sqrt(2*muons[muon_index].pt*event.PuppiMET_pt*(1 - cos(event.PuppiMET_phi - muons[muon_index].phi))))
 
         found_other_jet = False
 
@@ -124,6 +132,9 @@ class exampleProducer(Module):
 
         if not found_other_jet:
             return False
+
+        self.out.fillBranch("met",event.MET_pt)
+        self.out.fillBranch("puppimet",event.PuppiMET_pt)
 
         return True
 
