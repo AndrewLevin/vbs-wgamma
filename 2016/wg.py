@@ -103,6 +103,7 @@ ROOT.TMinuitMinimizer.UseStaticMinuit(False)
 f_pu_weights = ROOT.TFile("/afs/cern.ch/user/a/amlevin/PileupWeights2016.root")
 
 pu_weight_hist = f_pu_weights.Get("ratio")
+pu_weight_up_hist = f_pu_weights.Get("ratio_up")
 
 from wg_labels import labels
 
@@ -409,6 +410,7 @@ for label in labels.keys():
     labels[label]["hists-muon-id-sf-variation"] = {}
     labels[label]["hists-muon-iso-sf-variation"] = {}
     labels[label]["hists-photon-id-sf-variation"] = {}
+    labels[label]["hists-pileup-up"] = {}
 
     if labels[label]["syst-pdf"]:
         for i in range(0,102):
@@ -425,6 +427,7 @@ for label in labels.keys():
         labels[label]["hists"][i] = histogram_templates[i].Clone(label + " " + variables[i])
         labels[label]["hists"][i].Sumw2()
 
+        labels[label]["hists-pileup-up"][i] = histogram_templates[i].Clone(label + " " + variables[i])
         labels[label]["hists-electron-id-sf-variation"][i] = histogram_templates[i].Clone(label + " " + variables[i])
         labels[label]["hists-electron-reco-sf-variation"][i] = histogram_templates[i].Clone(label + " " + variables[i])
         labels[label]["hists-muon-id-sf-variation"][i] = histogram_templates[i].Clone(label + " " + variables[i])
@@ -556,7 +559,6 @@ def fillHistogramMC(label,sample):
             pass_photon_gen_matching_for_fake = False    
 
         weight = sample["xs"] * 1000 * 35.9 / sample["nweightedevents"]
-        weight *= pu_weight_hist.GetBinContent(pu_weight_hist.FindFixBin(sample["tree"].npu))    
         weight *= sample["tree"].L1PreFiringWeight 
 
 #        if sample["filename"] == "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjetsewdim6.root":
@@ -565,6 +567,7 @@ def fillHistogramMC(label,sample):
         if sample["tree"].gen_weight < 0:
             weight = - weight
 
+        weight_pu_up = weight
         weight_double_fake = weight
         weight_fake_lepton = weight
         weight_fake_photon = weight
@@ -577,7 +580,22 @@ def fillHistogramMC(label,sample):
         weight_electron_reco_sf_variation = weight
         weight_muon_id_sf_variation = weight 
         weight_muon_iso_sf_variation = weight
-        
+
+        weight *= pu_weight_hist.GetBinContent(pu_weight_hist.FindFixBin(sample["tree"].npu))    
+        weight_pu_up *= pu_weight_up_hist.GetBinContent(pu_weight_up_hist.FindFixBin(sample["tree"].npu))    
+        weight_double_fake *= pu_weight_hist.GetBinContent(pu_weight_hist.FindFixBin(sample["tree"].npu))
+        weight_fake_lepton *= pu_weight_hist.GetBinContent(pu_weight_hist.FindFixBin(sample["tree"].npu))
+        weight_fake_photon *= pu_weight_hist.GetBinContent(pu_weight_hist.FindFixBin(sample["tree"].npu))
+        weight_fake_lepton_stat_up *= pu_weight_hist.GetBinContent(pu_weight_hist.FindFixBin(sample["tree"].npu))
+        weight_fake_lepton_stat_down *= pu_weight_hist.GetBinContent(pu_weight_hist.FindFixBin(sample["tree"].npu))
+        weight_fake_photon_alt *= pu_weight_hist.GetBinContent(pu_weight_hist.FindFixBin(sample["tree"].npu))
+        weight_fake_photon_stat_up *= pu_weight_hist.GetBinContent(pu_weight_hist.FindFixBin(sample["tree"].npu)) 
+        weight_photon_id_sf_variation *= pu_weight_hist.GetBinContent(pu_weight_hist.FindFixBin(sample["tree"].npu))
+        weight_electron_id_sf_variation *= pu_weight_hist.GetBinContent(pu_weight_hist.FindFixBin(sample["tree"].npu))
+        weight_electron_reco_sf_variation *= pu_weight_hist.GetBinContent(pu_weight_hist.FindFixBin(sample["tree"].npu))
+        weight_muon_id_sf_variation *= pu_weight_hist.GetBinContent(pu_weight_hist.FindFixBin(sample["tree"].npu)) 
+        weight_muon_iso_sf_variation *= pu_weight_hist.GetBinContent(pu_weight_hist.FindFixBin(sample["tree"].npu))
+
         if pass_photon_gen_matching_for_fake and pass_is_lepton_real:
             if pass_selection(sample["tree"],options.phoeta,True,False):
 
@@ -606,14 +624,21 @@ def fillHistogramMC(label,sample):
 
         weight_photon_id_sf_variation *= eff_scale_factor.photon_efficiency_scale_factor(sample["tree"].photon_pt,sample["tree"].photon_eta,True)
         weight *= eff_scale_factor.photon_efficiency_scale_factor(sample["tree"].photon_pt,sample["tree"].photon_eta)
+        weight_pu_up *= eff_scale_factor.photon_efficiency_scale_factor(sample["tree"].photon_pt,sample["tree"].photon_eta)
+        weight_electron_id_sf_variation *= eff_scale_factor.photon_efficiency_scale_factor(sample["tree"].photon_pt,sample["tree"].photon_eta)
+        weight_electron_reco_sf_variation *= eff_scale_factor.photon_efficiency_scale_factor(sample["tree"].photon_pt,sample["tree"].photon_eta)
+        weight_muon_id_sf_variation *= eff_scale_factor.photon_efficiency_scale_factor(sample["tree"].photon_pt,sample["tree"].photon_eta)
+        weight_muon_iso_sf_variation *= eff_scale_factor.photon_efficiency_scale_factor(sample["tree"].photon_pt,sample["tree"].photon_eta)
          
         if sample["tree"].lepton_pdg_id == 11:
             weight *= eff_scale_factor.electron_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta)
+            weight_pu_up *= eff_scale_factor.electron_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta)
             weight_electron_id_sf_variation *= eff_scale_factor.electron_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta,True,False)
             weight_electron_reco_sf_variation *= eff_scale_factor.electron_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta,False,True)
             weight_photon_id_sf_variation *= eff_scale_factor.electron_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta)
         elif sample["tree"].lepton_pdg_id == 13:
             weight *= eff_scale_factor.muon_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta)
+            weight_pu_up *= eff_scale_factor.muon_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta)
             weight_muon_id_sf_variation *= eff_scale_factor.muon_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta,False,True)
             weight_muon_iso_sf_variation *= eff_scale_factor.muon_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta,True,False)
             weight_photon_id_sf_variation *= eff_scale_factor.muon_efficiency_scale_factor(sample["tree"].lepton_pt,sample["tree"].lepton_eta)
@@ -633,6 +658,7 @@ def fillHistogramMC(label,sample):
 
                     for j in range(len(variables)):
                         fillHistogram(label["hists"][j],getVariable(variables[j],sample["tree"]),weight)
+                        fillHistogram(label["hists-pileup-up"][j],getVariable(variables[j],sample["tree"]),weight_pu_up)
                         fillHistogram(label["hists-electron-id-sf-variation"][j],getVariable(variables[j],sample["tree"]),weight_electron_id_sf_variation)
                         fillHistogram(label["hists-electron-reco-sf-variation"][j],getVariable(variables[j],sample["tree"]),weight_electron_reco_sf_variation)
                         fillHistogram(label["hists-muon-id-sf-variation"][j],getVariable(variables[j],sample["tree"]),weight_muon_id_sf_variation)
@@ -654,6 +680,7 @@ def fillHistogramMC(label,sample):
 
                     for j in range(len(variables)):
                         fillHistogram(label["hists"][j],getVariable(variables[j],sample["tree"]),weight)
+                        fillHistogram(label["hists-pileup-up"][j],getVariable(variables[j],sample["tree"]),weight_pu_up)
                         fillHistogram(label["hists-electron-id-sf-variation"][j],getVariable(variables[j],sample["tree"]),weight_electron_id_sf_variation)
                         fillHistogram(label["hists-electron-reco-sf-variation"][j],getVariable(variables[j],sample["tree"]),weight_electron_reco_sf_variation)
                         fillHistogram(label["hists-muon-id-sf-variation"][j],getVariable(variables[j],sample["tree"]),weight_muon_id_sf_variation)
@@ -1301,6 +1328,14 @@ if lepton_name == "electron":
     fit_inputs_fake_lepton_stat_up["fake_lepton"] = fake_lepton_stat_up["hists"][mlg_index]
     fit_results_fake_lepton_stat_up = mlg_fit(fit_inputs_fake_lepton_stat_up)
 
+    fit_inputs_pileup_up = dict(fit_inputs)
+    fit_inputs_pileup_up["label"] = "pileup_up"
+    fit_inputs_pileup_up["zg"] = labels["zg+jets"]["hists-pileup-up"][mlg_index]
+    fit_inputs_pileup_up["wg"] = labels["wg+jets"]["hists-pileup-up"][mlg_index]
+    fit_inputs_pileup_up["top"] = labels["top+jets"]["hists-pileup-up"][mlg_index]
+    fit_inputs_pileup_up["vv"] = labels["vv+jets"]["hists-pileup-up"][mlg_index]
+    fit_results_pileup_up = mlg_fit(fit_inputs_pileup_up)
+
     fit_inputs_fake_lepton_stat_down = dict(fit_inputs)
     fit_inputs_fake_lepton_stat_down["label"] = "fake_lepton_stat_down"
     fit_inputs_fake_lepton_stat_down["fake_lepton"] = fake_lepton_stat_down["hists"][mlg_index]
@@ -1393,6 +1428,7 @@ if lepton_name == "electron":
         fit_inputs_zg_pdf_variation["zg"] = labels["zg+jets"]["hists-pdf-variation"+str(i)][mlg_index]
         fit_results_zg_pdf_variation.append(mlg_fit(fit_inputs_zg_pdf_variation))
 
+pileup_unc = abs(labels["wg+jets"]["hists-pileup-up"][mlg_index].Integral() - labels["wg+jets"]["hists"][mlg_index].Integral())
 electron_id_sf_unc = labels["wg+jets"]["hists-electron-id-sf-variation"][mlg_index].Integral() - labels["wg+jets"]["hists"][mlg_index].Integral()
 electron_reco_sf_unc = labels["wg+jets"]["hists-electron-reco-sf-variation"][mlg_index].Integral() - labels["wg+jets"]["hists"][mlg_index].Integral()
 muon_id_sf_unc = labels["wg+jets"]["hists-muon-id-sf-variation"][mlg_index].Integral() - labels["wg+jets"]["hists"][mlg_index].Integral()
@@ -1581,10 +1617,12 @@ if lepton_name == "muon":
         "fiducial_region_cuts_efficiency":fiducial_region_cuts_efficiency,
         "n_weighted_run_over" : labels["wg+jets"]["samples"][0]["nweightedevents"],
         "n_signal_muon" : n_signal,
+        "n_signal_syst_unc_due_to_pileup" : abs(labels["top+jets"]["hists-pileup-up"][mlg_index].Integral()+ labels["zg+jets"]["hists-pileup-up"][mlg_index].Integral()+labels["vv+jets"]["hists-pileup-up"][mlg_index].Integral()-labels["top+jets"]["hists"][mlg_index].Integral()- labels["zg+jets"]["hists"][mlg_index].Integral()-labels["vv+jets"]["hists"][mlg_index].Integral()),
         "n_signal_syst_unc_due_to_fake_photon_muon" : abs(fake_photon_alt["hists"][mlg_index].Integral() - fake_photon["hists"][mlg_index].Integral()),
         "n_signal_syst_unc_due_to_fake_lepton_muon" : abs(fake_lepton["hists"][mlg_index].Integral()*1.3 - fake_lepton["hists"][mlg_index].Integral()),
         "n_signal_stat_unc_muon" : n_signal_error,
         "n_weighted_selected_data_mc_sf_muon" : labels["wg+jets"]["hists"][mlg_index].Integral()*labels["wg+jets"]["samples"][0]["nweightedevents"]/(labels["wg+jets"]["samples"][0]["xs"]*1000*35.9),
+        "n_weighted_selected_data_mc_sf_syst_unc_due_to_pileup" : pileup_unc,
         "n_weighted_selected_data_mc_sf_syst_unc_due_to_muon_id_sf_muon" : muon_id_sf_unc,
         "n_weighted_selected_data_mc_sf_syst_unc_due_to_muon_iso_sf_muon" : muon_iso_sf_unc,
         "n_weighted_selected_data_mc_sf_syst_unc_due_to_photon_id_sf_muon" : photon_id_sf_unc
@@ -1636,11 +1674,13 @@ elif lepton_name == "electron":
         "fiducial_region_cuts_efficiency":fiducial_region_cuts_efficiency,
         "n_weighted_run_over" : labels["wg+jets"]["samples"][0]["nweightedevents"],
         "n_signal_electron" : fit_results["wg_norm"],
+        "n_signal_syst_unc_due_to_pileup" : abs(fit_results_pileup_up["wg_norm"]-fit_results["wg_norm"]),
         "n_signal_syst_unc_due_to_fake_photon_electron" : abs(fit_results_fake_photon_alt["wg_norm"]-fit_results["wg_norm"]),
         "n_signal_syst_unc_due_to_fake_lepton_electron" : abs(fit_results_fake_lepton_syst["wg_norm"]-fit_results["wg_norm"]),
         "n_signal_stat_unc_electron" : fit_results["wg_norm_err"],
         "n_weighted_selected_data_mc_sf_electron" : labels["wg+jets"]["hists"][mlg_index].Integral()*labels["wg+jets"]["samples"][0]["nweightedevents"]/(labels["wg+jets"]["samples"][0]["xs"]*1000*35.9), 
         "n_weighted_selected_data_mc_sf_syst_unc_due_to_electron_id_sf_electron" : electron_id_sf_unc,
+        "n_weighted_selected_data_mc_sf_syst_unc_due_to_pileup" : pileup_unc,
         "n_weighted_selected_data_mc_sf_syst_unc_due_to_electron_reco_sf_electron" : electron_reco_sf_unc,
         "n_weighted_selected_data_mc_sf_syst_unc_due_to_photon_id_sf_electron" : photon_id_sf_unc
         }
