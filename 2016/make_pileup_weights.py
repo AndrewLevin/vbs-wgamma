@@ -1,15 +1,17 @@
 import ROOT
 
-fmc = ROOT.TFile("PileupWeights2016.root","NEW")
-fdata = ROOT.TFile("/afs/cern.ch/user/a/amlevin/PileupData2016Observed.root","READ") #pileupCalc.py -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/ReReco/Final/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt --inputLumiJSON /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/PileUp/pileup_latest.txt  --calcMode observed --minBiasXsec 69200 --maxPileupBin 70 --numPileupBins 70  PileupData2016Observed.root
-
+fout = ROOT.TFile("PileupWeights2016.root","RECREATE")
+fdata = ROOT.TFile("/afs/cern.ch/user/a/amlevin/PileupData2016Observed.root","READ") 
+fdataminbiasxsecup = ROOT.TFile("/afs/cern.ch/user/a/amlevin/PileupData2016ObservedMinBiasXsecUp.root","READ") 
 
 data_hist = fdata.Get("pileup") 
+data_up_hist = fdataminbiasxsecup.Get("pileup") 
 
 mc_hist=ROOT.TH1D("mc","mc",70,0,70)
 
 mc_hist.Sumw2()
 data_hist.Sumw2()
+data_up_hist.Sumw2()
 
 tchain = ROOT.TChain("Events")
 
@@ -37,19 +39,25 @@ tchain.Add("/afs/cern.ch/work/a/amlevin/data/WGToLNuG_01J_5f_TuneCUETP8M1_13TeV-
 
 tchain.Draw("Pileup_nPU >> mc")
 
-fmc.cd()
+fout.cd()
 
-mc_hist2 = mc_hist.Clone("mc")
-data_hist2 = data_hist.Clone("data")
+mc_cloned = mc_hist.Clone("mc")
+data_cloned = data_hist.Clone("data")
+data_up_cloned = data_up_hist.Clone("data_up")
 
-data_hist2.Write()
+data_cloned.Write()
+data_up_cloned.Write()
 
-data_hist3 = data_hist.Clone("ratio")
+ratio = data_hist.Clone("ratio")
+ratio_up = data_up_hist.Clone("ratio_up")
 
-mc_hist2.Scale(1/mc_hist2.Integral())
-data_hist3.Scale(1/data_hist3.Integral())
+mc_cloned.Scale(1/mc_cloned.Integral())
+ratio.Scale(1/ratio.Integral())
+ratio_up.Scale(1/ratio_up.Integral())
 
-data_hist3.Divide(mc_hist2)
+ratio.Divide(mc_cloned)
+ratio_up.Divide(mc_cloned)
 
-data_hist3.Write()
-mc_hist2.Write()
+ratio.Write()
+ratio_up.Write()
+mc_cloned.Write()
