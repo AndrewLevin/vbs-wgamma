@@ -1,0 +1,4 @@
+pileupCalc.py -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/ReReco/Final/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt --inputLumiJSON /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/PileUp/pileup_latest.txt --calcMode observed --minBiasXsec 69200 --maxPileupBin 70 --numPileupBins 70  PileupData2016Observed.root 
+
+#increase the min bias cross-section by 4.6% following https://twiki.cern.ch/twiki/bin/view/CMS/PileupJSONFileforData and https://hypernews.cern.ch/HyperNews/CMS/get/B2G-17-018/14.html
+pileupCalc.py -i /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/ReReco/Final/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt --inputLumiJSON /afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/PileUp/pileup_latest.txt --calcMode observed --minBiasXsec 72383 --maxPileupBin 70 --numPileupBins 70  PileupData2016ObservedMinBiasXsecUp.root 
