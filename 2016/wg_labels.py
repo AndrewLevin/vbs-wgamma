@@ -37,8 +37,10 @@ labels = {
         "color": ROOT.kCyan, 
         "samples" : [
             {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjets.root", "xs" : 178.6, "non_fsr" : True, "e_to_p_non_res" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True} 
+#            {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wjets.root", "xs" : 60430.0, "non_fsr" : True, "e_to_p_non_res" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True} 
 #            {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjetsewdim6.root", "xs" : 4.138, "non_fsr" : True, "e_to_p_non_res" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True} 
-#            {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/powhegwplusg.root", "xs" : 33420., "non_fsr" : True, "e_to_p_non_res" : True,"fsr" : True, "e_to_p_for_fake" : True} 
+#            {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/powhegwplusg.root", "xs" : 33420., "non_fsr" : True, "e_to_p_non_res" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True}, 
+#            {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/powhegwminusg.root", "xs" : 24780., "non_fsr" : True, "e_to_p_non_res" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True} 
             ] 
         }, 
     "zg+jets" : {

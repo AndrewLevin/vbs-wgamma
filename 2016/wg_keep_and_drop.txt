@@ -4,6 +4,8 @@ keep run
 keep luminosityBlock
 keep event
 keep Generator_weight
+keep Photon_genPartFlav
+keep Photon_genPartIdx
 keep L1PreFiringWeight
 keep L1PreFiringWeightUp
 keep L1PreFiringWeightDn
@@ -17,6 +19,8 @@ keep LHEScaleWeight
 keep LHEWeight_rwgt_*
 keep MET_pt
 keep MET_phi
+keep PuppiMET_pt
+keep PuppiMET_phi
 keep RawMET_pt
 keep RawMET_phi
 keep PV_npvs

@@ -50,6 +50,7 @@ class wgProducer(Module):
         self.out.branch("n_lhe_photons",  "I");
         self.out.branch("n_lower_pt_leptons",  "I");
         self.out.branch("photon_gen_matching",  "I");
+        self.out.branch("photon_gen_matching_old",  "I");
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         pass
     def analyze(self, event):
@@ -63,12 +64,11 @@ class wgProducer(Module):
         jets = Collection(event, "Jet")
         photons = Collection(event, "Photon")
 
-        try:
+        if hasattr(event,'nGenPart'):
             genparts = Collection(event, "GenPart")
+
+        if hasattr(event,'nLHEPart'):    
             lheparts = Collection(event, "LHEPart")
-        except:
-            
-            pass
             
         debug = False
 
@@ -537,38 +537,62 @@ class wgProducer(Module):
         else:
             return False
 
-
         photon_gen_matching=0
 
-        try:
-
-            for i in range(0,len(genparts)):
-                if genparts[i].pt > 5 and genparts[i].status == 1 and abs(genparts[i].pdgId) == 13 and ((genparts[i].statusFlags & isprompt_mask == isprompt_mask) or (genparts[i].statusFlags & isdirectprompttaudecayproduct_mask == isdirectprompttaudecayproduct_mask)) and deltaR(photons[tight_photons[0]].eta,photons[tight_photons[0]].phi,genparts[i].eta,genparts[i].phi) < 0.3:
-                    photon_gen_matching += 1 #m -> g
-
-                if genparts[i].pt > 5 and genparts[i].status == 1 and abs(genparts[i].pdgId) == 11 and ((genparts[i].statusFlags & isprompt_mask == isprompt_mask) or (genparts[i].statusFlags & isdirectprompttaudecayproduct_mask == isdirectprompttaudecayproduct_mask)) and deltaR(photons[tight_photons[0]].eta,photons[tight_photons[0]].phi,genparts[i].eta,genparts[i].phi) < 0.3:
-                    photon_gen_matching += 2 #e -> g
-
-                if genparts[i].pt > 5 and genparts[i].status == 1 and genparts[i].pdgId == 22 and ((genparts[i].statusFlags & isprompt_mask == isprompt_mask) or (genparts[i].statusFlags & isdirectprompttaudecayproduct_mask == isdirectprompttaudecayproduct_mask)) and deltaR(photons[tight_photons[0]].eta,photons[tight_photons[0]].phi,genparts[i].eta,genparts[i].phi) < 0.3:
-                    if genparts[i].genPartIdxMother >= 0 and (abs(genparts[genparts[i].genPartIdxMother].pdgId) == 11 or abs(genparts[genparts[i].genPartIdxMother].pdgId) == 13 or abs(genparts[genparts[i].genPartIdxMother].pdgId) == 15):
-                        photon_gen_matching += 8 #fsr photon
-                    else:
-                        photon_gen_matching += 4 #non-fsr photon
-        except:
-            pass
+        if hasattr(photons[tight_photons[0]],'genPartIdx'):
+            if photons[tight_photons[0]].genPartIdx >= 0 and genparts[photons[tight_photons[0]].genPartIdx].pdgId  == 22: 
+                if ((genparts[photons[tight_photons[0]].genPartIdx].statusFlags & isprompt_mask == isprompt_mask) or (genparts[photons[tight_photons[0]].genPartIdx].statusFlags & isdirectprompttaudecayproduct_mask == isdirectprompttaudecayproduct_mask)): 
+                    if (genparts[photons[tight_photons[0]].genPartIdx].genPartIdxMother >= 0 and (abs(genparts[genparts[photons[tight_photons[0]].genPartIdx].genPartIdxMother].pdgId) == 11 or abs(genparts[genparts[photons[tight_photons[0]].genPartIdx].genPartIdxMother].pdgId) == 13 or abs(genparts[genparts[photons[tight_photons[0]].genPartIdx].genPartIdxMother].pdgId) == 15)):
+                        photon_gen_matching = 4
+                    else:    
+                        photon_gen_matching = 5
+                else:
+                    photon_gen_matching = 3
+            elif photons[tight_photons[0]].genPartIdx >= 0 and abs(genparts[photons[tight_photons[0]].genPartIdx].pdgId) == 11:     
+                if ((genparts[photons[tight_photons[0]].genPartIdx].statusFlags & isprompt_mask == isprompt_mask) or (genparts[photons[tight_photons[0]].genPartIdx].statusFlags & isdirectprompttaudecayproduct_mask == isdirectprompttaudecayproduct_mask)):  
+                    photon_gen_matching = 1
+                else:
+                    photon_gen_matching = 2
+                    
+            else:
+                assert(photons[tight_photons[0]].genPartFlav == 0)
+                photon_gen_matching = 0
 
         self.out.fillBranch("photon_gen_matching",photon_gen_matching)
 
-        try:
-            self.out.fillBranch("gen_weight",event.Generator_weight)
-        except:
-            pass
+        photon_gen_matching_old=0
 
-        try:
+        if hasattr(event,'nGenPart'):
+
+            for i in range(0,len(genparts)):
+                if genparts[i].pt > 5 and genparts[i].status == 1 and abs(genparts[i].pdgId) == 13 and ((genparts[i].statusFlags & isprompt_mask == isprompt_mask) or (genparts[i].statusFlags & isdirectprompttaudecayproduct_mask == isdirectprompttaudecayproduct_mask)) and deltaR(photons[tight_photons[0]].eta,photons[tight_photons[0]].phi,genparts[i].eta,genparts[i].phi) < 0.3:
+                    photon_gen_matching_old += 1 #m -> g
+
+                if genparts[i].pt > 5 and genparts[i].status == 1 and abs(genparts[i].pdgId) == 11 and ((genparts[i].statusFlags & isprompt_mask == isprompt_mask) or (genparts[i].statusFlags & isdirectprompttaudecayproduct_mask == isdirectprompttaudecayproduct_mask)) and deltaR(photons[tight_photons[0]].eta,photons[tight_photons[0]].phi,genparts[i].eta,genparts[i].phi) < 0.3:
+                    photon_gen_matching_old += 2 #e -> g
+
+                if genparts[i].pt > 5 and genparts[i].status == 1 and genparts[i].pdgId == 22 and ((genparts[i].statusFlags & isprompt_mask == isprompt_mask) or (genparts[i].statusFlags & isdirectprompttaudecayproduct_mask == isdirectprompttaudecayproduct_mask)) and deltaR(photons[tight_photons[0]].eta,photons[tight_photons[0]].phi,genparts[i].eta,genparts[i].phi) < 0.3:
+                    if genparts[i].genPartIdxMother >= 0 and (abs(genparts[genparts[i].genPartIdxMother].pdgId) == 11 or abs(genparts[genparts[i].genPartIdxMother].pdgId) == 13 or abs(genparts[genparts[i].genPartIdxMother].pdgId) == 15):
+                        photon_gen_matching_old += 8 #fsr photon
+                    else:
+                        photon_gen_matching_old += 4 #non-fsr photon
+
+        self.out.fillBranch("photon_gen_matching_old",photon_gen_matching_old)
+
+        if hasattr(event,'Generator_weight'):
+            self.out.fillBranch("gen_weight",event.Generator_weight)
+        else:    
+            self.out.fillBranch("gen_weight",0)
+
+        if hasattr(event,'Pileup_nPU'):    
             self.out.fillBranch("npu",event.Pileup_nPU)
+        else:
+            self.out.fillBranch("npu",0)
+    
+        if hasattr(event,'Pileup_nTrueInt'):    
             self.out.fillBranch("ntruepu",event.Pileup_nTrueInt)
-        except:
-            pass
+        else:
+            self.out.fillBranch("ntruepu",0)
 
         try:
             n_lhe_w_plus = 0
@@ -603,10 +627,14 @@ class wgProducer(Module):
                 self.out.fillBranch("pass_lhe_selection",0)
      
             self.out.fillBranch("lhe_lepton_charge",bool(n_lhe_w_plus))
-        except:
-            pass
+        except:   
+            self.out.fillBranch("lhe_lepton_charge",0)
+            self.out.fillBranch("pass_lhe_selection",0)
+            self.out.fillBranch("n_lhe_partons",0)
+            self.out.fillBranch("n_lhe_photons",0)
+            
 
-        try:
+        if hasattr(event,'nGenPart'):    
 
             n_gen_leptons = 0
             n_gen_photons = 0
@@ -645,11 +673,9 @@ class wgProducer(Module):
                 self.out.fillBranch("pass_fiducial",1)
             else:
                 self.out.fillBranch("pass_fiducial",0)
-        except: 
-            pass
+        else:
+            self.out.fillBranch("pass_fiducial",0)
 
-#        assert(n_gen_leptons == 1 or n_gen_leptons == 0)        
-#        assert(n_gen_photons == 1 or n_gen_photons == 0)        
 
         self.out.fillBranch("n_lower_pt_leptons",len(lower_pt_muons)+len(lower_pt_electrons))
         self.out.fillBranch("njets",njets)

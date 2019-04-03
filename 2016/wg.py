@@ -142,6 +142,7 @@ ewdim6_tree = ewdim6_file.Get("Events")
 #ewdim6_xs = 5.519
 ewdim6_xs = 4.318
 
+#ewdim6_nweightedevents = ewdim6_file.Get("nEventsGenWeighted").GetBinContent(1)
 ewdim6_nweightedevents = ewdim6_file.Get("nWeightedEvents").GetBinContent(1)
 
 def getVariable(varname, tree):
@@ -453,7 +454,7 @@ for label in labels.keys():
     for sample in labels[label]["samples"]:
         sample["file"] = ROOT.TFile.Open(sample["filename"])
         sample["tree"] = sample["file"].Get("Events")
-        sample["nweightedevents"] = sample["file"].Get("nWeightedEvents").GetBinContent(1)
+        sample["nweightedevents"] = sample["file"].Get("nEventsGenWeighted").GetBinContent(1)
 
 
 if labels["wg+jets"]["syst-scale"]:
@@ -548,12 +549,14 @@ def fillHistogramMC(label,sample):
         else:
             pass_is_lepton_real = False
 
-        if (bool(sample["tree"].photon_gen_matching & int('010',2)) and sample["e_to_p"]) or (bool(sample["tree"].photon_gen_matching & int('1000',2)) and sample["fsr"]) or (bool(sample["tree"].photon_gen_matching & int('0100',2)) and sample["non_fsr"]) :
+        if ((sample["tree"].photon_gen_matching == 1) and sample["e_to_p"]) or ((sample["tree"].photon_gen_matching ==4) and sample["fsr"]) or ((sample["tree"].photon_gen_matching == 5) and sample["non_fsr"]) :
+#        if (bool(sample["tree"].photon_gen_matching_old & int('010',2)) and sample["e_to_p"]) or (bool(sample["tree"].photon_gen_matching_old & int('1000',2)) and sample["fsr"]) or (bool(sample["tree"].photon_gen_matching_old & int('0100',2)) and sample["non_fsr"]) :
             pass_photon_gen_matching = True
         else:
             pass_photon_gen_matching = False    
 
-        if (bool(sample["tree"].photon_gen_matching & int('010',2)) and sample["e_to_p_for_fake"]) or (bool(sample["tree"].photon_gen_matching & int('1000',2)) and sample["fsr"]) or (bool(sample["tree"].photon_gen_matching & int('0100',2)) and sample["non_fsr"]) :
+        if ((sample["tree"].photon_gen_matching == 1) and sample["e_to_p_for_fake"]) or ((sample["tree"].photon_gen_matching ==4) and sample["fsr"]) or ((sample["tree"].photon_gen_matching == 5) and sample["non_fsr"]) :
+#        if (bool(sample["tree"].photon_gen_matching_old & int('010',2)) and sample["e_to_p_for_fake"]) or (bool(sample["tree"].photon_gen_matching_old & int('1000',2)) and sample["fsr"]) or (bool(sample["tree"].photon_gen_matching_old & int('0100',2)) and sample["non_fsr"]) :
             pass_photon_gen_matching_for_fake = True
         else:
             pass_photon_gen_matching_for_fake = False    
@@ -646,14 +649,16 @@ def fillHistogramMC(label,sample):
             assert(0)
 
         if pass_is_lepton_real:
-            if bool(sample["tree"].photon_gen_matching & int('0010',2)):
+#            if bool(sample["tree"].photon_gen_matching_old & int('0010',2)):
+            if sample["tree"].photon_gen_matching == 1:
                 if sample["e_to_p_non_res"]:
                     for j in range(len(variables)):
                         e_to_p_non_res["hists"][j].Fill(getVariable(variables[j],sample["tree"]),weight)
                 if sample["e_to_p"]:
                     for j in range(len(variables)):
                         e_to_p["hists"][j].Fill(getVariable(variables[j],sample["tree"]),weight)
-            elif bool(sample["tree"].photon_gen_matching & int('1000',2)):
+#            elif bool(sample["tree"].photon_gen_matching_old & int('1000',2)):
+            elif sample["tree"].photon_gen_matching == 4:
                 if sample["fsr"]:
 
                     for j in range(len(variables)):
@@ -675,7 +680,8 @@ def fillHistogramMC(label,sample):
                                 else:
                                     fillHistogram(label["hists-scale-variation"+str(k)][j],getVariable(variables[j],sample["tree"]),weight*sample["tree"].LHEScaleWeight[k])
                         
-            elif bool(sample["tree"].photon_gen_matching & int('0100',2)):
+            elif sample["tree"].photon_gen_matching == 5:
+#            elif bool(sample["tree"].photon_gen_matching & int('0100',2)):
                 if sample["non_fsr"]:
 
                     for j in range(len(variables)):
@@ -1054,8 +1060,8 @@ def mlg_fit(inputs):
 
     m= ROOT.RooRealVar("m","m",0,mlg_fit_upper_bound)
     m0=ROOT.RooRealVar("m0",    "m0",1.55915,-2.5,2.5)
-    sigma=ROOT.RooRealVar("sigma",  "sigma",1.31407,0.1,3)
-    alpha=ROOT.RooRealVar("alpha",  "alpha",1.51265,0,10)
+    sigma=ROOT.RooRealVar("sigma",  "sigma",1.75029,0.1,3)
+    alpha=ROOT.RooRealVar("alpha",  "alpha",2.26024,0,10)
 #    alpha=ROOT.RooRealVar("alpha",  "alpha",4.45779,4.45779-2,4.45779+2)
 #    alpha=ROOT.RooRealVar("alpha",  "alpha",,0,10)
 #    alpha=ROOT.RooRealVar("alpha",  "alpha",4.27560,4.27560,4.27560)
@@ -1063,8 +1069,8 @@ def mlg_fit(inputs):
     n=ROOT.RooRealVar("n",          "n",2.11960,2.11960,2.11960)
     cb = ROOT.RooCBShape("cb", "Crystal Ball", m, m0, sigma, alpha, n)
 
-    mass = ROOT.RooRealVar("mass","mass",90.6566,90.6566-5,90.6566+5)
-    width = ROOT.RooRealVar("width","width",4.01306,3.0*4.01306/4.0,5*4.01306/3.0);
+    mass = ROOT.RooRealVar("mass","mass",89.855,89.855-5,89.855+5)
+    width = ROOT.RooRealVar("width","width",3.85825,3.0*3.85825/4.0,5*3.85825/3.0);
     bw = ROOT.RooBreitWigner("bw","Breit Wigner",m,mass,width)
 
     RooFFTConvPdf_bwcb = ROOT.RooFFTConvPdf("bwcb","Breit Wigner convolved with a Crystal Ball",m,bw,cb)
@@ -1098,11 +1104,11 @@ def mlg_fit(inputs):
         RooHistPdf_etog = ROOT.RooHistPdf("etog","etog",ROOT.RooArgSet(m),RooDataHist_mlg_etog)
 
     top_norm = ROOT.RooRealVar("top_norm","top_norm",inputs["top"].Integral(),inputs["top"].Integral())    
-    wg_norm = ROOT.RooRealVar("wg_norm","wg_norm",13403.7,0.5*13403.7,2*13403.7);    
+    wg_norm = ROOT.RooRealVar("wg_norm","wg_norm",13234.2,0.5*13234.2,2*13234.2);    
 #    zg_norm = ROOT.RooRealVar("zg_norm","zg_norm",0,1000000);    
     zg_norm = ROOT.RooRealVar("zg_norm","zg_norm",inputs["zg"].Integral(),inputs["zg"].Integral());    
     vv_norm = ROOT.RooRealVar("vv_norm","vv_norm",inputs["vv"].Integral(),inputs["vv"].Integral());    
-    bwcb_norm = ROOT.RooRealVar("bwcb_norm","bwcb_norm",3656.16,0.5*3656.16,2*3656.16);    
+    bwcb_norm = ROOT.RooRealVar("bwcb_norm","bwcb_norm",3488.71,0.5*3488.71,2*3488.71);    
     fake_lepton_norm = ROOT.RooRealVar("fake_lepton_norm","fake_lepton_norm",inputs["fake_lepton"].Integral(),inputs["fake_lepton"].Integral());    
     fake_photon_norm = ROOT.RooRealVar("fake_photon_norm","fake_photon_norm",inputs["fake_photon"].Integral(),inputs["fake_photon"].Integral());    
     double_fake_norm = ROOT.RooRealVar("double_fake_norm","double_fake_norm",inputs["double_fake"].Integral(),inputs["double_fake"].Integral());    

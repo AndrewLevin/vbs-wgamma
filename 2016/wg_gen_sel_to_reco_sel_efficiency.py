@@ -2,7 +2,56 @@ import ROOT
 
 import sys
 
-lepton_pdgid = "11"
+import style
+
+style.GoodStyle().cd()
+
+xoffsetstart = 0.0;
+yoffsetstart = 0.0;
+xoffset = 0.20;
+yoffset = 0.05;
+
+xpositions = [0.40,0.40,0.40,0.40,0.40,0.40,0.20,0.20,0.20]
+ypositions = [0,1,2,3,4,5,0,1,2]
+
+def set_axis_fonts(thstack, coordinate, title):
+
+    if coordinate == "x":
+        axis = thstack.GetXaxis();
+    elif coordinate == "y":
+        axis = thstack.GetYaxis();
+    else:
+        assert(0)
+
+    axis.SetLabelFont  (   42)
+    axis.SetLabelOffset(0.015)
+    axis.SetLabelSize  (0.050)
+    axis.SetNdivisions (  505)
+    axis.SetTitleFont  (   42)
+    axis.SetTitleOffset(  1.5)
+    axis.SetTitleSize  (0.050)
+    if (coordinate == "y"):
+        axis.SetTitleOffset(1.6)
+    axis.SetTitle(title)
+
+def draw_legend(x1,y1,hist,label,options):
+
+    legend = ROOT.TLegend(x1+xoffsetstart,y1+yoffsetstart,x1+xoffsetstart + xoffset,y1+yoffsetstart + yoffset)
+
+    legend.SetBorderSize(     0)
+    legend.SetFillColor (     0)
+    legend.SetTextAlign (    12)
+    legend.SetTextFont  (    42)
+    legend.SetTextSize  ( 0.040)
+
+    legend.AddEntry(hist,label,options)
+
+    legend.Draw("same")
+
+    #otherwise the legend goes out of scope and is deleted once the function finishes                                                                                                     
+    hist.label = legend
+
+lepton_pdgid = "13"
 
 #h_gen_photon_pt_powheg_plus_num_pos
 
@@ -141,14 +190,31 @@ h_gen_photon_pt_mg5amc_num_pos.Divide(h_gen_photon_pt_mg5amc_den_pos)
 
 c = ROOT.TCanvas()
 
+h_gen_photon_pt_mg5amc_num_pos.SetTitle("")
+h_gen_photon_pt_powheg_plus_num_pos.SetTitle("")
+
+h_gen_photon_pt_powheg_plus_num_pos.SetLineColor(ROOT.kRed)
+h_gen_photon_pt_mg5amc_num_pos.SetLineColor(ROOT.kBlue)
+
+h_gen_photon_pt_powheg_plus_num_pos.SetLineWidth(3)
+h_gen_photon_pt_mg5amc_num_pos.SetLineWidth(3)
+
 h_gen_photon_pt_powheg_plus_num_pos.SetStats(0)
 h_gen_photon_pt_powheg_plus_num_pos.SetMinimum(0)
-h_gen_photon_pt_powheg_plus_num_pos.SetMaximum(0.6)
+h_gen_photon_pt_powheg_plus_num_pos.SetMaximum(0.3)
+
+set_axis_fonts(h_gen_photon_pt_powheg_plus_num_pos,"x","photon pt (GeV)")
+set_axis_fonts(h_gen_photon_pt_powheg_plus_num_pos,"y","Events / bin")
+
 h_gen_photon_pt_powheg_plus_num_pos.Draw()
 
-h_gen_photon_pt_mg5amc_num_pos.SetLineColor(ROOT.kRed)
-
 h_gen_photon_pt_mg5amc_num_pos.Draw("same")
+
+j=0
+draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,h_gen_photon_pt_mg5amc_num_pos,"MadGraph5_aMC@NLO","lp")
+j=1
+draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,h_gen_photon_pt_powheg_plus_num_pos,"POWHEG","lp")
+
 
 
 c.SaveAs("/eos/user/a/amlevin/www/tmp/delete_this.png")
