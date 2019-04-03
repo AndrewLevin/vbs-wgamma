@@ -7,10 +7,6 @@ fake_photon_event_weights_wjets_wgjets_as_data = json.load(open("fake_photon_eve
 
 fake_photon_event_weights_wjets_wgjets = json.load(open("fake_photon_event_weights/fake_photon_event_weights_wjets_wgjets.txt"))
 
-import pprint
-
-pprint.pprint(fake_photon_event_weights)
-
 print """
 \\begin{table}[htbp]
 \\begin{center}
