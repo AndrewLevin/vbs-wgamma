@@ -49,6 +49,7 @@ parser.add_option('--lep',dest='lep',default='both')
 parser.add_option('--phoeta',dest='phoeta',default='both')
 parser.add_option('--overflow',dest='overflow',action='store_true',default=False)
 parser.add_option('--ewdim6',dest='ewdim6',action='store_true',default=False)
+parser.add_option('--float_fake_sig_cont',dest='float_fake_sig_cont',action='store_true',default=False)
 parser.add_option('--draw_ewdim6',dest='draw_ewdim6',action='store_true',default=False)
 parser.add_option('--ewdim6_scaling_only',dest='ewdim6_scaling_only',action='store_true',default=False)
 
@@ -473,6 +474,7 @@ labels["wg+jets"]["samples"][0]["nweightedeventspassgenselection"]=labels["wg+je
 fiducial_region_cuts_efficiency = float(labels["wg+jets"]["samples"][0]["nweightedeventspassgenselection"])/float(labels["wg+jets"]["samples"][0]["nweightedevents"])
 
 data = {}
+fake_signal_contamination = {}
 fake_photon = {}
 fake_photon_alt = {}
 fake_photon_stat_up = {}
@@ -485,6 +487,7 @@ e_to_p_non_res = {}
 ewdim6 = {}
 
 data["hists"] = []
+fake_signal_contamination["hists"] = []
 fake_photon["hists"] = []
 fake_photon_alt["hists"] = []
 fake_photon_stat_up["hists"] = []
@@ -498,6 +501,7 @@ ewdim6["hists"] = []
 
 for i in range(len(variables)):
     data["hists"].append(histogram_templates[i].Clone("data " + variables[i]))
+    fake_signal_contamination["hists"].append(histogram_templates[i].Clone("fake signal " + variables[i]))
     fake_photon["hists"].append(histogram_templates[i].Clone("fake photon " + variables[i]))
     fake_photon_stat_up["hists"].append(histogram_templates[i].Clone("fake photon stat up" + variables[i]))
     fake_photon_alt["hists"].append(histogram_templates[i].Clone("fake photon sys " + variables[i]))
@@ -511,6 +515,7 @@ for i in range(len(variables)):
 
 for i in range(len(variables)):
     data["hists"][i].Sumw2()
+    fake_signal_contamination["hists"][i].Sumw2()
     fake_photon["hists"][i].Sumw2()
     fake_photon_stat_up["hists"][i].Sumw2()
     fake_photon_alt["hists"][i].Sumw2()
@@ -607,9 +612,12 @@ def fillHistogramMC(label,sample):
                 weight_fake_lepton_stat_down *= -fake_lepton_event_weight(sample["tree"].lepton_pdg_id,sample["tree"].lepton_eta, sample["tree"].lepton_pt,"down")
 
                 for j in range(len(variables)):
-                    fillHistogram(fake_lepton["hists"][j],getVariable(variables[j],sample["tree"]),weight_fake_lepton)
-                    fillHistogram(fake_lepton_stat_up["hists"][j],getVariable(variables[j],sample["tree"]),weight_fake_lepton_stat_up)
-                    fillHistogram(fake_lepton_stat_down["hists"][j],getVariable(variables[j],sample["tree"]),weight_fake_lepton_stat_down)
+                    if sample["filename"] == "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjets.root" and options.float_fake_sig_cont:
+                        fillHistogram(fake_signal_contamination["hists"][j],getVariable(variables[j],sample["tree"]),weight_fake_lepton)
+                    else:    
+                        fillHistogram(fake_lepton["hists"][j],getVariable(variables[j],sample["tree"]),weight_fake_lepton)
+                        fillHistogram(fake_lepton_stat_up["hists"][j],getVariable(variables[j],sample["tree"]),weight_fake_lepton_stat_up)
+                        fillHistogram(fake_lepton_stat_down["hists"][j],getVariable(variables[j],sample["tree"]),weight_fake_lepton_stat_down)
 
             if pass_selection(sample["tree"],options.phoeta,False,True):
 
@@ -618,9 +626,12 @@ def fillHistogramMC(label,sample):
                 weight_fake_photon_stat_up *= -fake_photon_event_weight(sample["tree"].photon_eta, sample["tree"].photon_pt,sample["tree"].lepton_pdg_id, False,True)
 
                 for j in range(len(variables)):
-                    fillHistogram(fake_photon["hists"][j],getVariable(variables[j],sample["tree"]),weight_fake_photon)
-                    fillHistogram(fake_photon_alt["hists"][j],getVariable(variables[j],sample["tree"]),weight_fake_photon_alt)
-                    fillHistogram(fake_photon_stat_up["hists"][j],getVariable(variables[j],sample["tree"]),weight_fake_photon_stat_up)
+                    if sample["filename"] == "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjets.root" and options.float_fake_sig_cont:
+                        fillHistogram(fake_signal_contamination["hists"][j],getVariable(variables[j],sample["tree"]),weight_fake_photon)
+                    else:
+                        fillHistogram(fake_photon["hists"][j],getVariable(variables[j],sample["tree"]),weight_fake_photon)
+                        fillHistogram(fake_photon_alt["hists"][j],getVariable(variables[j],sample["tree"]),weight_fake_photon_alt)
+                        fillHistogram(fake_photon_stat_up["hists"][j],getVariable(variables[j],sample["tree"]),weight_fake_photon_stat_up)
 
         if not pass_selection(sample["tree"],options.phoeta,False,False):
             continue
@@ -1033,6 +1044,11 @@ double_fake_integral = double_fake["hists"][mlg_index].IntegralAndError(1,double
 data_integral_error = ROOT.Double()
 data_integral = data["hists"][mlg_index].IntegralAndError(1,data["hists"][mlg_index].GetXaxis().GetNbins(),data_integral_error)
 
+fake_signal_contamination_integral_error = ROOT.Double()
+fake_signal_contamination_integral = fake_signal_contamination["hists"][mlg_index].IntegralAndError(1,fake_signal_contamination["hists"][mlg_index].GetXaxis().GetNbins(),fake_signal_contamination_integral_error)
+
+print "fake signal contamination = "+str(fake_signal_contamination_integral) + " +/- " +str(fake_signal_contamination_integral_error)
+
 print "wg+jets = "+str(wg_jets_integral)+" +/- "+str(wg_jets_integral_error)
 print "zg+jets = "+str(zg_jets_integral)+" +/- "+str(zg_jets_integral_error)
 print "vv+jets = "+str(vv_jets_integral)+" +/- "+str(vv_jets_integral_error)
@@ -1081,6 +1097,12 @@ def mlg_fit(inputs):
     RooDataHist_mlg_wg = ROOT.RooDataHist("wg data hist","wg data hist",ROOT.RooArgList(m),inputs["wg"])
     RooHistPdf_wg = ROOT.RooHistPdf("wg","wg",ROOT.RooArgSet(m),RooDataHist_mlg_wg)
 
+    wg_plus_fake_wg_contamination_hist = inputs["wg"].Clone("wg plus fake wg contamination hist")
+    wg_plus_fake_wg_contamination_hist.Add(inputs["fake-wg-contamination"])
+
+    RooDataHist_mlg_wg_plus_fake_wg_contamination = ROOT.RooDataHist("wg plus fake wg contamination","wg plus fake wg contamination",ROOT.RooArgList(m),wg_plus_fake_wg_contamination_hist)
+    RooHistPdf_wg_plus_fake_wg_contamination = ROOT.RooHistPdf("wg plus fake wg contamination","wg plus fake wg contamination",ROOT.RooArgSet(m),RooDataHist_mlg_wg_plus_fake_wg_contamination)
+
     RooDataHist_mlg_vv = ROOT.RooDataHist("vv data hist","vv data hist",ROOT.RooArgList(m),inputs["vv"])
     RooHistPdf_vv = ROOT.RooHistPdf("vv","vv",ROOT.RooArgSet(m),RooDataHist_mlg_vv)
 
@@ -1105,6 +1127,7 @@ def mlg_fit(inputs):
 
     top_norm = ROOT.RooRealVar("top_norm","top_norm",inputs["top"].Integral(),inputs["top"].Integral())    
     wg_norm = ROOT.RooRealVar("wg_norm","wg_norm",13234.2,0.5*13234.2,2*13234.2);    
+    wg_plus_fake_wg_contamination_norm = ROOT.RooRealVar("wg_plus_fake_wg_contamination_norm","wg_plus_fake_wg_contamination_norm",13234.2,0.5*13234.2,2*13234.2);    
 #    zg_norm = ROOT.RooRealVar("zg_norm","zg_norm",0,1000000);    
     zg_norm = ROOT.RooRealVar("zg_norm","zg_norm",inputs["zg"].Integral(),inputs["zg"].Integral());    
     vv_norm = ROOT.RooRealVar("vv_norm","vv_norm",inputs["vv"].Integral(),inputs["vv"].Integral());    
@@ -1121,9 +1144,15 @@ def mlg_fit(inputs):
     f= ROOT.RooRealVar("f","f",0.5,0.,1.) ;
 
     if inputs["lepton"] == "electron" or inputs["lepton"] == "both":
-        sum=ROOT.RooAddPdf("sum","sum",ROOT.RooArgList(RooHistPdf_wg,RooHistPdf_zg,RooHistPdf_vv,RooFFTConvPdf_bwcb,RooHistPdf_fake_lepton,RooHistPdf_fake_photon,RooHistPdf_double_fake,RooHistPdf_top,RooHistPdf_etog),ROOT.RooArgList(wg_norm,zg_norm,vv_norm,bwcb_norm,fake_lepton_norm,fake_photon_norm,double_fake_norm,top_norm,etog_norm))
+        if options.float_fake_sig_cont:
+            sum=ROOT.RooAddPdf("sum","sum",ROOT.RooArgList(RooHistPdf_wg_plus_fake_wg_contamination,RooHistPdf_zg,RooHistPdf_vv,RooFFTConvPdf_bwcb,RooHistPdf_fake_lepton,RooHistPdf_fake_photon,RooHistPdf_double_fake,RooHistPdf_top,RooHistPdf_etog),ROOT.RooArgList(wg_plus_fake_wg_contamination_norm,zg_norm,vv_norm,bwcb_norm,fake_lepton_norm,fake_photon_norm,double_fake_norm,top_norm,etog_norm))
+        else:    
+            sum=ROOT.RooAddPdf("sum","sum",ROOT.RooArgList(RooHistPdf_wg,RooHistPdf_zg,RooHistPdf_vv,RooFFTConvPdf_bwcb,RooHistPdf_fake_lepton,RooHistPdf_fake_photon,RooHistPdf_double_fake,RooHistPdf_top,RooHistPdf_etog),ROOT.RooArgList(wg_norm,zg_norm,vv_norm,bwcb_norm,fake_lepton_norm,fake_photon_norm,double_fake_norm,top_norm,etog_norm))        
     elif inputs["lepton"] == "muon":
-        sum=ROOT.RooAddPdf("sum","sum",ROOT.RooArgList(RooHistPdf_wg,RooHistPdf_zg,RooHistPdf_vv,RooHistPdf_fake_lepton,RooHistPdf_fake_photon,RooHistPdf_double_fake,RooHistPdf_top),ROOT.RooArgList(wg_norm,zg_norm,vv_norm,fake_lepton_norm,fake_photon_norm,double_fake_norm,top_norm))
+        if options.float_fake_sig_cont:
+            sum=ROOT.RooAddPdf("sum","sum",ROOT.RooArgList(RooHistPdf_wg_plus_fake_wg_contamination,RooHistPdf_zg,RooHistPdf_vv,RooHistPdf_fake_lepton,RooHistPdf_fake_photon,RooHistPdf_double_fake,RooHistPdf_top),ROOT.RooArgList(wg_plus_fake_wg_contamination_norm,zg_norm,vv_norm,fake_lepton_norm,fake_photon_norm,double_fake_norm,top_norm))
+        else:    
+            sum=ROOT.RooAddPdf("sum","sum",ROOT.RooArgList(RooHistPdf_wg,RooHistPdf_zg,RooHistPdf_vv,RooHistPdf_fake_lepton,RooHistPdf_fake_photon,RooHistPdf_double_fake,RooHistPdf_top),ROOT.RooArgList(wg_norm,zg_norm,vv_norm,fake_lepton_norm,fake_photon_norm,double_fake_norm,top_norm))
     else:
         assert(0)
 
@@ -1295,8 +1324,15 @@ def mlg_fit(inputs):
 
     mlg_fit_results = {}
 
-    mlg_fit_results["wg_norm"] = wg_norm.getVal()
-    mlg_fit_results["wg_norm_err"] = wg_norm.getError()
+    print "wg_plus_fake_wg_contamination_norm.getVal() = "+str(wg_plus_fake_wg_contamination_norm.getVal())
+    print "wg_plus_fake_wg_contamination_norm.getVal()*inputs[\"wg\"].Integral()/(inputs[\"wg\"].Integral() + inputs[\"fake-wg-contamination\"]) = "+str(wg_plus_fake_wg_contamination_norm.getVal()*inputs["wg"].Integral()/(inputs["wg"].Integral() + inputs["fake-wg-contamination"].Integral()))
+
+    if options.float_fake_sig_cont:
+        mlg_fit_results["wg_norm"] = wg_plus_fake_wg_contamination_norm.getVal()*inputs["wg"].Integral()/(inputs["wg"].Integral() + inputs["fake-wg-contamination"].Integral())
+        mlg_fit_results["wg_norm_err"] = wg_plus_fake_wg_contamination_norm.getError()*inputs["wg"].Integral()/(inputs["wg"].Integral() + inputs["fake-wg-contamination"].Integral())
+    else:
+        mlg_fit_results["wg_norm"] = wg_plus_fake_wg_contamination_norm.getVal()
+        mlg_fit_results["wg_norm_err"] = wg_plus_fake_wg_contamination_norm.getError()
 
 #instead of resetting after each fit, turn the static minuit feature off (see above near "import ROOT")
 #    ROOT.gMinuit.mncler()
@@ -1314,6 +1350,7 @@ if lepton_name == "electron":
         "zg" : labels["zg+jets"]["hists"][mlg_index],
         "vv" : labels["vv+jets"]["hists"][mlg_index],
         "wg" : labels["wg+jets"]["hists"][mlg_index],
+        "fake-wg-contamination" : fake_signal_contamination["hists"][mlg_index],
         "e_to_p_non_res" : e_to_p_non_res["hists"][mlg_index],
         "fake_photon" : fake_photon["hists"][mlg_index],
         "fake_lepton" : fake_lepton["hists"][mlg_index],
