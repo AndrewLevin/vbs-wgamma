@@ -15,7 +15,7 @@ import style
 
 import optparse
 
-from math import hypot, pi, sqrt
+from math import hypot, pi, sqrt, acos
 
 from pprint import pprint
 
@@ -114,8 +114,8 @@ mlg_fit_upper_bound = 400
 #variables = ["photon_pt","dphilg","met","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","lepton_phi","photon_phi","njets","mt","npvs","drlg"]
 #variables_labels = ["ewdim6_photon_pt","dphilg","met","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","lepton_phi","photon_phi","njets","mt","npvs","drlg"]
 
-variables = ["photon_pt","dphilg","met","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","mlg","lepton_phi","photon_phi","njets","mt","npvs","drlg","photon_pt"]
-variables_labels = ["ewdim6_photon_pt","dphilg","met","lepton_pt","lepton_eta","photon_pt","photon_eta","fit_mlg","mlg","lepton_phi","photon_phi","njets","mt","npvs","drlg","photon_pt_20to180"]
+variables = ["photon_pt","dphilmet","dphilg","met","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","mlg","lepton_phi","photon_phi","njets","mt","npvs","drlg","photon_pt"]
+variables_labels = ["ewdim6_photon_pt","dphilmet","dphilg","met","lepton_pt","lepton_eta","photon_pt","photon_eta","fit_mlg","mlg","lepton_phi","photon_phi","njets","mt","npvs","drlg","photon_pt_20to180"]
 
 assert(len(variables) == len(variables_labels))
 
@@ -127,11 +127,11 @@ binning_photon_pt = array('f',[400,500,600,900,1500])
 
 n_photon_pt_bins = len(binning_photon_pt)-1
 
-histogram_templates = [ROOT.TH1D('', '', n_photon_pt_bins, binning_photon_pt ),ROOT.TH1D('','',8,pi/2,pi), ROOT.TH1D("met", "", 15 , 0., 300 ), ROOT.TH1D('lepton_pt', '', 8, 20., 180 ), ROOT.TH1D('lepton_eta', '', 10, -2.5, 2.5 ), ROOT.TH1D('photon_pt', '', n_photon_pt_bins, binning_photon_pt ), ROOT.TH1D('photon_eta', '', 10, -2.5, 2.5 ), ROOT.TH1D("mlg","",mlg_fit_upper_bound/2,0,mlg_fit_upper_bound), ROOT.TH1D("mlg","",100,0,200),ROOT.TH1D("lepton_phi","",14,-3.5,3.5), ROOT.TH1D("photon_phi","",14,-3.5,3.5), ROOT.TH1D("njets","",7,-0.5,6.5), ROOT.TH1D("mt","",20,0,200), ROOT.TH1D("npvs","",51,-0.5,50.5), ROOT.TH1D("drlg","",60,0,6), ROOT.TH1D('photon_pt', '', 8, 20., 180 )] 
+histogram_templates = [ROOT.TH1D('', '', n_photon_pt_bins, binning_photon_pt ),ROOT.TH1D('','',16,0,pi),ROOT.TH1D('','',16,0,pi), ROOT.TH1D("met", "", 15 , 0., 300 ), ROOT.TH1D('lepton_pt', '', 8, 20., 180 ), ROOT.TH1D('lepton_eta', '', 10, -2.5, 2.5 ), ROOT.TH1D('photon_pt', '', n_photon_pt_bins, binning_photon_pt ), ROOT.TH1D('photon_eta', '', 10, -2.5, 2.5 ), ROOT.TH1D("mlg","",mlg_fit_upper_bound/2,0,mlg_fit_upper_bound), ROOT.TH1D("mlg","",100,0,200),ROOT.TH1D("lepton_phi","",14,-3.5,3.5), ROOT.TH1D("photon_phi","",14,-3.5,3.5), ROOT.TH1D("njets","",7,-0.5,6.5), ROOT.TH1D("mt","",20,0,200), ROOT.TH1D("npvs","",51,-0.5,50.5), ROOT.TH1D("drlg","",60,0,6), ROOT.TH1D('photon_pt', '', 8, 20., 180 )] 
 
 assert(len(variables) == len(histogram_templates))
 
-mlg_index = 7
+mlg_index = 8
 
 #ewdim6_filename = "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjetsewdim6.root.bak"
 ewdim6_filename = "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjetsewdim6.root"
@@ -151,6 +151,8 @@ def getVariable(varname, tree):
         return tree.mlg
     elif varname == "drlg":
         return deltaR(tree.lepton_eta,tree.lepton_phi,tree.photon_eta,tree.photon_phi)
+    elif varname == "dphilmet":
+        return acos(max(min(-(pow(tree.puppimt,2)/2/tree.lepton_pt/tree.puppimet-1),1),-1))
     elif varname == "dphilg":
         return deltaPhi(tree.lepton_phi,tree.photon_phi)
     elif varname == "mt":
@@ -179,6 +181,8 @@ def getVariable(varname, tree):
 def getXaxisLabel(varname):
     if varname == "njets":
         return "number of jets"
+    elif varname == "dphilmet":
+        return "#Delta #phi(l,MET)"
     elif varname == "drlg":
         return "#Delta R(l,g)"
     elif varname == "dphilg":
@@ -1331,8 +1335,8 @@ def mlg_fit(inputs):
         mlg_fit_results["wg_norm"] = wg_plus_fake_wg_contamination_norm.getVal()*inputs["wg"].Integral()/(inputs["wg"].Integral() + inputs["fake-wg-contamination"].Integral())
         mlg_fit_results["wg_norm_err"] = wg_plus_fake_wg_contamination_norm.getError()*inputs["wg"].Integral()/(inputs["wg"].Integral() + inputs["fake-wg-contamination"].Integral())
     else:
-        mlg_fit_results["wg_norm"] = wg_plus_fake_wg_contamination_norm.getVal()
-        mlg_fit_results["wg_norm_err"] = wg_plus_fake_wg_contamination_norm.getError()
+        mlg_fit_results["wg_norm"] = wg_norm.getVal()
+        mlg_fit_results["wg_norm_err"] = wg_norm.getError()
 
 #instead of resetting after each fit, turn the static minuit feature off (see above near "import ROOT")
 #    ROOT.gMinuit.mncler()
@@ -1388,6 +1392,16 @@ if lepton_name == "electron":
     fit_inputs_fake_photon_alt["fake_photon"] = fake_photon_alt["hists"][mlg_index]
     fit_inputs_fake_photon_alt["label"] = "fake_photon_alt"
     fit_results_fake_photon_alt = mlg_fit(fit_inputs_fake_photon_alt)
+
+    fit_inputs_lumi_up= dict(fit_inputs)
+    fit_inputs_lumi_up["zg"] = labels["zg+jets"]["hists"][mlg_index].Clone("zg+jets lumi up")
+    fit_inputs_lumi_up["zg"].Scale(1.025)
+    fit_inputs_lumi_up["top"] = labels["top+jets"]["hists"][mlg_index].Clone("top+jets lumi up")
+    fit_inputs_lumi_up["top"].Scale(1.025)
+    fit_inputs_lumi_up["vv"] = labels["vv+jets"]["hists"][mlg_index].Clone("vv+jets lumi up")
+    fit_inputs_lumi_up["vv"].Scale(1.025)
+    fit_inputs_lumi_up["label"] = "lumi_up"
+    fit_results_lumi_up = mlg_fit(fit_inputs_lumi_up)
 
     fit_results_fake_photon_stat_up = []
 
@@ -1703,6 +1717,8 @@ if lepton_name == "muon":
     for i in range(1,102): 
         xs_inputs_muon["n_signal_syst_unc_due_to_zg_pdf_variation"+str(i)] = labels["zg+jets"]["hists"][mlg_index].Integral() - labels["zg+jets"]["hists-pdf-variation"+str(i)][mlg_index].Integral()
 
+    xs_inputs_muon["n_signal_syst_unc_due_to_lumi_up"] = abs(0.026*(labels["zg+jets"]["hists"][mlg_index].Integral()+labels["top+jets"]["hists"][mlg_index].Integral() + labels["vv+jets"]["hists"][mlg_index].Integral()) )
+
     pprint(xs_inputs_muon)
 
     import json
@@ -1759,6 +1775,8 @@ elif lepton_name == "electron":
 
     for i in range(1,102): 
         xs_inputs_electron["n_signal_syst_unc_due_to_zg_pdf_variation"+str(i)] = fit_results_zg_pdf_variation[i-1]["wg_norm"] - fit_results["wg_norm"]
+
+    xs_inputs_electron["n_signal_syst_unc_due_to_lumi_up"] = abs(fit_results_lumi_up["wg_norm"] - fit_results["wg_norm"])
 
     pprint(xs_inputs_electron)
 
