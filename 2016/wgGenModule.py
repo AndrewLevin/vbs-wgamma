@@ -30,6 +30,8 @@ class wgGenProducer(Module):
         self.out.branch("lepton_pt",  "F");
         self.out.branch("lepton_phi",  "F");
         self.out.branch("lepton_eta",  "F");
+        self.out.branch("gen_met_pt",  "F");
+        self.out.branch("gen_met_phi",  "F");
         self.out.branch("photon_pt",  "F");
         self.out.branch("photon_phi",  "F");
         self.out.branch("photon_eta",  "F");
@@ -106,6 +108,8 @@ class wgGenProducer(Module):
                 self.out.fillBranch("gen_photon_pt",genparts[gen_photon_index].pt)
                 self.out.fillBranch("gen_photon_eta",genparts[gen_photon_index].eta)
                 self.out.fillBranch("gen_photon_phi",genparts[gen_photon_index].phi)
+                self.out.fillBranch("gen_met_phi",event.GenMET_phi)
+                self.out.fillBranch("gen_met_pt",event.GenMET_pt)
                 self.out.fillBranch("gen_weight",event.Generator_weight)
                 pass_gen_selection = True
 
@@ -305,7 +309,8 @@ class wgGenProducer(Module):
             self.out.fillBranch("lepton_pt",muons[tight_muons[0]].pt)
             self.out.fillBranch("lepton_eta",muons[tight_muons[0]].eta)
             self.out.fillBranch("lepton_phi",muons[tight_muons[0]].phi)
-
+            self.out.fillBranch("gen_met_phi",event.GenMET_phi)
+            self.out.fillBranch("gen_met_pt",event.GenMET_pt)
             self.out.fillBranch("photon_pt",photons[tight_photons[0]].pt)
             self.out.fillBranch("photon_eta",photons[tight_photons[0]].eta)
             self.out.fillBranch("photon_phi",photons[tight_photons[0]].phi)
@@ -342,7 +347,8 @@ class wgGenProducer(Module):
             self.out.fillBranch("lepton_pt",muons[loose_but_not_tight_muons[0]].pt)
             self.out.fillBranch("lepton_eta",muons[loose_but_not_tight_muons[0]].eta)
             self.out.fillBranch("lepton_phi",muons[loose_but_not_tight_muons[0]].phi)
-
+            self.out.fillBranch("gen_met_phi",event.GenMET_phi)
+            self.out.fillBranch("gen_met_pt",event.GenMET_pt)
             self.out.fillBranch("photon_pt",photons[tight_photons[0]].pt)
             self.out.fillBranch("photon_eta",photons[tight_photons[0]].eta)
             self.out.fillBranch("photon_phi",photons[tight_photons[0]].phi)
@@ -381,6 +387,8 @@ class wgGenProducer(Module):
             self.out.fillBranch("lepton_pt",electrons[tight_electrons[0]].pt)
             self.out.fillBranch("lepton_eta",electrons[tight_electrons[0]].eta)
             self.out.fillBranch("lepton_phi",electrons[tight_electrons[0]].phi)
+            self.out.fillBranch("gen_met_phi",event.GenMET_phi)
+            self.out.fillBranch("gen_met_pt",event.GenMET_pt)
             self.out.fillBranch("photon_pt",photons[tight_photons[0]].pt)
             self.out.fillBranch("photon_eta",photons[tight_photons[0]].eta)
             self.out.fillBranch("photon_phi",photons[tight_photons[0]].phi)
@@ -417,6 +425,8 @@ class wgGenProducer(Module):
             self.out.fillBranch("lepton_pt",electrons[loose_but_not_tight_electrons[0]].pt)
             self.out.fillBranch("lepton_eta",electrons[loose_but_not_tight_electrons[0]].eta)
             self.out.fillBranch("lepton_phi",electrons[loose_but_not_tight_electrons[0]].phi)
+            self.out.fillBranch("gen_met_phi",event.GenMET_phi)
+            self.out.fillBranch("gen_met_pt",event.GenMET_pt)
             self.out.fillBranch("photon_pt",photons[tight_photons[0]].pt)
             self.out.fillBranch("photon_eta",photons[tight_photons[0]].eta)
             self.out.fillBranch("photon_phi",photons[tight_photons[0]].phi)
