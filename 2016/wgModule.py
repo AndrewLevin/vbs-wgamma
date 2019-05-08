@@ -35,8 +35,10 @@ class wgProducer(Module):
         self.out.branch("mlg",  "F");
         self.out.branch("photon_selection",  "I");
         self.out.branch("met",  "F");
+        self.out.branch("metphi",  "F");
         self.out.branch("mt",  "F");
         self.out.branch("puppimet",  "F");
+        self.out.branch("puppimetphi",  "F");
         self.out.branch("puppimt",  "F");
         self.out.branch("npvs","I")
         self.out.branch("njets","I")
@@ -685,6 +687,8 @@ class wgProducer(Module):
         self.out.fillBranch("run",event.run)
         self.out.fillBranch("met",event.MET_pt)
         self.out.fillBranch("puppimet",event.PuppiMET_pt)
+        self.out.fillBranch("puppimetphi",event.PuppiMET_phi)
+        self.out.fillBranch("metphi",event.MET_phi)
 
         return True
 
