@@ -41,11 +41,17 @@ fmuonout=TFile("muon_frs.root","recreate")
 
 electron_data_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/single_electron_fake_electron.root"}]
 
+#electron_data_samples = []
+
+#electron_mc_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wjets_fake_electron.root", "xs" : 60430.0, "subtract" : True},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/zjets_fake_electron.root", "xs" : 4963.0, "subtract" : True}]
+
 electron_mc_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wjets_fake_electron.root", "xs" : 60430.0, "subtract" : True},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/zjets_fake_electron.root", "xs" : 4963.0, "subtract" : True}]
 
-#electron_mc_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/qcd_bctoe_170250.root", "xs" : 2608, "subtract" : False},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/qcd_bctoe_2030.root", "xs" : 363100, "subtract" : False},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/qcd_bctoe_250.root", "xs" : 722.6, "subtract" : False},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/qcd_bctoe_3080.root", "xs" : 417800, "subtract" : False},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/qcd_bctoe_80170.root", "xs" : 39860, "subtract" : False}]
+#electron_mc_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/qcd_bctoe_170250.root", "xs" : 2608, "subtract" : False},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/qcd_bctoe_2030.root", "xs" : 363100, "subtract" : False},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/qcd_bctoe_250.root", "xs" : 722.6, "subtract" : False},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/qcd_bctoe_3080.root", "xs" : 417800, "subtract" : False},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/qcd_bctoe_80170.root", "xs" : 39860, "subtract" : False}]
 
 muon_data_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/single_muon_fake_muon.root"}]
+
+#muon_mc_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wjets_fake_muon.root", "xs" : 60430.0, "subtract" : True},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/zjets_fake_muon.root", "xs" : 4963.0, "subtract" : True}]
 
 muon_mc_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wjets_fake_muon.root", "xs" : 60430.0, "subtract" : True},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/zjets_fake_muon.root", "xs" : 4963.0, "subtract" : True}]
 
@@ -77,10 +83,13 @@ def fill_loose_and_tight_th2ds(tree,tight_th2d,loose_th2d,xs_weight = None):
         if entry % int(options.mod) != 0:
             continue
 
+        if tree.met > 30 or tree.mt > 20:
+            continue
+
         if xs_weight:
             weight = xs_weight
         else:
-            weight = 1
+            weight = 1.0
 
         if tree.gen_weight < 0:
             weight = -weight
@@ -101,7 +110,7 @@ def fill_loose_and_tight_th2ds(tree,tight_th2d,loose_th2d,xs_weight = None):
 for sample in electron_data_samples:
     f = TFile.Open(sample["filename"])
     t = f.Get("Events")
-    fill_loose_and_tight_th2ds(t,tight_electron_th2d,loose_electron_th2d,1.0)
+    fill_loose_and_tight_th2ds(t,tight_electron_th2d,loose_electron_th2d)
 
 for sample in electron_mc_samples:
     f = TFile.Open(sample["filename"])
@@ -115,7 +124,7 @@ for sample in electron_mc_samples:
 for sample in muon_data_samples:
     f = TFile.Open(sample["filename"])
     t = f.Get("Events")
-    fill_loose_and_tight_th2ds(t,tight_muon_th2d,loose_muon_th2d,1.0)
+    fill_loose_and_tight_th2ds(t,tight_muon_th2d,loose_muon_th2d)
 
 for sample in muon_mc_samples:
     f = TFile.Open(sample["filename"])
