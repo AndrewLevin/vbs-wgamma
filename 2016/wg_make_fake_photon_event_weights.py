@@ -39,9 +39,9 @@ lepton_names =["electron","muon"]
 photon1_eta_ranges = ["abs(photon1_eta) < 1.4442","abs(photon1_eta) > 1.566 && abs(photon1_eta) < 2.5"]
 photon2_eta_ranges = ["abs(photon2_eta) < 1.4442","abs(photon2_eta) > 1.566 && abs(photon2_eta) < 2.5"]
 
-photon1_pt_range_cutstrings = ["photon1_pt > 25 && photon1_pt < 30","photon1_pt > 30 && photon1_pt < 40","photon1_pt > 40 && photon1_pt < 50","photon1_pt > 50 && photon1_pt < 70","photon1_pt > 70 && photon1_pt < 100","photon1_pt > 100 && photon1_pt < 135","photon1_pt > 135 && photon1_pt < 400"]
+photon1_pt_range_cutstrings = ["photon1_pt > 20 && photon1_pt < 25","photon1_pt > 25 && photon1_pt < 30","photon1_pt > 30 && photon1_pt < 40","photon1_pt > 40 && photon1_pt < 50","photon1_pt > 50 && photon1_pt < 70","photon1_pt > 70 && photon1_pt < 100","photon1_pt > 100 && photon1_pt < 135","photon1_pt > 135 && photon1_pt < 400"]
 
-photon2_pt_range_cutstrings = ["photon2_pt > 25 && photon2_pt < 30","photon2_pt > 30 && photon2_pt < 40","photon2_pt > 40 && photon2_pt < 50","photon2_pt > 50 && photon2_pt < 70","photon2_pt > 70 && photon2_pt < 100","photon2_pt > 100 && photon2_pt < 135","photon2_pt > 135 && photon2_pt < 400"]
+photon2_pt_range_cutstrings = ["photon2_pt > 20 && photon2_pt < 25","photon2_pt > 25 && photon2_pt < 30","photon2_pt > 30 && photon2_pt < 40","photon2_pt > 40 && photon2_pt < 50","photon2_pt > 50 && photon2_pt < 70","photon2_pt > 70 && photon2_pt < 100","photon2_pt > 100 && photon2_pt < 135","photon2_pt > 135 && photon2_pt < 400"]
 
 assert(len(photon1_pt_range_cutstrings) == len(photon2_pt_range_cutstrings))
 assert(len(photon2_eta_ranges) == len(photon2_eta_ranges))
@@ -89,7 +89,7 @@ for lepton_name in lepton_names:
                 sieie_cut = 0.03001
                 #n_bins = 160                                                                                                                                                             
                 #n_bins = 80                                                                                                                                                              
-                n_bins = 40
+                n_bins = 20
                 sieie_lower = 0.01
                 sieie_upper = 0.06
 
@@ -124,7 +124,10 @@ for lepton_name in lepton_names:
 
                 pass_photon_pt_range = False
 
-                if photon1_pt_range_cutstring == "photon1_pt > 25 && photon1_pt < 30":
+                if photon1_pt_range_cutstring == "photon1_pt > 20 && photon1_pt < 25":
+                    if real_photon_template_tree.photon_pt > 20 and real_photon_template_tree.photon_pt < 25:
+                        pass_photon_pt_range = True
+                elif photon1_pt_range_cutstring == "photon1_pt > 25 && photon1_pt < 30":
                     if real_photon_template_tree.photon_pt > 25 and real_photon_template_tree.photon_pt < 30:
                         pass_photon_pt_range = True
                 elif photon1_pt_range_cutstring == "photon1_pt > 30 && photon1_pt < 40":
@@ -197,7 +200,9 @@ for lepton_name in lepton_names:
             else:
                 assert(0)
 
-            if photon1_pt_range_cutstring == "photon1_pt > 25 && photon1_pt < 30":
+            if photon1_pt_range_cutstring == "photon1_pt > 20 && photon1_pt < 25":
+                photon_pt_range_cutstring_no_spaces = "20to25"
+            elif photon1_pt_range_cutstring == "photon1_pt > 25 && photon1_pt < 30":
                 photon_pt_range_cutstring_no_spaces = "25to30"
             elif photon1_pt_range_cutstring == "photon1_pt > 30 && photon1_pt < 40":
                 photon_pt_range_cutstring_no_spaces = "30to40"
