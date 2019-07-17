@@ -220,7 +220,7 @@ for lepton_name in lepton_names:
                    assert(0)
 
 
-            c1.SaveAs("/eos/user/a/amlevin/www/zg/2016/fake-photon/"+lepton_name+"/"+eta_range_no_spaces+"/real_photon_template_"+photon_pt_range_cutstring_no_spaces+".png")
+            c1.SaveAs("/eos/user/a/amlevin/www/wg/2016/fake-photon/"+lepton_name+"/"+eta_range_no_spaces+"/real_photon_template_"+photon_pt_range_cutstring_no_spaces+".png")
 
             #print "andrew debug 2"                                                                                                                                                       
 
@@ -228,7 +228,7 @@ for lepton_name in lepton_names:
 
             fake_photon_template_hist.Draw("hist")
 
-            c1.SaveAs("/eos/user/a/amlevin/www/zg/2016/fake-photon/"+lepton_name+"/"+eta_range_no_spaces+"/fake_photon_template_"+photon_pt_range_cutstring_no_spaces+".png")
+            c1.SaveAs("/eos/user/a/amlevin/www/wg/2016/fake-photon/"+lepton_name+"/"+eta_range_no_spaces+"/fake_photon_template_"+photon_pt_range_cutstring_no_spaces+".png")
 
             #raw_input()                                                                                                                                                                  
 
@@ -236,13 +236,13 @@ for lepton_name in lepton_names:
 
             total_hist.Draw("hist")
 
-            c1.SaveAs("/eos/user/a/amlevin/www/zg/2016/fake-photon/"+lepton_name+"/"+eta_range_no_spaces+"/total_"+photon_pt_range_cutstring_no_spaces+".png")
+            c1.SaveAs("/eos/user/a/amlevin/www/wg/2016/fake-photon/"+lepton_name+"/"+eta_range_no_spaces+"/total_"+photon_pt_range_cutstring_no_spaces+".png")
 
             total_hist.Draw("Ep")
 
             ffitter.GetPlot().Draw("same")
 
-            c1.SaveAs("/eos/user/a/amlevin/www/zg/2016/fake-photon/"+lepton_name+"/"+eta_range_no_spaces+"/fit_"+photon_pt_range_cutstring_no_spaces+".png")
+            c1.SaveAs("/eos/user/a/amlevin/www/wg/2016/fake-photon/"+lepton_name+"/"+eta_range_no_spaces+"/fit_"+photon_pt_range_cutstring_no_spaces+".png")
 
 
             c1.ForceUpdate()
