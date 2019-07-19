@@ -104,8 +104,8 @@ for lepton_name in lepton_names:
             fake_photon_tree.Draw("photon2_sieie >> fake_photon_template_hist",photon2_eta_range + " && lepton_pdg_id == "+lepton_pdg_id+" && "+photon2_pt_range_cutstring + " && pass_selection2 && "+str(veto_signal_selection_cutstring))
 
             real_photon_template_tree = real_photon_template_file.Get("Events")
-            real_photon_template_hist.Sumw2()
             real_photon_template_hist = ROOT.TH1F("real_photon_template_hist","real_photon_template_hist",n_bins,sieie_lower,sieie_upper)
+            real_photon_template_hist.Sumw2()
             for k in range(real_photon_template_tree.GetEntries()):
                 real_photon_template_tree.GetEntry(k)
 
