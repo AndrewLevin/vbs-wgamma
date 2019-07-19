@@ -96,12 +96,15 @@ for lepton_name in lepton_names:
 
             fake_photon_tree = fake_photon_file.Get("Events")
             total_hist = ROOT.TH1F("total_sieie_for_fake_photon_fraction_hist","total_sieie_for_fake_photon_fraction_hist",n_bins,sieie_lower,sieie_upper)
+            total_hist.Sumw2()
             fake_photon_tree.Draw("photon1_sieie >> total_sieie_for_fake_photon_fraction_hist",photon1_eta_range+" && (photon1_selection == 1 || photon1_selection == 2) && "+photon1_pt_range_cutstring + " && pass_selection1 && "+str(veto_signal_selection_cutstring))
 
             fake_photon_template_hist = ROOT.TH1F("fake_photon_template_hist","fake_photon_template_hist",n_bins,sieie_lower,sieie_upper)
+            fake_photon_template_hist.Sumw2()
             fake_photon_tree.Draw("photon2_sieie >> fake_photon_template_hist",photon2_eta_range + " && lepton_pdg_id == "+lepton_pdg_id+" && "+photon2_pt_range_cutstring + " && pass_selection2 && "+str(veto_signal_selection_cutstring))
 
             real_photon_template_tree = real_photon_template_file.Get("Events")
+            real_photon_template_hist.Sumw2()
             real_photon_template_hist = ROOT.TH1F("real_photon_template_hist","real_photon_template_hist",n_bins,sieie_lower,sieie_upper)
             for k in range(real_photon_template_tree.GetEntries()):
                 real_photon_template_tree.GetEntry(k)
@@ -172,25 +175,13 @@ for lepton_name in lepton_names:
 
             ffitter = ROOT.TFractionFitter(total_hist,mc)
 
-            #ffitter.SetData(total_sieie_for_fake_photon_fraction_hist)                                                                                                                   
-            #ffitter.SetMC(0,fake_photon_template_hist)                                                                                                                                   
-            #ffitter.SetMC(1,real_photon_template_hist)                                                                                                                                   
-
-            #print "andrew debug 1"                                                                                                                                                       
 
             c1 = ROOT.TCanvas("c1", "c1",5,50,500,500);
 
-            real_photon_template_hist.Draw("hist")
-
-            f = ROOT.TFile.Open("delete_this.root","recreate")
-
-            f.cd()
-
-            real_photon_template_hist.Write()
-            fake_photon_template_hist.Write()
-            total_hist.Write()
-
-            f.Close()
+            real_photon_template_hist.GetXaxis().SetTitle("\sigma_{i \eta i \eta}")
+            real_photon_template_hist.SetLineWidth(2)
+#            real_photon_template_hist.Draw("hist")
+            real_photon_template_hist.Draw()
 
 
             if photon1_eta_range == "abs(photon1_eta) < 1.4442":
@@ -222,11 +213,9 @@ for lepton_name in lepton_names:
 
             c1.SaveAs("/eos/user/a/amlevin/www/wg/2016/fake-photon/"+lepton_name+"/"+eta_range_no_spaces+"/real_photon_template_"+photon_pt_range_cutstring_no_spaces+".png")
 
-            #print "andrew debug 2"                                                                                                                                                       
-
-            #raw_input()                                                                                                                                                                  
-
-            fake_photon_template_hist.Draw("hist")
+            fake_photon_template_hist.GetXaxis().SetTitle("\sigma_{i \eta i \eta}")
+            fake_photon_template_hist.SetLineWidth(2)
+            fake_photon_template_hist.Draw()
 
             c1.SaveAs("/eos/user/a/amlevin/www/wg/2016/fake-photon/"+lepton_name+"/"+eta_range_no_spaces+"/fake_photon_template_"+photon_pt_range_cutstring_no_spaces+".png")
 
@@ -234,13 +223,44 @@ for lepton_name in lepton_names:
 
             ffitter.Fit()
 
-            total_hist.Draw("hist")
+            total_hist.GetXaxis().SetTitle("\sigma_{i \eta i \eta}")            
+            total_hist.SetLineWidth(2)            
+            total_hist.Draw()
 
             c1.SaveAs("/eos/user/a/amlevin/www/wg/2016/fake-photon/"+lepton_name+"/"+eta_range_no_spaces+"/total_"+photon_pt_range_cutstring_no_spaces+".png")
 
-            total_hist.Draw("Ep")
+            total_hist.SetLineColor(ROOT.kBlack)
+            total_hist.SetMarkerColor(ROOT.kBlack)
+            total_hist.Draw()
 
-            ffitter.GetPlot().Draw("same")
+            ffitter.GetPlot().SetLineColor(ROOT.kRed)
+
+            ffitter.GetPlot().SetOption("")
+            ffitter.GetPlot().Draw("hist same l")
+
+            black_th1f=ROOT.TH1F("black_th1f","black_th1f",1,0,1)
+            black_th1f.SetLineColor(ROOT.kBlack)
+            black_th1f.SetLineWidth(2)
+#            black_th1f.SetLineStyle(ROOT.kDashed)
+            red_th1f=ROOT.TH1F("red_th1f","red_th1f",1,0,1)
+            red_th1f.SetLineColor(ROOT.kRed)
+            red_th1f.SetLineWidth(2)
+#            red_th1f.SetLineStyle(ROOT.kDashed)
+            blue_th1f=ROOT.TH1F("blue_th1f","blue_th1f",1,0,1)
+            blue_th1f.SetLineColor(ROOT.kBlue)
+            blue_th1f.SetLineWidth(2)
+#            blue_th1f.SetLineStyle(ROOT.kDashed)
+            blue_dashed_th1f=ROOT.TH1F("blue_th1f","blue_th1f",1,0,1)
+            blue_dashed_th1f.SetLineColor(ROOT.kBlue)
+            blue_dashed_th1f.SetLineWidth(2)
+            blue_dashed_th1f.SetLineStyle(ROOT.kDashed)
+            
+            legend1 = ROOT.TLegend(0.6, 0.7, 0.89, 0.89)
+            legend1.SetBorderSize(0)  # no border
+            legend1.SetFillStyle(0)  # make transparent
+            legend1.AddEntry(black_th1f,"data fitted to","lp")
+            legend1.AddEntry(red_th1f,"fit result","lp")
+            legend1.Draw("same")
 
             c1.SaveAs("/eos/user/a/amlevin/www/wg/2016/fake-photon/"+lepton_name+"/"+eta_range_no_spaces+"/fit_"+photon_pt_range_cutstring_no_spaces+".png")
 
@@ -254,6 +274,38 @@ for lepton_name in lepton_names:
             ffitter.GetResult(0,value,error)
 
             print str(value) + "+/-" + str(error)
+
+            ffitter.GetPlot().SetOption("")
+            ffitter.GetPlot().SetLineColor(ROOT.kRed)
+#            ffitter.GetPlot().SetLineWidth(2)
+            ffitter.GetPlot().Draw("hist l")
+            real_component = real_photon_template_hist.Clone("real component")
+            fake_component = fake_photon_template_hist.Clone("fake component")
+            
+            real_component.SetLineColor(ROOT.kBlue)
+            fake_component.SetLineColor(ROOT.kBlue)
+            fake_component.SetLineStyle(ROOT.kDashed)
+
+            real_component.Scale((1-value)*ffitter.GetPlot().Integral()/real_component.Integral())
+            fake_component.Scale(value*ffitter.GetPlot().Integral()/fake_component.Integral())
+            
+            real_component.Draw("hist same l")
+            fake_component.Draw("hist same l")
+            ffitter.GetPlot().Draw("hist same l")
+
+            legend1 = ROOT.TLegend(0.6, 0.7, 0.89, 0.89)
+            legend1.SetBorderSize(0)  # no border
+            legend1.SetFillStyle(0)  # make transparent
+            legend1.AddEntry(red_th1f,"fit result","lp")
+            legend1.AddEntry(blue_th1f,"true component","lp")
+            legend1.AddEntry(blue_dashed_th1f,"fake component","lp")
+            legend1.Draw("same")
+
+            c1.ForceUpdate()
+            c1.Modified()
+
+            c1.SaveAs("/eos/user/a/amlevin/www/wg/2016/fake-photon/"+lepton_name+"/"+eta_range_no_spaces+"/components_"+photon_pt_range_cutstring_no_spaces+".png")
+
 
             print total_hist.GetXaxis().FindFixBin( sieie_cut )
 
