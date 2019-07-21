@@ -84,7 +84,7 @@ for i in range(0,t.GetEntries()):
     else:    
         n_weighted.Fill(0.5,-1)
 
-    if deltaR(lepton_eta,lepton_phi,photon_eta,photon_phi) < 0.7:
+    if deltaR(lepton_eta,lepton_phi,photon_eta,photon_phi) < 0.5:
         continue
 
     if t.Generator_weight > 0:

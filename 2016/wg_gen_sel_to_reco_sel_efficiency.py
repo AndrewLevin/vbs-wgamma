@@ -51,45 +51,45 @@ def draw_legend(x1,y1,hist,label,options):
     #otherwise the legend goes out of scope and is deleted once the function finishes                                                                                                     
     hist.label = legend
 
-lepton_pdgid = "13"
+lepton_pdgid = "11"
 
 #h_gen_photon_pt_powheg_plus_num_pos
 
 ROOT.gROOT.cd()
 
-h_gen_photon_pt_powheg_plus_num_neg = ROOT.TH1F("h_gen_photon_pt_powheg_plus_num_neg","h_gen_photon_pt_powheg_plus_num_neg",9,20,200)
-h_gen_photon_pt_powheg_minus_num_neg = ROOT.TH1F("h_gen_photon_pt_powheg_minus_num_neg","h_gen_photon_pt_powheg_minus_num_neg",9,20,200)
-h_gen_photon_pt_powheg_plus_den_neg = ROOT.TH1F("h_gen_photon_pt_powheg_plus_den_neg","h_gen_photon_pt_powheg_plus_den_neg",9,20,200)
-h_gen_photon_pt_powheg_minus_den_neg = ROOT.TH1F("h_gen_photon_pt_powheg_minus_den_neg","h_gen_photon_pt_powheg_minus_den_neg",9,20,200)
+h_gen_dphilg_powheg_plus_num_neg = ROOT.TH1F("h_gen_dphilg_powheg_plus_num_neg","h_gen_dphilg_powheg_plus_num_neg",16,0,3.141592653589793)
+h_gen_dphilg_powheg_minus_num_neg = ROOT.TH1F("h_gen_dphilg_powheg_minus_num_neg","h_gen_dphilg_powheg_minus_num_neg",16,0,3.141592653589793)
+h_gen_dphilg_powheg_plus_den_neg = ROOT.TH1F("h_gen_dphilg_powheg_plus_den_neg","h_gen_dphilg_powheg_plus_den_neg",16,0,3.141592653589793)
+h_gen_dphilg_powheg_minus_den_neg = ROOT.TH1F("h_gen_dphilg_powheg_minus_den_neg","h_gen_dphilg_powheg_minus_den_neg",16,0,3.141592653589793)
 
-h_gen_photon_pt_powheg_plus_den_pos = ROOT.TH1F("h_gen_photon_pt_powheg_plus_den_pos","h_gen_photon_pt_powheg_plus_den_pos",9,20,200)
-h_gen_photon_pt_powheg_minus_den_pos = ROOT.TH1F("h_gen_photon_pt_powheg_minus_den_pos","h_gen_photon_pt_powheg_minus_den_pos",9,20,200)
-h_gen_photon_pt_powheg_plus_num_pos = ROOT.TH1F("h_gen_photon_pt_powheg_plus_num_pos","h_gen_photon_pt_powheg_plus_num_pos",9,20,200)
-h_gen_photon_pt_powheg_minus_num_pos = ROOT.TH1F("h_gen_photon_pt_powheg_minus_num_pos","h_gen_photon_pt_powheg_minus_num_pos",9,20,200)
+h_gen_dphilg_powheg_plus_den_pos = ROOT.TH1F("h_gen_dphilg_powheg_plus_den_pos","h_gen_dphilg_powheg_plus_den_pos",16,0,3.141592653589793)
+h_gen_dphilg_powheg_minus_den_pos = ROOT.TH1F("h_gen_dphilg_powheg_minus_den_pos","h_gen_dphilg_powheg_minus_den_pos",16,0,3.141592653589793)
+h_gen_dphilg_powheg_plus_num_pos = ROOT.TH1F("h_gen_dphilg_powheg_plus_num_pos","h_gen_dphilg_powheg_plus_num_pos",16,0,3.141592653589793)
+h_gen_dphilg_powheg_minus_num_pos = ROOT.TH1F("h_gen_dphilg_powheg_minus_num_pos","h_gen_dphilg_powheg_minus_num_pos",16,0,3.141592653589793)
 
 
-h_gen_photon_pt_mg5amc_num_neg = ROOT.TH1F("h_gen_photon_pt_mg5amc_num_neg","h_gen_photon_pt_mg5amc_num_neg",9,20,200)
-h_gen_photon_pt_mg5amc_den_neg = ROOT.TH1F("h_gen_photon_pt_mg5amc_den_neg","h_gen_photon_pt_mg5amc_den_neg",9,20,200)
-h_gen_photon_pt_mg5amc_den_pos = ROOT.TH1F("h_gen_photon_pt_mg5amc_den_pos","h_gen_photon_pt_mg5amc_den_pos",9,20,200)
-h_gen_photon_pt_mg5amc_num_pos = ROOT.TH1F("h_gen_photon_pt_mg5amc_num_pos","h_gen_photon_pt_mg5amc_num_pos",9,20,200)
+h_gen_dphilg_mg5amc_num_neg = ROOT.TH1F("h_gen_dphilg_mg5amc_num_neg","h_gen_dphilg_mg5amc_num_neg",16,0,3.141592653589793)
+h_gen_dphilg_mg5amc_den_neg = ROOT.TH1F("h_gen_dphilg_mg5amc_den_neg","h_gen_dphilg_mg5amc_den_neg",16,0,3.141592653589793)
+h_gen_dphilg_mg5amc_den_pos = ROOT.TH1F("h_gen_dphilg_mg5amc_den_pos","h_gen_dphilg_mg5amc_den_pos",16,0,3.141592653589793)
+h_gen_dphilg_mg5amc_num_pos = ROOT.TH1F("h_gen_dphilg_mg5amc_num_pos","h_gen_dphilg_mg5amc_num_pos",16,0,3.141592653589793)
 
-h_gen_photon_pt_powheg_plus_num_neg.Sumw2()
-h_gen_photon_pt_powheg_minus_num_neg.Sumw2()
-h_gen_photon_pt_powheg_plus_den_neg.Sumw2()
-h_gen_photon_pt_powheg_minus_den_neg.Sumw2()
+h_gen_dphilg_powheg_plus_num_neg.Sumw2()
+h_gen_dphilg_powheg_minus_num_neg.Sumw2()
+h_gen_dphilg_powheg_plus_den_neg.Sumw2()
+h_gen_dphilg_powheg_minus_den_neg.Sumw2()
 
-h_gen_photon_pt_powheg_plus_den_pos.Sumw2()
-h_gen_photon_pt_powheg_minus_den_pos.Sumw2()
-h_gen_photon_pt_powheg_plus_num_pos.Sumw2()
-h_gen_photon_pt_powheg_minus_num_pos.Sumw2()
+h_gen_dphilg_powheg_plus_den_pos.Sumw2()
+h_gen_dphilg_powheg_minus_den_pos.Sumw2()
+h_gen_dphilg_powheg_plus_num_pos.Sumw2()
+h_gen_dphilg_powheg_minus_num_pos.Sumw2()
 
-h_gen_photon_pt_mg5amc_num_neg.Sumw2()
-h_gen_photon_pt_mg5amc_den_neg.Sumw2()
-h_gen_photon_pt_mg5amc_den_pos.Sumw2()
-h_gen_photon_pt_mg5amc_num_pos.Sumw2()
+h_gen_dphilg_mg5amc_num_neg.Sumw2()
+h_gen_dphilg_mg5amc_den_neg.Sumw2()
+h_gen_dphilg_mg5amc_den_pos.Sumw2()
+h_gen_dphilg_mg5amc_num_pos.Sumw2()
 
-powheg_wpgjets_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/2016/gen/wpg_powheg.root")
-powheg_wmgjets_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/2016/gen/wmg_powheg.root")
+powheg_wpgjets_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/2016/gen/powhegwplusg.root")
+powheg_wmgjets_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/2016/gen/powhegwminusg.root")
 wgjets_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/2016/gen/wgjets.root")
 
 powheg_wpgjets_tree = powheg_wpgjets_file.Get("Events")
@@ -98,63 +98,63 @@ wgjets_tree = wgjets_file.Get("Events")
 
 ROOT.gROOT.cd()
 
-wgjets_tree.Draw("gen_photon_pt >> h_gen_photon_pt_mg5amc_num_pos","pass_gen_selection && pass_selection && is_lepton_tight && photon_selection == 2 && abs(gen_lepton_pdgid) == "+str(lepton_pdgid)+" && photon_gen_matching > 0 && is_lepton_real && gen_weight > 0")
+wgjets_tree.Draw("abs((gen_met_phi-gen_lepton_phi < -3.141592653589793 ? gen_met_phi-gen_lepton_phi + 2*3.141592653589793 : gen_met_phi-gen_lepton_phi) > 3.141592653589793 ? gen_met_phi-gen_lepton_phi - 2*3.141592653589793 : (gen_met_phi-gen_lepton_phi < -3.141592653589793 ? gen_met_phi-gen_lepton_phi + 2*3.141592653589793 : gen_met_phi-gen_lepton_phi)) >> h_gen_dphilg_mg5amc_num_pos","pass_gen_selection && pass_selection && is_lepton_tight && photon_selection == 2 && abs(gen_lepton_pdgid) == "+str(lepton_pdgid)+" && photon_gen_matching > 0 && is_lepton_real && gen_weight > 0 && gen_met_pt > 60")
 
-wgjets_tree.Draw("gen_photon_pt >> h_gen_photon_pt_mg5amc_num_neg","pass_gen_selection && pass_selection && is_lepton_tight && photon_selection == 2 && abs(gen_lepton_pdgid) == "+str(lepton_pdgid)+" && photon_gen_matching > 0 && is_lepton_real && gen_weight < 0")
+wgjets_tree.Draw("abs((gen_met_phi-gen_lepton_phi < -3.141592653589793 ? gen_met_phi-gen_lepton_phi + 2*3.141592653589793 : gen_met_phi-gen_lepton_phi) > 3.141592653589793 ? gen_met_phi-gen_lepton_phi - 2*3.141592653589793 : (gen_met_phi-gen_lepton_phi < -3.141592653589793 ? gen_met_phi-gen_lepton_phi + 2*3.141592653589793 : gen_met_phi-gen_lepton_phi))  >> h_gen_dphilg_mg5amc_num_neg","pass_gen_selection && pass_selection && is_lepton_tight && photon_selection == 2 && abs(gen_lepton_pdgid) == "+str(lepton_pdgid)+" && photon_gen_matching > 0 && is_lepton_real && gen_weight < 0 && gen_met_pt > 60")
 
 #wgjets_tree.SetScanField(0)
 
-#wgjets_tree.Scan("run:lumi:event","pass_gen_selection && pass_selection && is_lepton_tight && photon_selection == 2 && abs(gen_lepton_pdgid) == "+str(lepton_pdgid)+" && photon_gen_matching > 0 && is_lepton_real && gen_weight > 0")
+#wgjets_tree.Scan("run:lumi:event","pass_gen_selection && pass_selection && is_lepton_tight && photon_selection == 2 && abs(gen_lepton_pdgid) == "+str(lepton_pdgid)+" && photon_gen_matching > 0 && is_lepton_real && gen_weight > 0 && gen_met_pt > 60 ")
 
-#wgjets_tree.Scan("run:lumi:event","pass_gen_selection && pass_selection && is_lepton_tight && photon_selection == 2 && abs(gen_lepton_pdgid) == "+str(lepton_pdgid)+" && photon_gen_matching > 0 && is_lepton_real && gen_weight < 0")
+#wgjets_tree.Scan("run:lumi:event","pass_gen_selection && pass_selection && is_lepton_tight && photon_selection == 2 && abs(gen_lepton_pdgid) == "+str(lepton_pdgid)+" && photon_gen_matching > 0 && is_lepton_real && gen_weight < 0 && gen_met_pt > 60")
 
 #sys.exit(1)
 
-wgjets_tree.Draw("gen_photon_pt >> h_gen_photon_pt_mg5amc_den_pos","abs(gen_lepton_pdgid) == "+str(lepton_pdgid)+" && pass_gen_selection && gen_weight > 0")
+wgjets_tree.Draw("abs((gen_met_phi-gen_lepton_phi < -3.141592653589793 ? gen_met_phi-gen_lepton_phi + 2*3.141592653589793 : gen_met_phi-gen_lepton_phi) > 3.141592653589793 ? gen_met_phi-gen_lepton_phi - 2*3.141592653589793 : (gen_met_phi-gen_lepton_phi < -3.141592653589793 ? gen_met_phi-gen_lepton_phi + 2*3.141592653589793 : gen_met_phi-gen_lepton_phi))  >> h_gen_dphilg_mg5amc_den_pos","abs(gen_lepton_pdgid) == "+str(lepton_pdgid)+" && pass_gen_selection && gen_weight > 0 && gen_met_pt > 60 ")
 
-wgjets_tree.Draw("gen_photon_pt >> h_gen_photon_pt_mg5amc_den_neg","abs(gen_lepton_pdgid) == "+str(lepton_pdgid)+" && pass_gen_selection && gen_weight < 0")
+wgjets_tree.Draw("abs((gen_met_phi-gen_lepton_phi < -3.141592653589793 ? gen_met_phi-gen_lepton_phi + 2*3.141592653589793 : gen_met_phi-gen_lepton_phi) > 3.141592653589793 ? gen_met_phi-gen_lepton_phi - 2*3.141592653589793 : (gen_met_phi-gen_lepton_phi < -3.141592653589793 ? gen_met_phi-gen_lepton_phi + 2*3.141592653589793 : gen_met_phi-gen_lepton_phi))  >> h_gen_dphilg_mg5amc_den_neg","abs(gen_lepton_pdgid) == "+str(lepton_pdgid)+" && pass_gen_selection && gen_weight < 0 && gen_met_pt > 60")
 
-powheg_wpgjets_tree.Draw("gen_photon_pt >> h_gen_photon_pt_powheg_plus_num_pos","pass_gen_selection && pass_selection && is_lepton_tight && photon_selection == 2 && abs(gen_lepton_pdgid) == "+str(lepton_pdgid)+" && photon_gen_matching > 0 && is_lepton_real && gen_weight > 0")
+powheg_wpgjets_tree.Draw("abs((gen_met_phi-gen_lepton_phi < -3.141592653589793 ? gen_met_phi-gen_lepton_phi + 2*3.141592653589793 : gen_met_phi-gen_lepton_phi) > 3.141592653589793 ? gen_met_phi-gen_lepton_phi - 2*3.141592653589793 : (gen_met_phi-gen_lepton_phi < -3.141592653589793 ? gen_met_phi-gen_lepton_phi + 2*3.141592653589793 : gen_met_phi-gen_lepton_phi))  >> h_gen_dphilg_powheg_plus_num_pos","pass_gen_selection && pass_selection && is_lepton_tight && photon_selection == 2 && abs(gen_lepton_pdgid) == "+str(lepton_pdgid)+" && photon_gen_matching > 0 && is_lepton_real && gen_weight > 0 && gen_met_pt > 60 ")
 
-powheg_wpgjets_tree.Draw("gen_photon_pt >> h_gen_photon_pt_powheg_plus_num_neg","pass_gen_selection && pass_selection && is_lepton_tight && photon_selection == 2 && abs(gen_lepton_pdgid) == "+str(lepton_pdgid)+" && photon_gen_matching > 0 && is_lepton_real && gen_weight < 0")
+powheg_wpgjets_tree.Draw("abs((gen_met_phi-gen_lepton_phi < -3.141592653589793 ? gen_met_phi-gen_lepton_phi + 2*3.141592653589793 : gen_met_phi-gen_lepton_phi) > 3.141592653589793 ? gen_met_phi-gen_lepton_phi - 2*3.141592653589793 : (gen_met_phi-gen_lepton_phi < -3.141592653589793 ? gen_met_phi-gen_lepton_phi + 2*3.141592653589793 : gen_met_phi-gen_lepton_phi))  >> h_gen_dphilg_powheg_plus_num_neg","pass_gen_selection && pass_selection && is_lepton_tight && photon_selection == 2 && abs(gen_lepton_pdgid) == "+str(lepton_pdgid)+" && photon_gen_matching > 0 && is_lepton_real && gen_weight < 0 && gen_met_pt > 60")
 
-powheg_wpgjets_tree.Draw("gen_photon_pt >> h_gen_photon_pt_powheg_plus_den_pos","abs(gen_lepton_pdgid) == "+str(lepton_pdgid)+" && pass_gen_selection && gen_weight > 0")
+powheg_wpgjets_tree.Draw("abs((gen_met_phi-gen_lepton_phi < -3.141592653589793 ? gen_met_phi-gen_lepton_phi + 2*3.141592653589793 : gen_met_phi-gen_lepton_phi) > 3.141592653589793 ? gen_met_phi-gen_lepton_phi - 2*3.141592653589793 : (gen_met_phi-gen_lepton_phi < -3.141592653589793 ? gen_met_phi-gen_lepton_phi + 2*3.141592653589793 : gen_met_phi-gen_lepton_phi))  >> h_gen_dphilg_powheg_plus_den_pos","abs(gen_lepton_pdgid) == "+str(lepton_pdgid)+" && pass_gen_selection && gen_weight > 0 && gen_met_pt > 60 ")
 
-powheg_wpgjets_tree.Draw("gen_photon_pt >> h_gen_photon_pt_powheg_plus_den_neg","abs(gen_lepton_pdgid) == "+str(lepton_pdgid)+" && pass_gen_selection && gen_weight < 0")
+powheg_wpgjets_tree.Draw("abs((gen_met_phi-gen_lepton_phi < -3.141592653589793 ? gen_met_phi-gen_lepton_phi + 2*3.141592653589793 : gen_met_phi-gen_lepton_phi) > 3.141592653589793 ? gen_met_phi-gen_lepton_phi - 2*3.141592653589793 : (gen_met_phi-gen_lepton_phi < -3.141592653589793 ? gen_met_phi-gen_lepton_phi + 2*3.141592653589793 : gen_met_phi-gen_lepton_phi))  >> h_gen_dphilg_powheg_plus_den_neg","abs(gen_lepton_pdgid) == "+str(lepton_pdgid)+" && pass_gen_selection && gen_weight < 0 && gen_met_pt > 60")
 
-powheg_wmgjets_tree.Draw("gen_photon_pt >> h_gen_photon_pt_powheg_minus_num_pos","pass_gen_selection && pass_selection && is_lepton_tight && photon_selection == 2 && abs(gen_lepton_pdgid) == "+str(lepton_pdgid)+" && photon_gen_matching > 0 && is_lepton_real && gen_weight > 0")
+powheg_wmgjets_tree.Draw("abs((gen_met_phi-gen_lepton_phi < -3.141592653589793 ? gen_met_phi-gen_lepton_phi + 2*3.141592653589793 : gen_met_phi-gen_lepton_phi) > 3.141592653589793 ? gen_met_phi-gen_lepton_phi - 2*3.141592653589793 : (gen_met_phi-gen_lepton_phi < -3.141592653589793 ? gen_met_phi-gen_lepton_phi + 2*3.141592653589793 : gen_met_phi-gen_lepton_phi))  >> h_gen_dphilg_powheg_minus_num_pos","pass_gen_selection && pass_selection && is_lepton_tight && photon_selection == 2 && abs(gen_lepton_pdgid) == "+str(lepton_pdgid)+" && photon_gen_matching > 0 && is_lepton_real && gen_weight > 0 && gen_met_pt > 60 ")
 
-powheg_wmgjets_tree.Draw("gen_photon_pt >> h_gen_photon_pt_powheg_minus_num_neg","pass_gen_selection && pass_selection && is_lepton_tight && photon_selection == 2 && abs(gen_lepton_pdgid) == "+str(lepton_pdgid)+" && photon_gen_matching > 0 && is_lepton_real && gen_weight < 0")
+powheg_wmgjets_tree.Draw("abs((gen_met_phi-gen_lepton_phi < -3.141592653589793 ? gen_met_phi-gen_lepton_phi + 2*3.141592653589793 : gen_met_phi-gen_lepton_phi) > 3.141592653589793 ? gen_met_phi-gen_lepton_phi - 2*3.141592653589793 : (gen_met_phi-gen_lepton_phi < -3.141592653589793 ? gen_met_phi-gen_lepton_phi + 2*3.141592653589793 : gen_met_phi-gen_lepton_phi))  >> h_gen_dphilg_powheg_minus_num_neg","pass_gen_selection && pass_selection && is_lepton_tight && photon_selection == 2 && abs(gen_lepton_pdgid) == "+str(lepton_pdgid)+" && photon_gen_matching > 0 && is_lepton_real && gen_weight < 0 && gen_met_pt > 60")
 
-powheg_wmgjets_tree.Draw("gen_photon_pt >> h_gen_photon_pt_powheg_minus_den_pos","abs(gen_lepton_pdgid) == "+str(lepton_pdgid)+" && pass_gen_selection && gen_weight > 0")
+powheg_wmgjets_tree.Draw("abs((gen_met_phi-gen_lepton_phi < -3.141592653589793 ? gen_met_phi-gen_lepton_phi + 2*3.141592653589793 : gen_met_phi-gen_lepton_phi) > 3.141592653589793 ? gen_met_phi-gen_lepton_phi - 2*3.141592653589793 : (gen_met_phi-gen_lepton_phi < -3.141592653589793 ? gen_met_phi-gen_lepton_phi + 2*3.141592653589793 : gen_met_phi-gen_lepton_phi))  >> h_gen_dphilg_powheg_minus_den_pos","abs(gen_lepton_pdgid) == "+str(lepton_pdgid)+" && pass_gen_selection && gen_weight > 0 && gen_met_pt > 60")
 
-powheg_wmgjets_tree.Draw("gen_photon_pt >> h_gen_photon_pt_powheg_minus_den_neg","abs(gen_lepton_pdgid) == "+str(lepton_pdgid)+" && pass_gen_selection && gen_weight < 0")
+powheg_wmgjets_tree.Draw("abs((gen_met_phi-gen_lepton_phi < -3.141592653589793 ? gen_met_phi-gen_lepton_phi + 2*3.141592653589793 : gen_met_phi-gen_lepton_phi) > 3.141592653589793 ? gen_met_phi-gen_lepton_phi - 2*3.141592653589793 : (gen_met_phi-gen_lepton_phi < -3.141592653589793 ? gen_met_phi-gen_lepton_phi + 2*3.141592653589793 : gen_met_phi-gen_lepton_phi))  >> h_gen_dphilg_powheg_minus_den_neg","abs(gen_lepton_pdgid) == "+str(lepton_pdgid)+" && pass_gen_selection && gen_weight < 0 && gen_met_pt > 60")
 
-h_gen_photon_pt_mg5amc_num_neg.Scale(-1)
-h_gen_photon_pt_mg5amc_den_neg.Scale(-1)
-h_gen_photon_pt_powheg_minus_num_neg.Scale(-24780./33420.)
-h_gen_photon_pt_powheg_minus_den_neg.Scale(-24780./33420.)
-h_gen_photon_pt_powheg_plus_num_neg.Scale(-1)
-h_gen_photon_pt_powheg_plus_den_neg.Scale(-1)
+h_gen_dphilg_mg5amc_num_neg.Scale(-1)
+h_gen_dphilg_mg5amc_den_neg.Scale(-1)
+h_gen_dphilg_powheg_minus_num_neg.Scale(-24780./33420.)
+h_gen_dphilg_powheg_minus_den_neg.Scale(-24780./33420.)
+h_gen_dphilg_powheg_plus_num_neg.Scale(-1)
+h_gen_dphilg_powheg_plus_den_neg.Scale(-1)
 
-for i in range(1,h_gen_photon_pt_mg5amc_den_neg.GetNbinsX()+1):
-    h_gen_photon_pt_powheg_plus_den_neg.SetBinError(i,0)
-    h_gen_photon_pt_powheg_minus_den_neg.SetBinError(i,0)
-    h_gen_photon_pt_powheg_plus_den_pos.SetBinError(i,0)
-    h_gen_photon_pt_powheg_minus_den_pos.SetBinError(i,0)
-    h_gen_photon_pt_mg5amc_den_neg.SetBinError(i,0)
-    h_gen_photon_pt_mg5amc_den_pos.SetBinError(i,0)
+for i in range(1,h_gen_dphilg_mg5amc_den_neg.GetNbinsX()+1):
+    h_gen_dphilg_powheg_plus_den_neg.SetBinError(i,0)
+    h_gen_dphilg_powheg_minus_den_neg.SetBinError(i,0)
+    h_gen_dphilg_powheg_plus_den_pos.SetBinError(i,0)
+    h_gen_dphilg_powheg_minus_den_pos.SetBinError(i,0)
+    h_gen_dphilg_mg5amc_den_neg.SetBinError(i,0)
+    h_gen_dphilg_mg5amc_den_pos.SetBinError(i,0)
 
-h_gen_photon_pt_mg5amc_num_pos.Add(h_gen_photon_pt_mg5amc_num_neg)
-h_gen_photon_pt_mg5amc_den_pos.Add(h_gen_photon_pt_mg5amc_den_neg)
+h_gen_dphilg_mg5amc_num_pos.Add(h_gen_dphilg_mg5amc_num_neg)
+h_gen_dphilg_mg5amc_den_pos.Add(h_gen_dphilg_mg5amc_den_neg)
 
-h_gen_photon_pt_powheg_minus_num_pos.Add(h_gen_photon_pt_powheg_minus_num_neg)
-h_gen_photon_pt_powheg_minus_den_pos.Add(h_gen_photon_pt_powheg_minus_den_neg)
-h_gen_photon_pt_powheg_plus_num_pos.Add(h_gen_photon_pt_powheg_plus_num_neg)
-h_gen_photon_pt_powheg_plus_den_pos.Add(h_gen_photon_pt_powheg_plus_den_neg)
+h_gen_dphilg_powheg_minus_num_pos.Add(h_gen_dphilg_powheg_minus_num_neg)
+h_gen_dphilg_powheg_minus_den_pos.Add(h_gen_dphilg_powheg_minus_den_neg)
+h_gen_dphilg_powheg_plus_num_pos.Add(h_gen_dphilg_powheg_plus_num_neg)
+h_gen_dphilg_powheg_plus_den_pos.Add(h_gen_dphilg_powheg_plus_den_neg)
 
-h_gen_photon_pt_powheg_plus_num_pos.Add(h_gen_photon_pt_powheg_minus_num_pos)
-h_gen_photon_pt_powheg_plus_den_pos.Add(h_gen_photon_pt_powheg_minus_den_pos)
+h_gen_dphilg_powheg_plus_num_pos.Add(h_gen_dphilg_powheg_minus_num_pos)
+h_gen_dphilg_powheg_plus_den_pos.Add(h_gen_dphilg_powheg_minus_den_pos)
 
 powheg_den = ROOT.Double()
 powheg_den_error = ROOT.Double()
@@ -162,8 +162,8 @@ powheg_den_error = ROOT.Double()
 mg5amc_den = ROOT.Double()
 mg5amc_den_error = ROOT.Double()
 
-powheg_den = h_gen_photon_pt_powheg_plus_den_pos.IntegralAndError(0,h_gen_photon_pt_powheg_plus_den_pos.GetNbinsX()+2,powheg_den_error)
-mg5amc_den = h_gen_photon_pt_mg5amc_den_pos.IntegralAndError(0,h_gen_photon_pt_mg5amc_den_pos.GetNbinsX()+2,mg5amc_den_error)
+powheg_den = h_gen_dphilg_powheg_plus_den_pos.IntegralAndError(0,h_gen_dphilg_powheg_plus_den_pos.GetNbinsX()+2,powheg_den_error)
+mg5amc_den = h_gen_dphilg_mg5amc_den_pos.IntegralAndError(0,h_gen_dphilg_mg5amc_den_pos.GetNbinsX()+2,mg5amc_den_error)
 
 powheg_num = ROOT.Double()
 powheg_num_error = ROOT.Double()
@@ -171,8 +171,8 @@ powheg_num_error = ROOT.Double()
 mg5amc_num = ROOT.Double()
 mg5amc_num_error = ROOT.Double()
 
-powheg_num = h_gen_photon_pt_powheg_plus_num_pos.IntegralAndError(0,h_gen_photon_pt_powheg_plus_num_pos.GetNbinsX()+2,powheg_num_error)
-mg5amc_num = h_gen_photon_pt_mg5amc_num_pos.IntegralAndError(0,h_gen_photon_pt_mg5amc_num_pos.GetNbinsX()+2,mg5amc_num_error)
+powheg_num = h_gen_dphilg_powheg_plus_num_pos.IntegralAndError(0,h_gen_dphilg_powheg_plus_num_pos.GetNbinsX()+2,powheg_num_error)
+mg5amc_num = h_gen_dphilg_mg5amc_num_pos.IntegralAndError(0,h_gen_dphilg_mg5amc_num_pos.GetNbinsX()+2,mg5amc_num_error)
 
 print "powheg_den = "+str(powheg_den)+ " +/- " + str(powheg_den_error)
 print "mg5amc_den = "+str(mg5amc_den)+ " +/- " + str(mg5amc_den_error)
@@ -180,40 +180,40 @@ print "mg5amc_den = "+str(mg5amc_den)+ " +/- " + str(mg5amc_den_error)
 print "powheg_num = "+str(powheg_num)+ " +/- " + str(powheg_num_error)
 print "mg5amc_num = "+str(mg5amc_num)+ " +/- " + str(mg5amc_num_error)
 
-print h_gen_photon_pt_powheg_plus_num_pos.Integral(0,h_gen_photon_pt_powheg_plus_num_pos.GetNbinsX()+2)/h_gen_photon_pt_powheg_plus_den_pos.Integral(0,h_gen_photon_pt_powheg_plus_den_pos.GetNbinsX()+2)
+print h_gen_dphilg_powheg_plus_num_pos.Integral(0,h_gen_dphilg_powheg_plus_num_pos.GetNbinsX()+2)/h_gen_dphilg_powheg_plus_den_pos.Integral(0,h_gen_dphilg_powheg_plus_den_pos.GetNbinsX()+2)
 
-print h_gen_photon_pt_mg5amc_num_pos.Integral(0,h_gen_photon_pt_mg5amc_num_pos.GetNbinsX()+2)/h_gen_photon_pt_mg5amc_den_pos.Integral(0,h_gen_photon_pt_mg5amc_den_pos.GetNbinsX()+2)
+print h_gen_dphilg_mg5amc_num_pos.Integral(0,h_gen_dphilg_mg5amc_num_pos.GetNbinsX()+2)/h_gen_dphilg_mg5amc_den_pos.Integral(0,h_gen_dphilg_mg5amc_den_pos.GetNbinsX()+2)
 
-h_gen_photon_pt_powheg_plus_num_pos.Divide(h_gen_photon_pt_powheg_plus_den_pos)
+h_gen_dphilg_powheg_plus_num_pos.Divide(h_gen_dphilg_powheg_plus_den_pos)
 
-h_gen_photon_pt_mg5amc_num_pos.Divide(h_gen_photon_pt_mg5amc_den_pos)
+h_gen_dphilg_mg5amc_num_pos.Divide(h_gen_dphilg_mg5amc_den_pos)
 
 c = ROOT.TCanvas()
 
-h_gen_photon_pt_mg5amc_num_pos.SetTitle("")
-h_gen_photon_pt_powheg_plus_num_pos.SetTitle("")
+h_gen_dphilg_mg5amc_num_pos.SetTitle("")
+h_gen_dphilg_powheg_plus_num_pos.SetTitle("")
 
-h_gen_photon_pt_powheg_plus_num_pos.SetLineColor(ROOT.kRed)
-h_gen_photon_pt_mg5amc_num_pos.SetLineColor(ROOT.kBlue)
+h_gen_dphilg_powheg_plus_num_pos.SetLineColor(ROOT.kRed)
+h_gen_dphilg_mg5amc_num_pos.SetLineColor(ROOT.kBlue)
 
-h_gen_photon_pt_powheg_plus_num_pos.SetLineWidth(3)
-h_gen_photon_pt_mg5amc_num_pos.SetLineWidth(3)
+h_gen_dphilg_powheg_plus_num_pos.SetLineWidth(3)
+h_gen_dphilg_mg5amc_num_pos.SetLineWidth(3)
 
-h_gen_photon_pt_powheg_plus_num_pos.SetStats(0)
-h_gen_photon_pt_powheg_plus_num_pos.SetMinimum(0)
-h_gen_photon_pt_powheg_plus_num_pos.SetMaximum(0.3)
+h_gen_dphilg_powheg_plus_num_pos.SetStats(0)
+h_gen_dphilg_powheg_plus_num_pos.SetMinimum(0)
+h_gen_dphilg_powheg_plus_num_pos.SetMaximum(0.3)
 
-set_axis_fonts(h_gen_photon_pt_powheg_plus_num_pos,"x","photon pt (GeV)")
-set_axis_fonts(h_gen_photon_pt_powheg_plus_num_pos,"y","Events / bin")
+set_axis_fonts(h_gen_dphilg_powheg_plus_num_pos,"x","photon pt (GeV)")
+set_axis_fonts(h_gen_dphilg_powheg_plus_num_pos,"y","Events / bin")
 
-h_gen_photon_pt_powheg_plus_num_pos.Draw()
+h_gen_dphilg_powheg_plus_num_pos.Draw()
 
-h_gen_photon_pt_mg5amc_num_pos.Draw("same")
+h_gen_dphilg_mg5amc_num_pos.Draw("same")
 
 j=0
-draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,h_gen_photon_pt_mg5amc_num_pos,"MadGraph5_aMC@NLO","lp")
+draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,h_gen_dphilg_mg5amc_num_pos,"MadGraph5_aMC@NLO","lp")
 j=1
-draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,h_gen_photon_pt_powheg_plus_num_pos,"POWHEG","lp")
+draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,h_gen_dphilg_powheg_plus_num_pos,"POWHEG","lp")
 
 
 

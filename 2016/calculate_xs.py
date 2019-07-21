@@ -1,8 +1,8 @@
 import json
 import math
 
-xs_inputs_muon = json.load(open("xs_inputs_muon.txt"))
-xs_inputs_electron = json.load(open("xs_inputs_electron.txt"))
+#xs_inputs_muon = json.load(open("xs_inputs_muon.txt"))
+#xs_inputs_electron = json.load(open("xs_inputs_electron.txt.bak"))
 
 #xs_inputs_muon = json.load(open("xs_inputs_muon.txt.bak"))
 #xs_inputs_electron = json.load(open("xs_inputs_electron.txt.bak"))
@@ -13,8 +13,8 @@ xs_inputs_electron = json.load(open("xs_inputs_electron.txt"))
 #xs_inputs_muon = json.load(open("xs_inputs/xs_inputs_muon.unbinned.txt"))
 #xs_inputs_electron = json.load(open("xs_inputs/xs_inputs_electron.unbinned.txt"))
 
-#xs_inputs_muon = json.load(open("xs_inputs/xs_inputs_muon.txt"))
-#xs_inputs_electron = json.load(open("xs_inputs/xs_inputs_electron.txt"))
+xs_inputs_muon = json.load(open("xs_inputs/xs_inputs_muon.txt"))
+xs_inputs_electron = json.load(open("xs_inputs/xs_inputs_electron.txt"))
 
 from pprint import pprint
 
@@ -209,8 +209,6 @@ unc_due_to_mc_stat = math.sqrt(sum_electron_zg_stat+sum_electron_vv_stat+sum_ele
 #print "unc_due_to_data_driven_stat_electron = "+str(unc_due_to_data_driven_stat_electron)
 #print "unc_due_to_data_driven_stat_muon = "+str(unc_due_to_data_driven_stat_muon)
 
-
-
 n_signal_unc_due_to_qcd_scale_muon = max(abs(xs_inputs_muon["n_signal_syst_unc_due_to_zg_scale_variation0"]),abs(xs_inputs_muon["n_signal_syst_unc_due_to_zg_scale_variation1"]),abs(xs_inputs_muon["n_signal_syst_unc_due_to_zg_scale_variation3"]),abs(xs_inputs_muon["n_signal_syst_unc_due_to_zg_scale_variation4"]),abs(xs_inputs_muon["n_signal_syst_unc_due_to_zg_scale_variation6"]),abs(xs_inputs_muon["n_signal_syst_unc_due_to_zg_scale_variation7"]))
 
 n_signal_unc_due_to_qcd_scale_electron = max(abs(xs_inputs_electron["n_signal_syst_unc_due_to_zg_scale_variation0"]),abs(xs_inputs_electron["n_signal_syst_unc_due_to_zg_scale_variation1"]),abs(xs_inputs_electron["n_signal_syst_unc_due_to_zg_scale_variation3"]),abs(xs_inputs_electron["n_signal_syst_unc_due_to_zg_scale_variation4"]),abs(xs_inputs_electron["n_signal_syst_unc_due_to_zg_scale_variation6"]),abs(xs_inputs_electron["n_signal_syst_unc_due_to_zg_scale_variation7"]))
@@ -221,6 +219,8 @@ fiducial_region_cuts_efficiency  =  xs_inputs_muon["fiducial_region_cuts_efficie
 n_weighted_run_over  =  xs_inputs_muon["n_weighted_run_over"]
 
 n_signal_muon  =  xs_inputs_muon["n_signal_muon"]
+
+n_signal_unc_due_to_lumi_muon = xs_inputs_muon["n_signal_syst_unc_due_to_lumi_up"]
 n_signal_syst_unc_due_to_pileup_muon = xs_inputs_muon["n_signal_syst_unc_due_to_pileup"]
 n_signal_syst_unc_due_to_fake_photon_muon  =  xs_inputs_muon["n_signal_syst_unc_due_to_fake_photon_muon"]
 n_signal_syst_unc_due_to_fake_lepton_muon  =  xs_inputs_muon["n_signal_syst_unc_due_to_fake_lepton_muon"]
@@ -234,6 +234,7 @@ n_weighted_selected_data_mc_sf_syst_unc_due_to_qcd_scale_muon  =  0
 
 n_signal_electron  =  xs_inputs_electron["n_signal_electron"]
 n_signal_syst_unc_due_to_fake_photon_electron  =  xs_inputs_electron["n_signal_syst_unc_due_to_fake_photon_electron"]
+n_signal_unc_due_to_lumi_electron = xs_inputs_electron["n_signal_syst_unc_due_to_lumi_up"]
 n_signal_syst_unc_due_to_pileup_electron = xs_inputs_electron["n_signal_syst_unc_due_to_pileup"]
 n_signal_syst_unc_due_to_fake_lepton_electron  =  xs_inputs_electron["n_signal_syst_unc_due_to_fake_lepton_electron"]
 n_signal_stat_unc_electron  =  xs_inputs_electron["n_signal_stat_unc_electron"]
@@ -253,6 +254,8 @@ n_weighted_selected_data_mc_sf_syst_unc_due_to_pileup = xs_inputs_muon["n_weight
 n_signal = n_signal_muon+n_signal_electron
 
 n_signal_syst_unc_due_to_pileup = n_signal_syst_unc_due_to_pileup_electron+n_signal_syst_unc_due_to_pileup_muon
+
+n_signal_syst_unc_due_to_lumi = n_signal_unc_due_to_lumi_electron + n_signal_unc_due_to_lumi_muon
 
 n_signal_syst_unc_due_to_fake_photon = n_signal_syst_unc_due_to_fake_photon_electron+n_signal_syst_unc_due_to_fake_photon_muon
 
@@ -337,15 +340,26 @@ syst_err_n_signal_mc_stat_muon = (n_signal_muon+unc_due_to_mc_stat_muon)/(n_weig
 
 syst_err_n_signal_mc_stat_electron = (n_signal_electron+unc_due_to_mc_stat_electron)/(n_weighted_selected_data_mc_sf_electron*35.9*1000/n_weighted_run_over/fiducial_region_cuts_efficiency) - xs_electron
 
+syst_err_n_signal_pileup = (n_signal+n_signal_syst_unc_due_to_pileup)/(n_weighted_selected_data_mc_sf*35.9*1000/n_weighted_run_over/fiducial_region_cuts_efficiency) - xs
+
+syst_err_n_signal_pileup_muon = (n_signal_muon+n_signal_syst_unc_due_to_pileup_muon)/(n_weighted_selected_data_mc_sf_muon*35.9*1000/n_weighted_run_over/fiducial_region_cuts_efficiency) - xs_muon
+
+syst_err_n_signal_pileup_electron = (n_signal_electron+n_signal_syst_unc_due_to_pileup_electron)/(n_weighted_selected_data_mc_sf_electron*35.9*1000/n_weighted_run_over/fiducial_region_cuts_efficiency) - xs_electron
+
+
+syst_err_n_signal_lumi = (n_signal+n_signal_syst_unc_due_to_lumi)/(n_weighted_selected_data_mc_sf*35.9*1000/n_weighted_run_over/fiducial_region_cuts_efficiency) - xs
+
+syst_err_n_signal_lumi_muon = (n_signal_muon+n_signal_unc_due_to_lumi_muon)/(n_weighted_selected_data_mc_sf_muon*35.9*1000/n_weighted_run_over/fiducial_region_cuts_efficiency) - xs_muon
+
+syst_err_n_signal_lumi_electron = (n_signal_electron+n_signal_unc_due_to_lumi_electron)/(n_weighted_selected_data_mc_sf_electron*35.9*1000/n_weighted_run_over/fiducial_region_cuts_efficiency) - xs_electron
 
 
 
+syst_err_n_signal = math.sqrt(pow(syst_err_n_signal_fake_photon,2)+pow(syst_err_n_signal_fake_lepton,2) + pow(syst_err_n_signal_data_driven_stat,2)+pow(syst_err_n_signal_mc_stat,2) + pow(syst_err_n_signal_qcd_scale,2) + pow(syst_err_n_signal_pdf,2) + pow(syst_err_n_signal_lumi,2) + pow(syst_err_n_signal_pileup,2))
 
-syst_err_n_signal = math.sqrt(pow(syst_err_n_signal_fake_photon,2)+pow(syst_err_n_signal_fake_lepton,2) + pow(syst_err_n_signal_data_driven_stat,2)+pow(syst_err_n_signal_mc_stat,2) + pow(syst_err_n_signal_qcd_scale,2) + pow(syst_err_n_signal_pdf,2))
+syst_err_n_signal_muon = math.sqrt(pow(syst_err_n_signal_fake_photon_muon,2)+pow(syst_err_n_signal_fake_lepton_muon,2) + pow(syst_err_n_signal_data_driven_stat_muon,2)+pow(syst_err_n_signal_mc_stat_muon,2) + pow(syst_err_n_signal_qcd_scale_muon,2) + pow(syst_err_n_signal_pdf_muon,2) + pow(syst_err_n_signal_lumi_muon,2) + pow(syst_err_n_signal_pileup_muon,2))
 
-syst_err_n_signal_muon = math.sqrt(pow(syst_err_n_signal_fake_photon_muon,2)+pow(syst_err_n_signal_fake_lepton_muon,2) + pow(syst_err_n_signal_data_driven_stat_muon,2)+pow(syst_err_n_signal_mc_stat_muon,2) + pow(syst_err_n_signal_qcd_scale_muon,2) + pow(syst_err_n_signal_pdf_muon,2))
-
-syst_err_n_signal_electron = math.sqrt(pow(syst_err_n_signal_fake_photon_electron,2)+pow(syst_err_n_signal_fake_lepton_electron,2) + pow(syst_err_n_signal_data_driven_stat_electron,2)+pow(syst_err_n_signal_mc_stat_electron,2) + pow(syst_err_n_signal_qcd_scale_electron,2) + pow(syst_err_n_signal_pdf_electron,2))
+syst_err_n_signal_electron = math.sqrt(pow(syst_err_n_signal_fake_photon_electron,2)+pow(syst_err_n_signal_fake_lepton_electron,2) + pow(syst_err_n_signal_data_driven_stat_electron,2)+pow(syst_err_n_signal_mc_stat_electron,2) + pow(syst_err_n_signal_qcd_scale_electron,2) + pow(syst_err_n_signal_pdf_electron,2) + pow(syst_err_n_signal_lumi_electron,2) + pow(syst_err_n_signal_pileup_electron,2))
 
 syst_err = math.sqrt(pow(syst_err_n_signal,2)+pow(syst_err_acc,2))
 
@@ -556,7 +570,7 @@ PDF & %0.2f & %0.2f & %0.2f \\\\
 100*err_on_acc_due_to_qcd_scale_electron/acc_electron,
 100*err_on_acc_due_to_pdf/acc,
 100*err_on_acc_due_to_pdf_muon/acc_muon,
-100*err_on_acc_due_to_pdf_electron/acc_electron,
+100*err_on_acc_due_to_pdf_electron/acc_electron
 )
 
 print """
@@ -579,6 +593,8 @@ simulation stat &  %0.2f & %0.2f & %0.2f \\\\
 QCD scale &  %0.2f & %0.2f & %0.2f \\\\
 \\hline
 PDF &  %0.2f & %0.2f & %0.2f \\\\
+\\hline
+lumi &  %0.2f & %0.2f & %0.2f \\\\
 \\hline
 \\end{tabular}
 \\end{center}
@@ -607,6 +623,9 @@ PDF &  %0.2f & %0.2f & %0.2f \\\\
 100*stddev_pdf/n_signal,
 100*stddev_pdf_muon/n_signal_muon,
 100*stddev_pdf_electron/n_signal_electron,
+100*n_signal_syst_unc_due_to_lumi/n_signal,
+100*n_signal_unc_due_to_lumi_muon/n_signal_muon,
+100*n_signal_unc_due_to_lumi_electron/n_signal_electron,
 )
 
 print "xs = " +str(xs) + " +/- " + str(stat_err) + " (stat) +/- " + str(syst_err) + " (syst) +/- " + str(lumi_err) + " (lumi)"

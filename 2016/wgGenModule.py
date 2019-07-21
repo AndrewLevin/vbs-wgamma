@@ -22,6 +22,10 @@ class wgGenProducer(Module):
         self.out.branch("run",  "i");
         self.out.branch("lumi",  "i");
         self.out.branch("event",  "l");
+        self.out.branch("met",  "F");
+        self.out.branch("metphi",  "F");
+        self.out.branch("puppimet",  "F");
+        self.out.branch("puppimetphi",  "F");
         self.out.branch("is_lepton_tight",  "B");
         self.out.branch("photon_gen_matching",  "I");
         self.out.branch("is_lepton_real",  "B");
@@ -32,14 +36,24 @@ class wgGenProducer(Module):
         self.out.branch("lepton_eta",  "F");
         self.out.branch("gen_met_pt",  "F");
         self.out.branch("gen_met_phi",  "F");
+        self.out.branch("lhe_met_pt",  "F");
+        self.out.branch("lhe_met_phi",  "F");
         self.out.branch("photon_pt",  "F");
         self.out.branch("photon_phi",  "F");
         self.out.branch("photon_eta",  "F");
+        self.out.branch("lhe_photon_pt",  "F");
+        self.out.branch("lhe_photon_phi",  "F");
+        self.out.branch("lhe_photon_eta",  "F");
         self.out.branch("gen_weight",  "F");
+        self.out.branch("lhe_lepton_pdgid",  "I");
         self.out.branch("gen_lepton_pdgid",  "I");
         self.out.branch("gen_lepton_pt",  "F");
         self.out.branch("gen_lepton_phi",  "F");
         self.out.branch("gen_lepton_eta",  "F");
+        self.out.branch("lhe_lepton_pt",  "F");
+        self.out.branch("lhe_lepton_phi",  "F");
+        self.out.branch("lhe_lepton_eta",  "F");
+        self.out.branch("lhe_lepton_pdgid",  "I")
         self.out.branch("gen_photon_pt",  "F");
         self.out.branch("gen_photon_phi",  "F");
         self.out.branch("gen_photon_eta",  "F");
@@ -440,6 +454,33 @@ class wgGenProducer(Module):
 
         photon_gen_matching=0
 
+        self.out.fillBranch("lhe_photon_pt",0)
+        self.out.fillBranch("lhe_photon_eta",0)
+        self.out.fillBranch("lhe_photon_phi",0)
+        self.out.fillBranch("lhe_lepton_pt",0)
+        self.out.fillBranch("lhe_lepton_eta",0)
+        self.out.fillBranch("lhe_lepton_phi",0)
+        self.out.fillBranch("lhe_lepton_pdgid",0)
+        self.out.fillBranch("lhe_met_pt",0)
+        self.out.fillBranch("lhe_met_phi",0)
+
+        for i in range(0,len(lheparts)):
+            if lheparts[i].pdgId == 22:
+                self.out.fillBranch("lhe_photon_pt",lheparts[i].pt)
+                self.out.fillBranch("lhe_photon_eta",lheparts[i].eta)
+                self.out.fillBranch("lhe_photon_phi",lheparts[i].phi)
+
+            if abs(lheparts[i].pdgId) == 11 or abs(lheparts[i].pdgId) == 13 or abs(lheparts[i].pdgId) == 15:
+                self.out.fillBranch("lhe_lepton_pt",lheparts[i].pt)
+                self.out.fillBranch("lhe_lepton_eta",lheparts[i].eta)
+                self.out.fillBranch("lhe_lepton_phi",lheparts[i].phi)
+                self.out.fillBranch("lhe_lepton_pdgid",lheparts[i].pdgId)
+
+            if abs(lheparts[i].pdgId) == 12 or abs(lheparts[i].pdgId) == 14 or abs(lheparts[i].pdgId) == 16:
+                self.out.fillBranch("lhe_met_pt",lheparts[i].pt)
+                self.out.fillBranch("lhe_met_phi",lheparts[i].phi)
+
+
         try:
 
             for i in range(0,len(genparts)):
@@ -458,6 +499,10 @@ class wgGenProducer(Module):
             pass
 
         self.out.fillBranch("photon_gen_matching",photon_gen_matching)
+        self.out.fillBranch("met",event.MET_pt)
+        self.out.fillBranch("puppimet",event.PuppiMET_pt)
+        self.out.fillBranch("puppimetphi",event.PuppiMET_phi)
+        self.out.fillBranch("metphi",event.MET_phi)
 
         if pass_selection or pass_gen_selection:
             self.out.fillBranch("pass_selection",pass_selection)

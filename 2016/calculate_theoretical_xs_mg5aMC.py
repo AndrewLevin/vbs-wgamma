@@ -58,7 +58,7 @@ for i in range(0,t.GetEntries()):
     pass_fiducial = False
 
     if n_gen_leptons == 1 and n_gen_photons == 1:
-        if deltaR(t.GenPart_eta[gen_lepton_index],t.GenPart_phi[gen_lepton_index],t.GenPart_eta[gen_photon_index],t.GenPart_phi[gen_photon_index]) > 0.7 and t.GenPart_pt[gen_lepton_index] > 20 and t.GenPart_pt[gen_photon_index] > 20 and abs(t.GenPart_eta[gen_photon_index]) < 2.5:
+        if deltaR(t.GenPart_eta[gen_lepton_index],t.GenPart_phi[gen_lepton_index],t.GenPart_eta[gen_photon_index],t.GenPart_phi[gen_photon_index]) > 0.5 and t.GenPart_pt[gen_lepton_index] > 20 and t.GenPart_pt[gen_photon_index] > 20 and abs(t.GenPart_eta[gen_photon_index]) < 2.5:
             pass_fiducial = True
 
     assert(n_gen_leptons == 1 or n_gen_leptons == 0)

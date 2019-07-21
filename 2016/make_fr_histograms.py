@@ -6,25 +6,6 @@ import math
 
 import json
 
-import optparse
-
-parser = optparse.OptionParser()
-
-parser.add_option('--muon_data_input_filename', help='filename of the input muon ntuple', dest='finmuondataname')
-parser.add_option('--electron_data_input_filename', help='filename of the input electron ntuple', dest='finelectrondataname')
-parser.add_option('--electron_mc_input_filename1', help='filename of the input mc electron ntuple', dest='finelectronmcname1')
-parser.add_option('--electron_mc_input_filename2', help='filename of the input mc electron ntuple', dest='finelectronmcname2')
-parser.add_option('--muon_mc_input_filename1', help='filename of the input mc muon ntuple', dest='finmuonmcname1')
-parser.add_option('--muon_mc_input_filename2', help='filename of the input mc muon ntuple', dest='finmuonmcname2')
-parser.add_option('-o', '--output_filename', help='filename of the output ntuple', dest='foutname', default='my_file.root')
-parser.add_option('--mod', help='only use every mod events', dest='mod', default=1)
-parser.add_option('--debug', help='print out information about the events that pass', dest='debug', default=False)
-
-(options,args) = parser.parse_args()
-
-#assert(options.finmuondataname != None)
-#assert(options.finelectrondataname != None)
-
 import sys
 
 #otherwise, root will parse the command line options, see here http://root.cern.ch/phpBB3/viewtopic.php?f=14&t=18637
@@ -39,21 +20,27 @@ gStyle.SetOptStat(0)
 felectronout=TFile("electron_frs.root","recreate")
 fmuonout=TFile("muon_frs.root","recreate")
 
-electron_data_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/single_electron_fake_electron.root"}]
+#electron_data_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/single_electron_fake_electron.root"}]
+
+electron_data_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/tmp/single_electron_fake_lepton.root"}]
 
 #electron_data_samples = []
 
-#electron_mc_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wjets_fake_electron.root", "xs" : 60430.0, "subtract" : True},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/zjets_fake_electron.root", "xs" : 4963.0, "subtract" : True}]
+electron_mc_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/tmp/wjets_fake_lepton.root", "xs" : 60430.0, "subtract" : True},{"filename" : "/afs/cern.ch/work/a/amlevin/tmp/zjets_fake_lepton.root", "xs" : 4963.0, "subtract" : True}]
 
-electron_mc_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wjets_fake_electron.root", "xs" : 60430.0, "subtract" : True},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/zjets_fake_electron.root", "xs" : 4963.0, "subtract" : True}]
+#electron_mc_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wjets_fake_electron.root", "xs" : 60430.0, "subtract" : True},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/zjets_fake_electron.root", "xs" : 4963.0, "subtract" : True}]
 
 #electron_mc_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/qcd_bctoe_170250.root", "xs" : 2608, "subtract" : False},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/qcd_bctoe_2030.root", "xs" : 363100, "subtract" : False},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/qcd_bctoe_250.root", "xs" : 722.6, "subtract" : False},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/qcd_bctoe_3080.root", "xs" : 417800, "subtract" : False},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/qcd_bctoe_80170.root", "xs" : 39860, "subtract" : False}]
 
-muon_data_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/single_muon_fake_muon.root"}]
+#muon_data_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/single_muon_fake_muon.root"}]
+
+muon_data_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/tmp/single_muon_fake_lepton.root"}]
 
 #muon_mc_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wjets_fake_muon.root", "xs" : 60430.0, "subtract" : True},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/zjets_fake_muon.root", "xs" : 4963.0, "subtract" : True}]
 
-muon_mc_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wjets_fake_muon.root", "xs" : 60430.0, "subtract" : True},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/zjets_fake_muon.root", "xs" : 4963.0, "subtract" : True}]
+#muon_mc_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wjets_fake_muon.root", "xs" : 60430.0, "subtract" : True},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/zjets_fake_muon.root", "xs" : 4963.0, "subtract" : True}]
+
+muon_mc_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/tmp/wjets_fake_lepton.root", "xs" : 60430.0, "subtract" : True},{"filename" : "/afs/cern.ch/work/a/amlevin/tmp/zjets_fake_lepton.root", "xs" : 4963.0, "subtract" : True}]
 
 electron_ptbins=array('d', [30,40,50])
 electron_etabins=array('d', [0,0.5,1,1.479,2.0,2.5])
@@ -73,14 +60,14 @@ tight_muon_th2d=TH2F("tight_muon_hist","tight_muon_hist",len(muon_etabins)-1,muo
 loose_muon_th2d.Sumw2()
 tight_muon_th2d.Sumw2()
 
-def fill_loose_and_tight_th2ds(tree,tight_th2d,loose_th2d,xs_weight = None):
+def fill_loose_and_tight_th2ds(tree,tight_th2d,loose_th2d,abspdgid,xs_weight = None):
     for entry in range(tree.GetEntries()):
         tree.GetEntry(entry)
 
         if entry % 100000 == 0:
             print entry
 
-        if entry % int(options.mod) != 0:
+        if abs(tree.lepton_pdgid) != abspdgid:
             continue
 
         if tree.met > 30 or tree.mt > 20:
@@ -110,30 +97,30 @@ def fill_loose_and_tight_th2ds(tree,tight_th2d,loose_th2d,xs_weight = None):
 for sample in electron_data_samples:
     f = TFile.Open(sample["filename"])
     t = f.Get("Events")
-    fill_loose_and_tight_th2ds(t,tight_electron_th2d,loose_electron_th2d)
+    fill_loose_and_tight_th2ds(t,tight_electron_th2d,loose_electron_th2d,11)
 
 for sample in electron_mc_samples:
     f = TFile.Open(sample["filename"])
     t = f.Get("Events")
-    n_weighted_events = f.Get("nWeightedEvents").GetBinContent(1)
+    n_weighted_events = f.Get("nEventsGenWeighted").GetBinContent(1)
     if sample["subtract"]:
-        fill_loose_and_tight_th2ds(t,tight_electron_th2d,loose_electron_th2d,-sample["xs"]*1000*35.9/n_weighted_events)
+        fill_loose_and_tight_th2ds(t,tight_electron_th2d,loose_electron_th2d,11,-sample["xs"]*1000*35.9/n_weighted_events)
     else:
-        fill_loose_and_tight_th2ds(t,tight_electron_th2d,loose_electron_th2d,sample["xs"]*1000*35.9/n_weighted_events)
+        fill_loose_and_tight_th2ds(t,tight_electron_th2d,loose_electron_th2d,11,sample["xs"]*1000*35.9/n_weighted_events)
 
 for sample in muon_data_samples:
     f = TFile.Open(sample["filename"])
     t = f.Get("Events")
-    fill_loose_and_tight_th2ds(t,tight_muon_th2d,loose_muon_th2d)
+    fill_loose_and_tight_th2ds(t,tight_muon_th2d,loose_muon_th2d,13)
 
 for sample in muon_mc_samples:
     f = TFile.Open(sample["filename"])
     t = f.Get("Events")
-    n_weighted_events = f.Get("nWeightedEvents").GetBinContent(1)
+    n_weighted_events = f.Get("nEventsGenWeighted").GetBinContent(1)
     if sample["subtract"]:
-        fill_loose_and_tight_th2ds(t,tight_muon_th2d,loose_muon_th2d,-sample["xs"]*1000*35.9/n_weighted_events)
+        fill_loose_and_tight_th2ds(t,tight_muon_th2d,loose_muon_th2d,13,-sample["xs"]*1000*35.9/n_weighted_events)
     else:
-        fill_loose_and_tight_th2ds(t,tight_muon_th2d,loose_muon_th2d,sample["xs"]*1000*35.9/n_weighted_events)
+        fill_loose_and_tight_th2ds(t,tight_muon_th2d,loose_muon_th2d,13,sample["xs"]*1000*35.9/n_weighted_events)
 
 felectronout.cd()
 

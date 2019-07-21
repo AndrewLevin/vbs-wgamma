@@ -17,8 +17,12 @@ keep LHEPart_pdgId
 keep LHEPdfWeight
 keep LHEScaleWeight
 keep LHEWeight_rwgt_*
+keep RawMET_phi
+keep RawMET_pt
 keep MET_pt
 keep MET_phi
+keep MET_MetUnclustEnUpDeltaX
+keep MET_MetUnclustEnUpDeltaY
 keep PuppiMET_pt
 keep PuppiMET_phi
 keep RawMET_pt
@@ -68,6 +72,7 @@ keep Pileup_nTrueInt
 keep Photon_pt
 keep Photon_eta
 keep Photon_sieie
+keep Photon_pfRelIso03_chg
 keep Photon_hoe
 keep Photon_phi
 keep Photon_mass

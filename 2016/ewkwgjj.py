@@ -231,6 +231,11 @@ def pass_selection(tree, fake_lepton = False , fake_photon = False):
     else:
         pass_mlg = True
 
+    if tree.lepton_pt < 30:
+        pass_lepton_pt = False
+    else:
+        pass_lepton_pt = True
+
     if tree.met > 35:
 #    if tree.met > 0:
         pass_met = True
@@ -243,7 +248,7 @@ def pass_selection(tree, fake_lepton = False , fake_photon = False):
     else:
         pass_mt = False
 
-    if tree.mjj < 500:
+    if tree.mjj < 400:
 #    if tree.mjj < 50000:
         pass_mjj = True
     else:
@@ -282,7 +287,7 @@ def pass_selection(tree, fake_lepton = False , fake_photon = False):
     else:
         pass_photon_pt = False
 
-    if pass_photon_pt and pass_lepton_selection and pass_photon_selection and pass_mlg and pass_photon_eta and pass_lepton_flavor and pass_mjj and pass_btagging_selection and pass_met and pass_mt:
+    if pass_photon_pt and pass_lepton_selection and pass_photon_selection and pass_mlg and pass_photon_eta and pass_lepton_flavor and pass_mjj and pass_btagging_selection and pass_met and pass_mt and pass_lepton_pt:
         return True
     else:
         return False
@@ -301,8 +306,8 @@ ypositions = [0,1,2,3,0,1,2,3,0,1,2,3]
 
 style.GoodStyle().cd()
 
-muon_fr_file = ROOT.TFile("/afs/cern.ch/user/a/amlevin/wg/muon_frs.root")
-electron_fr_file = ROOT.TFile("/afs/cern.ch/user/a/amlevin/wg/electron_frs.root")
+muon_fr_file = ROOT.TFile("/afs/cern.ch/user/a/amlevin/wg/2016/muon_frs.root")
+electron_fr_file = ROOT.TFile("/afs/cern.ch/user/a/amlevin/wg/2016/electron_frs.root")
 
 muon_fr_hist=muon_fr_file.Get("muon_frs")
 electron_fr_hist=electron_fr_file.Get("electron_frs")
@@ -618,8 +623,8 @@ def fillHistogramMC(sample,histograms,e_to_p_histograms):
         if sample["tree"].gen_weight < 0:
             weight = -weight
 
-        if sample["filename"] == "/afs/cern.ch/work/a/amlevin/data/ewkwgjj/wgjets.root":
-            weight = weight * nnlo_scale_factor(sample["tree"].photon_pt,sample["tree"].photon_eta)
+#        if sample["filename"] == "/afs/cern.ch/work/a/amlevin/data/ewkwgjj/wgjets.root":
+#            weight = weight * nnlo_scale_factor(sample["tree"].photon_pt,sample["tree"].photon_eta)
 
         if pass_is_lepton_real:
 #            print str(sample["tree"].run) + " " + str(sample["tree"].lumi) + " " + str(sample["tree"].event)+ " " + str(weight)+ " " +str(sample["tree"].lepton_pt)+ " " +str(sample["tree"].lepton_eta)+ " "+str(sample["tree"].lepton_phi)+ " "+ str(sample["tree"].photon_pt)+ " " + str(str(sample["tree"].photon_eta))+ " " + str(str(sample["tree"].photon_phi))
@@ -654,6 +659,8 @@ for i in range(data_events_tree.GetEntries()):
     if pass_selection(data_events_tree,True,False):
 
         weight = leptonfakerate(data_events_tree.lepton_pdg_id,data_events_tree.lepton_eta, data_events_tree.lepton_pt,"nominal")
+
+#        print str(data_events_tree.run) + " " + str(data_events_tree.lumi) + " " + str(data_events_tree.event)
 
         for variable in variables:
             fake_lepton["hists"][variable].Fill(getVariable(variable,data_events_tree),weight)
@@ -694,6 +701,10 @@ for label in labels.keys():
 #subtractRealMCFromFakeEstimateFromData(mc_samples[0]["tree"],fake_photon_hist,fake_muon_hist,fake_lepton_hist,mc_samples[0]["xs"],mc_samples[0]["nweightedevents"])
 
 for variable in variables:
+
+    fake_lepton["hists"][variable].Print("all")
+    fake_photon["hists"][variable].Print("all")
+    double_fake["hists"][variable].Print("all")
 
     data["hists"][variable].Print("all")
 

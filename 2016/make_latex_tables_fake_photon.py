@@ -27,6 +27,8 @@ photon $p_T$ bin & muon endcap & electron endcap & muon barrel & electron barrel
 \\hline
 100-135 GeV & %0.3f $\pm$ %0.3f & %0.3f $\pm$ %0.3f & %0.3f $\pm$ %0.3f & %0.3f $\pm$ %0.3f  \\\\   
 \\hline
+135-400 GeV & %0.3f $\pm$ %0.3f & %0.3f $\pm$ %0.3f & %0.3f $\pm$ %0.3f & %0.3f $\pm$ %0.3f  \\\\   
+\\hline
 \\end{tabular}
 \\end{center}
 \\caption{Fake photon weights calculated from data.}
@@ -80,7 +82,15 @@ fake_photon_event_weights["electron_endcap"][5][1],
 fake_photon_event_weights["muon_barrel"][5][0],
 fake_photon_event_weights["muon_barrel"][5][1],
 fake_photon_event_weights["electron_barrel"][5][0],
-fake_photon_event_weights["electron_barrel"][5][1]
+fake_photon_event_weights["electron_barrel"][5][1],
+fake_photon_event_weights["muon_endcap"][6][0],
+fake_photon_event_weights["muon_endcap"][6][1],
+fake_photon_event_weights["electron_endcap"][6][0],
+fake_photon_event_weights["electron_endcap"][6][1],
+fake_photon_event_weights["muon_barrel"][6][0],
+fake_photon_event_weights["muon_barrel"][6][1],
+fake_photon_event_weights["electron_barrel"][6][0],
+fake_photon_event_weights["electron_barrel"][6][1]
 )
 
 sys.exit(0)

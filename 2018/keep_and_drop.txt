@@ -36,7 +36,6 @@ keep Electron_mass
 keep Electron_pdgId
 keep Electron_charge
 keep Electron_cutBased
-keep Electron_eCorr
 keep Electron_dz
 keep Electron_dxy
 keep Electron_deltaEtaSC
@@ -64,17 +63,11 @@ keep Photon_sieie
 keep Photon_hoe
 keep Photon_phi
 keep Photon_mass
-keep Photon_cutBased
 keep Photon_electronVeto
 keep Photon_pixelSeed
-keep Photon_eCorr
 keep Photon_vidNestedWPBitmap
 keep HLT_Ele27_WPTight_Gsf
 keep HLT_Ele35_WPTight_Gsf
 keep HLT_IsoMu24
-keep HLT_IsoTkMu24
-keep HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ
-keep HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ
-keep HLT_Mu17_TrkIsoVVL_TkMu8_TrkIsoVVL_DZ
 keep Jet_btagCSVV2
 keep LHE_Njets

@@ -2,7 +2,8 @@ import ROOT
 
 from array import array
 
-photon_ptbins=array('d', [25,30,40,50,70,100,135,400])
+#photon_ptbins=array('d', [20,25,30,40,50,70,100,135,400])
+photon_ptbins=array('d', [20,25,30,40,50,70,100,135])
 
 import json
 
@@ -14,6 +15,10 @@ fake_photon_event_weights = json.load(open("fake_photon_event_weights_data.txt")
 fake_photon_event_weights_wjets_wgjets_as_data = json.load(open("fake_photon_event_weights/fake_photon_event_weights_wjets_wgjets_as_data.txt"))
 
 fake_photon_event_weights_wjets_wgjets = json.load(open("fake_photon_event_weights/fake_photon_event_weights_wjets_wgjets.txt"))
+
+#fake_photon_event_weights_wjets_wgjets_as_data = json.load(open("fake_photon_event_weights_data.txt"))
+
+#fake_photon_event_weights_wjets_wgjets = json.load(open("fake_photon_event_weights_data.txt"))
 
 fake_photon_event_weights_muon_barrel = list(np.array(fake_photon_event_weights["muon_barrel"])[:,0])
 
