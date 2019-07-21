@@ -20,9 +20,9 @@ gStyle.SetOptStat(0)
 felectronout=TFile("electron_frs.root","recreate")
 fmuonout=TFile("muon_frs.root","recreate")
 
-#electron_data_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/single_electron_fake_electron.root"}]
+electron_data_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/single_electron_fake_electron.root"}]
 
-electron_data_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/tmp/single_electron_fake_lepton.root"}]
+#electron_data_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/tmp/single_electron_fake_lepton.root"}]
 
 #electron_data_samples = []
 
@@ -32,9 +32,9 @@ electron_mc_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/tmp/wjets_fake
 
 #electron_mc_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/qcd_bctoe_170250.root", "xs" : 2608, "subtract" : False},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/qcd_bctoe_2030.root", "xs" : 363100, "subtract" : False},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/qcd_bctoe_250.root", "xs" : 722.6, "subtract" : False},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/qcd_bctoe_3080.root", "xs" : 417800, "subtract" : False},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/qcd_bctoe_80170.root", "xs" : 39860, "subtract" : False}]
 
-#muon_data_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/single_muon_fake_muon.root"}]
+muon_data_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/single_muon_fake_muon.root"}]
 
-muon_data_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/tmp/single_muon_fake_lepton.root"}]
+#muon_data_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/tmp/single_muon_fake_lepton.root"}]
 
 #muon_mc_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wjets_fake_muon.root", "xs" : 60430.0, "subtract" : True},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/zjets_fake_muon.root", "xs" : 4963.0, "subtract" : True}]
 
