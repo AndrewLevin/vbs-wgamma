@@ -52,19 +52,11 @@ photon2_pt_range_cutstrings = ["photon2_pt > 20 && photon2_pt < 25","photon2_pt 
 assert(len(photon1_pt_range_cutstrings) == len(photon2_pt_range_cutstrings))
 assert(len(photon2_eta_ranges) == len(photon2_eta_ranges))
 
-#veto_signal_selection_cutstring = "!((met > 70 && mt > 30 && lepton_pt > 30 && photon_pt > 25 && lepton_pdg_id == 11) || (met > 70 && mt > 30 && lepton_pt > 25 && photon_pt > 25 && lepton_pdg_id == 13))" #need to fix this such that it uses photon1 and photon2 branches
+photon_recoil_upper = 0
+photon_recoil_lower = -1000
 
-photon1_recoil_string = "(cos(photon1_phi)*(- lepton_pt*cos(lepton_phi) - puppimet*cos(puppimetphi)) + sin(photon1_phi)*(-lepton_pt*sin(lepton_phi) - puppimet*sin(puppimetphi)))"
-
-photon2_recoil_string = "(cos(photon2_phi)*(- lepton_pt*cos(lepton_phi) - puppimet*cos(puppimetphi)) + sin(photon2_phi)*(-lepton_pt*sin(lepton_phi) - puppimet*sin(puppimetphi)))"
-
-photon_recoil_upper = 1000
-photon_recoil_lower = 25
-
-photon1_recoil_cutstring = photon1_recoil_string + " > 25 && " + photon1_recoil_string + " < 1000"
-photon2_recoil_cutstring = photon2_recoil_string + " > 25 && " + photon2_recoil_string + " < 1000"
-
-veto_signal_selection_cutstring = "1"
+njets_min = 0
+njets_max = 0
 
 index = 0
 
@@ -205,23 +197,29 @@ for lepton_name in lepton_names:
                         pass_photon2_pt_range = True
                 else:
                     assert(0)
+
+                photon1_pass_signal_selection_veto = not ((fake_photon_tree1.puppimet > 60 and fake_photon_tree1.puppimt > 30 and fake_photon_tree1.lepton_pt > 30 and fake_photon_tree1.photon1_pt > 25 and abs(fake_photon_tree1.lepton_pdg_id) == 11) or (fake_photon_tree1.puppimet > 60 and fake_photon_tree1.puppimt > 30 and fake_photon_tree1.lepton_pt > 25 and fake_photon_tree1.photon1_pt > 25 and abs(fake_photon_tree1.lepton_pdg_id) == 13))  
+
+                photon2_pass_signal_selection_veto = not ((fake_photon_tree1.puppimet > 60 and fake_photon_tree1.puppimt > 30 and fake_photon_tree1.lepton_pt > 30 and fake_photon_tree1.photon2_pt > 25 and abs(fake_photon_tree1.lepton_pdg_id) == 11) or (fake_photon_tree1.puppimet > 60 and fake_photon_tree1.puppimt > 30 and fake_photon_tree1.lepton_pt > 25 and fake_photon_tree1.photon2_pt > 25 and abs(fake_photon_tree1.lepton_pdg_id) == 13))  
+
+#                photon1_pass_signal_selection_veto = 1
+
+#                photon2_pass_signal_selection_veto = 1
                     
-                pass_signal_selection_veto = 1    
-                    
-                if fake_photon_tree1.pass_selection1 and pass_photon1_pt_range and pass_lepton_pdg_id and pass_photon1_eta_range and pass_signal_selection_veto and (fake_photon_tree1.photon1_selection == 3) and fake_photon_tree1.photon1_gen_matching == 0 and photon1_recoil > photon_recoil_lower and photon1_recoil < photon_recoil_upper and fake_photon_tree1.njets_fake == 0:
+                if fake_photon_tree1.pass_selection1 and pass_photon1_pt_range and pass_lepton_pdg_id and pass_photon1_eta_range and photon1_pass_signal_selection_veto and (fake_photon_tree1.photon1_selection == 3) and fake_photon_tree1.photon1_gen_matching == 0 and photon1_recoil > photon_recoil_lower and photon1_recoil < photon_recoil_upper and fake_photon_tree1.njets_fake >= njets_min and fake_photon_tree1.njets_fake <= njets_max:
                     if fake_photon_tree1.gen_weight > 0:
                         fake_photon_denominator += wjets_xs/fake_photon_file1_nweightedevents
                     else:
                         fake_photon_denominator -= wjets_xs/fake_photon_file1_nweightedevents
                         
-                if fake_photon_tree1.pass_selection1 and pass_photon1_pt_range and pass_lepton_pdg_id and pass_photon1_eta_range and pass_signal_selection_veto and (fake_photon_tree1.photon1_selection == 0 or fake_photon_tree1.photon1_selection == 4) and fake_photon_tree1.photon1_gen_matching == 0 and photon1_recoil > photon_recoil_lower and photon1_recoil < photon_recoil_upper and fake_photon_tree1.njets_fake == 0:
+                if fake_photon_tree1.pass_selection1 and pass_photon1_pt_range and pass_lepton_pdg_id and pass_photon1_eta_range and photon1_pass_signal_selection_veto and (fake_photon_tree1.photon1_selection == 0 or fake_photon_tree1.photon1_selection == 4) and fake_photon_tree1.photon1_gen_matching == 0 and photon1_recoil > photon_recoil_lower and photon1_recoil < photon_recoil_upper and fake_photon_tree1.njets_fake >= njets_min and fake_photon_tree1.njets_fake <= njets_max:
 
                     if fake_photon_tree1.gen_weight > 0:
                         total_hist.Fill(fake_photon_tree1.photon1_sieie,wjets_xs/fake_photon_file1_nweightedevents)
                     else:
                         total_hist.Fill(fake_photon_tree1.photon1_sieie,-wjets_xs/fake_photon_file1_nweightedevents)
 
-                if fake_photon_tree1.pass_selection2 and pass_photon2_pt_range and pass_lepton_pdg_id and pass_photon2_eta_range and pass_signal_selection_veto and fake_photon_tree1.photon2_gen_matching == 0 and photon2_recoil > photon_recoil_lower and photon2_recoil < photon_recoil_upper and fake_photon_tree1.njets_fake_template == 0:
+                if fake_photon_tree1.pass_selection2 and pass_photon2_pt_range and pass_lepton_pdg_id and pass_photon2_eta_range and photon2_pass_signal_selection_veto and fake_photon_tree1.photon2_gen_matching == 0 and photon2_recoil > photon_recoil_lower and photon2_recoil < photon_recoil_upper and fake_photon_tree1.njets_fake_template >= njets_min and fake_photon_tree1.njets_fake_template <= njets_max:
 
                     if fake_photon_tree1.gen_weight > 0:
                         fake_photon_template_hist.Fill(fake_photon_tree1.photon2_sieie,wjets_xs/fake_photon_file1_nweightedevents)
@@ -306,22 +304,28 @@ for lepton_name in lepton_names:
                 else:
                     assert(0)
                     
-                pass_signal_selection_veto = 1    
+                photon1_pass_signal_selection_veto = not ((fake_photon_tree2.puppimet > 60 and fake_photon_tree2.puppimt > 30 and fake_photon_tree2.lepton_pt > 30 and fake_photon_tree2.photon1_pt > 25 and abs(fake_photon_tree2.lepton_pdg_id) == 11) or (fake_photon_tree2.puppimet > 60 and fake_photon_tree2.puppimt > 30 and fake_photon_tree2.lepton_pt > 25 and fake_photon_tree2.photon1_pt > 25 and abs(fake_photon_tree2.lepton_pdg_id) == 13))  
+
+                photon2_pass_signal_selection_veto = not ((fake_photon_tree2.puppimet > 60 and fake_photon_tree2.puppimt > 30 and fake_photon_tree2.lepton_pt > 30 and fake_photon_tree2.photon2_pt > 25 and abs(fake_photon_tree2.lepton_pdg_id) == 11) or (fake_photon_tree2.puppimet > 60 and fake_photon_tree2.puppimt > 30 and fake_photon_tree2.lepton_pt > 25 and fake_photon_tree2.photon2_pt > 25 and abs(fake_photon_tree2.lepton_pdg_id) == 13))  
+
+#                photon1_pass_signal_selection_veto = 1
+
+#                photon2_pass_signal_selection_veto = 1
                     
-                if fake_photon_tree2.pass_selection1 and pass_photon1_pt_range and pass_lepton_pdg_id and pass_photon1_eta_range and pass_signal_selection_veto and (fake_photon_tree2.photon1_selection == 3) and photon1_recoil > photon_recoil_lower and photon1_recoil < photon_recoil_upper and fake_photon_tree2.photon1_gen_matching > 0 and fake_photon_tree2.njets_fake == 0:
+                if fake_photon_tree2.pass_selection1 and pass_photon1_pt_range and pass_lepton_pdg_id and pass_photon1_eta_range and photon1_pass_signal_selection_veto and (fake_photon_tree2.photon1_selection == 3) and photon1_recoil > photon_recoil_lower and photon1_recoil < photon_recoil_upper and fake_photon_tree2.photon1_gen_matching > 0 and fake_photon_tree2.njets_fake >= njets_min and fake_photon_tree2.njets_fake <= njets_max:
                     if fake_photon_tree2.gen_weight > 0:
                         fake_photon_denominator += wgjets_xs/fake_photon_file2_nweightedevents
                     else:
                         fake_photon_denominator -= wgjets_xs/fake_photon_file2_nweightedevents
                         
-                if fake_photon_tree2.pass_selection1 and pass_photon1_pt_range and pass_lepton_pdg_id and pass_photon1_eta_range and pass_signal_selection_veto and (fake_photon_tree2.photon1_selection == 0 or fake_photon_tree2.photon1_selection == 4) and fake_photon_tree2.photon1_gen_matching > 0 and photon1_recoil > photon_recoil_lower and photon1_recoil < photon_recoil_upper and fake_photon_tree2.njets_fake == 0:
+                if fake_photon_tree2.pass_selection1 and pass_photon1_pt_range and pass_lepton_pdg_id and pass_photon1_eta_range and photon1_pass_signal_selection_veto and (fake_photon_tree2.photon1_selection == 0 or fake_photon_tree2.photon1_selection == 4) and fake_photon_tree2.photon1_gen_matching > 0 and photon1_recoil > photon_recoil_lower and photon1_recoil < photon_recoil_upper and fake_photon_tree2.njets_fake >= njets_min and fake_photon_tree2.njets_fake <= njets_max:
 
                     if fake_photon_tree2.gen_weight > 0:
                         total_hist.Fill(fake_photon_tree2.photon1_sieie,wgjets_xs/fake_photon_file2_nweightedevents)
                     else:
                         total_hist.Fill(fake_photon_tree2.photon1_sieie,-wgjets_xs/fake_photon_file2_nweightedevents)
 
-                if fake_photon_tree2.pass_selection2 and pass_photon2_pt_range and pass_lepton_pdg_id and pass_photon2_eta_range and pass_signal_selection_veto and fake_photon_tree2.photon2_gen_matching > 0 and photon2_recoil > photon_recoil_lower and photon2_recoil < photon_recoil_upper and fake_photon_tree2.njets_fake_template == 0:
+                if fake_photon_tree2.pass_selection2 and pass_photon2_pt_range and pass_lepton_pdg_id and pass_photon2_eta_range and photon2_pass_signal_selection_veto and fake_photon_tree2.photon2_gen_matching > 0 and photon2_recoil > photon_recoil_lower and photon2_recoil < photon_recoil_upper and fake_photon_tree2.njets_fake_template >= njets_min and fake_photon_tree2.njets_fake_template <= njets_max:
 
                     if fake_photon_tree2.gen_weight > 0:
                         fake_photon_template_hist.Fill(fake_photon_tree2.photon2_sieie,wgjets_xs/fake_photon_file2_nweightedevents)
@@ -371,7 +375,7 @@ for lepton_name in lepton_names:
                     assert(0)
 
 
-#                pass_signal_selection_veto = not ((real_photon_template_tree.met > 70 and real_photon_template_tree.mt > 30 and real_photon_template_tree.lepton_pt > 30 and real_photon_template_tree.photon_pt > 25 and real_photon_template_tree.lepton_pdg_id == 11) or (real_photon_template_tree.met > 70 and real_photon_template_tree.mt > 30 and real_photon_template_tree.lepton_pt > 25 and real_photon_template_tree.photon_pt > 25 and real_photon_template_tree.lepton_pdg_id == 13))
+#                pass_signal_selection_veto = not ((real_photon_template_tree.puppimet > 60 and real_photon_template_tree.puppimt > 30 and real_photon_template_tree.lepton_pt > 30 and real_photon_template_tree.photon_pt > 25 and real_photon_template_tree.lepton_pdg_id == 11) or (real_photon_template_tree.puppimet   > 70 and real_photon_template_tree.puppimt > 30 and real_photon_template_tree.lepton_pt > 25 and real_photon_template_tree.photon_pt > 25 and real_photon_template_tree.lepton_pdg_id == 13))
                 pass_signal_selection_veto = 1
 
                 if pass_photon_pt_range and pass_lepton_pdg_id and pass_eta_range and pass_signal_selection_veto:
@@ -550,7 +554,7 @@ pprint(fake_fractions)
 
 pprint(fake_event_weights)
 
-json.dump(fake_event_weights,open("fake_photon_event_weights_data.txt","w"))
+json.dump(fake_event_weights,open("fake_photon_event_weights_sim.txt","w"))
 
-json.dump(fake_fractions,open("fake_photon_fractions_data.txt","w"))
+json.dump(fake_fractions,open("fake_photon_fractions_sim.txt","w"))
 
