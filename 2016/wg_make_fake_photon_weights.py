@@ -50,8 +50,6 @@ photon2_pt_range_cutstrings = ["photon2_pt > 20 && photon2_pt < 25","photon2_pt 
 assert(len(photon1_pt_range_cutstrings) == len(photon2_pt_range_cutstrings))
 assert(len(photon2_eta_ranges) == len(photon2_eta_ranges))
 
-#veto_signal_selection_cutstring = "!((met > 70 && mt > 30 && lepton_pt > 30 && photon_pt > 25 && lepton_pdg_id == 11) || (met > 70 && mt > 30 && lepton_pt > 25 && photon_pt > 25 && lepton_pdg_id == 13))" #need to fix this such that it uses photon1 and photon2 branches
-
 photon1_recoil_string = "(cos(photon1_phi)*(- lepton_pt*cos(lepton_phi) - puppimet*cos(puppimetphi)) + sin(photon1_phi)*(-lepton_pt*sin(lepton_phi) - puppimet*sin(puppimetphi)))"
 
 photon2_recoil_string = "(cos(photon2_phi)*(- lepton_pt*cos(lepton_phi) - puppimet*cos(puppimetphi)) + sin(photon2_phi)*(-lepton_pt*sin(lepton_phi) - puppimet*sin(puppimetphi)))"
@@ -59,13 +57,13 @@ photon2_recoil_string = "(cos(photon2_phi)*(- lepton_pt*cos(lepton_phi) - puppim
 photon1_recoil_cutstring = photon1_recoil_string + " > -1000 && " + photon1_recoil_string + " < 1000"
 photon2_recoil_cutstring = photon2_recoil_string + " > -1000 && " + photon2_recoil_string + " < 1000"
 
-#photon1_veto_signal_selection_cutstring = "!((puppimet > 60 && puppimt > 30 && lepton_pt > 30 && photon1_pt > 25 && lepton_pdg_id == 11) || (puppimet > 60 && puppimt > 30 && lepton_pt > 25 && photon1_pt > 25 && lepton_pdg_id == 13))" #need to fix this such that it uses photon1 and photon2 branches
+photon1_veto_signal_selection_cutstring = "!((puppimet > 60 && puppimt > 30 && lepton_pt > 30 && photon1_pt > 25 && lepton_pdg_id == 11) || (puppimet > 60 && puppimt > 30 && lepton_pt > 25 && photon1_pt > 25 && lepton_pdg_id == 13))" #need to fix this such that it uses photon1 and photon2 branches
 
-#photon2_veto_signal_selection_cutstring = "!((puppimet > 60 && puppimt > 30 && lepton_pt > 30 && photon2_pt > 25 && lepton_pdg_id == 11) || (puppimet > 60 && puppimt > 30 && lepton_pt > 25 && photon2_pt > 25 && lepton_pdg_id == 13))" #need to fix this such that it uses photon1 and photon2 branches
+photon2_veto_signal_selection_cutstring = "!((puppimet > 60 && puppimt > 30 && lepton_pt > 30 && photon2_pt > 25 && lepton_pdg_id == 11) || (puppimet > 60 && puppimt > 30 && lepton_pt > 25 && photon2_pt > 25 && lepton_pdg_id == 13))" #need to fix this such that it uses photon1 and photon2 branches
 
-photon1_veto_signal_selection_cutstring = "1"
+#photon1_veto_signal_selection_cutstring = "1"
 
-photon2_veto_signal_selection_cutstring = "1"
+#photon2_veto_signal_selection_cutstring = "1"
 
 njets_min = 0
 njets_max = 100
@@ -169,7 +167,7 @@ for lepton_name in lepton_names:
                     assert(0)
 
 
-                pass_signal_selection_veto = not ((real_photon_template_tree.puppimet > 70 and real_photon_template_tree.puppimt > 30 and real_photon_template_tree.lepton_pt > 30 and real_photon_template_tree.photon_pt > 25 and real_photon_template_tree.lepton_pdg_id == 11) or (real_photon_template_tree.puppimet > 70 and real_photon_template_tree.puppimt > 30 and real_photon_template_tree.lepton_pt > 25 and real_photon_template_tree.photon_pt > 25 and real_photon_template_tree.lepton_pdg_id == 13))
+                pass_signal_selection_veto = not ((real_photon_template_tree.puppimet > 60 and real_photon_template_tree.puppimt > 30 and real_photon_template_tree.lepton_pt > 30 and real_photon_template_tree.photon_pt > 25 and real_photon_template_tree.lepton_pdg_id == 11) or (real_photon_template_tree.puppimet > 60 and real_photon_template_tree.puppimt > 30 and real_photon_template_tree.lepton_pt > 25 and real_photon_template_tree.photon_pt > 25 and real_photon_template_tree.lepton_pdg_id == 13))
 
                 if pass_photon_pt_range and pass_lepton_pdg_id and pass_eta_range and pass_signal_selection_veto:
 
