@@ -212,7 +212,7 @@ for lepton_name in lepton_names:
             elif photon1_pt_range_cutstring == "photon1_pt > 40 && photon1_pt < 50":
                 photon_pt_range_cutstring_no_spaces = "40to50"
             elif photon1_pt_range_cutstring == "photon1_pt > 50 && photon1_pt < 400":
-                photon_pt_range_cutstring_no_spaces = "100to400"
+                photon_pt_range_cutstring_no_spaces = "50to400"
             else:
                    assert(0)
 
