@@ -20,6 +20,9 @@ class wgFakeLeptonProducer(Module):
         pass
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = wrappedOutputTree
+        self.out.branch("run",  "i")
+        self.out.branch("lumi",  "i")
+        self.out.branch("event",  "l")
         self.out.branch("met",  "F");
         self.out.branch("mt",  "F");
         self.out.branch("puppimet",  "F");
@@ -165,9 +168,11 @@ class wgFakeLeptonProducer(Module):
         if hasattr(event,'Generator_weight'):
             self.out.fillBranch("gen_weight",event.Generator_weight)
 
-
         self.out.fillBranch("met",event.MET_pt)
         self.out.fillBranch("puppimet",event.PuppiMET_pt)
+        self.out.fillBranch("event",event.event)
+        self.out.fillBranch("lumi",event.luminosityBlock)
+        self.out.fillBranch("run",event.run)
 
         return True
 
