@@ -20,27 +20,33 @@ gStyle.SetOptStat(0)
 felectronout=TFile("electron_frs.root","recreate")
 fmuonout=TFile("muon_frs.root","recreate")
 
-electron_data_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/single_electron_fake_electron.root"}]
+electron_data_samples = []
 
-#electron_data_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/tmp/single_electron_fake_lepton.root"}]
+#electron_data_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/single_electron_fake_electron.root"}]
 
-#electron_data_samples = []
+#electron_data_samples = [{"filename" : "/eos/cms/store/user/amlevin/SingleElectron/wg-fake-lepton-2016/190831_122802/0000/tree_11.root"}]
 
-electron_mc_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/tmp/wjets_fake_lepton.root", "xs" : 60430.0, "subtract" : True},{"filename" : "/afs/cern.ch/work/a/amlevin/tmp/zjets_fake_lepton.root", "xs" : 4963.0, "subtract" : True}]
+electron_mc_samples = []
+
+#electron_mc_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/tmp/wjets_fake_lepton.root", "xs" : 60430.0, "subtract" : True},{"filename" : "/afs/cern.ch/work/a/amlevin/tmp/zjets_fake_lepton.root", "xs" : 4963.0, "subtract" : True}]
 
 #electron_mc_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wjets_fake_electron.root", "xs" : 60430.0, "subtract" : True},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/zjets_fake_electron.root", "xs" : 4963.0, "subtract" : True}]
 
 #electron_mc_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/qcd_bctoe_170250.root", "xs" : 2608, "subtract" : False},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/qcd_bctoe_2030.root", "xs" : 363100, "subtract" : False},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/qcd_bctoe_250.root", "xs" : 722.6, "subtract" : False},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/qcd_bctoe_3080.root", "xs" : 417800, "subtract" : False},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/qcd_bctoe_80170.root", "xs" : 39860, "subtract" : False}]
 
-muon_data_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/single_muon_fake_muon.root"}]
+muon_data_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/single_muon_fake_lepton.root"}]
+
+muon_mc_samples = []
 
 #muon_data_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/tmp/single_muon_fake_lepton.root"}]
 
-#muon_mc_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wjets_fake_muon.root", "xs" : 60430.0, "subtract" : True},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/zjets_fake_muon.root", "xs" : 4963.0, "subtract" : True}]
+#muon_mc_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wjets_fake_lepton.root", "xs" : 60430.0, "subtract" : True},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/zjets_fake_lepton.root", "xs" : 4963.0, "subtract" : True}]
 
 #muon_mc_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wjets_fake_muon.root", "xs" : 60430.0, "subtract" : True},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/zjets_fake_muon.root", "xs" : 4963.0, "subtract" : True}]
 
-muon_mc_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/tmp/wjets_fake_lepton.root", "xs" : 60430.0, "subtract" : True},{"filename" : "/afs/cern.ch/work/a/amlevin/tmp/zjets_fake_lepton.root", "xs" : 4963.0, "subtract" : True}]
+#muon_mc_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wjets_fake_muon.root", "xs" : 60430.0, "subtract" : True},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/zjets_fake_muon.root", "xs" : 4963.0, "subtract" : True}]
+
+#muon_mc_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/tmp/wjets_fake_lepton.root", "xs" : 60430.0, "subtract" : True},{"filename" : "/afs/cern.ch/work/a/amlevin/tmp/zjets_fake_lepton.root", "xs" : 4963.0, "subtract" : True}]
 
 electron_ptbins=array('d', [30,40,50])
 electron_etabins=array('d', [0,0.5,1,1.479,2.0,2.5])
@@ -82,6 +88,9 @@ def fill_loose_and_tight_th2ds(tree,tight_th2d,loose_th2d,abspdgid,xs_weight = N
             weight = -weight
 
         if (tree.is_lepton_tight == '\x01'):
+
+#            print str(tree.run) + " " + str(tree.lumi) + " " + str(tree.event)
+
             if tree.lepton_pt > tight_th2d.GetYaxis().GetBinUpEdge(tight_th2d.GetYaxis().GetNbins()):
                 tight_th2d.Fill(abs(tree.lepton_eta),tight_th2d.GetYaxis().GetBinCenter(tight_th2d.GetYaxis().GetNbins()),weight)
             else:
