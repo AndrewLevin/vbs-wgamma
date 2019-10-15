@@ -14,6 +14,10 @@ keep LHEScaleWeight
 keep LHEWeight_rwgt_*
 keep MET_pt
 keep MET_phi
+keep MET_MetUnclustEnUpDeltaX
+keep MET_MetUnclustEnUpDeltaY
+keep PuppiMET_pt
+keep PuppiMET_phi
 keep RawMET_pt
 keep RawMET_phi
 keep PV_npvs
@@ -36,6 +40,7 @@ keep Electron_mass
 keep Electron_pdgId
 keep Electron_charge
 keep Electron_cutBased
+keep Electron_eCorr
 keep Electron_dz
 keep Electron_dxy
 keep Electron_deltaEtaSC
@@ -60,12 +65,17 @@ keep Pileup_nTrueInt
 keep Photon_pt
 keep Photon_eta
 keep Photon_sieie
+keep Photon_pfRelIso03_chg
 keep Photon_hoe
 keep Photon_phi
 keep Photon_mass
+keep Photon_cutBased
 keep Photon_electronVeto
 keep Photon_pixelSeed
+keep Photon_eCorr
 keep Photon_vidNestedWPBitmap
+keep Photon_genPartFlav
+keep Photon_genPartIdx
 keep HLT_Ele27_WPTight_Gsf
 keep HLT_Ele35_WPTight_Gsf
 keep HLT_IsoMu24

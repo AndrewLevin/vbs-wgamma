@@ -82,17 +82,17 @@ if options.ewdim6_scaling_only and not options.ewdim6:
     assert(0)
 
 if options.year == "2016":
-    year = "2016"
-    lumi=35.9
+    years = ["2016"]
+    totallumi=35.9
 elif options.year == "2017":
-    year="2017"
-    lumi=41.5
+    years=["2017"]
+    totallumi=41.5
 elif options.year == "2018":
-    year="2018"
-    lumi=59.6
-elif options.year == "all":
-    year="all"
-    lumi=137.1
+    years=["2018"]
+    totallumi=59.6
+elif options.year == "run2":
+    years=["2016","2017","2018"]
+    totallumi=137.1
 else:
     assert(0)
 
@@ -102,23 +102,6 @@ sieie_cut_2017_barrel = 0.01015
 sieie_cut_2017_endcap = 0.0272
 sieie_cut_2018_barrel = 0.01015
 sieie_cut_2018_endcap = 0.0272
-
-if year == "2016":
-    sieie_cut_barrel = sieie_cut_2016_barrel
-    sieie_cut_endcap = sieie_cut_2016_endcap
-elif year == "2017":
-    sieie_cut_barrel = sieie_cut_2017_barrel
-    sieie_cut_endcap = sieie_cut_2017_endcap
-elif year == "2018":
-    sieie_cut_barrel = sieie_cut_2017_barrel
-    sieie_cut_endcap = sieie_cut_2017_endcap
-else:
-    assert(0)
-
-#fake_photon_sieie_cut_barrel = 0.0175
-#fake_photon_sieie_cut_endcap = 0.04
-fake_photon_sieie_cut_barrel = sieie_cut_barrel*1.75
-fake_photon_sieie_cut_endcap = sieie_cut_endcap*1.75
 
 if options.lep == "muon":
     lepton_name = "muon"
@@ -362,7 +345,24 @@ def getXaxisLabel(varname):
     else:
         assert(0)
 
-def pass_selection(tree, barrel_or_endcap_or_both = "both", fake_lepton = False , fake_photon = False):
+def pass_selection(tree, year, barrel_or_endcap_or_both = "both", fake_lepton = False , fake_photon = False):
+
+    assert(year == "2016" or year == "2017" or year == "2018")
+
+    if year == "2016":
+        sieie_cut_barrel = sieie_cut_2016_barrel
+        sieie_cut_endcap = sieie_cut_2016_endcap
+    elif year == "2017":
+        sieie_cut_barrel = sieie_cut_2017_barrel
+        sieie_cut_endcap = sieie_cut_2017_endcap
+    elif year == "2018":
+        sieie_cut_barrel = sieie_cut_2017_barrel
+        sieie_cut_endcap = sieie_cut_2017_endcap
+    else:
+        assert(0)
+
+    fake_photon_sieie_cut_barrel = sieie_cut_barrel*1.75
+    fake_photon_sieie_cut_endcap = sieie_cut_endcap*1.75
 
     if barrel_or_endcap_or_both == "both":
         pass_photon_eta = True    
@@ -569,39 +569,6 @@ def draw_legend(x1,y1,hist,label,options):
     #otherwise the legend goes out of scope and is deleted once the function finishes
     hist.label = legend
 
-if lepton_name == "muon":
-#    data_file = ROOT.TFile.Open("/afs/cern.ch/project/afs/var/ABS/recover/R.1935065321.08020759/data/wg/single_muon.root")
-#    data_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/2016/single_muon.root")
-    if not closure_test:
-        data_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/single_muon.root")
-    else:
-        data_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/2016/"+year+"/1June2019/wjets.root")
-        
-#    data_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/2016/14Dec2018/wjets.root")
-#    data_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/tmp/wjets.root")
-elif lepton_name == "electron":
-#    data_file = ROOT.TFile.Open("/afs/cern.ch/project/afs/var/ABS/recover/R.1935065321.08020759/data/wg/single_electron.root")
-#    data_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/2016/single_electron.root")
-    if not closure_test:
-        if year != "2018":
-            data_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/single_electron.root")
-        else:    
-            data_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/egamma.root")
-    else:
-        data_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/wjets.root")
-#    data_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/tmp/wjets.root")
-#    data_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/2016/14Dec2018/wjets.root")
-elif lepton_name == "both":
-    if not closure_test:
-        data_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June02019/single_lepton.root")
-    else:
-        data_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/wjets.root")
-
-#    data_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/tmp/wjets.root")
-#    data_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/2016/single_lepton.root")
-else:
-    assert(0)
-
 for label in labels.keys():
 
     labels[label]["hists"] = {}
@@ -650,11 +617,11 @@ for label in labels.keys():
                 labels[label]["hists-scale-variation"+str(j)][i] = histogram_templates[i].Clone(label + " " + variables[i])
                 labels[label]["hists-scale-variation"+str(j)][i].Sumw2()
             
-
-    for sample in labels[label]["samples"][year]:
-        sample["file"] = ROOT.TFile.Open(sample["filename"])
-        sample["tree"] = sample["file"].Get("Events")
-        sample["nweightedevents"] = sample["file"].Get("nEventsGenWeighted").GetBinContent(1)
+    for year in years:            
+        for sample in labels[label]["samples"][year]:
+            sample["file"] = ROOT.TFile.Open(sample["filename"])
+            sample["tree"] = sample["file"].Get("Events")
+            sample["nweightedevents"] = sample["file"].Get("nEventsGenWeighted").GetBinContent(1)
 
 
 if "wg+jets" in labels:
@@ -728,13 +695,20 @@ for i in range(len(variables)):
     e_to_p["hists"][i].Sumw2()
     ewdim6["hists"][i].Sumw2()
 
-data_events_tree = data_file.Get("Events")
-
 c1 = ROOT.TCanvas("c1", "c1",5,50,500,500);
 
 ROOT.gROOT.cd()
 
-def fillHistogramMC(label,sample,labelname):
+def fillHistogramMC(label,sample,labelname,year):
+
+    if year == "2016":
+        lumi=35.9
+    elif year == "2017":
+        lumi=41.5
+    elif year == "2018":
+        lumi=59.6
+    else:
+        assert(0)
 
     print "Running over sample " + str(sample["filename"])
     print "sample[\"tree\"].GetEntries() = " + str(sample["tree"].GetEntries())
@@ -857,7 +831,7 @@ def fillHistogramMC(label,sample,labelname):
 
 
         if pass_photon_gen_matching_for_fake and pass_is_lepton_real:
-            if pass_selection(sample["tree"],options.phoeta,True,False):
+            if pass_selection(sample["tree"],year,options.phoeta,True,False):
 
                 weight_fake_lepton *= -fake_lepton_weight(sample["tree"].lepton_pdg_id,sample["tree"].lepton_eta, sample["tree"].lepton_pt, year, "nominal")
                 weight_fake_lepton_stat_up *= -fake_lepton_weight(sample["tree"].lepton_pdg_id,sample["tree"].lepton_eta, sample["tree"].lepton_pt, year, "up")
@@ -883,7 +857,7 @@ def fillHistogramMC(label,sample,labelname):
                         fillHistogram(fake_lepton_stat_down["hists"][j],getVariable(variables[j],sample["tree"],corrMet,corrMetPhi),weight_fake_lepton_stat_down)
                         pass
 
-            if pass_selection(sample["tree"],options.phoeta,False,True):
+            if pass_selection(sample["tree"],year,options.phoeta,False,True):
 
                 weight_fake_photon *= -fake_photon_weight(sample["tree"].photon_eta, sample["tree"].photon_pt,year,getVariable("photon_recoil",sample["tree"]),sample["tree"].lepton_pdg_id)
                 weight_fake_photon_alt *= -fake_photon_weight(sample["tree"].photon_eta, sample["tree"].photon_pt,year,getVariable("photon_recoil",sample["tree"]),sample["tree"].lepton_pdg_id, True)
@@ -902,7 +876,7 @@ def fillHistogramMC(label,sample,labelname):
                         fillHistogram(fake_photon_alt["hists"][j],getVariable(variables[j],sample["tree"],corrMet,corrMetPhi),weight_fake_photon_alt)
                         fillHistogram(fake_photon_stat_up["hists"][j],getVariable(variables[j],sample["tree"],corrMet,corrMetPhi),weight_fake_photon_stat_up)
 
-        if not pass_selection(sample["tree"],options.phoeta,False,False):
+        if not pass_selection(sample["tree"],year,options.phoeta,False,False):
             continue
 
         weight_photon_id_sf_variation *= eff_scale_factor.photon_efficiency_scale_factor(sample["tree"].photon_pt,sample["tree"].photon_eta,True)
@@ -1099,7 +1073,7 @@ if options.ewdim6:
         if labels["wg+jets"]["samples"][0]["tree"].gen_weight < 0:
             w = -w
 
-        if pass_selection(labels["wg+jets"]["samples"][0]["tree"],options.phoeta):
+        if pass_selection(labels["wg+jets"]["samples"][0]["tree"],year,options.phoeta):
             fillHistogram(sm_hist,getVariable(variables[0],labels["wg+jets"]["samples"][0]["tree"]),w)
 
     sm_hist.Print("all")
@@ -1123,7 +1097,7 @@ if options.ewdim6:
         if ewdim6_tree.gen_weight < 0:
             w = -w
 
-        if pass_selection(ewdim6_tree,options.phoeta):
+        if pass_selection(ewdim6_tree,year,options.phoeta):
             for j in range(len(cwww_reweights)):
                 fillHistogram(cwww_hists[j],getVariable(variables[0],ewdim6_tree),w*getattr(ewdim6_tree, 'LHEWeight_rwgt_'+str(cwww_reweights[j])))
 
@@ -1241,103 +1215,128 @@ array_data_mlg=array('f',[0])
 
 data_mlg_tree.Branch('m',array_data_mlg,'m/F')
 
-print "Running over data"
-print "data_events_tree.GetEntries() = " + str(data_events_tree.GetEntries())
+for year in years:
 
-for i in range(data_events_tree.GetEntries()):
+    if lepton_name == "muon":
+        if not closure_test:
+            data_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/single_muon.root")
+        else:
+            data_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/2016/"+year+"/1June2019/wjets.root")
+    elif lepton_name == "electron":
+        if not closure_test:
+            if year != "2018":
+                data_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/single_electron.root")
+            else:    
+                data_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/egamma.root")
+        else:
+            data_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/wjets.root")
+    elif lepton_name == "both":
+        if not closure_test:
+            data_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June02019/single_lepton.root")
+        else:
+            data_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/wjets.root")
+    else:
+        assert(0)
 
-    data_events_tree.GetEntry(i)
+    data_events_tree = data_file.Get("Events")
 
-    if i > 0 and i % 100000 == 0:
-        print "Processed " + str(i) + " out of " + str(data_events_tree.GetEntries()) + " events"
+    print "Running over "+year+" data"
+    print "data_events_tree.GetEntries() = " + str(data_events_tree.GetEntries())
+
+    for i in range(data_events_tree.GetEntries()):
+
+        data_events_tree.GetEntry(i)
+
+        if i > 0 and i % 100000 == 0:
+            print "Processed " + str(i) + " out of " + str(data_events_tree.GetEntries()) + " events"
 
 #    if data_events_tree.event != 3041956875:
 #        continue
 
 #    if data_events_tree.puppimet < 60 or data_events_tree.puppimt < 30:
-    if data_events_tree.puppimet < puppimetlow or data_events_tree.puppimet > puppimethigh or data_events_tree.met < metlow or data_events_tree.met > methigh or abs(data_events_tree.lepton_pdg_id) not in lepton_abspdgids or abs(data_events_tree.photon_eta) < photon_eta_min or abs(data_events_tree.photon_eta) > photon_eta_max:
-        continue
+        if data_events_tree.puppimet < puppimetlow or data_events_tree.puppimet > puppimethigh or data_events_tree.met < metlow or data_events_tree.met > methigh or abs(data_events_tree.lepton_pdg_id) not in lepton_abspdgids or abs(data_events_tree.photon_eta) < photon_eta_min or abs(data_events_tree.photon_eta) > photon_eta_max:
+            continue
 
 #    if not pass_json(data_events_tree.run,data_events_tree.lumi):
 #        continue
 
-    if closure_test and data_events_tree.photon_gen_matching != 0 :
-        continue
+        if closure_test and data_events_tree.photon_gen_matching != 0 :
+            continue
     
-    if getVariable("photon_recoil",data_events_tree) > 1000000 or getVariable("photon_recoil",data_events_tree) < -1000000:
-        continue
+        if getVariable("photon_recoil",data_events_tree) > 1000000 or getVariable("photon_recoil",data_events_tree) < -1000000:
+            continue
 
-    if pass_selection(data_events_tree,options.phoeta):
+        if pass_selection(data_events_tree,year,options.phoeta):
 
-        if data_events_tree.photon_pt > blinding_cut:
-            pass
-        else:
+            if data_events_tree.photon_pt > blinding_cut:
+                pass
+            else:
 
-            weight = 1
+                weight = 1
 
-            if closure_test and data_events_tree.gen_weight < 0:
-                weight = -1
+                if closure_test and data_events_tree.gen_weight < 0:
+                    weight = -1
 #                pass
 
 #            print str(data_events_tree.njets40)+" "+str(data_events_tree.run) + " "+str(data_events_tree.lumi)+" "+str(data_events_tree.event)
 
                 
 
+                for j in range(len(variables)):
+                    fillHistogram(data["hists"][j],getVariable(variables[j],data_events_tree),weight)
+
+                array_data_mlg[0] = getVariable("mlg",data_events_tree)
+                data_mlg_tree.Fill()
+
+        if pass_selection(data_events_tree,year,options.phoeta,True,False):
+
+            weight = fake_lepton_weight(data_events_tree.lepton_pdg_id,data_events_tree.lepton_eta, data_events_tree.lepton_pt,year, "nominal")
+            weight_fake_lepton_stat_up = fake_lepton_weight(data_events_tree.lepton_pdg_id,data_events_tree.lepton_eta, data_events_tree.lepton_pt,year,"up")
+            weight_fake_lepton_stat_down = fake_lepton_weight(data_events_tree.lepton_pdg_id,data_events_tree.lepton_eta, data_events_tree.lepton_pt,year,"down")
+
+            if closure_test:
+                weight = 0
+
             for j in range(len(variables)):
-                fillHistogram(data["hists"][j],getVariable(variables[j],data_events_tree),weight)
+                fillHistogram(fake_lepton["hists"][j],getVariable(variables[j],data_events_tree),weight)
+                fillHistogram(fake_lepton_stat_up["hists"][j],getVariable(variables[j],data_events_tree),weight_fake_lepton_stat_up)
+                fillHistogram(fake_lepton_stat_down["hists"][j],getVariable(variables[j],data_events_tree),weight_fake_lepton_stat_down)
 
-            array_data_mlg[0] = getVariable("mlg",data_events_tree)
-            data_mlg_tree.Fill()
+        if pass_selection(data_events_tree,year,options.phoeta,False,True):
+            weight = fake_photon_weight(data_events_tree.photon_eta, data_events_tree.photon_pt,year,getVariable("photon_recoil",data_events_tree),data_events_tree.lepton_pdg_id )
+            weight_fake_photon_alt = fake_photon_weight(data_events_tree.photon_eta, data_events_tree.photon_pt,year,getVariable("photon_recoil",data_events_tree),data_events_tree.lepton_pdg_id, True)
+            weight_fake_photon_stat_up = fake_photon_weight(data_events_tree.photon_eta, data_events_tree.photon_pt,year,getVariable("photon_recoil",data_events_tree),data_events_tree.lepton_pdg_id, False, True)
 
-    if pass_selection(data_events_tree,options.phoeta,True,False):
-
-        weight = fake_lepton_weight(data_events_tree.lepton_pdg_id,data_events_tree.lepton_eta, data_events_tree.lepton_pt,year, "nominal")
-        weight_fake_lepton_stat_up = fake_lepton_weight(data_events_tree.lepton_pdg_id,data_events_tree.lepton_eta, data_events_tree.lepton_pt,year,"up")
-        weight_fake_lepton_stat_down = fake_lepton_weight(data_events_tree.lepton_pdg_id,data_events_tree.lepton_eta, data_events_tree.lepton_pt,year,"down")
-
-        if closure_test:
-            weight = 0
-
-        for j in range(len(variables)):
-            fillHistogram(fake_lepton["hists"][j],getVariable(variables[j],data_events_tree),weight)
-            fillHistogram(fake_lepton_stat_up["hists"][j],getVariable(variables[j],data_events_tree),weight_fake_lepton_stat_up)
-            fillHistogram(fake_lepton_stat_down["hists"][j],getVariable(variables[j],data_events_tree),weight_fake_lepton_stat_down)
-
-    if pass_selection(data_events_tree,options.phoeta,False,True):
-        weight = fake_photon_weight(data_events_tree.photon_eta, data_events_tree.photon_pt,year,getVariable("photon_recoil",data_events_tree),data_events_tree.lepton_pdg_id )
-        weight_fake_photon_alt = fake_photon_weight(data_events_tree.photon_eta, data_events_tree.photon_pt,year,getVariable("photon_recoil",data_events_tree),data_events_tree.lepton_pdg_id, True)
-        weight_fake_photon_stat_up = fake_photon_weight(data_events_tree.photon_eta, data_events_tree.photon_pt,year,getVariable("photon_recoil",data_events_tree),data_events_tree.lepton_pdg_id, False, True)
-
-        if closure_test and data_events_tree.gen_weight < 0:
-            weight *= -1
+            if closure_test and data_events_tree.gen_weight < 0:
+                weight *= -1
 #            pass
 
 
-        for j in range(len(variables)):
-            fillHistogram(fake_photon["hists"][j],getVariable(variables[j],data_events_tree),weight)
-            fillHistogram(fake_photon_alt["hists"][j],getVariable(variables[j],data_events_tree),weight_fake_photon_alt)
-            fillHistogram(fake_photon_stat_up["hists"][j],getVariable(variables[j],data_events_tree),weight_fake_photon_stat_up)
+            for j in range(len(variables)):
+                fillHistogram(fake_photon["hists"][j],getVariable(variables[j],data_events_tree),weight)
+                fillHistogram(fake_photon_alt["hists"][j],getVariable(variables[j],data_events_tree),weight_fake_photon_alt)
+                fillHistogram(fake_photon_stat_up["hists"][j],getVariable(variables[j],data_events_tree),weight_fake_photon_stat_up)
 
 
 #        print fake_photon_weight(data_events_tree.photon_eta, data_events_tree.photon_pt,data_events_tree.lepton_pdg_id )
 
-    if pass_selection(data_events_tree,options.phoeta,True,True):
+        if pass_selection(data_events_tree,year,options.phoeta,True,True):
 
-        weight = fake_lepton_weight(data_events_tree.lepton_pdg_id,data_events_tree.lepton_eta, data_events_tree.lepton_pt, year, "nominal")*fake_photon_weight(data_events_tree.photon_eta, data_events_tree.photon_pt,year,getVariable("photon_recoil",data_events_tree),data_events_tree.lepton_pdg_id)
-        weight_fake_photon_alt = fake_lepton_weight(data_events_tree.lepton_pdg_id,data_events_tree.lepton_eta, data_events_tree.lepton_pt, year, "nominal")*fake_photon_weight(data_events_tree.photon_eta, data_events_tree.photon_pt, year, getVariable("photon_recoil",data_events_tree),data_events_tree.lepton_pdg_id, True)
-        weight_fake_photon_stat_up = fake_lepton_weight(data_events_tree.lepton_pdg_id,data_events_tree.lepton_eta, data_events_tree.lepton_pt, year, "nominal")*fake_photon_weight (data_events_tree.photon_eta, data_events_tree.photon_pt, year, getVariable("photon_recoil",data_events_tree),data_events_tree.lepton_pdg_id, False,True)
+            weight = fake_lepton_weight(data_events_tree.lepton_pdg_id,data_events_tree.lepton_eta, data_events_tree.lepton_pt, year, "nominal")*fake_photon_weight(data_events_tree.photon_eta, data_events_tree.photon_pt,year,getVariable("photon_recoil",data_events_tree),data_events_tree.lepton_pdg_id)
+            weight_fake_photon_alt = fake_lepton_weight(data_events_tree.lepton_pdg_id,data_events_tree.lepton_eta, data_events_tree.lepton_pt, year, "nominal")*fake_photon_weight(data_events_tree.photon_eta, data_events_tree.photon_pt, year, getVariable("photon_recoil",data_events_tree),data_events_tree.lepton_pdg_id, True)
+            weight_fake_photon_stat_up = fake_lepton_weight(data_events_tree.lepton_pdg_id,data_events_tree.lepton_eta, data_events_tree.lepton_pt, year, "nominal")*fake_photon_weight (data_events_tree.photon_eta, data_events_tree.photon_pt, year, getVariable("photon_recoil",data_events_tree),data_events_tree.lepton_pdg_id, False,True)
 
-        if closure_test:
-            weight = 0
+            if closure_test:
+                weight = 0
 
 #        weight = 0    
 
-        for j in range(len(variables)):
-            fillHistogram(double_fake["hists"][j],getVariable(variables[j],data_events_tree),weight)
-            fillHistogram(fake_lepton["hists"][j],getVariable(variables[j],data_events_tree),-weight)
-            fillHistogram(fake_photon["hists"][j],getVariable(variables[j],data_events_tree),-weight)
-            fillHistogram(fake_photon_alt["hists"][j],getVariable(variables[j],data_events_tree),-weight_fake_photon_alt)
-            fillHistogram(fake_photon_stat_up["hists"][j],getVariable(variables[j],data_events_tree),-weight_fake_photon_stat_up)
+            for j in range(len(variables)):
+                fillHistogram(double_fake["hists"][j],getVariable(variables[j],data_events_tree),weight)
+                fillHistogram(fake_lepton["hists"][j],getVariable(variables[j],data_events_tree),-weight)
+                fillHistogram(fake_photon["hists"][j],getVariable(variables[j],data_events_tree),-weight)
+                fillHistogram(fake_photon_alt["hists"][j],getVariable(variables[j],data_events_tree),-weight_fake_photon_alt)
+                fillHistogram(fake_photon_stat_up["hists"][j],getVariable(variables[j],data_events_tree),-weight_fake_photon_stat_up)
 
 
 #import sys
@@ -1345,19 +1344,21 @@ for i in range(data_events_tree.GetEntries()):
 
 #data_mlg_tree.Scan("*")
 
-for label in labels.keys():
 
-    for sample in labels[label]["samples"][year]:
-        fillHistogramMC(labels[label],sample,label)
+for year in years:
+    for label in labels.keys():
 
-    for i in range(len(variables)):    
+        for sample in labels[label]["samples"][year]:
+            fillHistogramMC(labels[label],sample,label,year)
 
-        if labels[label]["color"] == None:
-            continue
+        for i in range(len(variables)):    
 
-        labels[label]["hists"][i].SetFillColor(labels[label]["color"])
-        labels[label]["hists"][i].SetFillStyle(1001)
-        labels[label]["hists"][i].SetLineColor(labels[label]["color"])
+            if labels[label]["color"] == None:
+                continue
+
+            labels[label]["hists"][i].SetFillColor(labels[label]["color"])
+            labels[label]["hists"][i].SetFillStyle(1001)
+            labels[label]["hists"][i].SetLineColor(labels[label]["color"])
 
 if options.make_recoil_trees:
 
@@ -1835,7 +1836,7 @@ for i in range(len(variables)):
     e_to_p["hists"][i].SetFillStyle(1001)
     e_to_p_non_res["hists"][i].SetFillStyle(1001)
 
-    s=str(lumi)+" fb^{-1} (13 TeV)"
+    s=str(totallumi)+" fb^{-1} (13 TeV)"
     lumilabel = ROOT.TLatex (0.95, 0.93, s)
     lumilabel.SetNDC ()
     lumilabel.SetTextAlign (30)

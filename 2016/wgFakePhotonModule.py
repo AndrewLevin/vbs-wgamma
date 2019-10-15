@@ -58,6 +58,10 @@ class exampleProducer(Module):
         self.out.branch("photon2_genpart_pdgid",  "I")
         self.out.branch("photon1_genpart_pt",  "F")
         self.out.branch("photon2_genpart_pt",  "F")
+        self.out.branch("photon1_moth_genpart_pdgid",  "I")
+        self.out.branch("photon2_moth_genpart_pdgid",  "I")
+        self.out.branch("photon1_moth_genpart_pt",  "F")
+        self.out.branch("photon2_moth_genpart_pt",  "F")
         self.out.branch("mt",  "F")
         self.out.branch("met",  "F")
         self.out.branch("metphi",  "F")
@@ -373,6 +377,8 @@ class exampleProducer(Module):
             photon1_gen_matching_old=0
             photon1_genpart_pdgid=0
             photon1_genpart_pt=0
+            photon1_moth_genpart_pdgid=0
+            photon1_moth_genpart_pt=0
 
             isprompt_mask = (1 << 0) #isPrompt
             isfromhardprocess_mask = (1 << 8) #isFromHardProcess 
@@ -384,6 +390,11 @@ class exampleProducer(Module):
 
                 if photons[selected_tight_or_control_photons[0]].genPartIdx >= 0:
                     photon1_genpart_pdgid =  genparts[photons[selected_tight_or_control_photons[0]].genPartIdx].pdgId
+                    if genparts[photons[selected_tight_or_control_photons[0]].genPartIdx].genPartIdxMother >= 0:
+                        photon1_moth_genpart_pdgid = genparts[genparts[photons[selected_tight_or_control_photons[0]].genPartIdx].genPartIdxMother].pdgId
+                        photon1_moth_genpart_pt = genparts[genparts[photons[selected_tight_or_control_photons[0]].genPartIdx].genPartIdxMother].pt
+
+                        
                     photon1_genpart_pt =  genparts[photons[selected_tight_or_control_photons[0]].genPartIdx].pt
                 
 
@@ -451,6 +462,8 @@ class exampleProducer(Module):
             self.out.fillBranch("photon1_gen_matching",photon1_gen_matching)
             self.out.fillBranch("photon1_genpart_pdgid",photon1_genpart_pdgid)
             self.out.fillBranch("photon1_genpart_pt",photon1_genpart_pt)
+            self.out.fillBranch("photon1_moth_genpart_pdgid",photon1_moth_genpart_pdgid)
+            self.out.fillBranch("photon1_moth_genpart_pt",photon1_moth_genpart_pt)
             self.out.fillBranch("photon1_gen_matching_old",photon1_gen_matching_old)
             self.out.fillBranch("njets_fake",njets_fake)
         else:
@@ -462,6 +475,8 @@ class exampleProducer(Module):
             self.out.fillBranch("photon1_gen_matching",0)
             self.out.fillBranch("photon1_genpart_pdgid",0)
             self.out.fillBranch("photon1_genpart_pt",0)
+            self.out.fillBranch("photon1_moth_genpart_pdgid",0)
+            self.out.fillBranch("photon1_moth_genpart_pt",0)
             self.out.fillBranch("photon1_gen_matching_old",0)
             self.out.fillBranch("njets_fake",0)
             self.out.fillBranch("photon1_selection",0)
@@ -471,6 +486,8 @@ class exampleProducer(Module):
             photon2_gen_matching_old=0
             photon2_genpart_pdgid=0
             photon2_genpart_pt=0
+            photon2_moth_genpart_pdgid=0
+            photon2_moth_genpart_pt=0
 
             isprompt_mask = (1 << 0) #isPrompt
             isfromhardprocess_mask = (1 << 8) #isFromHardProcess 
@@ -483,6 +500,9 @@ class exampleProducer(Module):
                 if photons[selected_fake_template_photons[0]].genPartIdx >= 0:
                     photon2_genpart_pdgid =  genparts[photons[selected_fake_template_photons[0]].genPartIdx].pdgId
                     photon2_genpart_pt =  genparts[photons[selected_fake_template_photons[0]].genPartIdx].pt
+                    if genparts[photons[selected_fake_template_photons[0]].genPartIdx].genPartIdxMother >= 0:
+                        photon2_moth_genpart_pdgid = genparts[genparts[photons[selected_fake_template_photons[0]].genPartIdx].genPartIdxMother].pdgId
+                        photon2_moth_genpart_pt = genparts[genparts[photons[selected_fake_template_photons[0]].genPartIdx].genPartIdxMother].pt
                 
 
                 if photons[selected_fake_template_photons[0]].genPartIdx >= 0 and genparts[photons[selected_fake_template_photons[0]].genPartIdx].pdgId  == 22:
@@ -528,6 +548,8 @@ class exampleProducer(Module):
             self.out.fillBranch("photon2_gen_matching",photon2_gen_matching)
             self.out.fillBranch("photon2_genpart_pdgid",photon2_genpart_pdgid)
             self.out.fillBranch("photon2_genpart_pt",photon2_genpart_pt)
+            self.out.fillBranch("photon2_moth_genpart_pdgid",photon2_moth_genpart_pdgid)
+            self.out.fillBranch("photon2_moth_genpart_pt",photon2_moth_genpart_pt)
             self.out.fillBranch("photon2_gen_matching_old",photon2_gen_matching_old)
             self.out.fillBranch("njets_fake_template",njets_fake_template)
 
@@ -540,6 +562,8 @@ class exampleProducer(Module):
             self.out.fillBranch("photon2_gen_matching",0)
             self.out.fillBranch("photon2_genpart_pdgid",0)
             self.out.fillBranch("photon2_genpart_pt",0)
+            self.out.fillBranch("photon2_moth_genpart_pdgid",0)
+            self.out.fillBranch("photon2_moth_genpart_pt",0)
             self.out.fillBranch("photon2_gen_matching_old",0)
             self.out.fillBranch("njets_fake_template",0)
 
