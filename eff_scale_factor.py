@@ -40,32 +40,32 @@ electron_reco_2018_sf = electron_reco_2018_sf_file.Get("EGamma_SF2D")
 
 muon_iso_2016_sf_filename = "eff_scale_factors/2016/RunBCDEF_SF_ISO.root"
 muon_iso_2016_sf_file = ROOT.TFile(muon_iso_2016_sf_filename,"read")
-muon_iso_2016 = muon_iso_2016_sf_file.Get("NUM_TightRelIso_DEN_TightIDandIPCut_pt_abseta")
+muon_iso_2016_sf = muon_iso_2016_sf_file.Get("NUM_TightRelIso_DEN_TightIDandIPCut_eta_pt")
 
 
 muon_id_2016_sf_filename = "eff_scale_factors/2016/RunBCDEF_SF_ID.root"
 muon_id_2016_sf_file = ROOT.TFile(muon_id_2016_sf_filename,"read")
-muon_id_2016 = muon_id_2016_sf_file.Get("NUM_TightID_DEN_genTracks_pt_abseta")
+muon_id_2016_sf = muon_id_2016_sf_file.Get("NUM_TightID_DEN_genTracks_eta_pt")
 
 
 muon_iso_2017_sf_filename = "eff_scale_factors/2017/RunBCDEF_SF_ISO.root"
 muon_iso_2017_sf_file = ROOT.TFile(muon_iso_2017_sf_filename,"read")
-muon_iso_2017 = muon_iso_2017_sf_file.Get("NUM_TightRelIso_DEN_TightIDandIPCut_pt_abseta")
+muon_iso_2017_sf = muon_iso_2017_sf_file.Get("NUM_TightRelIso_DEN_TightIDandIPCut_pt_abseta")
 
 
 muon_id_2017_sf_filename = "eff_scale_factors/2017/RunBCDEF_SF_ID.root"
 muon_id_2017_sf_file = ROOT.TFile(muon_id_2017_sf_filename,"read")
-muon_id_2017 = muon_id_2017_sf_file.Get("NUM_TightID_DEN_genTracks_pt_abseta")
+muon_id_2017_sf = muon_id_2017_sf_file.Get("NUM_TightID_DEN_genTracks_pt_abseta")
 
 
 muon_iso_2018_sf_filename = "eff_scale_factors/2018/RunABCD_SF_ISO.root"
 muon_iso_2018_sf_file = ROOT.TFile(muon_iso_2018_sf_filename,"read")
-muon_iso_2018 = muon_iso_2018_sf_file.Get("NUM_TightRelIso_DEN_TightIDandIPCut_pt_abseta")
+muon_iso_2018_sf = muon_iso_2018_sf_file.Get("NUM_TightRelIso_DEN_TightIDandIPCut_pt_abseta")
 
 
 muon_id_2018_sf_filename = "eff_scale_factors/2018/RunABCD_SF_ID.root"
 muon_id_2018_sf_file = ROOT.TFile(muon_id_2018_sf_filename,"read")
-muon_id_2018 = muon_id_2018_sf_file.Get("NUM_TightID_DEN_genTracks_pt_abseta")
+muon_id_2018_sf = muon_id_2018_sf_file.Get("NUM_TightID_DEN_genTracks_pt_abseta")
 
 
 
@@ -129,15 +129,39 @@ def muon_efficiency_scale_factor(pt,eta,year,iso_err_up=False,id_err_up=False):
     else:
         assert(0)
 
-    iso_sf = muon_iso_sf.GetBinContent(muon_iso_sf.GetXaxis().FindFixBin(abs(eta)),muon_iso_sf.GetYaxis().FindFixBin(min(pt,muon_iso_sf.GetYaxis().GetBinCenter(muon_id_sf.GetNbinsY()))))
+    if year == "2016":    
+        muon_iso_sf_xaxisbin = muon_iso_sf.GetXaxis().FindFixBin(eta)
+        muon_iso_sf_yaxisbin = muon_iso_sf.GetYaxis().FindFixBin(min(pt,muon_iso_sf.GetYaxis().GetBinCenter(muon_iso_sf.GetNbinsY())))
+    elif year == "2017":
+        muon_iso_sf_yaxisbin = muon_iso_sf.GetYaxis().FindFixBin(abs(eta))
+        muon_iso_sf_xaxisbin = muon_iso_sf.GetXaxis().FindFixBin(min(pt,muon_iso_sf.GetXaxis().GetBinCenter(muon_iso_sf.GetNbinsX())))
+    elif year == "2018":
+        muon_iso_sf_yaxisbin = muon_iso_sf.GetYaxis().FindFixBin(abs(eta))
+        muon_iso_sf_xaxisbin = muon_iso_sf.GetXaxis().FindFixBin(min(pt,muon_iso_sf.GetXaxis().GetBinCenter(muon_iso_sf.GetNbinsX())))
+    else:
+        assert(0)
+
+    if year == "2016":    
+        muon_id_sf_xaxisbin = muon_id_sf.GetXaxis().FindFixBin(eta)
+        muon_id_sf_yaxisbin = muon_id_sf.GetYaxis().FindFixBin(min(pt,muon_id_sf.GetYaxis().GetBinCenter(muon_id_sf.GetNbinsY())))
+    elif year == "2017":
+        muon_id_sf_yaxisbin = muon_id_sf.GetYaxis().FindFixBin(abs(eta))
+        muon_id_sf_xaxisbin = muon_id_sf.GetXaxis().FindFixBin(min(pt,muon_id_sf.GetXaxis().GetBinCenter(muon_id_sf.GetNbinsX())))
+    elif year == "2018":
+        muon_id_sf_yaxisbin = muon_id_sf.GetYaxis().FindFixBin(abs(eta))
+        muon_id_sf_xaxisbin = muon_id_sf.GetXaxis().FindFixBin(min(pt,muon_id_sf.GetXaxis().GetBinCenter(muon_id_sf.GetNbinsX())))
+    else:
+        assert(0)
+
+    iso_sf = muon_iso_sf.GetBinContent(muon_iso_sf_xaxisbin,muon_iso_sf_yaxisbin)
 
     if iso_err_up:
-        iso_sf += muon_iso_sf.GetBinError(muon_iso_sf.GetXaxis().FindFixBin(abs(eta)),muon_iso_sf.GetYaxis().FindFixBin(min(pt,muon_iso_sf.GetYaxis().GetBinCenter(muon_id_sf.GetNbinsY()))))
+        iso_sf += muon_iso_sf.GetBinError(muon_iso_sf_xaxisbin,muon_iso_sf_yaxisbin)
 
-    id_sf = muon_id_sf.GetBinContent(muon_id_sf.GetXaxis().FindFixBin(abs(eta)),muon_id_sf.GetYaxis().FindFixBin(min(pt,muon_id_sf.GetYaxis().GetBinCenter(muon_id_sf.GetNbinsY())))) 
+    id_sf = muon_id_sf.GetBinContent(muon_id_sf_xaxisbin,muon_id_sf_yaxisbin) 
     
     if id_err_up:
-        id_sf += muon_id_sf.GetBinError(muon_id_sf.GetXaxis().FindFixBin(abs(eta)),muon_id_sf.GetYaxis().FindFixBin(min(pt,muon_id_sf.GetYaxis().GetBinCenter(muon_id_sf.GetNbinsY())))) 
+        id_sf += muon_id_sf.GetBinError(muon_id_sf_xaxisbin,muon_id_sf_yaxisbin) 
 
     return iso_sf * id_sf
 
