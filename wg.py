@@ -1216,7 +1216,7 @@ for year in years:
         if not closure_test:
             data_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/single_muon.root")
         else:
-            data_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/2016/"+year+"/1June2019/wjets.root")
+            data_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/wjets.root")
     elif lepton_name == "electron":
         if not closure_test:
             if year != "2018":
@@ -1227,7 +1227,10 @@ for year in years:
             data_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/wjets.root")
     elif lepton_name == "both":
         if not closure_test:
-            data_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June02019/single_lepton.root")
+            if year != "2018":
+                data_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/data.root")
+            else:
+                data_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/data.root")
         else:
             data_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/wjets.root")
     else:
