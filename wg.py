@@ -188,11 +188,6 @@ zgrecoilCorrector.addFileWithGraph("/afs/cern.ch/user/a/amlevin/recoil_correctio
 #when the TMinuit object is reused, the random seed is not reset after each fit, so the fit result can change when it is run on the same input 
 ROOT.TMinuitMinimizer.UseStaticMinuit(False)
 
-f_pu_weights = ROOT.TFile("/afs/cern.ch/user/a/amlevin/PileupWeights2016.root")
-
-pu_weight_hist = f_pu_weights.Get("ratio")
-pu_weight_up_hist = f_pu_weights.Get("ratio_up")
-
 if closure_test:
     from wg_labels_closuretest import labels
 elif use_wjets_mc_for_fake_photon:
@@ -788,7 +783,9 @@ def fillHistogramMC(label,sample,labelname,year):
             pass_photon_gen_matching_for_fake = False    
 
         weight = sample["xs"] * 1000 * lumi / sample["nweightedevents"]
-#        weight *= sample["tree"].L1PreFiringWeight 
+        
+        if year == "2016" or year == "2017":
+            weight *= sample["tree"].PrefireWeight
 
 #        if sample["filename"] == "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjetsewdim6.root":
 #            weight *= sample["tree"].LHEWeight_rwgt_373
@@ -813,22 +810,20 @@ def fillHistogramMC(label,sample,labelname,year):
         weight_muon_id_sf_variation = weight 
         weight_muon_iso_sf_variation = weight
 
-#        weight *= pu_weight_hist.GetBinContent(pu_weight_hist.FindFixBin(sample["tree"].npu))    
-        weight_pu_up *= pu_weight_up_hist.GetBinContent(pu_weight_up_hist.FindFixBin(sample["tree"].npu))    
-        weight_double_fake *= pu_weight_hist.GetBinContent(pu_weight_hist.FindFixBin(sample["tree"].npu))
-        weight_fake_lepton *= pu_weight_hist.GetBinContent(pu_weight_hist.FindFixBin(sample["tree"].npu))
-        weight_fake_photon *= pu_weight_hist.GetBinContent(pu_weight_hist.FindFixBin(sample["tree"].npu))
-        weight_fake_lepton_stat_up *= pu_weight_hist.GetBinContent(pu_weight_hist.FindFixBin(sample["tree"].npu))
-        weight_fake_lepton_stat_down *= pu_weight_hist.GetBinContent(pu_weight_hist.FindFixBin(sample["tree"].npu))
-        weight_fake_photon_alt *= pu_weight_hist.GetBinContent(pu_weight_hist.FindFixBin(sample["tree"].npu))
-        weight_fake_photon_stat_up *= pu_weight_hist.GetBinContent(pu_weight_hist.FindFixBin(sample["tree"].npu)) 
-        weight_photon_id_sf_variation *= pu_weight_hist.GetBinContent(pu_weight_hist.FindFixBin(sample["tree"].npu))
-        weight_electron_id_sf_variation *= pu_weight_hist.GetBinContent(pu_weight_hist.FindFixBin(sample["tree"].npu))
-        weight_electron_reco_sf_variation *= pu_weight_hist.GetBinContent(pu_weight_hist.FindFixBin(sample["tree"].npu))
-        weight_muon_id_sf_variation *= pu_weight_hist.GetBinContent(pu_weight_hist.FindFixBin(sample["tree"].npu)) 
-        weight_muon_iso_sf_variation *= pu_weight_hist.GetBinContent(pu_weight_hist.FindFixBin(sample["tree"].npu))
-
-
+        weight *= sample["tree"].puWeight    
+        weight_pu_up *= sample["tree"].puWeightUp    
+        weight_double_fake *= sample["tree"].puWeight    
+        weight_fake_lepton *= sample["tree"].puWeight    
+        weight_fake_photon *= sample["tree"].puWeight    
+        weight_fake_lepton_stat_up *= sample["tree"].puWeight    
+        weight_fake_lepton_stat_down *= sample["tree"].puWeight    
+        weight_fake_photon_alt *= sample["tree"].puWeight    
+        weight_fake_photon_stat_up *= sample["tree"].puWeight    
+        weight_photon_id_sf_variation *= sample["tree"].puWeight    
+        weight_electron_id_sf_variation *= sample["tree"].puWeight    
+        weight_electron_reco_sf_variation *= sample["tree"].puWeight    
+        weight_muon_id_sf_variation *= sample["tree"].puWeight    
+        weight_muon_iso_sf_variation *= sample["tree"].puWeight    
 
         if pass_photon_gen_matching_for_fake and pass_is_lepton_real:
             if pass_selection(sample["tree"],year,options.phoeta,True,False):
