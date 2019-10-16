@@ -65,7 +65,7 @@ muon_iso_2018_sf = muon_iso_2018_sf_file.Get("NUM_TightRelIso_DEN_TightIDandIPCu
 
 muon_id_2018_sf_filename = "eff_scale_factors/2018/RunABCD_SF_ID.root"
 muon_id_2018_sf_file = ROOT.TFile(muon_id_2018_sf_filename,"read")
-muon_id_2018_sf = muon_id_2018_sf_file.Get("NUM_TightID_DEN_genTracks_pt_abseta")
+muon_id_2018_sf = muon_id_2018_sf_file.Get("NUM_TightID_DEN_TrackerMuons_pt_abseta")
 
 
 
