@@ -86,15 +86,15 @@ class wgProducer(Module):
 
         #see https://twiki.cern.ch/twiki/bin/viewauth/CMS/Egamma2017DataRecommendations
 #        if event.HLT_Ele32_WPTight_Gsf_L1DoubleEG and not (event.HLT_Ele32_WPTight_Gsf or  event.HLT_IsoMu24):
-        if event.HLT_Ele32_WPTight_Gsf_L1DoubleEG and not event.HLT_IsoMu24:
+        pass_HLT_Ele32_WPTight_Gsf = False
+        if event.HLT_Ele32_WPTight_Gsf_L1DoubleEG:
             trigobjs = Collection(event, "TrigObj")
-            pass_HLT_Ele32_WPTight_Gsf = False
             for i in range(0,len(trigobjs)):
                 if trigobjs[i].id == 11 and (trigobjs[i].filterBits & (1 << 10) == (1 << 10)):
                     pass_HLT_Ele32_WPTight_Gsf = True
-            if not pass_HLT_Ele32_WPTight_Gsf:
+
+        if not (pass_HLT_Ele32_WPTight_Gsf or event.HLT_IsoMu24):
                 return False
-                
 
         electrons = Collection(event, "Electron")
         muons = Collection(event, "Muon")
@@ -481,7 +481,7 @@ class wgProducer(Module):
 
         elif len(tight_electrons) == 1:
 
-            if not event.HLT_Ele32_WPTight_Gsf_L1DoubleEG:
+            if not pass_HLT_Ele32_WPTight_Gsf:
                 return False
 
             if electrons[tight_electrons[0]].cutBased == 0 or electrons[tight_electrons[0]].cutBased == 1:
@@ -548,7 +548,7 @@ class wgProducer(Module):
         elif len(loose_but_not_tight_electrons) == 1:
 
                         
-            if not event.HLT_Ele32_WPTight_Gsf_L1DoubleEG:
+            if not pass_HLT_Ele32_WPTight_Gsf:
                 return False
 
             if deltaR(photons[tight_photons[0]].eta,photons[tight_photons[0]].phi,electrons[loose_but_not_tight_electrons[0]].eta,electrons[loose_but_not_tight_electrons[0]].phi) < 0.5:
