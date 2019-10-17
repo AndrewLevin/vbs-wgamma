@@ -79,8 +79,22 @@ class wgProducer(Module):
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
         #do this first for processing speed-up
-        if not (event.HLT_Ele35_WPTight_Gsf or event.HLT_IsoMu24):
+        if not (event.HLT_Ele32_WPTight_Gsf_L1DoubleEG or  event.HLT_IsoMu24):
+#        if not (event.HLT_Ele32_WPTight_Gsf or event.HLT_Ele32_WPTight_Gsf_L1DoubleEG or  event.HLT_IsoMu24):
+
             return False
+
+        #see https://twiki.cern.ch/twiki/bin/viewauth/CMS/Egamma2017DataRecommendations
+#        if event.HLT_Ele32_WPTight_Gsf_L1DoubleEG and not (event.HLT_Ele32_WPTight_Gsf or  event.HLT_IsoMu24):
+        if event.HLT_Ele32_WPTight_Gsf_L1DoubleEG and not event.HLT_IsoMu24:
+            trigobjs = Collection(event, "TrigObj")
+            pass_HLT_Ele32_WPTight_Gsf = False
+            for i in range(0,len(trigobjs)):
+                if trigobjs[i].id == 11 and (trigobjs[i].filterBits & (1 << 10) == (1 << 10)):
+                    pass_HLT_Ele32_WPTight_Gsf = True
+            if not pass_HLT_Ele32_WPTight_Gsf:
+                return False
+                
 
         electrons = Collection(event, "Electron")
         muons = Collection(event, "Muon")
