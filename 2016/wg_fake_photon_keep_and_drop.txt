@@ -56,3 +56,5 @@ keep Photon_pixelSeed
 keep Photon_eCorr
 keep Photon_pfRelIso03_chg
 keep Photon_sieie
+keep Photon_genPartFlav
+keep Photon_genPartIdx
