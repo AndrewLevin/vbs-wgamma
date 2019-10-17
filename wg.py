@@ -945,7 +945,7 @@ def fillHistogramMC(label,sample,labelname,year):
                         if label["syst-scale"]:
                             for k in range(0,8):
                                 #this sample has a bug that causes the scale weight to be 1/2 the correct value
-                                if sample["filename"] == "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjets.root":
+                                if sample["filename"] == "/afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019/wgjets.root":
                                     fillHistogram(label["hists-scale-variation"+str(k)][j],getVariable(variables[j],sample["tree"],corrMet,corrMetPhi),weight*sample["tree"].LHEScaleWeight[k]*2)
                                 else:
                                     fillHistogram(label["hists-scale-variation"+str(k)][j],getVariable(variables[j],sample["tree"],corrMet,corrMetPhi),weight*sample["tree"].LHEScaleWeight[k])
@@ -978,7 +978,7 @@ def fillHistogramMC(label,sample,labelname,year):
                         if label["syst-scale"]:
                             for k in range(0,8):
                                 #this sample has a bug that causes the scale weight to be 1/2 the correct value
-                                if sample["filename"] == "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjets.root":
+                                if sample["filename"] == "/afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019/wgjets.root":
                                     fillHistogram(label["hists-scale-variation"+str(k)][j],getVariable(variables[j],sample["tree"],corrMet,corrMetPhi),weight*sample["tree"].LHEScaleWeight[k]*2)
                                 else:    
                                     fillHistogram(label["hists-scale-variation"+str(k)][j],getVariable(variables[j],sample["tree"],corrMet,corrMetPhi),weight*sample["tree"].LHEScaleWeight[k])
