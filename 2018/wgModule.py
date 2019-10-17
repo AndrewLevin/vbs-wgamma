@@ -79,7 +79,7 @@ class wgProducer(Module):
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
         #do this first for processing speed-up
-        if not (event.HLT_Ele35_WPTight_Gsf or event.HLT_IsoMu24):
+        if not (event.HLT_Ele32_WPTight_Gsf or event.HLT_IsoMu24):
             return False
 
         electrons = Collection(event, "Electron")
@@ -467,7 +467,7 @@ class wgProducer(Module):
 
         elif len(tight_electrons) == 1:
 
-            if not event.HLT_Ele35_WPTight_Gsf:
+            if not event.HLT_Ele32_WPTight_Gsf:
                 return False
 
             if electrons[tight_electrons[0]].cutBased == 0 or electrons[tight_electrons[0]].cutBased == 1:
@@ -534,7 +534,7 @@ class wgProducer(Module):
         elif len(loose_but_not_tight_electrons) == 1:
 
                         
-            if not event.HLT_Ele35_WPTight_Gsf:
+            if not event.HLT_Ele32_WPTight_Gsf:
                 return False
 
             if deltaR(photons[tight_photons[0]].eta,photons[tight_photons[0]].phi,electrons[loose_but_not_tight_electrons[0]].eta,electrons[loose_but_not_tight_electrons[0]].phi) < 0.5:
