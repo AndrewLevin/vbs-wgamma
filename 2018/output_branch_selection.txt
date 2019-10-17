@@ -1,4 +1,0 @@
-drop *
-keep LHEPdfWeight 
-keep LHEScaleWeight 
-keep LHEWeight_rwgt_*
