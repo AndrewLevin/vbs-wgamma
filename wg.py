@@ -502,7 +502,7 @@ def pass_selection(tree, year, barrel_or_endcap_or_both = "both", fake_lepton = 
 #    if tree.photon_pt < 25 and tree.lepton_pt > 35:
 #    if tree.photon_pt > 20 and tree.photon_pt < 30 and tree.lepton_pt > 25 and getVariable("dphilg",tree) < 1*pi/16 and getVariable("dphilg",tree) > 0*pi/16:
 #    if tree.photon_pt > 25 and tree.lepton_pt > 30 and tree.photon_pt < 50:
-    if tree.photon_pt > 30 and tree.photon_pt < 1000000 and ((tree.lepton_pt > 30 && (year == "2016" or abs(tree.lepton_pdg_id) == 13))) or (tree.lepton_pt > 35 and ((year == "2017" or year == "2018") and abs(tree.lepton_pdg_id) == 11)): 
+    if tree.photon_pt > 30 and tree.photon_pt < 1000000 and ((tree.lepton_pt > 30 and (year == "2016" or abs(tree.lepton_pdg_id) == 13))) or (tree.lepton_pt > 35 and ((year == "2017" or year == "2018") and abs(tree.lepton_pdg_id) == 11)): 
         pass_photon_pt =True
     else:
         pass_photon_pt = False
