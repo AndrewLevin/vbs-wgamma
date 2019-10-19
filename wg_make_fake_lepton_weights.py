@@ -1,7 +1,3 @@
-#if running on a dtmit machine, you need to move to root version 5.34.20 or higher
-#source /afs/cern.ch/sw/lcg/external/gcc/4.7.2/x86_64-slc5-gcc47-opt/setup.sh
-#source /afs/cern.ch/sw/lcg/app/releases/ROOT/5.34.20/x86_64-slc5-gcc47-opt/root/bin/thisroot.sh
-
 import math
 
 import json
@@ -34,25 +30,19 @@ electron_mc_samples = []
 
 #electron_mc_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/qcd_bctoe_170250.root", "xs" : 2608, "subtract" : False},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/qcd_bctoe_2030.root", "xs" : 363100, "subtract" : False},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/qcd_bctoe_250.root", "xs" : 722.6, "subtract" : False},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/qcd_bctoe_3080.root", "xs" : 417800, "subtract" : False},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/qcd_bctoe_80170.root", "xs" : 39860, "subtract" : False}]
 
-muon_data_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/single_muon_fake_lepton.root"}]
+#muon_data_samples = []
 
-muon_mc_samples = []
+muon_data_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019/single_muon_fake_lepton.root"}]
 
-#muon_data_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/tmp/single_muon_fake_lepton.root"}]
+#muon_mc_samples = []
 
-#muon_mc_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wjets_fake_lepton.root", "xs" : 60430.0, "subtract" : True},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/zjets_fake_lepton.root", "xs" : 4963.0, "subtract" : True}]
-
-#muon_mc_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wjets_fake_muon.root", "xs" : 60430.0, "subtract" : True},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/zjets_fake_muon.root", "xs" : 4963.0, "subtract" : True}]
-
-#muon_mc_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wjets_fake_muon.root", "xs" : 60430.0, "subtract" : True},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/zjets_fake_muon.root", "xs" : 4963.0, "subtract" : True}]
-
-#muon_mc_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/tmp/wjets_fake_lepton.root", "xs" : 60430.0, "subtract" : True},{"filename" : "/afs/cern.ch/work/a/amlevin/tmp/zjets_fake_lepton.root", "xs" : 4963.0, "subtract" : True}]
+muon_mc_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019/wjets_fake_lepton.root", "xs" : 60430.0, "subtract" : True},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019/zjets_fake_lepton.root", "xs" : 4963.0, "subtract" : True}]
 
 electron_ptbins=array('d', [30,40,50])
 electron_etabins=array('d', [0,0.5,1,1.479,2.0,2.5])
 
-loose_electron_th2d=TH2F("loose_electron_hist","loose_electron_hist",len(electron_etabins)-1,electron_etabins,len(electron_ptbins)-1,electron_ptbins)
-tight_electron_th2d=TH2F("tight_electron_hist","tight_electron_hist",len(electron_etabins)-1,electron_etabins,len(electron_ptbins)-1,electron_ptbins)
+loose_electron_th2d=TH2D("loose_electron_hist","loose_electron_hist",len(electron_etabins)-1,electron_etabins,len(electron_ptbins)-1,electron_ptbins)
+tight_electron_th2d=TH2D("tight_electron_hist","tight_electron_hist",len(electron_etabins)-1,electron_etabins,len(electron_ptbins)-1,electron_ptbins)
 
 loose_electron_th2d.Sumw2()
 tight_electron_th2d.Sumw2()
@@ -60,8 +50,8 @@ tight_electron_th2d.Sumw2()
 muon_ptbins=array('d', [25,30,40,50])    
 muon_etabins=array('d', [0,0.5,1.0,1.479,2.0,2.5])
 
-loose_muon_th2d=TH2F("loose_muon_hist","loose_muon_hist",len(muon_etabins)-1,muon_etabins,len(muon_ptbins)-1,muon_ptbins)
-tight_muon_th2d=TH2F("tight_muon_hist","tight_muon_hist",len(muon_etabins)-1,muon_etabins,len(muon_ptbins)-1,muon_ptbins)
+loose_muon_th2d=TH2D("loose_muon_hist","loose_muon_hist",len(muon_etabins)-1,muon_etabins,len(muon_ptbins)-1,muon_ptbins)
+tight_muon_th2d=TH2D("tight_muon_hist","tight_muon_hist",len(muon_etabins)-1,muon_etabins,len(muon_ptbins)-1,muon_ptbins)
 
 loose_muon_th2d.Sumw2()
 tight_muon_th2d.Sumw2()
