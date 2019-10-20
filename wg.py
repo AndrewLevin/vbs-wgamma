@@ -10,7 +10,7 @@ puppimetlow = 60
 puppimethigh = 1000000
 
 njets40min = 0
-njets40max = 10000
+njets40max = 1000000
 
 def fillHistogram(hist,value,weight=1):
     if options.overflow:

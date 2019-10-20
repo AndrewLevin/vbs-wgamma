@@ -105,7 +105,7 @@ max_chiso = 1000000
 njets_min = 0
 njets_max = 1000
 
-fit  = False
+fit  = True
 
 index = 0
 
@@ -118,8 +118,8 @@ electron_mc_fake_photon_samples = []
 #muon_mc_fake_photon_samples = [{"file" : ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/2016/14Dec2018/wjets_fake_photon.root"),"xs" : 60430.0, "subtract" : False, "prompt" : False}]
 #electron_mc_fake_photon_samples = [{"file" : ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/2016/14Dec2018/wjets_fake_photon.root"),"xs" : 60430.0, "subtract" : False, "prompt" : False}]
 
-muon_mc_fake_photon_samples = [{"file" : ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/wjets_fake_photon.root"),"xs" : 60430.0, "subtract" : False, "prompt" : False}]
-electron_mc_fake_photon_samples = [{"file" : ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/wjets_fake_photon.root"),"xs" : 60430.0, "subtract" : False, "prompt" : False}]
+#muon_mc_fake_photon_samples = [{"file" : ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/wjets_fake_photon.root"),"xs" : 60430.0, "subtract" : False, "prompt" : False}]
+#electron_mc_fake_photon_samples = [{"file" : ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/wjets_fake_photon.root"),"xs" : 60430.0, "subtract" : False, "prompt" : False}]
 
 #muon_mc_fake_photon_samples = [{"file" : ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/tmp/wjets_fake_photon.root"),"xs" : 60430.0, "subtract" : False, "prompt" : False}]
 #electron_mc_fake_photon_samples = [{"file" : ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/tmp/wjets_fake_photon.root"),"xs" : 60430.0, "subtract" : False, "prompt" : False}]
@@ -130,10 +130,16 @@ electron_mc_fake_photon_samples = [{"file" : ROOT.TFile.Open("/afs/cern.ch/work/
 muon_data_fake_photon_samples = []
 electron_data_fake_photon_samples = []
 
-#muon_data_fake_photon_samples = [{"file" : ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/2016/14Dec2018/single_muon_fake_photon.root")}]
-#electron_data_fake_photon_samples = [{"file" : ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/2016/14Dec2018/single_electron_fake_photon.root")}]
+muon_data_fake_photon_samples = [{"file" : ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/single_muon_fake_photon.root")}]
 
-real_photon_template_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/2016/14Dec2018/real_photon_template.root")
+if year == "2016" or year == "2017":
+    electron_data_fake_photon_samples = [{"file" : ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/single_electron_fake_photon.root")}]
+elif year == "2018":
+    electron_data_fake_photon_samples = [{"file" : ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/egamma_fake_photon.root")}]
+else:
+    assert(0)
+
+real_photon_template_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/real_photon_template.root")
 
 created_muon_fitter = False
 created_electron_fitter = False
@@ -373,13 +379,13 @@ for lepton_name in lepton_names:
                     assert(0)
 
 
-                c1.SaveAs("/eos/user/a/amlevin/www/wg/2016/fake-photon/"+lepton_name+"/"+eta_range_no_spaces+"/real_photon_template_"+photon_pt_range_cutstring_no_spaces+".png")
+                c1.SaveAs("/eos/user/a/amlevin/www/wg/"+year+"/fake-photon/"+lepton_name+"/"+eta_range_no_spaces+"/real_photon_template_"+photon_pt_range_cutstring_no_spaces+".png")
 
                 fake_photon_template_hist.GetXaxis().SetTitle("\sigma_{i \eta i \eta}")
                 fake_photon_template_hist.SetLineWidth(2)
                 fake_photon_template_hist.Draw()
 
-                c1.SaveAs("/eos/user/a/amlevin/www/wg/2016/fake-photon/"+lepton_name+"/"+eta_range_no_spaces+"/fake_photon_template_"+photon_pt_range_cutstring_no_spaces+".png")
+                c1.SaveAs("/eos/user/a/amlevin/www/wg/"+year+"/fake-photon/"+lepton_name+"/"+eta_range_no_spaces+"/fake_photon_template_"+photon_pt_range_cutstring_no_spaces+".png")
 
 
                 ffitter.Fit()
@@ -388,7 +394,7 @@ for lepton_name in lepton_names:
                 total_hist.SetLineWidth(2)            
                 total_hist.Draw()
 
-                c1.SaveAs("/eos/user/a/amlevin/www/wg/2016/fake-photon/"+lepton_name+"/"+eta_range_no_spaces+"/total_"+photon_pt_range_cutstring_no_spaces+".png")
+                c1.SaveAs("/eos/user/a/amlevin/www/wg/"+year+"/fake-photon/"+lepton_name+"/"+eta_range_no_spaces+"/total_"+photon_pt_range_cutstring_no_spaces+".png")
 
                 total_hist.SetLineColor(ROOT.kBlack)
                 total_hist.SetMarkerColor(ROOT.kBlack)
@@ -423,7 +429,7 @@ for lepton_name in lepton_names:
                 legend1.AddEntry(red_th1f,"fit result","lp")
                 legend1.Draw("same")
 
-                c1.SaveAs("/eos/user/a/amlevin/www/wg/2016/fake-photon/"+lepton_name+"/"+eta_range_no_spaces+"/fit_"+photon_pt_range_cutstring_no_spaces+".png")
+                c1.SaveAs("/eos/user/a/amlevin/www/wg/"+year+"/fake-photon/"+lepton_name+"/"+eta_range_no_spaces+"/fit_"+photon_pt_range_cutstring_no_spaces+".png")
 
 
                 c1.ForceUpdate()
@@ -465,7 +471,7 @@ for lepton_name in lepton_names:
                 c1.ForceUpdate()
                 c1.Modified()
 
-                c1.SaveAs("/eos/user/a/amlevin/www/wg/2016/fake-photon/"+lepton_name+"/"+eta_range_no_spaces+"/components_"+photon_pt_range_cutstring_no_spaces+".png")
+                c1.SaveAs("/eos/user/a/amlevin/www/wg/"+year+"/fake-photon/"+lepton_name+"/"+eta_range_no_spaces+"/components_"+photon_pt_range_cutstring_no_spaces+".png")
 
                 
                 print total_hist.GetXaxis().FindFixBin( sieie_cut )

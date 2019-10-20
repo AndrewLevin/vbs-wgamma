@@ -11,7 +11,7 @@ from PhysicsTools.NanoAODTools.postprocessing.tools import deltaR
 
 from PhysicsTools.NanoAODTools.postprocessing.tools import deltaPhi
 
-class exampleProducer(Module):
+class wgFakePhotonProducer(Module):
     def __init__(self):
         pass
     def beginJob(self):
@@ -414,8 +414,8 @@ class exampleProducer(Module):
                     else:
                         photon1_gen_matching = 2
 
-            else:
-                assert(photons[selected_tight_or_control_photons[0]].genPartFlav == 0)
+                else:
+                    assert(photons[selected_tight_or_control_photons[0]].genPartFlav == 0)
 
 
             if hasattr(event,'nGenPart'):
@@ -521,8 +521,8 @@ class exampleProducer(Module):
                     else:
                         photon2_gen_matching = 2
 
-            else:
-                assert(photons[selected_fake_template_photons[0]].genPartFlav == 0)
+                else:
+                    assert(photons[selected_fake_template_photons[0]].genPartFlav == 0)
 
 
             if hasattr(event,'nGenPart'):
@@ -622,4 +622,4 @@ class exampleProducer(Module):
 
         return True
 
-exampleModule = lambda : exampleProducer()
+wgFakePhotonModule = lambda : wgFakePhotonProducer()

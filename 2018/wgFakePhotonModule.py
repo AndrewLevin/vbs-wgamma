@@ -79,13 +79,6 @@ class wgFakePhotonProducer(Module):
         jets = Collection(event, "Jet")
         photons = Collection(event, "Photon")
 
-        pass_HLT_Ele32_WPTight_Gsf = False
-        if event.HLT_Ele32_WPTight_Gsf_L1DoubleEG:
-            trigobjs = Collection(event, "TrigObj")
-            for i in range(0,len(trigobjs)):
-                if trigobjs[i].id == 11 and (trigobjs[i].filterBits & (1 << 10) == (1 << 10)):
-                    pass_HLT_Ele32_WPTight_Gsf = True
-
         pass_selection1 = False
         pass_selection2 = False                
 
@@ -308,7 +301,7 @@ class wgFakePhotonProducer(Module):
             
         elif len(tight_electrons) == 1:
 
-            if not pass_HLT_Ele32_WPTight_Gsf:
+            if not event.HLT_Ele32_WPTight_Gsf:
                 return False
 
             if len(selected_tight_or_control_photons) >= 1:

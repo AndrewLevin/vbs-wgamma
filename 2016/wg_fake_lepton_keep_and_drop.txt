@@ -37,3 +37,5 @@ keep Jet_rawFactor
 keep HLT_Ele27_WPTight_Gsf
 keep HLT_IsoMu24
 keep HLT_IsoTkMu24
+keep Pileup_nPU
+keep Pileup_nTrueInt

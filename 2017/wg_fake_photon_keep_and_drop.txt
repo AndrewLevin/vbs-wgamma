@@ -46,6 +46,8 @@ keep HLT_IsoMu24
 keep HLT_IsoTkMu24
 keep HLT_Ele27_WPTight_Gsf
 keep HLT_Ele35_WPTight_Gsf
+keep HLT_Ele32_WPTight_Gsf
+keep HLT_Ele32_WPTight_Gsf_L1DoubleEG
 keep Photon_vidNestedWPBitmap
 keep Photon_pt
 keep Photon_eta
@@ -59,3 +61,12 @@ keep Photon_pfRelIso03_chg
 keep Photon_sieie
 keep Photon_genPartFlav
 keep Photon_genPartIdx
+keep Pileup_nPU
+keep Pileup_nTrueInt
+keep PV_npvs
+keep TrigObj_filterBits
+keep TrigObj_eta
+keep TrigObj_phi
+keep TrigObj_pt
+keep TrigObj_id
+

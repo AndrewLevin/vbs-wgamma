@@ -69,7 +69,6 @@ keep Photon_pfRelIso03_chg
 keep Photon_hoe
 keep Photon_phi
 keep Photon_mass
-keep Photon_cutBased
 keep Photon_electronVeto
 keep Photon_pixelSeed
 keep Photon_eCorr
@@ -78,6 +77,8 @@ keep Photon_genPartFlav
 keep Photon_genPartIdx
 keep HLT_Ele27_WPTight_Gsf
 keep HLT_Ele35_WPTight_Gsf
+keep HLT_Ele32_WPTight_Gsf
+keep HLT_Ele32_WPTight_Gsf_L1DoubleEG
 keep HLT_IsoMu24
 keep Jet_btagCSVV2
 keep LHE_Njets
