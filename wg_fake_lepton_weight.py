@@ -1,12 +1,33 @@
 import ROOT
 
-muon_fr_file = ROOT.TFile("/afs/cern.ch/user/a/amlevin/wg/2016/muon_frs_data_subtract_wjets_zjets.root")
-electron_fr_file = ROOT.TFile("/afs/cern.ch/user/a/amlevin/wg/2016/electron_frs_data_subtract_wjets_zjets.root")
+muon_2016_fr_file = ROOT.TFile("/afs/cern.ch/user/a/amlevin/wg/fake_lepton_weights/muon_2016_frs.root")
+electron_2016_fr_file = ROOT.TFile("/afs/cern.ch/user/a/amlevin/wg/fake_lepton_weights/electron_2016_frs.root")
 
-muon_fr_hist=muon_fr_file.Get("muon_frs")
-electron_fr_hist=electron_fr_file.Get("electron_frs")
+muon_2017_fr_file = ROOT.TFile("/afs/cern.ch/user/a/amlevin/wg/fake_lepton_weights/muon_2017_frs.root")
+electron_2017_fr_file = ROOT.TFile("/afs/cern.ch/user/a/amlevin/wg/fake_lepton_weights/electron_2017_frs.root")
+
+muon_2018_fr_file = ROOT.TFile("/afs/cern.ch/user/a/amlevin/wg/fake_lepton_weights/muon_2018_frs.root")
+electron_2018_fr_file = ROOT.TFile("/afs/cern.ch/user/a/amlevin/wg/fake_lepton_weights/electron_2018_frs.root")
+
+muon_2016_fr_hist=muon_2016_fr_file.Get("muon_frs")
+electron_2016_fr_hist=electron_2016_fr_file.Get("electron_frs")
+
+muon_2017_fr_hist=muon_2017_fr_file.Get("muon_frs")
+electron_2017_fr_hist=electron_2017_fr_file.Get("electron_frs")
+
+muon_2018_fr_hist=muon_2018_fr_file.Get("muon_frs")
+electron_2018_fr_hist=electron_2018_fr_file.Get("electron_frs")
 
 def fake_muon_weight(eta,pt,year,syst):
+
+    if year == "2016":
+        muon_fr_hist = muon_2016_fr_hist
+    elif year == "2017":    
+        muon_fr_hist = muon_2017_fr_hist
+    elif year == "2018":    
+        muon_fr_hist = muon_2018_fr_hist
+    else:
+        assert(0)
 
     myeta  = min(abs(eta),2.4999)
     #mypt   = min(pt,69.999)
@@ -29,6 +50,15 @@ def fake_muon_weight(eta,pt,year,syst):
 
 def fake_electron_weight(eta,pt,year,syst):
     
+    if year == "2016":
+        electron_fr_hist = electron_2016_fr_hist
+    elif year == "2017":    
+        electron_fr_hist = electron_2017_fr_hist
+    elif year == "2018":    
+        electron_fr_hist = electron_2018_fr_hist
+    else:
+        assert(0)
+
     myeta  = min(abs(eta),2.4999)
     mypt   = min(pt,44.999)
 
