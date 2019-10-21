@@ -517,5 +517,3 @@ pprint(fake_event_weights)
 json.dump(fake_event_weights,open("fake_photon_event_weights_data.txt","w"))
 
 json.dump(fake_fractions,open("fake_photon_fractions_data.txt","w"))
-
-assert(0)
