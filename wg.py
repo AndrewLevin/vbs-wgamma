@@ -6,7 +6,7 @@ use_wjets_mc_for_fake_photon = False
 metlow = 0
 methigh = 1000000
 
-puppimetlow = 60
+puppimetlow = 40
 puppimethigh = 1000000
 
 njets40min = 0
@@ -96,12 +96,21 @@ elif options.year == "run2":
 else:
     assert(0)
 
+den_pho_sel = 4
+
 sieie_cut_2016_barrel = 0.01022
 sieie_cut_2016_endcap = 0.03001
 sieie_cut_2017_barrel = 0.01015
 sieie_cut_2017_endcap = 0.0272
 sieie_cut_2018_barrel = 0.01015
 sieie_cut_2018_endcap = 0.0272
+
+chiso_cut_2016_barrel = 1.416
+chiso_cut_2016_endcap = 1.012
+chiso_cut_2017_barrel = 1.141
+chiso_cut_2017_endcap = 1.051
+chiso_cut_2018_barrel = 1.141
+chiso_cut_2018_endcap = 1.051
 
 if options.lep == "muon":
     lepton_name = "muon"
@@ -301,13 +310,13 @@ def getXaxisLabel(varname):
     elif varname == "detalg":
         return "#Delta #eta(l,g)"
     elif varname == "dphilmet":
-        return "#Delta #phi(l,MET)"
+        return "#Delta#phi(l,MET)"
     elif varname == "corrdphilmet":
-        return "corrected #Delta #phi(l,MET)"
+        return "corrected #Delta#phi(l,MET)"
     elif varname == "drlg":
         return "#Delta R(l,g)"
     elif varname == "dphilg":
-        return "#Delta #phi(l,g)"
+        return "#Delta#phi(l,g)"
     elif varname == "npvs":
         return "number of PVs"
     elif varname == "mt":
@@ -347,17 +356,25 @@ def pass_selection(tree, year, barrel_or_endcap_or_both = "both", fake_lepton = 
     if year == "2016":
         sieie_cut_barrel = sieie_cut_2016_barrel
         sieie_cut_endcap = sieie_cut_2016_endcap
+        chiso_cut_barrel = chiso_cut_2016_barrel
+        chiso_cut_endcap = chiso_cut_2016_endcap
     elif year == "2017":
         sieie_cut_barrel = sieie_cut_2017_barrel
         sieie_cut_endcap = sieie_cut_2017_endcap
+        chiso_cut_barrel = chiso_cut_2017_barrel
+        chiso_cut_endcap = chiso_cut_2017_endcap
     elif year == "2018":
-        sieie_cut_barrel = sieie_cut_2017_barrel
-        sieie_cut_endcap = sieie_cut_2017_endcap
+        sieie_cut_barrel = sieie_cut_2018_barrel
+        sieie_cut_endcap = sieie_cut_2018_endcap
+        chiso_cut_barrel = chiso_cut_2018_barrel
+        chiso_cut_endcap = chiso_cut_2018_endcap
     else:
         assert(0)
 
     fake_photon_sieie_cut_barrel = sieie_cut_barrel*1.75
     fake_photon_sieie_cut_endcap = sieie_cut_endcap*1.75
+    fake_photon_chiso_cut_barrel = chiso_cut_barrel*1000
+    fake_photon_chiso_cut_endcap = chiso_cut_endcap*1000
 
     if barrel_or_endcap_or_both == "both":
         pass_photon_eta = True    
@@ -475,9 +492,11 @@ def pass_selection(tree, year, barrel_or_endcap_or_both = "both", fake_lepton = 
     if fake_photon:    
         if abs(tree.photon_eta) < 1.5:
             fake_photon_sieie_cut = fake_photon_sieie_cut_barrel
+            fake_photon_chiso_cut = fake_photon_chiso_cut_barrel
         else:    
             fake_photon_sieie_cut = fake_photon_sieie_cut_endcap
-        if tree.photon_selection == 4 and tree.photon_sieie < fake_photon_sieie_cut:
+            fake_photon_chiso_cut = fake_photon_chiso_cut_endcap
+        if tree.photon_selection == den_pho_sel and tree.photon_sieie < fake_photon_sieie_cut and tree.photon_pfRelIso03_chg < fake_photon_chiso_cut:
             pass_photon_selection = True
         else:
             pass_photon_selection = False
@@ -502,7 +521,7 @@ def pass_selection(tree, year, barrel_or_endcap_or_both = "both", fake_lepton = 
 #    if tree.photon_pt < 25 and tree.lepton_pt > 35:
 #    if tree.photon_pt > 20 and tree.photon_pt < 30 and tree.lepton_pt > 25 and getVariable("dphilg",tree) < 1*pi/16 and getVariable("dphilg",tree) > 0*pi/16:
 #    if tree.photon_pt > 25 and tree.lepton_pt > 30 and tree.photon_pt < 50:
-    if tree.photon_pt > 30 and tree.photon_pt < 1000000 and ((tree.lepton_pt > 30 and (year == "2016" or abs(tree.lepton_pdg_id) == 13))) or (tree.lepton_pt > 35 and ((year == "2017" or year == "2018") and abs(tree.lepton_pdg_id) == 11)): 
+    if tree.photon_pt > 25 and tree.photon_pt < 1000000 and (abs(tree.lepton_pdg_id) == 11 and ((tree.lepton_pt > 30 and year == "2016") or (tree.lepton_pt > 35 and (year == "2017" or year == "2018")))) or (abs(tree.lepton_pdg_id) == 13 and tree.lepton_pt > 25):
         pass_photon_pt =True
     else:
         pass_photon_pt = False
@@ -1258,7 +1277,7 @@ for year in years:
 #    if not pass_json(data_events_tree.run,data_events_tree.lumi):
 #        continue
 
-        if closure_test and data_events_tree.photon_gen_matching != 0 :
+        if closure_test and (data_events_tree.photon_gen_matching == 6 or data_events_tree.photon_gen_matching == 5 or data_events_tree.photon_gen_matching == 4 or data_events_tree.photon_gen_matching == 1):
             continue
     
         if getVariable("photon_recoil",data_events_tree) > 1000000 or getVariable("photon_recoil",data_events_tree) < -1000000:
@@ -1850,25 +1869,34 @@ for i in range(len(variables)):
     for label in labels.keys():
         if labels[label]["color"] == None:
             continue
+        if closure_test and label == "wg+jets":
+            continue
+
         hsum.Add(labels[label]["hists"][i])
         hstack.Add(labels[label]["hists"][i])
 
-    if lepton_name == "electron" or lepton_name == "both": 
+    if not closure_test and (lepton_name == "electron" or lepton_name == "both"): 
+        if closure_test and label == "wg+jets":
+            continue
         hsum.Add(e_to_p["hists"][i])
         hstack.Add(e_to_p["hists"][i])
 
-    hsum.Add(e_to_p_non_res["hists"][i])
-    hstack.Add(e_to_p_non_res["hists"][i])
+    if not closure_test:    
+        hsum.Add(e_to_p_non_res["hists"][i])
+        hstack.Add(e_to_p_non_res["hists"][i])
 
     if data_driven:
-        hsum.Add(fake_lepton["hists"][i])
         hsum.Add(fake_photon["hists"][i])
-        hsum.Add(double_fake["hists"][i])
+        if not closure_test:
+            hsum.Add(fake_lepton["hists"][i])
+            hsum.Add(double_fake["hists"][i])
+
 
     if data_driven:
-        hstack.Add(fake_lepton["hists"][i])
         hstack.Add(fake_photon["hists"][i])
-        hstack.Add(double_fake["hists"][i])
+        if not closure_test:
+            hstack.Add(fake_lepton["hists"][i])
+            hstack.Add(double_fake["hists"][i])
 
 
     if data["hists"][i].GetMaximum() < hsum.GetMaximum():
@@ -1909,33 +1937,42 @@ for i in range(len(variables)):
 #wpwpjjewk.Draw("same")
 
     j=0
-    draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,data["hists"][i],"data","lp")
+    if closure_test:
+        draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,data["hists"][i],"w+jets","lp")
+    else:    
+        draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,data["hists"][i],"data","lp")
 
     if data_driven :
         j=j+1
-        if lepton_name == "muon":
-            draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,fake_lepton["hists"][i],"fake muon","f")
-        elif lepton_name == "electron":
-            draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,fake_lepton["hists"][i],"fake electron","f")
-        elif lepton_name == "both":
-            draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,fake_lepton["hists"][i],"fake lepton","f")
-        else:
-            assert(0)
-        j=j+1
         draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,fake_photon["hists"][i],"fake photon","f")
-        j=j+1
-        draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,double_fake["hists"][i],"double fake","f")
+        if not closure_test:
+            j=j+1
+            if lepton_name == "muon":
+                draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,fake_lepton["hists"][i],"fake muon","f")
+            elif lepton_name == "electron":
+                draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,fake_lepton["hists"][i],"fake electron","f")
+            elif lepton_name == "both":
+                draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,fake_lepton["hists"][i],"fake lepton","f")
+            else:
+                assert(0)
+            j=j+1
+            draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,double_fake["hists"][i],"double fake","f")
 
-    if lepton_name == "electron" or lepton_name == "both": 
+    if (lepton_name == "electron" or lepton_name == "both") and not closure_test: 
         j=j+1
         draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,e_to_p["hists"][i],"e->#gamma","f")
 
-    j=j+1
-    draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,e_to_p_non_res["hists"][i],"e->#gamma non-res","f")
+    if not closure_test:
+        j=j+1
+        draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,e_to_p_non_res["hists"][i],"e->#gamma non-res","f")
 
     for label in labels.keys():
         if labels[label]["color"] == None:
             continue
+
+        if closure_test and label == "wg+jets":
+            continue
+
         j=j+1    
 #        draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,labels[label]["hists"][i],label,"f")
         if len(label) > 10:
