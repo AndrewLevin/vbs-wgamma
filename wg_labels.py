@@ -11,26 +11,28 @@ labels = {
                 [
                 { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019/ttwjets.root", "xs" : 0.2001, "non_fsr" : True, "e_to_p_non_res" : True, "fsr" : True, "e_to_p": True , "e_to_p_for_fake" : True},
                 { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019/stschanneljets.root", "xs" : 6.35, "non_fsr" : True, "e_to_p_non_res" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True},
-                { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019/sttchanneltopjets.root", "xs" : 136.02, "non_fsr" : True, "e_to_p_non_res" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True},             
-                { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019/sttchannelantitopjets.root", "xs" : 80.95, "non_fsr" : True, "e_to_p_non_res" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True },           
+                { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019/sttchanneltopjets.root", "xs" : 136.02, "non_fsr" : False, "e_to_p_non_res" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True},             
+                { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019/sttchannelantitopjets.root", "xs" : 80.95, "non_fsr" : False, "e_to_p_non_res" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True },           
                 { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019/sttwtopjets.root", "xs" : 71.7/2, "non_fsr" : True, "e_to_p_non_res" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True },
                 { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019/sttwantitopjets.root", "xs" : 71.7/2, "non_fsr" : True, "e_to_p_non_res" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True },
                 { "filename":  '/afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019/ttsemijets.root', 'xs' : 365.4, "non_fsr" : False, "e_to_p_non_res" : True, "e_to_p" : True, "fsr" : True,  "e_to_p_for_fake" : True },
                 { "filename":  '/afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019/tt2l2nujets.root', 'xs' : 88.28, "non_fsr" : False, "e_to_p_non_res" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True },
-                {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019/ttgjets.root", "xs" : 3.795, "non_fsr" : True, "e_to_p_non_res" : True, "e_to_p" : True , "fsr" : True, "e_to_p_for_fake" : True} 
+                {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019/ttgjets.root", "xs" : 3.795, "non_fsr" : True, "e_to_p_non_res" : True, "e_to_p" : True , "fsr" : True, "e_to_p_for_fake" : True}, 
+                {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019/tgjets.root", "xs" : 0.98882289, "non_fsr" : True, "e_to_p_non_res" : True, "e_to_p" : True , "fsr" : True, "e_to_p_for_fake" : True} #tgjets cross section * branching ratio to leptons = 2.97 * 0.332937 = 0.98882289  
                 
                 ],
             "2017":
                 [
                 { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2017/1June2019/ttwjets.root", "xs" : 0.2001, "non_fsr" : True, "e_to_p_non_res" : True, "fsr" : True, "e_to_p": True , "e_to_p_for_fake" : True},
                 { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2017/1June2019/stschanneljets.root", "xs" : 6.35, "non_fsr" : True, "e_to_p_non_res" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True},
-                { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2017/1June2019/sttchanneltopjets.root", "xs" : 136.02, "non_fsr" : True, "e_to_p_non_res" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True},             
-                { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2017/1June2019/sttchannelantitopjets.root", "xs" : 80.95, "non_fsr" : True, "e_to_p_non_res" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True },           
+                { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2017/1June2019/sttchanneltopjets.root", "xs" : 136.02, "non_fsr" : False, "e_to_p_non_res" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True},             
+                { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2017/1June2019/sttchannelantitopjets.root", "xs" : 80.95, "non_fsr" : False, "e_to_p_non_res" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True },           
                 { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2017/1June2019/sttwtopjets.root", "xs" : 71.7/2, "non_fsr" : True, "e_to_p_non_res" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True },
                 { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2017/1June2019/sttwantitopjets.root", "xs" : 71.7/2, "non_fsr" : True, "e_to_p_non_res" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True },
                 { "filename":  '/afs/cern.ch/work/a/amlevin/data/wg/2017/1June2019/ttsemijets.root', 'xs' : 365.4, "non_fsr" : False, "e_to_p_non_res" : True, "e_to_p" : True, "fsr" : True,  "e_to_p_for_fake" : True },
                 { "filename":  '/afs/cern.ch/work/a/amlevin/data/wg/2017/1June2019/tt2l2nujets.root', 'xs' : 88.28, "non_fsr" : False, "e_to_p_non_res" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True },
-                {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2017/1June2019/ttgjets.root", "xs" : 3.795, "non_fsr" : True, "e_to_p_non_res" : True, "e_to_p" : True , "fsr" : True, "e_to_p_for_fake" : True} 
+                {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2017/1June2019/ttgjets.root", "xs" : 3.795, "non_fsr" : True, "e_to_p_non_res" : True, "e_to_p" : True , "fsr" : True, "e_to_p_for_fake" : True} ,
+                {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2017/1June2019/tgjets.root", "xs" : 0.98882289, "non_fsr" : True, "e_to_p_non_res" : True, "e_to_p" : True , "fsr" : True, "e_to_p_for_fake" : True} 
 
                 
                 ],
@@ -38,13 +40,14 @@ labels = {
                 [
                 { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2018/1June2019/ttwjets.root", "xs" : 0.2001, "non_fsr" : True, "e_to_p_non_res" : True, "fsr" : True, "e_to_p": True , "e_to_p_for_fake" : True},
                 { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2018/1June2019/stschanneljets.root", "xs" : 6.35, "non_fsr" : True, "e_to_p_non_res" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True},
-                { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2018/1June2019/sttchanneltopjets.root", "xs" : 136.02, "non_fsr" : True, "e_to_p_non_res" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True},             
-                { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2018/1June2019/sttchannelantitopjets.root", "xs" : 80.95, "non_fsr" : True, "e_to_p_non_res" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True },           
+                { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2018/1June2019/sttchanneltopjets.root", "xs" : 136.02, "non_fsr" : False, "e_to_p_non_res" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True},             
+                { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2018/1June2019/sttchannelantitopjets.root", "xs" : 80.95, "non_fsr" : False, "e_to_p_non_res" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True },           
                 { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2018/1June2019/sttwtopjets.root", "xs" : 71.7/2, "non_fsr" : True, "e_to_p_non_res" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True },
                 { "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2018/1June2019/sttwantitopjets.root", "xs" : 71.7/2, "non_fsr" : True, "e_to_p_non_res" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True },
                 { "filename":  '/afs/cern.ch/work/a/amlevin/data/wg/2018/1June2019/ttsemijets.root', 'xs' : 365.4, "non_fsr" : False, "e_to_p_non_res" : True, "e_to_p" : True, "fsr" : True,  "e_to_p_for_fake" : True },
                 { "filename":  '/afs/cern.ch/work/a/amlevin/data/wg/2018/1June2019/tt2l2nujets.root', 'xs' : 88.28, "non_fsr" : False, "e_to_p_non_res" : True, "e_to_p" : True, "fsr" : True, "e_to_p_for_fake" : True },
-                {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2018/1June2019/ttgjets.root", "xs" : 3.795, "non_fsr" : True, "e_to_p_non_res" : True, "e_to_p" : True , "fsr" : True, "e_to_p_for_fake" : True} 
+                {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2018/1June2019/ttgjets.root", "xs" : 3.795, "non_fsr" : True, "e_to_p_non_res" : True, "e_to_p" : True , "fsr" : True, "e_to_p_for_fake" : True} ,
+                {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2018/1June2019/tgjets.root", "xs" : 0.98882289, "non_fsr" : True, "e_to_p_non_res" : True, "e_to_p" : True , "fsr" : True, "e_to_p_for_fake" : True} 
                 
                 ]
             }

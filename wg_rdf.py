@@ -1016,7 +1016,7 @@ for year in years:
         if year == "2016":
             rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25")
         elif year == "2017":
-            rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25")
+            rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 30 && lepton_pt > 25")
         elif year == "2018":
             rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25")
         else:
@@ -1034,7 +1034,7 @@ for year in years:
         if year == "2016":
             rinterface = rdf.Filter("((puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25) || (puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 30 && !(mlg > 60.0 && mlg < 120.0)))")
         elif year == "2017":
-            rinterface = rdf.Filter("((puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25) || (puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35 && !(mlg > 60.0 && mlg < 120.0)))")
+            rinterface = rdf.Filter("((puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 30) || (puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35 && !(mlg > 60.0 && mlg < 120.0)))")
         elif year == "2018":
             rinterface = rdf.Filter("((puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25) || (puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35 && !(mlg > 60.0 && mlg < 120.0)))")
         else:
@@ -1115,16 +1115,15 @@ for year in years:
             photon_gen_matching_for_fake_cutstring = "("
             photon_gen_matching_cutstring = "("
             if sample["fsr"]:
-#                photon_gen_matching_for_fake_cutstring+="photon_gen_matching == 4 || photon_gen_matching == 5"
                 photon_gen_matching_for_fake_cutstring+="photon_gen_matching == 4"
-                photon_gen_matching_cutstring+="photon_gen_matching == 4 || photon_gen_matching == 5"
+                photon_gen_matching_cutstring+="photon_gen_matching == 4"
             if sample["non_fsr"]:  
                 if photon_gen_matching_for_fake_cutstring != "(":
                     photon_gen_matching_for_fake_cutstring += " || "
                 if photon_gen_matching_cutstring != "(":
                     photon_gen_matching_cutstring += " || "
-                photon_gen_matching_for_fake_cutstring+="photon_gen_matching == 6"
-                photon_gen_matching_cutstring+="photon_gen_matching == 6"
+                photon_gen_matching_for_fake_cutstring+="photon_gen_matching == 5 || photon_gen_matching == 6"
+                photon_gen_matching_cutstring+="photon_gen_matching == 5 || photon_gen_matching == 6"
             if sample["e_to_p_for_fake"]:
                 if photon_gen_matching_for_fake_cutstring != "(":
                     photon_gen_matching_for_fake_cutstring += " || "
@@ -1269,7 +1268,7 @@ for year in years:
                 rresultptrs_fake_lepton[i].Scale(-1)
                 fake_photon["hists"][i].Add(rresultptrs_fake_photon[i].GetValue())
                 fake_lepton["hists"][i].Add(rresultptrs_fake_lepton[i].GetValue())
-                #double_fake["hists"][i].Add(rresultptrs_double_fake[i].GetValue())
+                double_fake["hists"][i].Add(rresultptrs_double_fake[i].GetValue())
                 if sample["e_to_p"]:
                     e_to_p["hists"][i].Add(rresultptrs_e_to_p[i].GetValue())
 
