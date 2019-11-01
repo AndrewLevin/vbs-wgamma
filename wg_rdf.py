@@ -419,6 +419,7 @@ fake_lepton_stat_down = {}
 fake_lepton_stat_up = {}
 double_fake = {}
 double_fake_alt = {}
+double_fake_stat_up = {}
 e_to_p = {}
 e_to_p_non_res = {}
 ewdim6 = {}
@@ -433,6 +434,7 @@ fake_lepton_stat_down["hists"] = []
 fake_lepton_stat_up["hists"] = []
 double_fake["hists"] = []
 double_fake_alt["hists"] = []
+double_fake_stat_up["hists"] = []
 e_to_p_non_res["hists"] = []
 e_to_p["hists"] = []
 ewdim6["hists"] = []
@@ -441,9 +443,11 @@ for i in range(len(variables)):
     data["hists"].append(histogram_models[i].GetHistogram())
     fake_photon["hists"].append(histogram_models[i].GetHistogram())
     fake_photon_alt["hists"].append(histogram_models[i].GetHistogram())
+    fake_photon_stat_up["hists"].append(histogram_models[i].GetHistogram())
     fake_lepton["hists"].append(histogram_models[i].GetHistogram())
     double_fake["hists"].append(histogram_models[i].GetHistogram())
     double_fake_alt["hists"].append(histogram_models[i].GetHistogram())
+    double_fake_stat_up["hists"].append(histogram_models[i].GetHistogram())
     e_to_p_non_res["hists"].append(histogram_models[i].GetHistogram())
     e_to_p["hists"].append(histogram_models[i].GetHistogram())
     fake_signal_contamination["hists"].append(histogram_models[i].GetHistogram())
@@ -453,8 +457,11 @@ for i in range(len(variables)):
 for i in range(len(variables)):
     data["hists"][i].Sumw2()
     fake_lepton["hists"][i].Sumw2()
-    fake_photon["hists"][i].Sumw2()
+    fake_photon_alt["hists"][i].Sumw2()
+    fake_photon_stat_up["hists"][i].Sumw2()
     double_fake["hists"][i].Sumw2()
+    double_fake_alt["hists"][i].Sumw2()
+    double_fake_stat_up["hists"][i].Sumw2()
     e_to_p_non_res["hists"][i].Sumw2()
     e_to_p["hists"][i].Sumw2()
     ewdim6["hists"][i].Sumw2()
@@ -956,6 +963,8 @@ float get_fake_photon_weight(float eta, float pt, string year, int lepton_pdg_id
        }
     }
 
+
+
     if (use_alt) {
        if (year == "2016") {
           if (abs(eta) < 1.4442) {
@@ -1013,6 +1022,67 @@ float get_fake_photon_weight(float eta, float pt, string year, int lepton_pdg_id
           }
        }
     }
+
+
+
+    if (stat_err_up) {
+       if (year == "2016") {
+          if (abs(eta) < 1.4442) {
+             if (pt < 25 and pt > 20) fr += 0.003726696434316919;
+             else if (pt < 30 and pt > 25) fr += 0.008007838249636558;
+             else if (pt < 40 and pt > 30) fr += 0.008433979158612695;
+             else if (pt < 50 and pt > 40) fr += 0.010859005689809001;
+             else if (pt > 50) fr += 0.006921188984346714;
+             else assert(0); 
+    
+          }
+          else if (1.566 < abs(eta) && abs(eta) < 2.5) {
+             if (pt < 25 and pt > 20) fr += 0.008385538724853942;
+             else if (pt < 30 and pt > 25) fr += 0.01644968136974182;
+             else if (pt < 40 and pt > 30) fr += 0.01802650090283417;
+             else if (pt < 50 and pt > 40) fr += 0.029514264317711723;
+             else if (pt > 50) fr += 0.03290098149767282;
+             else assert(0); 
+          }
+       }
+       else if (year == "2017") {
+          if (abs(eta) < 1.4442) {
+             if (pt < 25 and pt > 20) fr += 0.003385092552323846;
+             else if (pt < 30 and pt > 25) fr += 0.007066861293194911;
+             else if (pt < 40 and pt > 30) fr += 0.008210431530362772;
+             else if (pt < 50 and pt > 40) fr += 0.011112675359727656;
+             else if (pt > 50) fr += 0.008149800513402552;
+             else assert(0); 
+          }
+          else if (1.566 < abs(eta) && abs(eta) < 2.5) {
+             if (pt < 25 and pt > 20) fr += 0.003526768130379223;
+             else if (pt < 30 and pt > 25) fr += 0.006543586882338852;
+             else if (pt < 40 and pt > 30) fr += 0.007742888937472314;
+             else if (pt < 50 and pt > 40) fr += 0.014797541119452121;
+             else if (pt > 50) fr += 0.01889769251249905;
+             else assert(0); 
+          }
+       }
+       else if (year == "2018") {
+          if (abs(eta) < 1.4442) {
+             if (pt < 25 and pt > 20) fr += 0.003045437293190333;
+             else if (pt < 30 and pt > 25) fr += 0.006371299316978814;
+             else if (pt < 40 and pt > 30) fr += 0.0072871968596617325;
+             else if (pt < 50 and pt > 40) fr += 0.010243263327547105;
+             else if (pt > 50) fr += 0.007432642816465921;
+             else assert(0); 
+          }
+          else if (1.566 < abs(eta) && abs(eta) < 2.5) {
+             if (pt < 25 and pt > 20) fr += 0.0025408616349431017;
+             else if (pt < 30 and pt > 25) fr += 0.004803076104518955;
+             else if (pt < 40 and pt > 30) fr += 0.0058370202697056684;
+             else if (pt < 50 and pt > 40) fr += 0.010347864628364374;
+             else if (pt > 50) fr += 0.014355530744851597;
+             else assert(0); 
+          }
+       }
+    }
+
 
     return fr;
 
@@ -1112,8 +1182,10 @@ for year in years:
     rinterface = rinterface.Define("fake_lepton_weight","photon_selection == 0 && is_lepton_tight == 0 ? get_fake_lepton_weight(lepton_eta,lepton_pt,\""+year+"\",lepton_pdg_id) : 0")
     rinterface = rinterface.Define("fake_photon_weight","photon_selection == 4 && "+str(fake_photon_sieie_cut_cutstring)+" && is_lepton_tight == 1 ? get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id) : 0")
     rinterface = rinterface.Define("fake_photon_alt_weight","photon_selection == 4 && "+str(fake_photon_sieie_cut_cutstring)+" && is_lepton_tight == 1 ? get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,true) : 0")
+    rinterface = rinterface.Define("fake_photon_stat_up_weight","photon_selection == 4 && "+str(fake_photon_sieie_cut_cutstring)+" && is_lepton_tight == 1 ? get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,false,true) : 0")
     rinterface = rinterface.Define("double_fake_weight","photon_selection == 4 && "+str(fake_photon_sieie_cut_cutstring)+" && is_lepton_tight == 0 ? get_fake_lepton_weight(lepton_eta,lepton_pt,\""+year+"\",lepton_pdg_id)*get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id) : 0") 
     rinterface = rinterface.Define("double_fake_alt_weight","photon_selection == 4 && "+str(fake_photon_sieie_cut_cutstring)+" && is_lepton_tight == 0 ? get_fake_lepton_weight(lepton_eta,lepton_pt,\""+year+"\",lepton_pdg_id)*get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,true) : 0") 
+    rinterface = rinterface.Define("double_fake_stat_up_weight","photon_selection == 4 && "+str(fake_photon_sieie_cut_cutstring)+" && is_lepton_tight == 0 ? get_fake_lepton_weight(lepton_eta,lepton_pt,\""+year+"\",lepton_pdg_id)*get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,false,true) : 0") 
 
     for variable_definition in variable_definitions:
             rinterface = rinterface.Define(variable_definition[0],variable_definition[1])
@@ -1121,25 +1193,31 @@ for year in years:
     rresultptrs = []    
     rresultptrs_fake_photon = []    
     rresultptrs_fake_photon_alt = []    
+    rresultptrs_fake_photon_stat_up = []    
     rresultptrs_fake_lepton = []    
     rresultptrs_double_fake = []    
     rresultptrs_double_fake_alt = []    
+    rresultptrs_double_fake_stat_up = []    
 
     for i in range(len(variables)):
         rresultptrs.append(rinterface.Histo1D(histogram_models[i],variables[i],"weight"))
         rresultptrs_fake_photon.append(rinterface.Histo1D(histogram_models[i],variables[i],"fake_photon_weight"))
         rresultptrs_fake_photon_alt.append(rinterface.Histo1D(histogram_models[i],variables[i],"fake_photon_alt_weight"))
+        rresultptrs_fake_photon_stat_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"fake_photon_stat_up_weight"))
         rresultptrs_fake_lepton.append(rinterface.Histo1D(histogram_models[i],variables[i],"fake_lepton_weight"))
         rresultptrs_double_fake.append(rinterface.Histo1D(histogram_models[i],variables[i],"double_fake_weight"))
         rresultptrs_double_fake_alt.append(rinterface.Histo1D(histogram_models[i],variables[i],"double_fake_alt_weight"))
+        rresultptrs_double_fake_stat_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"double_fake_stat_up_weight"))
 
     for i in range(len(variables)):
         data["hists"][i].Add(rresultptrs[i].GetValue())
         fake_photon["hists"][i].Add(rresultptrs_fake_photon[i].GetValue())
         fake_photon_alt["hists"][i].Add(rresultptrs_fake_photon_alt[i].GetValue())
+        fake_photon_stat_up["hists"][i].Add(rresultptrs_fake_photon_stat_up[i].GetValue())
         fake_lepton["hists"][i].Add(rresultptrs_fake_lepton[i].GetValue())
         double_fake["hists"][i].Add(rresultptrs_double_fake[i].GetValue())
         double_fake_alt["hists"][i].Add(rresultptrs_double_fake_alt[i].GetValue())
+        double_fake_stat_up["hists"][i].Add(rresultptrs_double_fake_stat_up[i].GetValue())
         rresultptrs_double_fake[i].GetPtr().Scale(-1)
         rresultptrs_double_fake_alt[i].GetPtr().Scale(-1)
         fake_photon["hists"][i].Add(rresultptrs_double_fake[i].GetValue())
@@ -1282,14 +1360,18 @@ for year in years:
                 rinterface = rinterface.Define("fake_lepton_weight","photon_selection == 0 && is_lepton_tight == 0 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_fake_lepton_weight(lepton_eta,lepton_pt,\""+year+"\",lepton_pdg_id)*xs_weight*puWeight*PrefireWeight : 0")
                 rinterface = rinterface.Define("fake_photon_weight","photon_selection == 4 && "+str(fake_photon_sieie_cut_cutstring)+" && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id)*xs_weight*puWeight*PrefireWeight : 0")
                 rinterface = rinterface.Define("fake_photon_alt_weight","photon_selection == 4 && "+str(fake_photon_sieie_cut_cutstring)+" && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,true)*xs_weight*puWeight*PrefireWeight : 0")
+                rinterface = rinterface.Define("fake_photon_stat_up_weight","photon_selection == 4 && "+str(fake_photon_sieie_cut_cutstring)+" && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,false,true)*xs_weight*puWeight*PrefireWeight : 0")
                 rinterface = rinterface.Define("double_fake_weight","photon_selection == 4 && "+str(fake_photon_sieie_cut_cutstring)+" && is_lepton_tight == 0 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_fake_lepton_weight(lepton_eta,lepton_pt,\""+year+"\",lepton_pdg_id)*get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id)*xs_weight*puWeight*PrefireWeight : 0") 
                 rinterface = rinterface.Define("double_fake_alt_weight","photon_selection == 4 && "+str(fake_photon_sieie_cut_cutstring)+" && is_lepton_tight == 0 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_fake_lepton_weight(lepton_eta,lepton_pt,\""+year+"\",lepton_pdg_id)*get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,true)*xs_weight*puWeight*PrefireWeight : 0") 
+                rinterface = rinterface.Define("double_fake_stat_up_weight","photon_selection == 4 && "+str(fake_photon_sieie_cut_cutstring)+" && is_lepton_tight == 0 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_fake_lepton_weight(lepton_eta,lepton_pt,\""+year+"\",lepton_pdg_id)*get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,false,true)*xs_weight*puWeight*PrefireWeight : 0") 
             elif year == "2018"    :
                 rinterface = rinterface.Define("fake_lepton_weight","photon_selection == 0 && is_lepton_tight == 0 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_fake_lepton_weight(lepton_eta,lepton_pt,\""+year+"\",lepton_pdg_id)*xs_weight*puWeight : 0")
                 rinterface = rinterface.Define("fake_photon_weight","photon_selection == 4 && "+str(fake_photon_sieie_cut_cutstring)+" && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id)*xs_weight*puWeight : 0")
                 rinterface = rinterface.Define("fake_photon_alt_weight","photon_selection == 4 && "+str(fake_photon_sieie_cut_cutstring)+" && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,true)*xs_weight*puWeight : 0")
+                rinterface = rinterface.Define("fake_photon_stat_up_weight","photon_selection == 4 && "+str(fake_photon_sieie_cut_cutstring)+" && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,false,true)*xs_weight*puWeight : 0")
                 rinterface = rinterface.Define("double_fake_weight","photon_selection == 4 && "+str(fake_photon_sieie_cut_cutstring)+" && is_lepton_tight == 0 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_fake_lepton_weight(lepton_eta,lepton_pt,\""+year+"\",lepton_pdg_id)*get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id)*xs_weight*puWeight : 0") 
                 rinterface = rinterface.Define("double_fake_alt_weight","photon_selection == 4 && "+str(fake_photon_sieie_cut_cutstring)+" && is_lepton_tight == 0 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_fake_lepton_weight(lepton_eta,lepton_pt,\""+year+"\",lepton_pdg_id)*get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,true)*xs_weight*puWeight : 0") 
+                rinterface = rinterface.Define("double_fake_stat_up_weight","photon_selection == 4 && "+str(fake_photon_sieie_cut_cutstring)+" && is_lepton_tight == 0 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_fake_lepton_weight(lepton_eta,lepton_pt,\""+year+"\",lepton_pdg_id)*get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,false,true)*xs_weight*puWeight : 0") 
 
             if sample["e_to_p"]:
                 rinterface = rinterface.Define("e_to_p_weight","photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1 ? base_weight : 0")
@@ -1303,9 +1385,11 @@ for year in years:
             rresultptrs = []    
             rresultptrs_fake_photon = []    
             rresultptrs_fake_photon_alt = []    
+            rresultptrs_fake_photon_stat_up = []    
             rresultptrs_fake_lepton = []    
             rresultptrs_double_fake = []    
             rresultptrs_double_fake_alt = []    
+            rresultptrs_double_fake_stat_up = []    
             rresultptrs_pileup_up = []    
             rresultptrs_electron_id_sf_up = []    
             rresultptrs_electron_reco_sf_up = []    
@@ -1328,9 +1412,11 @@ for year in years:
                     rresultptrs_photon_id_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"photon_id_sf_up_weight"))
                 rresultptrs_fake_photon.append(rinterface.Histo1D(histogram_models[i],variables[i],"fake_photon_weight"))
                 rresultptrs_fake_photon_alt.append(rinterface.Histo1D(histogram_models[i],variables[i],"fake_photon_alt_weight"))
+                rresultptrs_fake_photon_stat_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"fake_photon_stat_up_weight"))
                 rresultptrs_fake_lepton.append(rinterface.Histo1D(histogram_models[i],variables[i],"fake_lepton_weight"))
                 rresultptrs_double_fake.append(rinterface.Histo1D(histogram_models[i],variables[i],"double_fake_weight"))
                 rresultptrs_double_fake_alt.append(rinterface.Histo1D(histogram_models[i],variables[i],"double_fake_alt_weight"))
+                rresultptrs_double_fake_stat_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"double_fake_stat_up_weight"))
                 if sample["e_to_p"]:
                     rresultptrs_e_to_p.append(rinterface.Histo1D(histogram_models[i],variables[i],"e_to_p_weight"))
                 if sample["e_to_p_non_res"]:
@@ -1349,6 +1435,9 @@ for year in years:
             for i in range(len(variables)):
                 rresultptrs_fake_photon[i].Scale(-1)
                 rresultptrs_fake_lepton[i].Scale(-1)
+                rresultptrs_fake_photon_alt[i].Scale(-1)
+                rresultptrs_fake_photon_stat_up[i].Scale(-1)
+
 
                 if label == "wg+jets":
                     fake_signal_contamination["hists"][i].Add(rresultptrs_fake_lepton[i].GetValue())
@@ -1357,9 +1446,11 @@ for year in years:
 
                 fake_photon["hists"][i].Add(rresultptrs_fake_photon[i].GetValue())
                 fake_photon_alt["hists"][i].Add(rresultptrs_fake_photon_alt[i].GetValue())
+                fake_photon_stat_up["hists"][i].Add(rresultptrs_fake_photon_stat_up[i].GetValue())
                 fake_lepton["hists"][i].Add(rresultptrs_fake_lepton[i].GetValue())
                 double_fake["hists"][i].Add(rresultptrs_double_fake[i].GetValue())
                 double_fake_alt["hists"][i].Add(rresultptrs_double_fake_alt[i].GetValue())
+                double_fake_stat_up["hists"][i].Add(rresultptrs_double_fake_stat_up[i].GetValue())
                 if sample["e_to_p"]:
                     e_to_p["hists"][i].Add(rresultptrs_e_to_p[i].GetValue())
 
@@ -2067,8 +2158,8 @@ print "n_signal = "+str(n_signal) + " +/- " + str(n_signal_error)
 double_fake["hists"][mlg_index].Print("all")
 fake_lepton["hists"][mlg_index].Print("all")
 fake_photon["hists"][mlg_index].Print("all")
-#fake_photon_alt["hists"][mlg_index].Print("all")
-#fake_photon_stat_up["hists"][mlg_index].Print("all")
+fake_photon_alt["hists"][mlg_index].Print("all")
+fake_photon_stat_up["hists"][mlg_index].Print("all")
 
 if lepton_name == "muon":
 
