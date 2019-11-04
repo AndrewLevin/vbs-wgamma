@@ -15,6 +15,10 @@ fake_fractions = {}
 
 fake_event_weights = {}
 
+fake_fractions["both_barrel"] = []
+
+fake_fractions["both_endcap"] = []
+
 fake_fractions["muon_barrel"] = []
 
 fake_fractions["muon_endcap"] = []
@@ -22,6 +26,10 @@ fake_fractions["muon_endcap"] = []
 fake_fractions["electron_barrel"] = []
 
 fake_fractions["electron_endcap"] = []
+
+fake_event_weights["both_barrel"] = []
+
+fake_event_weights["both_endcap"] = []
 
 fake_event_weights["muon_barrel"] = []
 
@@ -33,8 +41,9 @@ fake_event_weights["electron_endcap"] = []
 
 #lepton_names =["muon","electron"]
 #lepton_names =["electron","muon"]
-lepton_names =["muon"]
+#lepton_names =["muon"]
 #lepton_names =["electron"]
+lepton_names =["both"]
 
 photon1_eta_ranges = ["abs(photon1_eta) < 1.4442","abs(photon1_eta) > 1.566 && abs(photon1_eta) < 2.5"]
 photon2_eta_ranges = ["abs(photon2_eta) < 1.4442","abs(photon2_eta) > 1.566 && abs(photon2_eta) < 2.5"]
@@ -132,24 +141,13 @@ max_chiso_endcap = chiso_endcap*1000
 njets_min = 0
 njets_max = 1000
 
-fit  = False
+fit  = True
 
 index = 0
 
-muon_mc_fake_photon_samples = []
-electron_mc_fake_photon_samples = []
+mc_fake_photon_samples = []
 
-muon_mc_fake_photon_samples = [{"file" : ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/wjets_fake_photon.root"),"xs" : 60430.0, "subtract" : False, "prompt" : False},{"file" : ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/wgjets_fake_photon.root"),"xs" : 178.6, "subtract" : False, "prompt" : True}]
-electron_mc_fake_photon_samples = [{"file" : ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/wjets_fake_photon.root"),"xs" : 60430.0, "subtract" : False, "prompt" : False},{"file" : ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/wgjets_fake_photon.root"),"xs" : 178.6, "subtract" : False, "prompt" : True}]
-
-#muon_mc_fake_photon_samples = [{"file" : ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/wjets_fake_photon.root"),"xs" : 60430.0, "subtract" : False, "prompt" : False}]
-#electron_mc_fake_photon_samples = [{"file" : ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/wjets_fake_photon.root"),"xs" : 60430.0, "subtract" : False, "prompt" : False}]
-
-#muon_mc_fake_photon_samples = [{"file" : ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/tmp/wjets_fake_photon.root"),"xs" : 60430.0, "subtract" : False, "prompt" : False}]
-#electron_mc_fake_photon_samples = [{"file" : ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/tmp/wjets_fake_photon.root"),"xs" : 60430.0, "subtract" : False, "prompt" : False}]
-
-#muon_mc_fake_photon_samples = [{"file" : ROOT.TFile.Open("/afs/cern.ch/user/a/amlevin/wg/2016/Merged_Skim.root"),"xs" : 60430.0, "subtract" : False, "prompt" : False}]
-#electron_mc_fake_photon_samples = [{"file" : ROOT.TFile.Open("/afs/cern.ch/user/a/amlevin/wg/2016/Merged_Skim.root"),"xs" : 60430.0, "subtract" : False, "prompt" : False}]
+#mc_fake_photon_samples = [{"file" : ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/wjets_fake_photon.root"),"xs" : 60430.0, "subtract" : False, "prompt" : False},{"file" : ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/wgjets_fake_photon.root"),"xs" : 178.6, "subtract" : False, "prompt" : True}]
 
 muon_data_fake_photon_samples = [{"file" : ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/single_muon_fake_photon.root")}]
 
@@ -160,8 +158,10 @@ elif year == "2018":
 else:
     assert(0)
 
-muon_data_fake_photon_samples = []
-electron_data_fake_photon_samples = []
+data_fake_photon_samples = [{"file" : ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/data_fake_photon.root")}]
+
+#muon_data_fake_photon_samples = []
+#electron_data_fake_photon_samples = []
 
 real_photon_template_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/real_photon_template.root")
 
@@ -173,16 +173,23 @@ lumi=35.9
 for lepton_name in lepton_names:
 
     if lepton_name == "muon":
-        lepton_pdg_id = "13"
+        lepton_pdg_id = "(lepton_pdg_id == 13)"
+    elif lepton_name == "electron":
+        lepton_pdg_id = "(lepton_pdg_id == 11)"
+    elif lepton_name == "both":    
+        lepton_pdg_id = "1"
     else:
-        lepton_pdg_id = "11"
+        assert(0)
 
     if lepton_name == "muon":
         fake_photon_data_samples = muon_data_fake_photon_samples
-        fake_photon_mc_samples = muon_mc_fake_photon_samples
-    else:
+        fake_photon_mc_samples = mc_fake_photon_samples
+    elif lepton_name == "electron":
         fake_photon_data_samples = electron_data_fake_photon_samples
-        fake_photon_mc_samples = electron_mc_fake_photon_samples
+        fake_photon_mc_samples = mc_fake_photon_samples
+    elif lepton_name == "both":
+        fake_photon_data_samples = data_fake_photon_samples
+        fake_photon_mc_samples = mc_fake_photon_samples
 
     for i in range(len(photon1_eta_ranges)):
         for j in range(len(photon1_pt_range_cutstrings)):
@@ -225,7 +232,7 @@ for lepton_name in lepton_names:
             for k,fake_photon_data_sample in enumerate(fake_photon_data_samples):   
                 fake_photon_tree = fake_photon_data_sample["file"].Get("Events")
 
-                denominator+=fake_photon_tree.GetEntries(photon1_eta_range+ " && lepton_pdg_id == "+lepton_pdg_id + " && (photon1_selection == "+den_pho_sel+") && "+ photon1_pt_range_cutstring + " && pass_selection1" + " && " + photon1_recoil_cutstring + " && njets_fake >= "+ str(njets_min) + " && njets_fake <= "+str(njets_max) + " && photon1_sieie < "+str(max_sieie) + " && photon1_pfRelIso03_chg*photon1_pt < "+str(max_chiso)+ " && " + str(photon1_veto_signal_selection_cutstring))
+                denominator+=fake_photon_tree.GetEntries(photon1_eta_range+ " && "+lepton_pdg_id + " && (photon1_selection == "+den_pho_sel+") && "+ photon1_pt_range_cutstring + " && pass_selection1" + " && " + photon1_recoil_cutstring + " && njets_fake >= "+ str(njets_min) + " && njets_fake <= "+str(njets_max) + " && photon1_sieie < "+str(max_sieie) + " && photon1_pfRelIso03_chg*photon1_pt < "+str(max_chiso)+ " && " + str(photon1_veto_signal_selection_cutstring))
 
                 if fit:
                     total_hist_data = ROOT.TH1F("total_hist_data_sample"+str(k),"total_hist_data_sample"+str(k),n_bins,sieie_lower,sieie_upper)
@@ -234,16 +241,16 @@ for lepton_name in lepton_names:
                     fake_photon_template_hist_data = ROOT.TH1F("fake_photon_template_hist_data_sample"+str(k),"fake_photon_template_hist_data_sample"+str(k),n_bins,sieie_lower,sieie_upper)
                     fake_photon_template_hist_data.Sumw2()
 
-                    fake_photon_tree.Draw("photon1_sieie >> total_hist_data_sample"+str(k),photon1_eta_range+ " && lepton_pdg_id == "+lepton_pdg_id+" && (photon1_selection == 0 || photon1_selection == 4) && "+photon1_pt_range_cutstring + " && pass_selection1 && "+str(photon1_veto_signal_selection_cutstring) + " && " + photon1_recoil_cutstring + "&& njets_fake >= "+str(njets_min) + " && njets_fake_template <= "+str(njets_max))
+                    fake_photon_tree.Draw("photon1_sieie >> total_hist_data_sample"+str(k),photon1_eta_range+ " && "+lepton_pdg_id+" && (photon1_selection == 0 || photon1_selection == 4) && "+photon1_pt_range_cutstring + " && pass_selection1 && "+str(photon1_veto_signal_selection_cutstring) + " && " + photon1_recoil_cutstring + "&& njets_fake >= "+str(njets_min) + " && njets_fake_template <= "+str(njets_max))
 
-                    fake_photon_tree.Draw("photon2_sieie >> fake_photon_template_hist_data_sample"+str(k),photon2_eta_range + " && lepton_pdg_id == "+lepton_pdg_id+" && "+photon2_pt_range_cutstring + " && pass_selection2 && "+str(photon2_veto_signal_selection_cutstring)  + " && " + photon2_recoil_cutstring +" && njets_fake_template  >= "+str(njets_min) + " && njets_fake_template <= " + str(njets_max))
+                    fake_photon_tree.Draw("photon2_sieie >> fake_photon_template_hist_data_sample"+str(k),photon2_eta_range + " && "+lepton_pdg_id+" && "+photon2_pt_range_cutstring + " && pass_selection2 && "+str(photon2_veto_signal_selection_cutstring)  + " && " + photon2_recoil_cutstring +" && njets_fake_template  >= "+str(njets_min) + " && njets_fake_template <= " + str(njets_max))
 
                     total_hist.Add(total_hist_data)
                     fake_photon_template_hist.Add(fake_photon_template_hist_data)
 
                 else:    
 
-                    numerator+=fake_photon_tree.GetEntries(photon1_eta_range+ " && lepton_pdg_id == "+lepton_pdg_id + " && (photon1_selection == 0) && "+ photon1_pt_range_cutstring + " && pass_selection1" + " && " + photon1_recoil_cutstring + " && njets_fake >= "+ str(njets_min) + " && njets_fake <= "+str(njets_max)+ " && " + str(photon1_veto_signal_selection_cutstring))
+                    numerator+=fake_photon_tree.GetEntries(photon1_eta_range+ " && "+lepton_pdg_id+ " && (photon1_selection == 0) && "+ photon1_pt_range_cutstring + " && pass_selection1" + " && " + photon1_recoil_cutstring + " && njets_fake >= "+ str(njets_min) + " && njets_fake <= "+str(njets_max)+ " && " + str(photon1_veto_signal_selection_cutstring))
                 
 
             for k,fake_photon_mc_sample in enumerate(fake_photon_mc_samples):   
@@ -263,8 +270,8 @@ for lepton_name in lepton_names:
 #                    photon1_gen_matching_cutstring = "photon1_gen_matching_old == 0"
 #                    photon2_gen_matching_cutstring = "photon2_gen_matching_old == 0"
 
-                denominator+=fake_photon_tree.GetEntries(photon1_eta_range+ " && lepton_pdg_id == "+lepton_pdg_id + " && (photon1_selection == "+den_pho_sel+") && "+ photon1_pt_range_cutstring + " && pass_selection1" + " && " + photon1_recoil_cutstring + " && njets_fake >= "+ str(njets_min) + " && njets_fake <= "+str(njets_max) + " && photon1_sieie < "+str(max_sieie) + " && photon1_pfRelIso03_chg*photon1_pt < "+str(max_chiso) + " && gen_weight > 0 && " + photon1_gen_matching_cutstring+ " && " + str(photon1_veto_signal_selection_cutstring))*fake_photon_mc_sample["xs"]*1000*lumi/fake_photon_mc_sample["file"].Get("nEventsGenWeighted").GetBinContent(1)
-                denominator-=fake_photon_tree.GetEntries(photon1_eta_range+ " && lepton_pdg_id == "+lepton_pdg_id + " && (photon1_selection == "+den_pho_sel+") && "+ photon1_pt_range_cutstring + " && pass_selection1" + " && " + photon1_recoil_cutstring + " && njets_fake >= "+ str(njets_min) + " && njets_fake <= "+str(njets_max) + " && photon1_sieie < "+str(max_sieie) + " && photon1_pfRelIso03_chg*photon1_pt < "+str(max_chiso) + " && gen_weight < 0 && "  + photon1_gen_matching_cutstring + " && " + str(photon1_veto_signal_selection_cutstring))*fake_photon_mc_sample["xs"]*1000*lumi/fake_photon_mc_sample["file"].Get("nEventsGenWeighted").GetBinContent(1)
+                denominator+=fake_photon_tree.GetEntries(photon1_eta_range+ " && "+lepton_pdg_id + " && (photon1_selection == "+den_pho_sel+") && "+ photon1_pt_range_cutstring + " && pass_selection1" + " && " + photon1_recoil_cutstring + " && njets_fake >= "+ str(njets_min) + " && njets_fake <= "+str(njets_max) + " && photon1_sieie < "+str(max_sieie) + " && photon1_pfRelIso03_chg*photon1_pt < "+str(max_chiso) + " && gen_weight > 0 && " + photon1_gen_matching_cutstring+ " && " + str(photon1_veto_signal_selection_cutstring))*fake_photon_mc_sample["xs"]*1000*lumi/fake_photon_mc_sample["file"].Get("nEventsGenWeighted").GetBinContent(1)
+                denominator-=fake_photon_tree.GetEntries(photon1_eta_range+ " && "+lepton_pdg_id + " && (photon1_selection == "+den_pho_sel+") && "+ photon1_pt_range_cutstring + " && pass_selection1" + " && " + photon1_recoil_cutstring + " && njets_fake >= "+ str(njets_min) + " && njets_fake <= "+str(njets_max) + " && photon1_sieie < "+str(max_sieie) + " && photon1_pfRelIso03_chg*photon1_pt < "+str(max_chiso) + " && gen_weight < 0 && "  + photon1_gen_matching_cutstring + " && " + str(photon1_veto_signal_selection_cutstring))*fake_photon_mc_sample["xs"]*1000*lumi/fake_photon_mc_sample["file"].Get("nEventsGenWeighted").GetBinContent(1)
 
                 if fit:    
                     total_hist_pos = ROOT.TH1F("total_hist_pos_sample"+str(k),"total_hist_pos_sample"+str(k),n_bins,sieie_lower,sieie_upper)
@@ -272,8 +279,8 @@ for lepton_name in lepton_names:
                     total_hist_pos.Sumw2()
                     total_hist_neg.Sumw2()
 
-                    fake_photon_tree.Draw("photon1_sieie >> total_hist_pos_sample"+str(k),photon1_eta_range+ " && lepton_pdg_id == "+lepton_pdg_id+" && (photon1_selection == 0 || photon1_selection == 4) && "+photon1_pt_range_cutstring + " && pass_selection1 && "+str(photon1_veto_signal_selection_cutstring) + " && " + photon1_recoil_cutstring + "&& njets_fake >= "+str(njets_min) + " && njets_fake_template <= "+str(njets_max) + " && gen_weight > 0 && " + photon1_gen_matching_cutstring)
-                    fake_photon_tree.Draw("photon1_sieie >> total_hist_neg_sample"+str(k),photon1_eta_range+ " && lepton_pdg_id == "+lepton_pdg_id+" && (photon1_selection == 0 || photon1_selection == 4) && "+photon1_pt_range_cutstring + " && pass_selection1 && "+str(photon1_veto_signal_selection_cutstring) + " && " + photon1_recoil_cutstring + "&& njets_fake >= "+str(njets_min) + " && njets_fake_template <= "+str(njets_max) + " && gen_weight < 0 && "+photon1_gen_matching_cutstring)
+                    fake_photon_tree.Draw("photon1_sieie >> total_hist_pos_sample"+str(k),photon1_eta_range+ " && "+lepton_pdg_id+" && (photon1_selection == 0 || photon1_selection == 4) && "+photon1_pt_range_cutstring + " && pass_selection1 && "+str(photon1_veto_signal_selection_cutstring) + " && " + photon1_recoil_cutstring + "&& njets_fake >= "+str(njets_min) + " && njets_fake_template <= "+str(njets_max) + " && gen_weight > 0 && " + photon1_gen_matching_cutstring)
+                    fake_photon_tree.Draw("photon1_sieie >> total_hist_neg_sample"+str(k),photon1_eta_range+ " && "+lepton_pdg_id+" && (photon1_selection == 0 || photon1_selection == 4) && "+photon1_pt_range_cutstring + " && pass_selection1 && "+str(photon1_veto_signal_selection_cutstring) + " && " + photon1_recoil_cutstring + "&& njets_fake >= "+str(njets_min) + " && njets_fake_template <= "+str(njets_max) + " && gen_weight < 0 && "+photon1_gen_matching_cutstring)
 
                     total_hist_pos.Scale(fake_photon_mc_sample["xs"]*1000*lumi/fake_photon_mc_sample["file"].Get("nEventsGenWeighted").GetBinContent(1))
                     total_hist_neg.Scale(-fake_photon_mc_sample["xs"]*1000*lumi/fake_photon_mc_sample["file"].Get("nEventsGenWeighted").GetBinContent(1))
@@ -286,8 +293,8 @@ for lepton_name in lepton_names:
                     fake_photon_template_hist_pos.Sumw2()
                     fake_photon_template_hist_neg.Sumw2()
 
-                    fake_photon_tree.Draw("photon2_sieie >> fake_photon_template_hist_pos_sample"+str(k),photon2_eta_range + " && lepton_pdg_id == "+lepton_pdg_id+" && "+photon2_pt_range_cutstring + " && pass_selection2 && "+str(photon2_veto_signal_selection_cutstring)  + " && " + photon2_recoil_cutstring +" && njets_fake_template  >= "+str(njets_min) + " && njets_fake_template <= " + str(njets_max)  + " && gen_weight > 0 && "+photon2_gen_matching_cutstring)
-                    fake_photon_tree.Draw("photon2_sieie >> fake_photon_template_hist_neg_sample"+str(k),photon2_eta_range + " && lepton_pdg_id == "+lepton_pdg_id+" && "+photon2_pt_range_cutstring + " && pass_selection2 && "+str(photon2_veto_signal_selection_cutstring)  + " && " + photon2_recoil_cutstring +" && njets_fake_template  >= "+str(njets_min) + " && njets_fake_template <= " + str(njets_max) + " && gen_weight < 0 &&" + photon2_gen_matching_cutstring)
+                    fake_photon_tree.Draw("photon2_sieie >> fake_photon_template_hist_pos_sample"+str(k),photon2_eta_range + " && "+lepton_pdg_id+" && "+photon2_pt_range_cutstring + " && pass_selection2 && "+str(photon2_veto_signal_selection_cutstring)  + " && " + photon2_recoil_cutstring +" && njets_fake_template  >= "+str(njets_min) + " && njets_fake_template <= " + str(njets_max)  + " && gen_weight > 0 && "+photon2_gen_matching_cutstring)
+                    fake_photon_tree.Draw("photon2_sieie >> fake_photon_template_hist_neg_sample"+str(k),photon2_eta_range + " && "+lepton_pdg_id+" && "+photon2_pt_range_cutstring + " && pass_selection2 && "+str(photon2_veto_signal_selection_cutstring)  + " && " + photon2_recoil_cutstring +" && njets_fake_template  >= "+str(njets_min) + " && njets_fake_template <= " + str(njets_max) + " && gen_weight < 0 &&" + photon2_gen_matching_cutstring)
 
                     fake_photon_template_hist_pos.Scale(fake_photon_mc_sample["xs"]*1000*lumi/fake_photon_mc_sample["file"].Get("nEventsGenWeighted").GetBinContent(1))
                     fake_photon_template_hist_neg.Scale(-fake_photon_mc_sample["xs"]*1000*lumi/fake_photon_mc_sample["file"].Get("nEventsGenWeighted").GetBinContent(1))
@@ -297,8 +304,8 @@ for lepton_name in lepton_names:
 
                 else:
                     if not fake_photon_mc_sample["prompt"]:
-                        numerator+=fake_photon_tree.GetEntries(photon1_eta_range+ " && lepton_pdg_id == "+lepton_pdg_id + " && (photon1_selection == 0) && "+ photon1_pt_range_cutstring + " && pass_selection1" + " && " + photon1_recoil_cutstring + " && njets_fake >= "+ str(njets_min) + " && njets_fake <= "+str(njets_max) + " && gen_weight > 0 &&" + photon1_gen_matching_cutstring+ " && " + str(photon1_veto_signal_selection_cutstring))*fake_photon_mc_sample["xs"]*1000*lumi/fake_photon_mc_sample["file"].Get("nEventsGenWeighted").GetBinContent(1)
-                        numerator-=fake_photon_tree.GetEntries(photon1_eta_range+ " && lepton_pdg_id == "+lepton_pdg_id + " && (photon1_selection == 0) && "+ photon1_pt_range_cutstring + " && pass_selection1" + " && " + photon1_recoil_cutstring + " && njets_fake >= "+ str(njets_min) + " && njets_fake <= "+str(njets_max) + " && gen_weight < 0 &&" + photon1_gen_matching_cutstring+ " && " + str(photon1_veto_signal_selection_cutstring))*fake_photon_mc_sample["xs"]*1000*lumi/fake_photon_mc_sample["file"].Get("nEventsGenWeighted").GetBinContent(1)
+                        numerator+=fake_photon_tree.GetEntries(photon1_eta_range+ " && "+lepton_pdg_id + " && (photon1_selection == 0) && "+ photon1_pt_range_cutstring + " && pass_selection1" + " && " + photon1_recoil_cutstring + " && njets_fake >= "+ str(njets_min) + " && njets_fake <= "+str(njets_max) + " && gen_weight > 0 &&" + photon1_gen_matching_cutstring+ " && " + str(photon1_veto_signal_selection_cutstring))*fake_photon_mc_sample["xs"]*1000*lumi/fake_photon_mc_sample["file"].Get("nEventsGenWeighted").GetBinContent(1)
+                        numerator-=fake_photon_tree.GetEntries(photon1_eta_range+ " && "+lepton_pdg_id + " && (photon1_selection == 0) && "+ photon1_pt_range_cutstring + " && pass_selection1" + " && " + photon1_recoil_cutstring + " && njets_fake >= "+ str(njets_min) + " && njets_fake <= "+str(njets_max) + " && gen_weight < 0 &&" + photon1_gen_matching_cutstring+ " && " + str(photon1_veto_signal_selection_cutstring))*fake_photon_mc_sample["xs"]*1000*lumi/fake_photon_mc_sample["file"].Get("nEventsGenWeighted").GetBinContent(1)
                 
 #                fake_photon_tree.Scan("run:lumi:event:photon1_pt:photon1_eta:photon1_phi:lepton_pt:lepton_eta:lepton_phi:lepton_pdg_id",photon1_eta_range+ "  && lepton_pdg_id == "+lepton_pdg_id + " && (photon1_selection == 3) && "+ photon1_pt_range_cutstring + " && pass_selection1" + " && " + photon1_recoil_cutstring + " && njets_fake >= "+ str(njets_min) + " && njets_fake <= "+str(njets_max) + " && photon1_sieie < "+str(max_sieie) + " && photon1_pfRelIso03_chg*photon1_pt < "+str(max_chiso) + " && "+photon1_gen_matching_cutstring)*fake_photon_mc_sample["xs"]*1000*lumi/fake_photon_mc_sample["file"].Get("nEventsGenWeighted").GetBinContent(1)
 #                fake_photon_tree.Scan("run:lumi:event:photon1_pt:photon1_eta:photon1_phi:lepton_pt:lepton_eta:lepton_phi:lepton_pdg_id",photon1_eta_range+ " && lumi == 1054017 && lepton_pdg_id == "+lepton_pdg_id + " && (photon1_selection == 4) && "+ photon1_pt_range_cutstring + " && pass_selection1" + " && " + photon1_recoil_cutstring + " && njets_fake >= "+ str(njets_min) + " && njets_fake <= "+str(njets_max) + " && photon1_sieie < "+str(max_sieie) + " && photon1_pfRelIso03_chg*photon1_pt < "+str(max_chiso) + " && "+photon1_gen_matching_cutstring)*fake_photon_mc_sample["xs"]*1000*lumi/fake_photon_mc_sample["file"].Get("nEventsGenWeighted").GetBinContent(1)
@@ -328,8 +335,16 @@ for lepton_name in lepton_names:
 
                     pass_lepton_pdg_id = False
 
-                    if str(real_photon_template_tree.lepton_pdg_id) == lepton_pdg_id:
+                    if lepton_name == "muon":
+                        if real_photon_template_tree.lepton_pdg_id == 13:
+                            pass_lepton_pdg_id = True
+                    elif lepton_name == "electron":
+                        if real_photon_template_tree.lepton_pdg_id == 11:
+                            pass_lepton_pdg_id = True
+                    elif lepton_name == "both":    
                         pass_lepton_pdg_id = True
+                    else:
+                        assert(0)
 
                     pass_photon_pt_range = False
 
