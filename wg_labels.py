@@ -82,10 +82,10 @@ labels = {
         },
 
     "wg+jets" : {
-#        "syst-pdf": True, 
-#        "syst-scale": True, 
-        "syst-pdf": False, 
-        "syst-scale": False, 
+        "syst-pdf": True, 
+        "syst-scale": True, 
+#        "syst-pdf": False, 
+#        "syst-scale": False, 
         "color": ROOT.kCyan, 
         "samples" : {
             "2016":
@@ -109,8 +109,10 @@ labels = {
             }
         }, 
     "zg+jets" : {
-        "syst-pdf" : False, 
-        "syst-scale" : False, 
+#        "syst-pdf" : False, 
+#        "syst-scale" : False, 
+        "syst-pdf" : True, 
+        "syst-scale" : True, 
         "color" : ROOT.kOrange, 
         "samples" : {
             "2016":
