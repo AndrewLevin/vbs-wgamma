@@ -7,10 +7,12 @@ def deltaR(eta1,phi1,eta2,phi2):
     if dphi > pi: dphi = 2*pi-dphi
     return hypot(eta1-eta2,dphi)
 
-f=ROOT.TFile.Open("/eos/user/a/amlevin/tmp/wgjets.1.root")
+f=ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/tmp/BD10FEDE-2447-174B-8426-4BE7869483C4.root")
 t=f.Get("Events")
 
-sample_xs = 178.6
+#sample_xs = 178.6
+sample_xs = 33420.0 
+#sample_xs = 24780.0
 
 n_total = 0
 n_weighted = ROOT.TH1F("n_weighted","n_weighted",1,0,1)
@@ -22,7 +24,7 @@ n_weighted_scale = []
 n_weighted_pdf_pass_fiducial = []
 n_weighted_scale_pass_fiducial = []
 
-for i in range(0,102):
+for i in range(0,32):
     n_weighted_pdf.append(ROOT.TH1F("n_weighted_pdf_variation"+str(i),"n_weighted_pdf_variation"+str(i),1,0,1))
     n_weighted_pdf[i].Sumw2()
     n_weighted_pdf_pass_fiducial.append(ROOT.TH1F("n_weighted_pdf_pass_fiducial_variation"+str(i),"n_weighted_pdf_pass_fiducial_variation"+str(i),1,0,1))
@@ -74,7 +76,7 @@ for i in range(0,t.GetEntries()):
             n_weighted_scale[j].Fill(0.5,t.LHEScaleWeight[j]*2)
         else:    
             n_weighted_scale[j].Fill(0.5,-t.LHEScaleWeight[j]*2)
-    for j in range(0,102):
+    for j in range(0,32):
         if t.Generator_weight > 0:
             n_weighted_pdf[j].Fill(0.5,t.LHEPdfWeight[j+1])
         else:    
@@ -92,7 +94,7 @@ for i in range(0,t.GetEntries()):
                 n_weighted_scale_pass_fiducial[j].Fill(0.5,t.LHEScaleWeight[j]*2)
             else:    
                 n_weighted_scale_pass_fiducial[j].Fill(0.5,-t.LHEScaleWeight[j]*2)
-        for j in range(0,102):
+        for j in range(0,32):
             if t.Generator_weight > 0:
                 n_weighted_pdf_pass_fiducial[j].Fill(0.5,t.LHEPdfWeight[j+1])
             else:    
@@ -114,25 +116,25 @@ pdf_pass_fiducial_stddev = 0
 scale_pass_fiducial_mean = 0
 scale_pass_fiducial_stddev = 0
 
-for i in range(0,102):
+for i in range(0,32):
     pdf_mean+=n_weighted_pdf[i].GetBinContent(1)
     pdf_pass_fiducial_mean+=n_weighted_pdf_pass_fiducial[i].GetBinContent(1)
 
 pdf_mean += n_weighted.GetBinContent(1)
 pdf_pass_fiducial_mean += n_weighted_pass_fiducial.GetBinContent(1)
 
-pdf_mean /= 103
-pdf_pass_fiducial_mean /= 103
+pdf_mean /= 33
+pdf_pass_fiducial_mean /= 33
 
-for i in range(0,102):
+for i in range(0,32):
     pdf_stddev+= pow(n_weighted_pdf[i].GetBinContent(1)-pdf_mean,2)
     pdf_pass_fiducial_stddev+= pow(n_weighted_pdf_pass_fiducial[i].GetBinContent(1)-pdf_pass_fiducial_mean,2)
 
 pdf_stddev += pow(n_weighted.GetBinContent(1)-pdf_mean,2)
 pdf_pass_fiducial_stddev += pow(n_weighted_pass_fiducial.GetBinContent(1)-pdf_pass_fiducial_mean,2)
 
-pdf_stddev /= (103-1)
-pdf_pass_fiducial_stddev /= (103-1)
+pdf_stddev /= (33-1)
+pdf_pass_fiducial_stddev /= (33-1)
 
 pdf_stddev = math.sqrt(pdf_stddev)
 pdf_pass_fiducial_stddev = math.sqrt(pdf_pass_fiducial_stddev)
