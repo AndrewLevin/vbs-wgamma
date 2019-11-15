@@ -58,6 +58,7 @@ parser.add_option('--lep',dest='lep',default='both')
 parser.add_option('--year',dest='year',default='all')
 parser.add_option('--phoeta',dest='phoeta',default='both')
 parser.add_option('--overflow',dest='overflow',action='store_true',default=False)
+parser.add_option('--no_pdf_var_for_2017_and_2018',dest='no_pdf_var_for_2017_and_2018',action='store_true',default=False)
 parser.add_option('--ewdim6',dest='ewdim6',action='store_true',default=False)
 parser.add_option('--float_fake_sig_cont',dest='float_fake_sig_cont',action='store_true',default=False)
 parser.add_option('--draw_ewdim6',dest='draw_ewdim6',action='store_true',default=False)
@@ -347,6 +348,8 @@ def draw_legend(x1,y1,hist,label,options):
 
 for label in labels.keys():
 
+
+
     labels[label]["hists"] = {}
 
     labels[label]["hists-electron-id-sf-up"] = {}
@@ -403,20 +406,38 @@ for label in labels.keys():
             sample["nweightedevents"] = sample["file"].Get("nEventsGenWeighted").GetBinContent(1)
 
 
+
 if "wg+jets" in labels:
-    if labels["wg+jets"]["syst-scale"]:
-        for i in range(0,8):
-            labels["wg+jets"]["samples"][year][0]["nweightedevents_qcdscaleweight"+str(i)]=labels["wg+jets"]["samples"][year][0]["file"].Get("nEventsGenWeighted_QCDScaleWeight"+str(i)).GetBinContent(1)
 
-            if labels["wg+jets"]["samples"][year][0]["filename"] == "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjets.root":
-                labels["wg+jets"]["samples"][year][0]["nweightedevents_qcdscaleweight"+str(i)] *= 2
+    labels["wg+jets"]["hists-pass-fiducial"] = {}
 
-    if labels["wg+jets"]["syst-pdf"]:
-        for i in range(1,32):
-            labels["wg+jets"]["samples"][year][0]["nweightedevents_pdfweight"+str(i)]=labels["wg+jets"]["samples"][year][0]["file"].Get("nEventsGenWeighted_PDFWeight"+str(i)).GetBinContent(1)
+    for i in range(len(variables)):    
+        labels["wg+jets"]["hists-pass-fiducial"][i] = histogram_models[i].GetHistogram()
+        labels["wg+jets"]["hists-pass-fiducial"][i].Sumw2()
 
-    for year in years:
-        labels["wg+jets"]["samples"][year][0]["nweightedeventspassgenselection"]=labels["wg+jets"]["samples"][year][0]["file"].Get("nWeightedEventsPassGenSelection").GetBinContent(1)
+    for year in years:            
+        for sample in labels["wg+jets"]["samples"][year]:
+            sample["nweightedevents_passfiducial"] = sample["file"].Get("nEventsGenWeighted_PassFidSelection").GetBinContent(1)
+
+        if labels["wg+jets"]["syst-scale"]:
+            for i in range(0,8):
+                labels["wg+jets"]["samples"][year][0]["nweightedevents_qcdscaleweight"+str(i)]=labels["wg+jets"]["samples"][year][0]["file"].Get("nEventsGenWeighted_PassFidSelection_QCDScaleWeight"+str(i)).GetBinContent(1)
+
+                if labels["wg+jets"]["samples"][year][0]["filename"] == "/afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019/wgjets.root":
+                    labels["wg+jets"]["samples"][year][0]["nweightedevents_qcdscaleweight"+str(i)] *= 2
+                    
+        if labels["wg+jets"]["syst-pdf"]:
+            for i in range(1,32):
+                if (year == "2017" or year == "2018") and options.no_pdf_var_for_2017_and_2018:
+                    continue
+                labels["wg+jets"]["samples"][year][0]["nweightedevents_pdfweight"+str(i)]=labels["wg+jets"]["samples"][year][0]["file"].Get("nEventsGenWeighted_PassFidSelection_PDFWeight"+str(i)).GetBinContent(1)
+
+                if labels["wg+jets"]["samples"][year][0]["filename"] == "/afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019/wgjets.root":
+                    labels["wg+jets"]["samples"][year][0]["nweightedevents_pdfweight"+str(i)] *= 2
+
+
+#    for year in years:
+#        labels["wg+jets"]["samples"][year][0]["nweightedeventspassgenselection"]=labels["wg+jets"]["samples"][year][0]["file"].Get("nWeightedEventsPassGenSelection").GetBinContent(1)
     #labels["wg+jets"]["samples"][year][0]["nweightedeventspassgenselection"]=1
 
 
@@ -433,7 +454,7 @@ if "wg+jets" in labels:
         else:
             assert(0)
 
-        nweightedeventspassgenselection+=labels["wg+jets"]["samples"][year][0]["nweightedeventspassgenselection"]*lumi
+        nweightedeventspassgenselection+=labels["wg+jets"]["samples"][year][0]["nweightedevents_passfiducial"]*lumi
         nweightedevents+=labels["wg+jets"]["samples"][year][0]["nweightedevents"]*lumi
     fiducial_region_cuts_efficiency = nweightedeventspassgenselection/nweightedevents
 
@@ -1383,22 +1404,27 @@ for year in years:
             if year == "2016" or year == "2017":    
                 rinterface = rinterface.Define("base_weight","xs_weight*puWeight*PrefireWeight*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\") : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\"))")    
                 rinterface = rinterface.Define("pileup_up_base_weight","xs_weight*puWeightUp*PrefireWeight*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\") : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\"))")    
-                rinterface = rinterface.Define("electron_id_sf_up_base_weight","xs_weight*puWeightUp*PrefireWeight*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\") : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\",true))")                  
-                rinterface = rinterface.Define("electron_reco_sf_up_base_weight","xs_weight*puWeightUp*PrefireWeight*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\") : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\",false,true))")    
-                rinterface = rinterface.Define("muon_id_sf_up_base_weight","xs_weight*puWeightUp*PrefireWeight*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\") : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\",false,true))")                  
-                rinterface = rinterface.Define("muon_iso_sf_up_base_weight","xs_weight*puWeightUp*PrefireWeight*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\",true) : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\"))")    
-                rinterface = rinterface.Define("photon_id_sf_up_base_weight","xs_weight*puWeightUp*PrefireWeight*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\",true)*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\") : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\"))")    
+                rinterface = rinterface.Define("electron_id_sf_up_base_weight","xs_weight*puWeight*PrefireWeight*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\") : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\",true))")                  
+                rinterface = rinterface.Define("electron_reco_sf_up_base_weight","xs_weight*puWeight*PrefireWeight*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\") : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\",false,true))")    
+                rinterface = rinterface.Define("muon_id_sf_up_base_weight","xs_weight*puWeight*PrefireWeight*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\",false,true) : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\"))")                  
+                rinterface = rinterface.Define("muon_iso_sf_up_base_weight","xs_weight*puWeight*PrefireWeight*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\",true) : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\"))")    
+                rinterface = rinterface.Define("photon_id_sf_up_base_weight","xs_weight*puWeight*PrefireWeight*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\",true)*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\") : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\"))")    
             else:
                 rinterface = rinterface.Define("base_weight","xs_weight*puWeight*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\") : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\"))")    
                 rinterface = rinterface.Define("pileup_up_base_weight","xs_weight*puWeightUp*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\") : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\"))")
-                rinterface = rinterface.Define("electron_id_sf_up_base_weight","xs_weight*puWeightUp*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\") : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\",true))")        
-                rinterface = rinterface.Define("electron_reco_sf_up_base_weight","xs_weight*puWeightUp*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\") : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\",false,true))")        
-                rinterface = rinterface.Define("muon_id_sf_up_base_weight","xs_weight*puWeightUp*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\") : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\",false,true))")                  
-                rinterface = rinterface.Define("muon_iso_sf_up_base_weight","xs_weight*puWeightUp*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\",true) : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\"))")    
-                rinterface = rinterface.Define("photon_id_sf_up_base_weight","xs_weight*puWeightUp*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\",true)*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\") : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\"))")    
+                rinterface = rinterface.Define("electron_id_sf_up_base_weight","xs_weight*puWeight*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\") : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\",true))")        
+                rinterface = rinterface.Define("electron_reco_sf_up_base_weight","xs_weight*puWeight*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\") : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\",false,true))")        
+                rinterface = rinterface.Define("muon_id_sf_up_base_weight","xs_weight*puWeight*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\",false,true) : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\"))")                  
+                rinterface = rinterface.Define("muon_iso_sf_up_base_weight","xs_weight*puWeight*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\",true) : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\"))")    
+                rinterface = rinterface.Define("photon_id_sf_up_base_weight","xs_weight*puWeight*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\",true)*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\") : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\"))")    
 
 
             rinterface = rinterface.Define("weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + ")*base_weight")
+
+            if label == "wg+jets":
+                rinterface = rinterface.Define("weight_pass_fiducial","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && pass_fiducial)*base_weight")
+
+
             rinterface = rinterface.Define("pileup_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + ")*pileup_up_base_weight")
             rinterface = rinterface.Define("electron_id_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + ")*electron_id_sf_up_base_weight")
             rinterface = rinterface.Define("electron_reco_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + ")*electron_reco_sf_up_base_weight")
@@ -1416,6 +1442,8 @@ for year in years:
 
             if labels[label]["syst-pdf"]:
                 for i in range(0,32):
+                    if (year == "2017" or year == "2018") and options.no_pdf_var_for_2017_and_2018:
+                        continue
                     #this sample has a bug that causes the scale weight to be 1/2 the correct value
                     if sample["filename"] == "/afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019/wgjets.root":
                         rinterface = rinterface.Define("pdf"+str(i)+"_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + ")*base_weight*LHEPdfWeight["+str(i+1)+"]*2")
@@ -1468,6 +1496,8 @@ for year in years:
             if labels[label]["syst-pdf"]:
                 rresultptrs_pdf = []    
                 for i in range(0,32):
+                    if (year == "2017" or year == "2018") and options.no_pdf_var_for_2017_and_2018:
+                        continue
                     rresultptrs_pdf.append([])    
 
             rresultptrs = []    
@@ -1490,6 +1520,9 @@ for year in years:
                 rresultptrs_e_to_p = []    
             if sample["e_to_p_non_res"]:
                 rresultptrs_e_to_p_non_res = []    
+            if label == "wg+jets":
+                rresultptrs_pass_fiducial = []    
+
 
             for i in range(len(variables)):
                 if labels[label]["color"] != None:
@@ -1500,6 +1533,10 @@ for year in years:
                     rresultptrs_muon_id_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"muon_id_sf_up_weight"))
                     rresultptrs_muon_iso_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"muon_iso_sf_up_weight"))
                     rresultptrs_photon_id_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"photon_id_sf_up_weight"))
+                    if label == "wg+jets":
+                        rresultptrs_pass_fiducial.append(rinterface.Histo1D(histogram_models[i],variables[i],"weight_pass_fiducial"))
+
+
                 rresultptrs_fake_photon.append(rinterface.Histo1D(histogram_models[i],variables[i],"fake_photon_weight"))
                 rresultptrs_fake_photon_alt.append(rinterface.Histo1D(histogram_models[i],variables[i],"fake_photon_alt_weight"))
                 rresultptrs_fake_photon_stat_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"fake_photon_stat_up_weight"))
@@ -1515,6 +1552,8 @@ for year in years:
                         rresultptrs_scale[j].append(rinterface.Histo1D(histogram_models[i],variables[i],"scale"+str(j)+"_weight"))
                 if labels[label]["syst-pdf"]:
                     for j in range(0,32):
+                        if (year == "2017" or year == "2018") and options.no_pdf_var_for_2017_and_2018:
+                            continue
                         rresultptrs_pdf[j].append(rinterface.Histo1D(histogram_models[i],variables[i],"pdf"+str(j)+"_weight"))
 
                 if sample["e_to_p"]:
@@ -1531,6 +1570,9 @@ for year in years:
                     labels[label]["hists-muon-id-sf-up"][i].Add(rresultptrs_muon_id_sf_up[i].GetValue())
                     labels[label]["hists-muon-iso-sf-up"][i].Add(rresultptrs_muon_iso_sf_up[i].GetValue())
                     labels[label]["hists-photon-id-sf-up"][i].Add(rresultptrs_photon_id_sf_up[i].GetValue())
+                    if label == "wg+jets":
+                        labels[label]["hists-pass-fiducial"][i].Add(rresultptrs_pass_fiducial[i].GetValue())
+                        
 
             for i in range(len(variables)):
                 rresultptrs_fake_photon[i].Scale(-1)
@@ -1544,7 +1586,9 @@ for year in years:
 
                 if labels[label]["syst-pdf"]:
                     for j in range(0,32):
-                         labels[label]["hists-pdf-variation"+str(j)][i].Add(rresultptrs_pdf[j][i].GetValue())
+                        if (year == "2017" or year == "2018") and options.no_pdf_var_for_2017_and_2018:
+                            continue
+                        labels[label]["hists-pdf-variation"+str(j)][i].Add(rresultptrs_pdf[j][i].GetValue())
 
                 if label == "wg+jets":
                     fake_signal_contamination["hists"][i].Add(rresultptrs_fake_lepton[i].GetValue())
@@ -1588,10 +1632,12 @@ if options.make_recoil_trees:
 
 def mlg_fit(inputs):
 
+    print "inputs[\"label\"] = "+str(inputs["label"])
+
     m= ROOT.RooRealVar("m","m",0,mlg_fit_upper_bound)
-    m0=ROOT.RooRealVar("m0",    "m0",1.55915,-2.5,2.5)
+    m0=ROOT.RooRealVar("m0",    "m0",2.48320,-4,4)
     sigma=ROOT.RooRealVar("sigma",  "sigma",1.75029,0.1,3)
-    alpha=ROOT.RooRealVar("alpha",  "alpha",2.26024,0,10)
+    alpha=ROOT.RooRealVar("alpha",  "alpha",2.48320,0,10)
 #    alpha=ROOT.RooRealVar("alpha",  "alpha",4.45779,4.45779-2,4.45779+2)
 #    alpha=ROOT.RooRealVar("alpha",  "alpha",,0,10)
 #    alpha=ROOT.RooRealVar("alpha",  "alpha",4.27560,4.27560,4.27560)
@@ -1599,8 +1645,8 @@ def mlg_fit(inputs):
     n=ROOT.RooRealVar("n",          "n",2.11960,2.11960,2.11960)
     cb = ROOT.RooCBShape("cb", "Crystal Ball", m, m0, sigma, alpha, n)
 
-    mass = ROOT.RooRealVar("mass","mass",89.855,89.855-5,89.855+5)
-    width = ROOT.RooRealVar("width","width",3.85825,3.0*3.85825/4.0,5*3.85825/3.0);
+    mass = ROOT.RooRealVar("mass","mass",91.9311,89.855-5,89.855+5)
+    width = ROOT.RooRealVar("width","width",3.3244,1.0*3.3244/4.0,7*3.3244/3.0);
     bw = ROOT.RooBreitWigner("bw","Breit Wigner",m,mass,width)
 
     RooFFTConvPdf_bwcb = ROOT.RooFFTConvPdf("bwcb","Breit Wigner convolved with a Crystal Ball",m,bw,cb)
@@ -1640,12 +1686,12 @@ def mlg_fit(inputs):
         RooHistPdf_etog = ROOT.RooHistPdf("etog","etog",ROOT.RooArgSet(m),RooDataHist_mlg_etog)
 
     top_norm = ROOT.RooRealVar("top_norm","top_norm",inputs["top"].Integral(),inputs["top"].Integral())    
-    wg_norm = ROOT.RooRealVar("wg_norm","wg_norm",13234.2,0.5*13234.2,2*13234.2);    
+    wg_norm = ROOT.RooRealVar("wg_norm","wg_norm",125594.,75000,200000);    
     wg_plus_fake_wg_contamination_norm = ROOT.RooRealVar("wg_plus_fake_wg_contamination_norm","wg_plus_fake_wg_contamination_norm",13234.2,0.5*13234.2,2*13234.2);    
 #    zg_norm = ROOT.RooRealVar("zg_norm","zg_norm",0,1000000);    
     zg_norm = ROOT.RooRealVar("zg_norm","zg_norm",inputs["zg"].Integral(),inputs["zg"].Integral());    
     vv_norm = ROOT.RooRealVar("vv_norm","vv_norm",inputs["vv"].Integral(),inputs["vv"].Integral());    
-    bwcb_norm = ROOT.RooRealVar("bwcb_norm","bwcb_norm",3488.71,0.5*3488.71,2*3488.71);    
+    bwcb_norm = ROOT.RooRealVar("bwcb_norm","bwcb_norm",152671.0,0,1000000);    
     fake_lepton_norm = ROOT.RooRealVar("fake_lepton_norm","fake_lepton_norm",inputs["fake_lepton"].Integral(),inputs["fake_lepton"].Integral());    
     fake_photon_norm = ROOT.RooRealVar("fake_photon_norm","fake_photon_norm",inputs["fake_photon"].Integral(),inputs["fake_photon"].Integral());    
     double_fake_norm = ROOT.RooRealVar("double_fake_norm","double_fake_norm",inputs["double_fake"].Integral(),inputs["double_fake"].Integral());    
@@ -1670,8 +1716,10 @@ def mlg_fit(inputs):
     else:
         assert(0)
 
-    sum.fitTo(RooDataHist_mlg_data,ROOT.RooFit.Extended(),ROOT.RooFit.Strategy(2))
+    roofitresult=sum.fitTo(RooDataHist_mlg_data,ROOT.RooFit.Extended(),ROOT.RooFit.Strategy(2))
     #sum.fitTo(RooDataSet_mlg_data,ROOT.RooFit.Extended())
+
+    print "roofitresult.status() = "+str(roofitresult.status())
 
     frame1 = m.frame()
     frame2 = m.frame(ROOT.RooFit.Range(0,200))
@@ -2003,6 +2051,9 @@ muon_id_sf_unc = labels["wg+jets"]["hists-muon-id-sf-up"][mlg_index].Integral() 
 muon_iso_sf_unc = labels["wg+jets"]["hists-muon-iso-sf-up"][mlg_index].Integral() - labels["wg+jets"]["hists"][mlg_index].Integral()
 photon_id_sf_unc = labels["wg+jets"]["hists-photon-id-sf-up"][mlg_index].Integral() - labels["wg+jets"]["hists"][mlg_index].Integral()
 
+print labels["wg+jets"]["hists-muon-iso-sf-up"][mlg_index].Integral()
+print labels["wg+jets"]["hists"][mlg_index].Integral()
+
 print "(number of wg+jets events run over) = "+str(labels["wg+jets"]["samples"][year][0]["nweightedevents"])
 
 print "fiducial_region_cuts_efficiency = "+str(fiducial_region_cuts_efficiency)
@@ -2273,6 +2324,7 @@ fake_photon_stat_up["hists"][mlg_index].Print("all")
 if lepton_name == "muon":
 
     xs_times_lumi = 0
+    fiducial_xs_times_lumi = 0
     for year in years:
         if year == "2016":
             lumi=35.9
@@ -2283,9 +2335,12 @@ if lepton_name == "muon":
         else:
             assert(0)
         xs_times_lumi += labels["wg+jets"]["samples"][year][0]["xs"]*1000*lumi
+        fiducial_xs_times_lumi += labels["wg+jets"]["samples"][year][0]["nweightedevents_passfiducial"]*labels["wg+jets"]["samples"][year][0]["xs"]*1000*lumi/labels["wg+jets"]["samples"][year][0]["nweightedevents"]
 
     xs_inputs_muon = {
-        "fiducial_region_cuts_efficiency" : fiducial_region_cuts_efficiency,
+        "lumi" : totallumi,
+        "fiducial" : fiducial_xs_times_lumi,
+        "fiducial_pass" : labels["wg+jets"]["hists-pass-fiducial"][mlg_index].Integral(),
         "xs_times_lumi" : xs_times_lumi,
         "signal_data_muon" : n_signal,
         "signal_mc_xs_data_mc" : labels["wg+jets"]["hists"][mlg_index].Integral(),
@@ -2311,10 +2366,11 @@ if lepton_name == "muon":
                 lumi=59.6
             else:
                 assert(0)
-            if labels["wg+jets"]["samples"][year][0]["filename"] ==  "/afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019/wgjets.root":
-                xs_times_lumi_pdf_variation += labels["wg+jets"]["samples"][year][0]["xs"]*1000*lumi*labels["wg+jets"]["samples"][year][0]["nweightedevents_pdfweight"+str(i)]/labels["wg+jets"]["samples"][year][0]["nweightedevents"]*2
-            else:
-                xs_times_lumi_pdf_variation += labels["wg+jets"]["samples"][year][0]["xs"]*1000*lumi*labels["wg+jets"]["samples"][year][0]["nweightedevents_pdfweight"+str(i)]/labels["wg+jets"]["samples"][year][0]["nweightedevents"]
+
+            if (year == "2017" or year == "2018") and options.no_pdf_var_for_2017_and_2018:
+                continue
+
+            xs_times_lumi_pdf_variation += labels["wg+jets"]["samples"][year][0]["xs"]*1000*lumi*labels["wg+jets"]["samples"][year][0]["nweightedevents_pdfweight"+str(i)]/labels["wg+jets"]["samples"][year][0]["nweightedevents"]
 
         xs_inputs_muon["xs_times_lumi_pdf_variation"+str(i)] = xs_times_lumi_pdf_variation
 
@@ -2330,10 +2386,8 @@ if lepton_name == "muon":
                 lumi=59.6
             else:
                 assert(0)
-            if labels["wg+jets"]["samples"][year][0]["filename"] ==  "/afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019/wgjets.root":
-                xs_times_lumi_scale_variation += labels["wg+jets"]["samples"][year][0]["xs"]*1000*lumi*labels["wg+jets"]["samples"][year][0]["nweightedevents_qcdscaleweight"+str(i)]/labels["wg+jets"]["samples"][year][0]["nweightedevents"]*2
-            else:
-                xs_times_lumi_scale_variation += labels["wg+jets"]["samples"][year][0]["xs"]*1000*lumi*labels["wg+jets"]["samples"][year][0]["nweightedevents_qcdscaleweight"+str(i)]/labels["wg+jets"]["samples"][year][0]["nweightedevents"]
+            
+            xs_times_lumi_scale_variation += labels["wg+jets"]["samples"][year][0]["xs"]*1000*lumi*labels["wg+jets"]["samples"][year][0]["nweightedevents_qcdscaleweight"+str(i)]/labels["wg+jets"]["samples"][year][0]["nweightedevents"]
 
         xs_inputs_muon["xs_times_lumi_scale_variation"+str(i)] = xs_times_lumi_scale_variation        
 
@@ -2387,6 +2441,7 @@ elif lepton_name == "electron":
         xs_times_lumi += labels["wg+jets"]["samples"][year][0]["xs"]*1000*lumi
 
     xs_inputs_electron = {
+        "lumi" : totallumi,
         "fiducial_region_cuts_efficiency":fiducial_region_cuts_efficiency,
         "xs_times_lumi" : xs_times_lumi,
         "signal_mc_xs_data_mc" : labels["wg+jets"]["hists"][mlg_index].Integral(),
@@ -2415,11 +2470,10 @@ elif lepton_name == "electron":
             else:
                 assert(0)
 
-            if labels["wg+jets"]["samples"][year][0]["filename"] ==  "/afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019/wgjets.root":
-                xs_times_lumi_pdf_variation += labels["wg+jets"]["samples"][year][0]["xs"]*1000*lumi*labels["wg+jets"]["samples"][year][0]["nweightedevents_pdfweight"+str(i)]/labels["wg+jets"]["samples"][year][0]["nweightedevents"]*2
-            else:
-                xs_times_lumi_pdf_variation += labels["wg+jets"]["samples"][year][0]["xs"]*1000*lumi*labels["wg+jets"]["samples"][year][0]["nweightedevents_pdfweight"+str(i)]/labels["wg+jets"]["samples"][year][0]["nweightedevents"]
+            if (year == "2017" or year == "2018") and options.no_pdf_var_for_2017_and_2018:
+                continue
 
+            xs_times_lumi_pdf_variation += labels["wg+jets"]["samples"][year][0]["xs"]*1000*lumi*labels["wg+jets"]["samples"][year][0]["nweightedevents_pdfweight"+str(i)]/labels["wg+jets"]["samples"][year][0]["nweightedevents"]
 
         xs_inputs_electron["xs_times_lumi_pdf_variation"+str(i)] = xs_times_lumi_pdf_variation
 
@@ -2435,10 +2489,8 @@ elif lepton_name == "electron":
                 lumi=59.6
             else:
                 assert(0)
-            if labels["wg+jets"]["samples"][year][0]["filename"] ==  "/afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019/wgjets.root":
-                xs_times_lumi_scale_variation += labels["wg+jets"]["samples"][year][0]["xs"]*1000*lumi*labels["wg+jets"]["samples"][year][0]["nweightedevents_qcdscaleweight"+str(i)]/labels["wg+jets"]["samples"][year][0]["nweightedevents"]*2
-            else:
-                xs_times_lumi_scale_variation += labels["wg+jets"]["samples"][year][0]["xs"]*1000*lumi*labels["wg+jets"]["samples"][year][0]["nweightedevents_qcdscaleweight"+str(i)]/labels["wg+jets"]["samples"][year][0]["nweightedevents"]
+
+            xs_times_lumi_scale_variation += labels["wg+jets"]["samples"][year][0]["xs"]*1000*lumi*labels["wg+jets"]["samples"][year][0]["nweightedevents_qcdscaleweight"+str(i)]/labels["wg+jets"]["samples"][year][0]["nweightedevents"]
 
         xs_inputs_electron["xs_times_lumi_scale_variation"+str(i)] = xs_times_lumi_scale_variation        
 
