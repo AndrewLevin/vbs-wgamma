@@ -1632,7 +1632,7 @@ def mlg_fit(inputs):
     cb = ROOT.RooCBShape("cb", "Crystal Ball", m, m0, sigma, alpha, n)
 
     mass = ROOT.RooRealVar("mass","mass",91.9311,89.855-5,89.855+5)
-    width = ROOT.RooRealVar("width","width",3.3244,1.0*3.3244/4.0,7*3.3244/3.0);
+    width = ROOT.RooRealVar("width","width",3.3244,0.5*3.3244/4.0,10*3.3244/3.0);
     bw = ROOT.RooBreitWigner("bw","Breit Wigner",m,mass,width)
 
     RooFFTConvPdf_bwcb = ROOT.RooFFTConvPdf("bwcb","Breit Wigner convolved with a Crystal Ball",m,bw,cb)
@@ -1702,11 +1702,28 @@ def mlg_fit(inputs):
     else:
         assert(0)
 
+    print "nfits = "+str(0)
+
     roofitresult=sum.fitTo(RooDataHist_mlg_data,ROOT.RooFit.Extended(),ROOT.RooFit.Strategy(2),ROOT.RooFit.Save())
     #roofitresult=sum.fitTo(RooDataHist_mlg_data,ROOT.RooFit.Extended(),ROOT.RooFit.Strategy(2))
     #sum.fitTo(RooDataSet_mlg_data,ROOT.RooFit.Extended())
 
+
     print "roofitresult.status() = "+str(roofitresult.status())
+
+    nfits=1
+
+    while roofitresult.status() != 0 and nfits < 10:     
+
+        width.setVal(ROOT.TRandom(0).Uniform(3,4))
+        bwcb_norm.setVal(ROOT.TRandom(0).Uniform(140000,160000))
+        m0.setVal(ROOT.TRandom(0).Uniform(-2,2))
+        mass.setVal(ROOT.TRandom(0).Uniform(88,92))
+
+        print "nfits = "+str(nfits)
+        roofitresult=sum.fitTo(RooDataHist_mlg_data,ROOT.RooFit.Extended(),ROOT.RooFit.Strategy(2),ROOT.RooFit.Save())
+        print "roofitresult.status() = "+str(roofitresult.status())
+        nfits+=1
 
     frame1 = m.frame()
     frame2 = m.frame(ROOT.RooFit.Range(0,200))
