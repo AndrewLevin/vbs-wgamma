@@ -587,27 +587,27 @@ if options.ewdim6:
     for i in range(0,len(cpw_reweights)):
         cpw_hists.append(ROOT.TH1D('', '', n_photon_pt_bins, binning_photon_pt ))
 
-    for i in range(labels["wg+jets"]["samples"][0]["tree"].GetEntries()):
-        labels["wg+jets"]["samples"][0]["tree"].GetEntry(i)
+    for i in range(labels["wg+jets"]["samples"][year][0]["tree"].GetEntries()):
+        labels["wg+jets"]["samples"]["2016"][0]["tree"].GetEntry(i)
 
-        w = labels["wg+jets"]["samples"][0]["xs"]*1000*lumi/labels["wg+jets"]["samples"][0]["nweightedevents"]
+        w = labels["wg+jets"]["samples"]["2016"][0]["xs"]*1000*lumi/labels["wg+jets"]["samples"]["2016"][0]["nweightedevents"]
 
-        w *= pu_weight_hist.GetBinContent(pu_weight_hist.FindFixBin(labels["wg+jets"]["samples"][0]["tree"].npu))
+#        w *= pu_weight_hist.GetBinContent(pu_weight_hist.FindFixBin(labels["wg+jets"]["samples"]["2016"][0]["tree"].npu))
 
-        w *= eff_scale_factor.photon_efficiency_scale_factor(labels["wg+jets"]["samples"][0]["tree"].photon_pt,labels["wg+jets"]["samples"][0]["tree"].photon_eta)
+#        w *= eff_scale_factor.photon_efficiency_scale_factor(labels["wg+jets"]["samples"]["2016"][0]["tree"].photon_pt,labels["wg+jets"]["samples"]["2016"][0]["tree"].photon_eta)
 
-        if labels["wg+jets"]["samples"][0]["tree"].lepton_pdg_id == 13:
-            w *= eff_scale_factor.muon_efficiency_scale_factor(labels["wg+jets"]["samples"][0]["tree"].lepton_pt,labels["wg+jets"]["samples"][0]["tree"].lepton_eta)
-        elif labels["wg+jets"]["samples"][0]["tree"].lepton_pdg_id == 11:    
-            w *= eff_scale_factor.electron_efficiency_scale_factor(labels["wg+jets"]["samples"][0]["tree"].lepton_pt,labels["wg+jets"]["samples"][0]["tree"].lepton_eta)
-        else:
-            assert(0)
+#        if labels["wg+jets"]["samples"][0]["tree"].lepton_pdg_id == 13:
+#            w *= eff_scale_factor.muon_efficiency_scale_factor(labels["wg+jets"]["samples"]["2016"][0]["tree"].lepton_pt,labels["wg+jets"]["samples"]["2016"][0]["tree"].lepton_eta)
+#        elif labels["wg+jets"]["samples"][0]["tree"].lepton_pdg_id == 11:    
+#            w *= eff_scale_factor.electron_efficiency_scale_factor(labels["wg+jets"]["samples"]["2016"][0]["tree"].lepton_pt,labels["wg+jets"]["samples"]["2016"][0]["tree"].lepton_eta)
+#        else:
+#            assert(0)
 
-        if labels["wg+jets"]["samples"][0]["tree"].gen_weight < 0:
+        if labels["wg+jets"]["samples"]["2016"][0]["tree"].gen_weight < 0:
             w = -w
 
-        if pass_selection(labels["wg+jets"]["samples"][0]["tree"],year,options.phoeta):
-            fillHistogram(sm_hist,getVariable(variables[0],labels["wg+jets"]["samples"][0]["tree"]),w)
+#        if pass_selection(labels["wg+jets"]["samples"]["2016"][0]["tree"],year,options.phoeta):
+        fillHistogram(sm_hist,labels["wg+jets"]["samples"]["2016"][0]["tree"].photon_pt,w)
 
     sm_hist.Print("all")
 
@@ -616,37 +616,38 @@ if options.ewdim6:
 
         w = ewdim6_xs*1000*lumi/ewdim6_nweightedevents
 
-        w *= pu_weight_hist.GetBinContent(pu_weight_hist.FindFixBin(ewdim6_tree.npu))
+#        w *= pu_weight_hist.GetBinContent(pu_weight_hist.FindFixBin(ewdim6_tree.npu))
 
-        w *= eff_scale_factor.photon_efficiency_scale_factor(ewdim6_tree.photon_pt,ewdim6_tree.photon_eta)
+#        w *= eff_scale_factor.photon_efficiency_scale_factor(ewdim6_tree.photon_pt,ewdim6_tree.photon_eta)
 
-        if ewdim6_tree.lepton_pdg_id == 13:
-            w *= eff_scale_factor.muon_efficiency_scale_factor(ewdim6_tree.lepton_pt,ewdim6_tree.lepton_eta)
-        elif ewdim6_tree.lepton_pdg_id == 11:    
-            w *= eff_scale_factor.electron_efficiency_scale_factor(ewdim6_tree.lepton_pt,ewdim6_tree.lepton_eta)
-        else:
-            assert(0)
+#        if ewdim6_tree.lepton_pdg_id == 13:
+#            w *= eff_scale_factor.muon_efficiency_scale_factor(ewdim6_tree.lepton_pt,ewdim6_tree.lepton_eta)
+#        elif ewdim6_tree.lepton_pdg_id == 11:    
+#            w *= eff_scale_factor.electron_efficiency_scale_factor(ewdim6_tree.lepton_pt,ewdim6_tree.lepton_eta)
+#        else:
+#            assert(0)
 
         if ewdim6_tree.gen_weight < 0:
             w = -w
 
-        if pass_selection(ewdim6_tree,year,options.phoeta):
+#        if pass_selection(ewdim6_tree,year,options.phoeta):
+        if True:
             for j in range(len(cwww_reweights)):
-                fillHistogram(cwww_hists[j],getVariable(variables[0],ewdim6_tree),w*getattr(ewdim6_tree, 'LHEWeight_rwgt_'+str(cwww_reweights[j])))
+                fillHistogram(cwww_hists[j],ewdim6_tree.photon_pt,w*getattr(ewdim6_tree, 'LHEWeight_rwgt_'+str(cwww_reweights[j])))
 
             for j in range(len(cw_reweights)):
-                fillHistogram(cw_hists[j],getVariable(variables[0],ewdim6_tree),w*getattr(ewdim6_tree, 'LHEWeight_rwgt_'+str(cw_reweights[j])))
+                fillHistogram(cw_hists[j],ewdim6_tree.photon_pt,w*getattr(ewdim6_tree, 'LHEWeight_rwgt_'+str(cw_reweights[j])))
 
             for j in range(len(cb_reweights)):
-                fillHistogram(cb_hists[j],getVariable(variables[0],ewdim6_tree),w*getattr(ewdim6_tree, 'LHEWeight_rwgt_'+str(cb_reweights[j])))
+                fillHistogram(cb_hists[j],ewdim6_tree.photon_pt,w*getattr(ewdim6_tree, 'LHEWeight_rwgt_'+str(cb_reweights[j])))
 
             for j in range(len(cpwww_reweights)):
-                fillHistogram(cpwww_hists[j],getVariable(variables[0],ewdim6_tree),w*getattr(ewdim6_tree, 'LHEWeight_rwgt_'+str(cpwww_reweights[j])))
+                fillHistogram(cpwww_hists[j],ewdim6_tree.photon_pt,w*getattr(ewdim6_tree, 'LHEWeight_rwgt_'+str(cpwww_reweights[j])))
 
             for j in range(len(cpw_reweights)):
-                fillHistogram(cpw_hists[j],getVariable(variables[0],ewdim6_tree),w*getattr(ewdim6_tree, 'LHEWeight_rwgt_'+str(cpw_reweights[j])))
+                fillHistogram(cpw_hists[j],ewdim6_tree.photon_pt,w*getattr(ewdim6_tree, 'LHEWeight_rwgt_'+str(cpw_reweights[j])))
 
-            fillHistogram(sm_lhe_weight_hist,getVariable(variables[0],ewdim6_tree),w*getattr(ewdim6_tree, 'LHEWeight_rwgt_'+str(sm_lhe_weight)))
+            fillHistogram(sm_lhe_weight_hist,ewdim6_tree.photon_pt,w*getattr(ewdim6_tree, 'LHEWeight_rwgt_'+str(sm_lhe_weight)))
 
     cwww_scaling_outfile = ROOT.TFile("cwww_scaling.root",'recreate')
     cw_scaling_outfile = ROOT.TFile("cw_scaling.root",'recreate')
@@ -836,9 +837,12 @@ float photon_efficiency_scale_factor(float pt,float eta,string year,bool err_up=
     else if (year == "2018") photon_id_sf = photon_id_2018_sf;
     else assert(0);
 
-    float sf = photon_id_sf->GetBinContent(photon_id_sf->GetXaxis()->FindFixBin(eta),photon_id_sf->GetYaxis()->FindFixBin(pt));
+    float mypt = TMath::Min(pt,float(photon_id_sf->GetYaxis()->GetBinCenter(photon_id_sf->GetNbinsY())));
+    float myeta = TMath::Max(TMath::Min(eta,float(photon_id_sf->GetXaxis()->GetBinCenter(photon_id_sf->GetNbinsX()))),float(photon_id_sf->GetXaxis()->GetBinCenter(1)));
 
-    if (err_up) sf += photon_id_sf->GetBinError(photon_id_sf->GetXaxis()->FindFixBin(eta),photon_id_sf->GetYaxis()->FindFixBin(pt));
+    float sf = photon_id_sf->GetBinContent(photon_id_sf->GetXaxis()->FindFixBin(myeta),photon_id_sf->GetYaxis()->FindFixBin(mypt));
+
+    if (err_up) sf += photon_id_sf->GetBinError(photon_id_sf->GetXaxis()->FindFixBin(myeta),photon_id_sf->GetYaxis()->FindFixBin(mypt));
 
     return sf;
 }
@@ -2634,6 +2638,7 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
 
     if sm_lhe_weight_hist.GetBinContent(i) > 0:
 #        dcard.write("mcstat_ewdim6_bin"+str(i)+" lnN "+str(1+sm_lhe_weight_hist.GetBinError(i)/sm_lhe_weight_hist.GetBinContent(i)))
+        
         dcard.write("mcstat_ewdim6_bin"+str(i)+" lnN "+str(1+labels["wg+jets"]["hists"][0].GetBinError(i)/labels["wg+jets"]["hists"][0].GetBinContent(i)))
         for label in labels.keys():
             if label == "no label" or label == "wg+jets":
