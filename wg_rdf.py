@@ -51,6 +51,8 @@ def deltaR(eta1,phi1,eta2=None,phi2=None):
     return hypot(eta1-eta2, deltaPhi(phi1,phi2))
 
 
+dict_lumi = {"2016" : 35.9, "2017" : 41.5, "2018" : 59.6}
+
 parser = optparse.OptionParser()
 
 
@@ -81,16 +83,16 @@ if options.ewdim6_scaling_only and not options.ewdim6:
 
 if options.year == "2016":
     years = ["2016"]
-    totallumi=35.9
+    totallumi=dict_lumi["2016"]
 elif options.year == "2017":
     years=["2017"]
-    totallumi=41.5
+    totallumi=dict_lumi["2017"]
 elif options.year == "2018":
     years=["2018"]
-    totallumi=59.6
+    totallumi=dict_lumi["2018"]
 elif options.year == "run2":
     years=["2016","2017","2018"]
-    totallumi=137.1
+    totallumi=dict_lumi["2016"]+dict_lumi["2017"]+dict_lumi["2018"]
 else:
     assert(0)
 
@@ -239,17 +241,16 @@ assert(len(variables) == len(histogram_models))
 mlg_index = 9
 
 #ewdim6_filename = "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjetsewdim6.root.bak"
-ewdim6_filename = "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjetsewdim6.root"
+ewdim6_samples = {
+"2016" : [{"xs" : 4.318, "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjetsewdim6.root"}],
+"2017" : [{"xs" : 4.318, "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjetsewdim6.root"}],
+"2018" : [{"xs" : 4.318, "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjetsewdim6.root"}]
+}
 
-ewdim6_file = ROOT.TFile(ewdim6_filename)
-
-ewdim6_tree = ewdim6_file.Get("Events")
-
-#ewdim6_xs = 5.519
-ewdim6_xs = 4.318
-
-#ewdim6_nweightedevents = ewdim6_file.Get("nEventsGenWeighted").GetBinContent(1)
-ewdim6_nweightedevents = ewdim6_file.Get("nWeightedEvents").GetBinContent(1)
+for year in years:
+    for sample in ewdim6_samples[year]:
+        sample["file"] = ROOT.TFile(sample["filename"])
+        sample["nweightedevents"] = sample["file"].Get("nWeightedEvents").GetBinContent(1)
 
 def getXaxisLabel(varname):
     if varname == "njets40":
@@ -445,14 +446,7 @@ if "wg+jets" in labels:
     nweightedevents = 0
     for year in years:
 
-        if year == "2016":
-            lumi=35.9
-        elif year == "2017":
-            lumi=41.5
-        elif year == "2018":
-            lumi=59.6
-        else:
-            assert(0)
+        lumi = dict_lumi[year]
 
         nweightedeventspassgenselection+=labels["wg+jets"]["samples"][year][0]["nweightedevents_passfiducial"]*lumi
         nweightedevents+=labels["wg+jets"]["samples"][year][0]["nweightedevents"]*lumi
@@ -523,231 +517,6 @@ for i in range(len(variables)):
 c1 = ROOT.TCanvas("c1", "c1",5,50,500,500)
 
 ROOT.gROOT.cd()
-
-if options.ewdim6:
-
-    sm_lhe_weight = 373
-
-    sm_lhe_weight_hist = ROOT.TH1D('', '', n_photon_pt_bins, binning_photon_pt )
-
-    sm_hist = ROOT.TH1D('', '', n_photon_pt_bins, binning_photon_pt )
-
-    cwww_reweights = [373,1,2,3,4,5,6]
-
-    #cwww_coefficients = [0.0, 10.0,-10.0,20.0,-20.0,-30.0,30.0]
-
-    cwww_coefficients = [0.0, 1.0,-1.0,2.0,-2.0,-3.0,3.0]
-
-    cwww_hists = []
-
-    cw_reweights = [373,7,8,9,10,11,12]
-
-    #cw_coefficients = [0.0, 80.0,-80.0,160.0,-160.0,240.0,-240.0]
-
-    cw_coefficients = [0.0, 17.0,-17.0,34.0,-34.0,51.0,-51.0]
-
-    cw_hists = []
-
-    cb_reweights = [373,13,14,15,16,17,18]
-
-    #cb_coefficients = [0.0, 80.0,-80.0,160.0,-160.0,240.0,-240.0]
-
-    cb_coefficients = [0.0, 17.0,-17.0,34.0,-34.0,51.0,-51.0]
-
-    cb_hists = []
-
-    cpwww_reweights = [373,19,20,21,22,23,24]
-
-    #cpwww_coefficients = [0.0, 4.0,-4.0,8.0,-8.0,12.0,-12.0]
-
-    cpwww_coefficients = [0.0, 0.5,-0.5,1.0,-1.0,1.5,-1.5]
-
-    cpwww_hists = []
-
-    cpw_reweights = [373,25,26,27,28,29,30]
-
-    #cpw_coefficients = [0.0, 40.0,-40.0,80.0,-80.0,120.0,-120.0]
-
-    cpw_coefficients = [0.0, 8.0,-8.0,16.0,-16.0,24.0,-24.0]
-
-    cpw_hists = []
-
-    for i in range(0,len(cwww_reweights)):
-        cwww_hists.append(ROOT.TH1D('', '', n_photon_pt_bins, binning_photon_pt ))
-
-    for i in range(0,len(cw_reweights)):
-        cw_hists.append(ROOT.TH1D('', '', n_photon_pt_bins, binning_photon_pt ))
-
-    for i in range(0,len(cb_reweights)):
-        cb_hists.append(ROOT.TH1D('', '', n_photon_pt_bins, binning_photon_pt ))
-
-    for i in range(0,len(cpwww_reweights)):
-        cpwww_hists.append(ROOT.TH1D('', '', n_photon_pt_bins, binning_photon_pt ))
-
-    for i in range(0,len(cpw_reweights)):
-        cpw_hists.append(ROOT.TH1D('', '', n_photon_pt_bins, binning_photon_pt ))
-
-    for i in range(labels["wg+jets"]["samples"][year][0]["tree"].GetEntries()):
-        labels["wg+jets"]["samples"]["2016"][0]["tree"].GetEntry(i)
-
-        w = labels["wg+jets"]["samples"]["2016"][0]["xs"]*1000*lumi/labels["wg+jets"]["samples"]["2016"][0]["nweightedevents"]
-
-#        w *= pu_weight_hist.GetBinContent(pu_weight_hist.FindFixBin(labels["wg+jets"]["samples"]["2016"][0]["tree"].npu))
-
-#        w *= eff_scale_factor.photon_efficiency_scale_factor(labels["wg+jets"]["samples"]["2016"][0]["tree"].photon_pt,labels["wg+jets"]["samples"]["2016"][0]["tree"].photon_eta)
-
-#        if labels["wg+jets"]["samples"][0]["tree"].lepton_pdg_id == 13:
-#            w *= eff_scale_factor.muon_efficiency_scale_factor(labels["wg+jets"]["samples"]["2016"][0]["tree"].lepton_pt,labels["wg+jets"]["samples"]["2016"][0]["tree"].lepton_eta)
-#        elif labels["wg+jets"]["samples"][0]["tree"].lepton_pdg_id == 11:    
-#            w *= eff_scale_factor.electron_efficiency_scale_factor(labels["wg+jets"]["samples"]["2016"][0]["tree"].lepton_pt,labels["wg+jets"]["samples"]["2016"][0]["tree"].lepton_eta)
-#        else:
-#            assert(0)
-
-        if labels["wg+jets"]["samples"]["2016"][0]["tree"].gen_weight < 0:
-            w = -w
-
-#        if pass_selection(labels["wg+jets"]["samples"]["2016"][0]["tree"],year,options.phoeta):
-        fillHistogram(sm_hist,labels["wg+jets"]["samples"]["2016"][0]["tree"].photon_pt,w)
-
-    sm_hist.Print("all")
-
-    for i in range(ewdim6_tree.GetEntries()):
-        ewdim6_tree.GetEntry(i)
-
-        w = ewdim6_xs*1000*lumi/ewdim6_nweightedevents
-
-#        w *= pu_weight_hist.GetBinContent(pu_weight_hist.FindFixBin(ewdim6_tree.npu))
-
-#        w *= eff_scale_factor.photon_efficiency_scale_factor(ewdim6_tree.photon_pt,ewdim6_tree.photon_eta)
-
-#        if ewdim6_tree.lepton_pdg_id == 13:
-#            w *= eff_scale_factor.muon_efficiency_scale_factor(ewdim6_tree.lepton_pt,ewdim6_tree.lepton_eta)
-#        elif ewdim6_tree.lepton_pdg_id == 11:    
-#            w *= eff_scale_factor.electron_efficiency_scale_factor(ewdim6_tree.lepton_pt,ewdim6_tree.lepton_eta)
-#        else:
-#            assert(0)
-
-        if ewdim6_tree.gen_weight < 0:
-            w = -w
-
-#        if pass_selection(ewdim6_tree,year,options.phoeta):
-        if True:
-            for j in range(len(cwww_reweights)):
-                fillHistogram(cwww_hists[j],ewdim6_tree.photon_pt,w*getattr(ewdim6_tree, 'LHEWeight_rwgt_'+str(cwww_reweights[j])))
-
-            for j in range(len(cw_reweights)):
-                fillHistogram(cw_hists[j],ewdim6_tree.photon_pt,w*getattr(ewdim6_tree, 'LHEWeight_rwgt_'+str(cw_reweights[j])))
-
-            for j in range(len(cb_reweights)):
-                fillHistogram(cb_hists[j],ewdim6_tree.photon_pt,w*getattr(ewdim6_tree, 'LHEWeight_rwgt_'+str(cb_reweights[j])))
-
-            for j in range(len(cpwww_reweights)):
-                fillHistogram(cpwww_hists[j],ewdim6_tree.photon_pt,w*getattr(ewdim6_tree, 'LHEWeight_rwgt_'+str(cpwww_reweights[j])))
-
-            for j in range(len(cpw_reweights)):
-                fillHistogram(cpw_hists[j],ewdim6_tree.photon_pt,w*getattr(ewdim6_tree, 'LHEWeight_rwgt_'+str(cpw_reweights[j])))
-
-            fillHistogram(sm_lhe_weight_hist,ewdim6_tree.photon_pt,w*getattr(ewdim6_tree, 'LHEWeight_rwgt_'+str(sm_lhe_weight)))
-
-    cwww_scaling_outfile = ROOT.TFile("cwww_scaling.root",'recreate')
-    cw_scaling_outfile = ROOT.TFile("cw_scaling.root",'recreate')
-    cb_scaling_outfile = ROOT.TFile("cb_scaling.root",'recreate')
-    cpwww_scaling_outfile = ROOT.TFile("cpwww_scaling.root",'recreate')
-    cpw_scaling_outfile = ROOT.TFile("cpw_scaling.root",'recreate')
-
-    cwww_hist_max = max(cwww_coefficients) + (max(cwww_coefficients) - min(cwww_coefficients))/(len(cwww_coefficients)-1)/2
-    cwww_hist_min = min(cwww_coefficients) - (max(cwww_coefficients) - min(cwww_coefficients))/(len(cwww_coefficients)-1)/2
-
-    cw_hist_max = max(cw_coefficients) + (max(cw_coefficients) - min(cw_coefficients))/(len(cw_coefficients)-1)/2
-    cw_hist_min = min(cw_coefficients) - (max(cw_coefficients) - min(cw_coefficients))/(len(cw_coefficients)-1)/2
-
-    cb_hist_max = max(cb_coefficients) + (max(cb_coefficients) - min(cb_coefficients))/(len(cb_coefficients)-1)/2
-    cb_hist_min = min(cb_coefficients) - (max(cb_coefficients) - min(cb_coefficients))/(len(cb_coefficients)-1)/2
-
-    cpwww_hist_max = max(cpwww_coefficients) + (max(cpwww_coefficients) - min(cpwww_coefficients))/(len(cpwww_coefficients)-1)/2
-    cpwww_hist_min = min(cpwww_coefficients) - (max(cpwww_coefficients) - min(cpwww_coefficients))/(len(cpwww_coefficients)-1)/2
-
-    cpw_hist_max = max(cpw_coefficients) + (max(cpw_coefficients) - min(cpw_coefficients))/(len(cpw_coefficients)-1)/2
-    cpw_hist_min = min(cpw_coefficients) - (max(cpw_coefficients) - min(cpw_coefficients))/(len(cpw_coefficients)-1)/2
-
-    sm_lhe_weight_hist.Print("all")
-
-    cwww_scaling_hists = {}
-
-    for i in range(1,cwww_hists[0].GetNbinsX()+1):
-        ROOT.gROOT.cd() #so that the histogram created in the next line is not put in a file that is closed
-        cwww_scaling_hists[i]=ROOT.TH1D("ewdim6_scaling_bin_"+str(i),"ewdim6_scaling_bin_"+str(i),len(cwww_coefficients),cwww_hist_min,cwww_hist_max);
-
-        for j in range(0,len(cwww_hists)):
-            assert(sm_lhe_weight_hist.GetBinContent(i) > 0)
-
-            cwww_scaling_hists[i].SetBinContent(cwww_scaling_hists[i].GetXaxis().FindFixBin(cwww_coefficients[j]), cwww_hists[j].GetBinContent(i)/sm_lhe_weight_hist.GetBinContent(i))
-        
-        cwww_scaling_outfile.cd()
-        cwww_scaling_hists[i].Write()
-
-    cwww_scaling_outfile.Close()
-
-    for i in range(1,cw_hists[0].GetNbinsX()+1):
-        cw_scaling_hist=ROOT.TH1D("ewdim6_scaling_bin_"+str(i),"ewdim6_scaling_bin_"+str(i),len(cw_coefficients),cw_hist_min,cw_hist_max);
-
-        for j in range(0,len(cw_hists)):
-            assert(sm_lhe_weight_hist.GetBinContent(i) > 0)
-
-            cw_scaling_hist.SetBinContent(cw_scaling_hist.GetXaxis().FindFixBin(cw_coefficients[j]), cw_hists[j].GetBinContent(i)/sm_lhe_weight_hist.GetBinContent(i))
-        
-        cw_scaling_outfile.cd()
-        cw_scaling_hist.Write()
-
-    cw_scaling_outfile.Close()
-
-    for i in range(1,cb_hists[0].GetNbinsX()+1):
-        cb_scaling_hist=ROOT.TH1D("ewdim6_scaling_bin_"+str(i),"ewdim6_scaling_bin_"+str(i),len(cb_coefficients),cb_hist_min,cb_hist_max);
-
-        for j in range(0,len(cb_hists)):
-            assert(sm_lhe_weight_hist.GetBinContent(i) > 0)
-
-            cb_scaling_hist.SetBinContent(cb_scaling_hist.GetXaxis().FindFixBin(cb_coefficients[j]), cb_hists[j].GetBinContent(i)/sm_lhe_weight_hist.GetBinContent(i))
-        
-        cb_scaling_outfile.cd()
-        cb_scaling_hist.Write()
-
-    cb_scaling_outfile.Close()
-
-    for i in range(1,cpwww_hists[0].GetNbinsX()+1):
-        cpwww_scaling_hist=ROOT.TH1D("ewdim6_scaling_bin_"+str(i),"ewdim6_scaling_bin_"+str(i),len(cpwww_coefficients),cpwww_hist_min,cpwww_hist_max);
-
-        for j in range(0,len(cpwww_hists)):
-            assert(sm_lhe_weight_hist.GetBinContent(i) > 0)
-
-            cpwww_scaling_hist.SetBinContent(cpwww_scaling_hist.GetXaxis().FindFixBin(cpwww_coefficients[j]), cpwww_hists[j].GetBinContent(i)/sm_lhe_weight_hist.GetBinContent(i))
-        
-        cpwww_scaling_outfile.cd()
-        cpwww_scaling_hist.Write()
-
-    cpwww_scaling_outfile.Close()
-
-    for i in range(1,cpw_hists[0].GetNbinsX()+1):
-        cpw_scaling_hist=ROOT.TH1D("ewdim6_scaling_bin_"+str(i),"ewdim6_scaling_bin_"+str(i),len(cpw_coefficients),cpw_hist_min,cpw_hist_max);
-
-        for j in range(0,len(cpw_hists)):
-            assert(sm_lhe_weight_hist.GetBinContent(i) > 0)
-
-            cpw_scaling_hist.SetBinContent(cpw_scaling_hist.GetXaxis().FindFixBin(cpw_coefficients[j]), cpw_hists[j].GetBinContent(i)/sm_lhe_weight_hist.GetBinContent(i))
-        
-        cpw_scaling_outfile.cd()
-        cpw_scaling_hist.Write()
-
-    cpw_scaling_outfile.Close()
-
-if options.ewdim6_scaling_only:
-    sys.exit(1)
-
-data_mlg_tree = ROOT.TTree()
-
-array_data_mlg=array('f',[0])
-
-data_mlg_tree.Branch('m',array_data_mlg,'m/F')
 
 eff_scale_factor_cpp = '''
 
@@ -1153,6 +922,302 @@ float get_fake_photon_weight(float eta, float pt, string year, int lepton_pdg_id
 ROOT.gInterpreter.Declare(fake_lepton_weight_cpp)
 ROOT.gInterpreter.Declare(fake_photon_weight_cpp)
 ROOT.gInterpreter.Declare(eff_scale_factor_cpp)
+
+if options.ewdim6:
+
+    sm_lhe_weight = 373
+
+    sm_lhe_weight_hist = ROOT.TH1D('', '', n_photon_pt_bins, binning_photon_pt )
+
+    sm_hist = ROOT.TH1D('', '', n_photon_pt_bins, binning_photon_pt )
+
+    cwww_reweights = [373,1,2,3,4,5,6]
+
+    #cwww_coefficients = [0.0, 10.0,-10.0,20.0,-20.0,-30.0,30.0]
+
+    cwww_coefficients = [0.0, 1.0,-1.0,2.0,-2.0,-3.0,3.0]
+
+    cwww_hists = []
+
+    cw_reweights = [373,7,8,9,10,11,12]
+
+    #cw_coefficients = [0.0, 80.0,-80.0,160.0,-160.0,240.0,-240.0]
+
+    cw_coefficients = [0.0, 17.0,-17.0,34.0,-34.0,51.0,-51.0]
+
+    cw_hists = []
+
+    cb_reweights = [373,13,14,15,16,17,18]
+
+    #cb_coefficients = [0.0, 80.0,-80.0,160.0,-160.0,240.0,-240.0]
+
+    cb_coefficients = [0.0, 17.0,-17.0,34.0,-34.0,51.0,-51.0]
+
+    cb_hists = []
+
+    cpwww_reweights = [373,19,20,21,22,23,24]
+
+    #cpwww_coefficients = [0.0, 4.0,-4.0,8.0,-8.0,12.0,-12.0]
+
+    cpwww_coefficients = [0.0, 0.5,-0.5,1.0,-1.0,1.5,-1.5]
+
+    cpwww_hists = []
+
+    cpw_reweights = [373,25,26,27,28,29,30]
+
+    #cpw_coefficients = [0.0, 40.0,-40.0,80.0,-80.0,120.0,-120.0]
+
+    cpw_coefficients = [0.0, 8.0,-8.0,16.0,-16.0,24.0,-24.0]
+
+    cpw_hists = []
+
+    for i in range(0,len(cwww_reweights)):
+        cwww_hists.append(ROOT.TH1D('', '', n_photon_pt_bins, binning_photon_pt ))
+
+    for i in range(0,len(cw_reweights)):
+        cw_hists.append(ROOT.TH1D('', '', n_photon_pt_bins, binning_photon_pt ))
+
+    for i in range(0,len(cb_reweights)):
+        cb_hists.append(ROOT.TH1D('', '', n_photon_pt_bins, binning_photon_pt ))
+
+    for i in range(0,len(cpwww_reweights)):
+        cpwww_hists.append(ROOT.TH1D('', '', n_photon_pt_bins, binning_photon_pt ))
+
+    for i in range(0,len(cpw_reweights)):
+        cpw_hists.append(ROOT.TH1D('', '', n_photon_pt_bins, binning_photon_pt ))
+
+    gen_matching_string = "(is_lepton_real == 1 && (photon_gen_matching == 4 || photon_gen_matching == 5 || photon_gen_matching == 6))"
+
+    for year in years:    
+
+        lumi = dict_lumi[year]
+
+        rdf=ROOT.RDataFrame("Events",labels["wg+jets"]["samples"][year][0]["filename"])
+
+        if options.lep == "muon":
+            if year == "2016":
+                rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25 && photon_selection == 0 && is_lepton_tight == 1 && "+str(gen_matching_string))
+            elif year == "2017":
+                rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 30 && lepton_pt > 25 && "+str(gen_matching_string))
+            elif year == "2018":
+                rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25 && "+str(gen_matching_string))
+            else:
+                assert(0)
+        elif options.lep == "electron":                
+            if year == "2016":
+                rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 30 && "+str(gen_matching_string))
+            elif year == "2017":
+                rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35 && "+str(gen_matching_string))
+            elif year == "2018":
+                rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35 && "+str(gen_matching_string))
+            else:
+                assert(0)
+        elif options.lep == "both":    
+            if year == "2016":
+                rinterface = rdf.Filter("((puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25) || (puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 30)) && "+str(gen_matching_string))
+            elif year == "2017":
+                rinterface = rdf.Filter("((puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 30) || (puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35)) && "+str(gen_matching_string))
+            elif year == "2018":
+                rinterface = rdf.Filter("((puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25) || (puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35)) && "+str(gen_matching_string))
+            else:
+                assert(0)
+        else:
+            assert(0)
+
+        rinterface = rinterface.Define("xs_weight",str(labels["wg+jets"]["samples"][year][0]["xs"]*1000*lumi/labels["wg+jets"]["samples"][year][0]["nweightedevents"]) + "*gen_weight/abs(gen_weight)")  
+
+        rresultptr = rinterface.Histo1D(histogram_models[0],variables[0],"xs_weight")
+
+        sm_hist.Add(rresultptr.GetValue())
+
+    sm_hist.Print("all")
+
+    for year in years:
+
+        lumi = dict_lumi[year]
+
+        rdf=ROOT.RDataFrame("Events",ewdim6_samples[year][0]["filename"])
+
+        if options.lep == "muon":
+            if year == "2016":
+                rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25 && "+str(gen_matching_string))
+            elif year == "2017":
+                rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 30 && lepton_pt > 25 && "+str(gen_matching_string))
+            elif year == "2018":
+                rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25 && "+str(gen_matching_string))
+            else:
+                assert(0)
+        elif options.lep == "electron":                
+            if year == "2016":
+                rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 30 && "+str(gen_matching_string))
+            elif year == "2017":
+                rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35 && "+str(gen_matching_string))
+            elif year == "2018":
+                rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35 && "+str(gen_matching_string))
+            else:
+                assert(0)
+        elif options.lep == "both":    
+            if year == "2016":
+                rinterface = rdf.Filter("((puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25) || (puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 30)) && "+str(gen_matching_string))
+            elif year == "2017":
+                rinterface = rdf.Filter("((puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 30) || (puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35)) && "+str(gen_matching_string))
+            elif year == "2018":
+                rinterface = rdf.Filter("((puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25) || (puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35)) && "+str(gen_matching_string))
+            else:
+                assert(0)
+        else:
+            assert(0)
+
+        rinterface = rinterface.Define("xs_weight",str(ewdim6_samples[year][0]["xs"]*1000*lumi/ewdim6_samples[year][0]["nweightedevents"]) + "*gen_weight/abs(gen_weight)")  
+
+        rinterface = rinterface.Define("weight","xs_weight*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\") : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\"))")    
+
+        rresultptrs_cwww = []
+        rresultptrs_cw = []
+        rresultptrs_cb = []
+        rresultptrs_cpwww = []
+        rresultptrs_cpw = []
+
+        for i in range(len(cwww_reweights)):
+            rinterface = rinterface.Define("cwww_weight_"+str(i),"weight*LHEWeight_rwgt_"+str(cwww_reweights[i]))
+            rresultptrs_cwww.append(rinterface.Histo1D(histogram_models[0],variables[0],"cwww_weight_"+str(i)))
+            
+
+        for i in range(len(cw_reweights)):
+            rinterface = rinterface.Define("cw_weight_"+str(i),"weight*LHEWeight_rwgt_"+str(cw_reweights[i]))
+            rresultptrs_cw.append(rinterface.Histo1D(histogram_models[0],variables[0],"cw_weight_"+str(i)))
+
+        for i in range(len(cb_reweights)):
+            rinterface = rinterface.Define("cb_weight_"+str(i),"weight*LHEWeight_rwgt_"+str(cb_reweights[i]))
+            rresultptrs_cb.append(rinterface.Histo1D(histogram_models[0],variables[0],"cb_weight_"+str(i)))
+
+        for i in range(len(cpwww_reweights)):
+            rinterface = rinterface.Define("cpwww_weight_"+str(i),"weight*LHEWeight_rwgt_"+str(cpwww_reweights[i]))
+            rresultptrs_cpwww.append(rinterface.Histo1D(histogram_models[0],variables[0],"cpwww_weight_"+str(i)))
+
+        for i in range(len(cpw_reweights)):
+            rinterface = rinterface.Define("cpw_weight_"+str(i),"weight*LHEWeight_rwgt_"+str(cpw_reweights[i]))
+            rresultptrs_cpw.append(rinterface.Histo1D(histogram_models[0],variables[0],"cpw_weight_"+str(i)))
+
+        rinterface = rinterface.Define("sm_weight","weight*LHEWeight_rwgt_"+str(sm_lhe_weight))
+        rresultptr_sm = rinterface.Histo1D(histogram_models[0],variables[0],"sm_weight")
+
+        for i in range(len(cwww_reweights)):
+            cwww_hists[i].Add(rresultptrs_cwww[i].GetValue())
+
+        for i in range(len(cw_reweights)):
+            cw_hists[i].Add(rresultptrs_cw[i].GetValue())
+
+        for i in range(len(cb_reweights)):
+            cb_hists[i].Add(rresultptrs_cb[i].GetValue())
+
+        for i in range(len(cpwww_reweights)):
+            cpwww_hists[i].Add(rresultptrs_cpwww[i].GetValue())
+
+        for i in range(len(cpw_reweights)):
+            cpw_hists[i].Add(rresultptrs_cpw[i].GetValue())
+
+        sm_lhe_weight_hist.Add(rresultptr_sm.GetValue())
+
+    cwww_scaling_outfile = ROOT.TFile("cwww_scaling.root",'recreate')
+    cw_scaling_outfile = ROOT.TFile("cw_scaling.root",'recreate')
+    cb_scaling_outfile = ROOT.TFile("cb_scaling.root",'recreate')
+    cpwww_scaling_outfile = ROOT.TFile("cpwww_scaling.root",'recreate')
+    cpw_scaling_outfile = ROOT.TFile("cpw_scaling.root",'recreate')
+
+    cwww_hist_max = max(cwww_coefficients) + (max(cwww_coefficients) - min(cwww_coefficients))/(len(cwww_coefficients)-1)/2
+    cwww_hist_min = min(cwww_coefficients) - (max(cwww_coefficients) - min(cwww_coefficients))/(len(cwww_coefficients)-1)/2
+
+    cw_hist_max = max(cw_coefficients) + (max(cw_coefficients) - min(cw_coefficients))/(len(cw_coefficients)-1)/2
+    cw_hist_min = min(cw_coefficients) - (max(cw_coefficients) - min(cw_coefficients))/(len(cw_coefficients)-1)/2
+
+    cb_hist_max = max(cb_coefficients) + (max(cb_coefficients) - min(cb_coefficients))/(len(cb_coefficients)-1)/2
+    cb_hist_min = min(cb_coefficients) - (max(cb_coefficients) - min(cb_coefficients))/(len(cb_coefficients)-1)/2
+
+    cpwww_hist_max = max(cpwww_coefficients) + (max(cpwww_coefficients) - min(cpwww_coefficients))/(len(cpwww_coefficients)-1)/2
+    cpwww_hist_min = min(cpwww_coefficients) - (max(cpwww_coefficients) - min(cpwww_coefficients))/(len(cpwww_coefficients)-1)/2
+
+    cpw_hist_max = max(cpw_coefficients) + (max(cpw_coefficients) - min(cpw_coefficients))/(len(cpw_coefficients)-1)/2
+    cpw_hist_min = min(cpw_coefficients) - (max(cpw_coefficients) - min(cpw_coefficients))/(len(cpw_coefficients)-1)/2
+
+    sm_lhe_weight_hist.Print("all")
+
+    cwww_scaling_hists = {}
+
+    for i in range(1,cwww_hists[0].GetNbinsX()+1):
+        ROOT.gROOT.cd() #so that the histogram created in the next line is not put in a file that is closed
+        cwww_scaling_hists[i]=ROOT.TH1D("ewdim6_scaling_bin_"+str(i),"ewdim6_scaling_bin_"+str(i),len(cwww_coefficients),cwww_hist_min,cwww_hist_max);
+
+        for j in range(0,len(cwww_hists)):
+            assert(sm_lhe_weight_hist.GetBinContent(i) > 0)
+
+            cwww_scaling_hists[i].SetBinContent(cwww_scaling_hists[i].GetXaxis().FindFixBin(cwww_coefficients[j]), cwww_hists[j].GetBinContent(i)/sm_lhe_weight_hist.GetBinContent(i))
+        
+        cwww_scaling_outfile.cd()
+        cwww_scaling_hists[i].Write()
+
+    cwww_scaling_outfile.Close()
+
+    for i in range(1,cw_hists[0].GetNbinsX()+1):
+        cw_scaling_hist=ROOT.TH1D("ewdim6_scaling_bin_"+str(i),"ewdim6_scaling_bin_"+str(i),len(cw_coefficients),cw_hist_min,cw_hist_max);
+
+        for j in range(0,len(cw_hists)):
+            assert(sm_lhe_weight_hist.GetBinContent(i) > 0)
+
+            cw_scaling_hist.SetBinContent(cw_scaling_hist.GetXaxis().FindFixBin(cw_coefficients[j]), cw_hists[j].GetBinContent(i)/sm_lhe_weight_hist.GetBinContent(i))
+        
+        cw_scaling_outfile.cd()
+        cw_scaling_hist.Write()
+
+    cw_scaling_outfile.Close()
+
+    for i in range(1,cb_hists[0].GetNbinsX()+1):
+        cb_scaling_hist=ROOT.TH1D("ewdim6_scaling_bin_"+str(i),"ewdim6_scaling_bin_"+str(i),len(cb_coefficients),cb_hist_min,cb_hist_max);
+
+        for j in range(0,len(cb_hists)):
+            assert(sm_lhe_weight_hist.GetBinContent(i) > 0)
+
+            cb_scaling_hist.SetBinContent(cb_scaling_hist.GetXaxis().FindFixBin(cb_coefficients[j]), cb_hists[j].GetBinContent(i)/sm_lhe_weight_hist.GetBinContent(i))
+        
+        cb_scaling_outfile.cd()
+        cb_scaling_hist.Write()
+
+    cb_scaling_outfile.Close()
+
+    for i in range(1,cpwww_hists[0].GetNbinsX()+1):
+        cpwww_scaling_hist=ROOT.TH1D("ewdim6_scaling_bin_"+str(i),"ewdim6_scaling_bin_"+str(i),len(cpwww_coefficients),cpwww_hist_min,cpwww_hist_max);
+
+        for j in range(0,len(cpwww_hists)):
+            assert(sm_lhe_weight_hist.GetBinContent(i) > 0)
+
+            cpwww_scaling_hist.SetBinContent(cpwww_scaling_hist.GetXaxis().FindFixBin(cpwww_coefficients[j]), cpwww_hists[j].GetBinContent(i)/sm_lhe_weight_hist.GetBinContent(i))
+        
+        cpwww_scaling_outfile.cd()
+        cpwww_scaling_hist.Write()
+
+    cpwww_scaling_outfile.Close()
+
+    for i in range(1,cpw_hists[0].GetNbinsX()+1):
+        cpw_scaling_hist=ROOT.TH1D("ewdim6_scaling_bin_"+str(i),"ewdim6_scaling_bin_"+str(i),len(cpw_coefficients),cpw_hist_min,cpw_hist_max);
+
+        for j in range(0,len(cpw_hists)):
+            assert(sm_lhe_weight_hist.GetBinContent(i) > 0)
+
+            cpw_scaling_hist.SetBinContent(cpw_scaling_hist.GetXaxis().FindFixBin(cpw_coefficients[j]), cpw_hists[j].GetBinContent(i)/sm_lhe_weight_hist.GetBinContent(i))
+        
+        cpw_scaling_outfile.cd()
+        cpw_scaling_hist.Write()
+
+    cpw_scaling_outfile.Close()
+
+if options.ewdim6_scaling_only:
+    sys.exit(1)
+
+data_mlg_tree = ROOT.TTree()
+
+array_data_mlg=array('f',[0])
+
+data_mlg_tree.Branch('m',array_data_mlg,'m/F')
 
 for year in years:
 
@@ -2581,8 +2646,8 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
         dcard.write(" " + str(j))
     dcard.write('\n')    
     dcard.write('rate')
-#    dcard.write(' '+str(sm_lhe_weight_hist.GetBinContent(i)))
-    dcard.write(' '+str(labels["wg+jets"]["hists"][0].GetBinContent(i)))
+    dcard.write(' '+str(sm_lhe_weight_hist.GetBinContent(i)))
+#    dcard.write(' '+str(labels["wg+jets"]["hists"][0].GetBinContent(i)))
     for label in labels.keys():
         if label == "no label" or label == "wg+jets":
             continue
@@ -2637,9 +2702,9 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
     dcard.write('\n')    
 
     if sm_lhe_weight_hist.GetBinContent(i) > 0:
-#        dcard.write("mcstat_ewdim6_bin"+str(i)+" lnN "+str(1+sm_lhe_weight_hist.GetBinError(i)/sm_lhe_weight_hist.GetBinContent(i)))
+        dcard.write("mcstat_ewdim6_bin"+str(i)+" lnN "+str(1+sm_lhe_weight_hist.GetBinError(i)/sm_lhe_weight_hist.GetBinContent(i)))
         
-        dcard.write("mcstat_ewdim6_bin"+str(i)+" lnN "+str(1+labels["wg+jets"]["hists"][0].GetBinError(i)/labels["wg+jets"]["hists"][0].GetBinContent(i)))
+#        dcard.write("mcstat_ewdim6_bin"+str(i)+" lnN "+str(1+labels["wg+jets"]["hists"][0].GetBinError(i)/labels["wg+jets"]["hists"][0].GetBinContent(i)))
         for label in labels.keys():
             if label == "no label" or label == "wg+jets":
                 continue
