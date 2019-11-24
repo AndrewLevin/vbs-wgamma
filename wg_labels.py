@@ -119,19 +119,19 @@ labels = {
                 [
                 ##            {"filename": "/afs/cern.ch/work/a/amlevin/data/wg/2016/zglowmlljets.root", "xs" : 96.75, "non_fsr" : True, "e_to_p_non_res" : False, "e_to_p" : False, "fsr" : True, "e_to_p_for_fake" : True} 
                 #            {"filename": "/afs/cern.ch/work/a/amlevin/data/wg/2016/14Dec2018/zglowmlljets.root", "xs" : 96.75, "non_fsr" : True, "e_to_p_non_res" : False, "e_to_p" : False, "fsr" : True, "e_to_p_for_fake" : True} 
-                {"filename": "/afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019/zglowmlljets.root", "xs" : 96.75/3, "non_fsr" : True, "e_to_p_non_res" : False, "e_to_p" : False, "fsr" : True, "e_to_p_for_fake" : True} 
+                {"filename": "/afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019/zglowmlljets.root", "xs" : 96.75, "non_fsr" : True, "e_to_p_non_res" : False, "e_to_p" : False, "fsr" : True, "e_to_p_for_fake" : True} 
                 ], 
             "2017":
                 [
                 ##            {"filename": "/afs/cern.ch/work/a/amlevin/data/wg/2016/zglowmlljets.root", "xs" : 96.75, "non_fsr" : True, "e_to_p_non_res" : False, "e_to_p" : False, "fsr" : True, "e_to_p_for_fake" : True} 
                 #            {"filename": "/afs/cern.ch/work/a/amlevin/data/wg/2016/14Dec2018/zglowmlljets.root", "xs" : 96.75, "non_fsr" : True, "e_to_p_non_res" : False, "e_to_p" : False, "fsr" : True, "e_to_p_for_fake" : True} 
-                {"filename": "/afs/cern.ch/work/a/amlevin/data/wg/2017/1June2019/zglowmlljets.root", "xs" : 96.75/3, "non_fsr" : True, "e_to_p_non_res" : False, "e_to_p" : False, "fsr" : True, "e_to_p_for_fake" : True} 
+                {"filename": "/afs/cern.ch/work/a/amlevin/data/wg/2017/1June2019/zglowmlljets.root", "xs" : 96.75, "non_fsr" : True, "e_to_p_non_res" : False, "e_to_p" : False, "fsr" : True, "e_to_p_for_fake" : True} 
                 ] ,
             "2018":
                 [
                 ##            {"filename": "/afs/cern.ch/work/a/amlevin/data/wg/2016/zglowmlljets.root", "xs" : 96.75, "non_fsr" : True, "e_to_p_non_res" : False, "e_to_p" : False, "fsr" : True, "e_to_p_for_fake" : True} 
                 #            {"filename": "/afs/cern.ch/work/a/amlevin/data/wg/2016/14Dec2018/zglowmlljets.root", "xs" : 96.75, "non_fsr" : True, "e_to_p_non_res" : False, "e_to_p" : False, "fsr" : True, "e_to_p_for_fake" : True} 
-                {"filename": "/afs/cern.ch/work/a/amlevin/data/wg/2018/1June2019/zglowmlljets.root", "xs" : 96.75/3, "non_fsr" : True, "e_to_p_non_res" : False, "e_to_p" : False, "fsr" : True, "e_to_p_for_fake" : True} 
+                {"filename": "/afs/cern.ch/work/a/amlevin/data/wg/2018/1June2019/zglowmlljets.root", "xs" : 96.75, "non_fsr" : True, "e_to_p_non_res" : False, "e_to_p" : False, "fsr" : True, "e_to_p_for_fake" : True} 
                 ] 
 
             }
