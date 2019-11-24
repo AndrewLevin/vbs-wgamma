@@ -60,6 +60,7 @@ parser.add_option('--lep',dest='lep',default='both')
 parser.add_option('--year',dest='year',default='all')
 parser.add_option('--phoeta',dest='phoeta',default='both')
 parser.add_option('--overflow',dest='overflow',action='store_true',default=False)
+parser.add_option('--fit',dest='fit',action='store_true',default=False)
 parser.add_option('--no_pdf_var_for_2017_and_2018',dest='no_pdf_var_for_2017_and_2018',action='store_true',default=False)
 parser.add_option('--ewdim6',dest='ewdim6',action='store_true',default=False)
 parser.add_option('--float_fake_sig_cont',dest='float_fake_sig_cont',action='store_true',default=False)
@@ -79,6 +80,9 @@ parser.add_option('-o',dest='outputdir',default="/eos/user/a/amlevin/www/tmp/")
 blinding_cut = float(options.blinding_cut)
 
 if options.ewdim6_scaling_only and not options.ewdim6:
+    assert(0)
+
+if options.fit and not options.lep == "electron":
     assert(0)
 
 if options.year == "2016":
@@ -1975,7 +1979,7 @@ def mlg_fit(inputs):
 
     return mlg_fit_results
 
-if lepton_name == "electron":
+if lepton_name == "electron" and options.fit:
 #if False:
 
     fit_inputs = {
@@ -2501,38 +2505,9 @@ if lepton_name == "muon":
 
 elif lepton_name == "electron":
 
-    xs_times_lumi = 0
-    for year in years:
-        if year == "2016":
-            lumi=35.9
-        elif year == "2017":
-            lumi=41.5
-        elif year == "2018":
-            lumi=59.6
-        else:
-            assert(0)
-        xs_times_lumi += labels["wg+jets"]["samples"][year][0]["xs"]*1000*lumi
+    if options.fit:
 
-    xs_inputs_electron = {
-        "lumi" : totallumi,
-        "fiducial_region_cuts_efficiency":fiducial_region_cuts_efficiency,
-        "xs_times_lumi" : xs_times_lumi,
-        "signal_mc_xs_data_mc" : labels["wg+jets"]["hists"][mlg_index].Integral(),
-        "signal_data_electron" : fit_results["wg_norm"],
-        "signal_syst_unc_due_to_pileup" : abs(fit_results_pileup_up["wg_norm"]-fit_results["wg_norm"]),
-        "signal_syst_unc_due_to_fake_photon_electron" : abs(fit_results_fake_photon_alt["wg_norm"]-fit_results["wg_norm"]),
-        "signal_syst_unc_due_to_fake_lepton_electron" : abs(fit_results_fake_lepton_syst["wg_norm"]-fit_results["wg_norm"]),
-        "signal_stat_unc_electron" : fit_results["wg_norm_err"],
-        "signal_mc_xs_data_mc_electron" : labels["wg+jets"]["hists"][mlg_index].Integral(),
-        "signal_mc_xs_data_mc_syst_unc_due_to_electron_id_sf_electron" : electron_id_sf_unc,
-        "signal_mc_xs_data_mc_syst_unc_due_to_pileup" : pileup_unc,
-        "signal_mc_xs_data_mc_syst_unc_due_to_electron_reco_sf_electron" : electron_reco_sf_unc,
-        "signal_mc_xs_data_mc_syst_unc_due_to_photon_id_sf_electron" : photon_id_sf_unc
-        }
-
-    for i in range(1,32):
-        xs_inputs_electron["signal_mc_xs_data_mc_pdf_variation"+str(i)] = labels["wg+jets"]["hists-pdf-variation"+str(i)][mlg_index].Integral()
-        xs_times_lumi_pdf_variation = 0
+        xs_times_lumi = 0
         for year in years:
             if year == "2016":
                 lumi=35.9
@@ -2542,17 +2517,92 @@ elif lepton_name == "electron":
                 lumi=59.6
             else:
                 assert(0)
+            xs_times_lumi += labels["wg+jets"]["samples"][year][0]["xs"]*1000*lumi
 
-            if (year == "2017" or year == "2018") and options.no_pdf_var_for_2017_and_2018:
-                continue
+        xs_inputs_electron = {
+            "lumi" : totallumi,
+            "fiducial_region_cuts_efficiency":fiducial_region_cuts_efficiency,
+            "xs_times_lumi" : xs_times_lumi,
+            "signal_mc_xs_data_mc" : labels["wg+jets"]["hists"][mlg_index].Integral(),
+            "signal_data_electron" : fit_results["wg_norm"],
+            "signal_syst_unc_due_to_pileup" : abs(fit_results_pileup_up["wg_norm"]-fit_results["wg_norm"]),
+            "signal_syst_unc_due_to_fake_photon_electron" : abs(fit_results_fake_photon_alt["wg_norm"]-fit_results["wg_norm"]),
+            "signal_syst_unc_due_to_fake_lepton_electron" : abs(fit_results_fake_lepton_syst["wg_norm"]-fit_results["wg_norm"]),
+            "signal_stat_unc_electron" : fit_results["wg_norm_err"],
+            "signal_mc_xs_data_mc_electron" : labels["wg+jets"]["hists"][mlg_index].Integral(),
+            "signal_mc_xs_data_mc_syst_unc_due_to_electron_id_sf_electron" : electron_id_sf_unc,
+            "signal_mc_xs_data_mc_syst_unc_due_to_pileup" : pileup_unc,
+            "signal_mc_xs_data_mc_syst_unc_due_to_electron_reco_sf_electron" : electron_reco_sf_unc,
+            "signal_mc_xs_data_mc_syst_unc_due_to_photon_id_sf_electron" : photon_id_sf_unc
+            }
 
-            xs_times_lumi_pdf_variation += labels["wg+jets"]["samples"][year][0]["xs"]*1000*lumi*labels["wg+jets"]["samples"][year][0]["nweightedevents_pdfweight"+str(i)]/labels["wg+jets"]["samples"][year][0]["nweightedevents"]
+        for i in range(1,32):
+            xs_inputs_electron["signal_mc_xs_data_mc_pdf_variation"+str(i)] = labels["wg+jets"]["hists-pdf-variation"+str(i)][mlg_index].Integral()
+            xs_times_lumi_pdf_variation = 0
+            for year in years:
+                if year == "2016":
+                    lumi=35.9
+                elif year == "2017":
+                    lumi=41.5
+                elif year == "2018":
+                    lumi=59.6
+                else:
+                    assert(0)
 
-        xs_inputs_electron["xs_times_lumi_pdf_variation"+str(i)] = xs_times_lumi_pdf_variation
+                if (year == "2017" or year == "2018") and options.no_pdf_var_for_2017_and_2018:
+                    continue
 
-    for i in range(0,8):
-        xs_inputs_electron["signal_mc_xs_data_mc_scale_variation"+str(i)] = labels["wg+jets"]["hists-scale-variation"+str(i)][mlg_index].Integral()
-        xs_times_lumi_scale_variation = 0
+                xs_times_lumi_pdf_variation += labels["wg+jets"]["samples"][year][0]["xs"]*1000*lumi*labels["wg+jets"]["samples"][year][0]["nweightedevents_pdfweight"+str(i)]/labels["wg+jets"]["samples"][year][0]["nweightedevents"]
+
+            xs_inputs_electron["xs_times_lumi_pdf_variation"+str(i)] = xs_times_lumi_pdf_variation
+
+        for i in range(0,8):
+            xs_inputs_electron["signal_mc_xs_data_mc_scale_variation"+str(i)] = labels["wg+jets"]["hists-scale-variation"+str(i)][mlg_index].Integral()
+            xs_times_lumi_scale_variation = 0
+            for year in years:
+                if year == "2016":
+                    lumi=35.9
+                elif year == "2017":
+                    lumi=41.5
+                elif year == "2018":
+                    lumi=59.6
+                else:
+                    assert(0)
+
+                xs_times_lumi_scale_variation += labels["wg+jets"]["samples"][year][0]["xs"]*1000*lumi*labels["wg+jets"]["samples"][year][0]["nweightedevents_qcdscaleweight"+str(i)]/labels["wg+jets"]["samples"][year][0]["nweightedevents"]
+
+            xs_inputs_electron["xs_times_lumi_scale_variation"+str(i)] = xs_times_lumi_scale_variation        
+
+        for i in range(1,fake_photon["hists"][mlg_index].GetNbinsX()+1): 
+            xs_inputs_electron["signal_syst_unc_due_to_fake_photon_stat_up_bin"+str(i)] = abs(fit_results_fake_photon_stat_up[i-1]["wg_norm"] - fit_results["wg_norm"])
+
+        for i in range(1,fake_lepton["hists"][mlg_index].GetNbinsX()+1): 
+            xs_inputs_electron["signal_syst_unc_due_to_fake_lepton_stat_up_bin"+str(i)] = abs(fit_results_fake_lepton_stat_up[i-1]["wg_norm"] - fit_results["wg_norm"])
+
+        for i in range(1,double_fake["hists"][mlg_index].GetNbinsX()+1): 
+            xs_inputs_electron["signal_syst_unc_due_to_double_fake_stat_up_bin"+str(i)] = abs(fit_results_double_fake_stat_up[i-1]["wg_norm"] - fit_results["wg_norm"])
+
+        for i in range(1,labels["zg+jets"]["hists"][mlg_index].GetNbinsX()+1): 
+            xs_inputs_electron["signal_syst_unc_due_to_zg_stat_up_bin"+str(i)] = abs(fit_results_zg_stat_up[i-1]["wg_norm"] - fit_results["wg_norm"])
+
+        for i in range(1,labels["vv+jets"]["hists"][mlg_index].GetNbinsX()+1): 
+            xs_inputs_electron["signal_syst_unc_due_to_vv_stat_up_bin"+str(i)] = abs(fit_results_vv_stat_up[i-1]["wg_norm"] - fit_results["wg_norm"])
+
+        for i in range(1,labels["top+jets"]["hists"][mlg_index].GetNbinsX()+1): 
+            xs_inputs_electron["signal_syst_unc_due_to_top_stat_up_bin"+str(i)] = abs(fit_results_top_stat_up[i-1]["wg_norm"] - fit_results["wg_norm"])
+
+        for i in range(0,8): 
+            xs_inputs_electron["signal_syst_unc_due_to_zg_scale_variation"+str(i)] = fit_results_zg_scale_variation[i]["wg_norm"] - fit_results["wg_norm"]
+
+        for i in range(1,32): 
+            xs_inputs_electron["signal_syst_unc_due_to_zg_pdf_variation"+str(i)] = fit_results_zg_pdf_variation[i-1]["wg_norm"] - fit_results["wg_norm"]
+
+        xs_inputs_electron["signal_syst_unc_due_to_lumi_up"] = abs(fit_results_lumi_up["wg_norm"] - fit_results["wg_norm"])
+
+    else:
+
+        xs_times_lumi = 0
+        fiducial_xs_times_lumi = 0
         for year in years:
             if year == "2016":
                 lumi=35.9
@@ -2562,36 +2612,88 @@ elif lepton_name == "electron":
                 lumi=59.6
             else:
                 assert(0)
+            xs_times_lumi += labels["wg+jets"]["samples"][year][0]["xs"]*1000*lumi
+            fiducial_xs_times_lumi += labels["wg+jets"]["samples"][year][0]["nweightedevents_passfiducial"]*labels["wg+jets"]["samples"][year][0]["xs"]*1000*lumi/labels["wg+jets"]["samples"][year][0]["nweightedevents"]
 
-            xs_times_lumi_scale_variation += labels["wg+jets"]["samples"][year][0]["xs"]*1000*lumi*labels["wg+jets"]["samples"][year][0]["nweightedevents_qcdscaleweight"+str(i)]/labels["wg+jets"]["samples"][year][0]["nweightedevents"]
+        xs_inputs_electron = {
+            "lumi" : totallumi,
+            "fiducial" : fiducial_xs_times_lumi,
+            "fiducial_pass" : labels["wg+jets"]["hists-pass-fiducial"][mlg_index].Integral(),
+            "xs_times_lumi" : xs_times_lumi,
+            "signal_data_electron" : n_signal,
+            "signal_mc_xs_data_mc" : labels["wg+jets"]["hists"][mlg_index].Integral(),
+            "signal_syst_unc_due_to_pileup" : abs(labels["top+jets"]["hists-pileup-up"][mlg_index].Integral()+ labels["zg+jets"]["hists-pileup-up"][mlg_index].Integral()+labels["vv+jets"]["hists-pileup-up"][mlg_index].Integral()-labels["top+jets"]["hists"][mlg_index].Integral()- labels["zg+jets"]["hists"][mlg_index].Integral()-labels["vv+jets"]["hists"][mlg_index].Integral()),
+            "signal_syst_unc_due_to_fake_photon_electron" : abs(fake_photon_alt["hists"][mlg_index].Integral() - fake_photon["hists"][mlg_index].Integral()),
+            "signal_syst_unc_due_to_fake_lepton_electron" : abs(fake_lepton["hists"][mlg_index].Integral()*1.3 - fake_lepton["hists"][mlg_index].Integral()),
+            "signal_stat_unc_electron" : n_signal_error,
+            "signal_mc_xs_data_mc_syst_unc_due_to_pileup" : pileup_unc,
+            "signal_mc_xs_data_mc_syst_unc_due_to_electron_id_sf_electron" : electron_id_sf_unc,
+            "signal_mc_xs_data_mc_syst_unc_due_to_electron_reco_sf_electron" : electron_reco_sf_unc,
+            "signal_mc_xs_data_mc_syst_unc_due_to_photon_id_sf_electron" : photon_id_sf_unc
+            }
+        
+        for i in range(1,32):
+            xs_inputs_electron["signal_mc_xs_data_mc_pdf_variation"+str(i)] = labels["wg+jets"]["hists-pdf-variation"+str(i)][mlg_index].Integral()
+            xs_times_lumi_pdf_variation = 0
+            for year in years:
+                if year == "2016":
+                    lumi=35.9
+                elif year == "2017":
+                    lumi=41.5
+                elif year == "2018":
+                    lumi=59.6
+                else:
+                    assert(0)
 
-        xs_inputs_electron["xs_times_lumi_scale_variation"+str(i)] = xs_times_lumi_scale_variation        
+                if (year == "2017" or year == "2018") and options.no_pdf_var_for_2017_and_2018:
+                    continue
 
-    for i in range(1,fake_photon["hists"][mlg_index].GetNbinsX()+1): 
-        xs_inputs_electron["signal_syst_unc_due_to_fake_photon_stat_up_bin"+str(i)] = abs(fit_results_fake_photon_stat_up[i-1]["wg_norm"] - fit_results["wg_norm"])
+                xs_times_lumi_pdf_variation += labels["wg+jets"]["samples"][year][0]["xs"]*1000*lumi*labels["wg+jets"]["samples"][year][0]["nweightedevents_pdfweight"+str(i)]/labels["wg+jets"]["samples"][year][0]["nweightedevents"]
 
-    for i in range(1,fake_lepton["hists"][mlg_index].GetNbinsX()+1): 
-        xs_inputs_electron["signal_syst_unc_due_to_fake_lepton_stat_up_bin"+str(i)] = abs(fit_results_fake_lepton_stat_up[i-1]["wg_norm"] - fit_results["wg_norm"])
+            xs_inputs_electron["xs_times_lumi_pdf_variation"+str(i)] = xs_times_lumi_pdf_variation
 
-    for i in range(1,double_fake["hists"][mlg_index].GetNbinsX()+1): 
-        xs_inputs_electron["signal_syst_unc_due_to_double_fake_stat_up_bin"+str(i)] = abs(fit_results_double_fake_stat_up[i-1]["wg_norm"] - fit_results["wg_norm"])
+        for i in range(0,8):
+            xs_inputs_electron["signal_mc_xs_data_mc_scale_variation"+str(i)] = labels["wg+jets"]["hists-scale-variation"+str(i)][mlg_index].Integral() 
+            xs_times_lumi_scale_variation = 0
+            for year in years:
+                if year == "2016":
+                    lumi=35.9
+                elif year == "2017":
+                    lumi=41.5
+                elif year == "2018":
+                    lumi=59.6
+                else:
+                    assert(0)
+            
+                xs_times_lumi_scale_variation += labels["wg+jets"]["samples"][year][0]["xs"]*1000*lumi*labels["wg+jets"]["samples"][year][0]["nweightedevents_qcdscaleweight"+str(i)]/labels["wg+jets"]["samples"][year][0]["nweightedevents"]
 
-    for i in range(1,labels["zg+jets"]["hists"][mlg_index].GetNbinsX()+1): 
-        xs_inputs_electron["signal_syst_unc_due_to_zg_stat_up_bin"+str(i)] = abs(fit_results_zg_stat_up[i-1]["wg_norm"] - fit_results["wg_norm"])
+            xs_inputs_electron["xs_times_lumi_scale_variation"+str(i)] = xs_times_lumi_scale_variation        
 
-    for i in range(1,labels["vv+jets"]["hists"][mlg_index].GetNbinsX()+1): 
-        xs_inputs_electron["signal_syst_unc_due_to_vv_stat_up_bin"+str(i)] = abs(fit_results_vv_stat_up[i-1]["wg_norm"] - fit_results["wg_norm"])
+        for i in range(1,fake_photon["hists"][mlg_index].GetNbinsX()+1): 
+            xs_inputs_electron["signal_syst_unc_due_to_fake_photon_stat_up_bin"+str(i)] = fake_photon["hists"][mlg_index].GetBinError(i)
 
-    for i in range(1,labels["top+jets"]["hists"][mlg_index].GetNbinsX()+1): 
-        xs_inputs_electron["signal_syst_unc_due_to_top_stat_up_bin"+str(i)] = abs(fit_results_top_stat_up[i-1]["wg_norm"] - fit_results["wg_norm"])
+        for i in range(1,fake_lepton["hists"][mlg_index].GetNbinsX()+1): 
+            xs_inputs_electron["signal_syst_unc_due_to_fake_lepton_stat_up_bin"+str(i)] = fake_lepton["hists"][mlg_index].GetBinError(i)
 
-    for i in range(0,8): 
-        xs_inputs_electron["signal_syst_unc_due_to_zg_scale_variation"+str(i)] = fit_results_zg_scale_variation[i]["wg_norm"] - fit_results["wg_norm"]
+        for i in range(1,double_fake["hists"][mlg_index].GetNbinsX()+1): 
+            xs_inputs_electron["signal_syst_unc_due_to_double_fake_stat_up_bin"+str(i)] = double_fake["hists"][mlg_index].GetBinError(i)
 
-    for i in range(1,32): 
-        xs_inputs_electron["signal_syst_unc_due_to_zg_pdf_variation"+str(i)] = fit_results_zg_pdf_variation[i-1]["wg_norm"] - fit_results["wg_norm"]
+        for i in range(1,labels["zg+jets"]["hists"][mlg_index].GetNbinsX()+1): 
+            xs_inputs_electron["signal_syst_unc_due_to_zg_stat_up_bin"+str(i)] = labels["zg+jets"]["hists"][mlg_index].GetBinError(i)
 
-    xs_inputs_electron["signal_syst_unc_due_to_lumi_up"] = abs(fit_results_lumi_up["wg_norm"] - fit_results["wg_norm"])
+        for i in range(1,labels["vv+jets"]["hists"][mlg_index].GetNbinsX()+1): 
+            xs_inputs_electron["signal_syst_unc_due_to_vv_stat_up_bin"+str(i)] = labels["vv+jets"]["hists"][mlg_index].GetBinError(i)
+
+        for i in range(1,labels["top+jets"]["hists"][mlg_index].GetNbinsX()+1): 
+            xs_inputs_electron["signal_syst_unc_due_to_top_stat_up_bin"+str(i)] = labels["top+jets"]["hists"][mlg_index].GetBinError(i)
+
+        for i in range(0,8): 
+            xs_inputs_electron["signal_syst_unc_due_to_zg_scale_variation"+str(i)] = labels["zg+jets"]["hists"][mlg_index].Integral() - labels["zg+jets"]["hists-scale-variation"+str(i)][mlg_index].Integral()
+
+        for i in range(1,32): 
+            xs_inputs_electron["signal_syst_unc_due_to_zg_pdf_variation"+str(i)] = labels["zg+jets"]["hists"][mlg_index].Integral() - labels["zg+jets"]["hists-pdf-variation"+str(i)][mlg_index].Integral()
+
+        xs_inputs_electron["signal_syst_unc_due_to_lumi_up"] = abs(0.026*(labels["zg+jets"]["hists"][mlg_index].Integral()+labels["top+jets"]["hists"][mlg_index].Integral() + labels["vv+jets"]["hists"][mlg_index].Integral()) )
 
     pprint(xs_inputs_electron)
 
