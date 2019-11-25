@@ -1002,7 +1002,7 @@ if options.ewdim6:
             if year == "2016":
                 rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25 && photon_selection == 0 && is_lepton_tight == 1 && "+str(gen_matching_string))
             elif year == "2017":
-                rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 30 && lepton_pt > 25 && "+str(gen_matching_string))
+                rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25 && "+str(gen_matching_string))
             elif year == "2018":
                 rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25 && "+str(gen_matching_string))
             else:
@@ -1046,7 +1046,7 @@ if options.ewdim6:
             if year == "2016":
                 rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25 && "+str(gen_matching_string))
             elif year == "2017":
-                rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 30 && lepton_pt > 25 && "+str(gen_matching_string))
+                rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25 && "+str(gen_matching_string))
             elif year == "2018":
                 rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25 && "+str(gen_matching_string))
             else:
@@ -1280,7 +1280,7 @@ for year in years:
         if year == "2016":
             rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25")
         elif year == "2017":
-            rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 30 && lepton_pt > 25")
+            rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25")
         elif year == "2018":
             rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25")
         else:
@@ -1411,6 +1411,7 @@ for year in years:
 
             photon_gen_matching_for_fake_cutstring = "("
             photon_gen_matching_cutstring = "("
+
             if sample["fsr"]:
                 photon_gen_matching_for_fake_cutstring+="photon_gen_matching == 4"
                 photon_gen_matching_cutstring+="photon_gen_matching == 4"
@@ -1480,7 +1481,7 @@ for year in years:
             else:    
                 prefire_weight_string = "1"
 
-            rinterface = rinterface.Define("base_weight","xs_weight*puWeight*"+prefire_weight_string+"*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\") : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\"))")    
+            rinterface = rinterface.Define("base_weight","xs_weight*puWeight*"+prefire_weight_string+"*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\") : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\"))")      
             rinterface = rinterface.Define("pileup_up_base_weight","xs_weight*puWeightUp*"+prefire_weight_string+"*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\") : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\"))")    
             rinterface = rinterface.Define("electron_id_sf_up_base_weight","xs_weight*puWeight*"+prefire_weight_string+"*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\") : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\",true))")                  
             rinterface = rinterface.Define("electron_reco_sf_up_base_weight","xs_weight*puWeight*"+prefire_weight_string+"*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\") : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\",false,true))")    
@@ -2105,21 +2106,25 @@ if lepton_name == "electron" and options.fit:
         fit_inputs_top_stat_up["top"] = top_mlg_stat_up
         fit_results_top_stat_up.append(mlg_fit(fit_inputs_top_stat_up))
 
-    fit_results_zg_scale_variation = []
 
-    for i in range(0,8): 
-        fit_inputs_zg_scale_variation = dict(fit_inputs)
-        fit_inputs_zg_scale_variation["label"] = "zg_scale_variation_"+str(i)
-        fit_inputs_zg_scale_variation["zg"] = labels["zg+jets"]["hists-scale-variation"+str(i)][mlg_index]
-        fit_results_zg_scale_variation.append(mlg_fit(fit_inputs_zg_scale_variation))
+    if labels["zg+jets"]["syst-scale"]:    
+        fit_results_zg_scale_variation = []
 
-    fit_results_zg_pdf_variation = []
+        for i in range(0,8): 
+            fit_inputs_zg_scale_variation = dict(fit_inputs)
+            fit_inputs_zg_scale_variation["label"] = "zg_scale_variation_"+str(i)
+            fit_inputs_zg_scale_variation["zg"] = labels["zg+jets"]["hists-scale-variation"+str(i)][mlg_index]
+            fit_results_zg_scale_variation.append(mlg_fit(fit_inputs_zg_scale_variation))
 
-    for i in range(1,32): 
-        fit_inputs_zg_pdf_variation = dict(fit_inputs)
-        fit_inputs_zg_pdf_variation["label"] = "zg_pdf_variation_"+str(i)
-        fit_inputs_zg_pdf_variation["zg"] = labels["zg+jets"]["hists-pdf-variation"+str(i)][mlg_index]
-        fit_results_zg_pdf_variation.append(mlg_fit(fit_inputs_zg_pdf_variation))
+
+    if labels["zg+jets"]["syst-pdf"]:    
+        fit_results_zg_pdf_variation = []
+        
+        for i in range(1,32): 
+            fit_inputs_zg_pdf_variation = dict(fit_inputs)
+            fit_inputs_zg_pdf_variation["label"] = "zg_pdf_variation_"+str(i)
+            fit_inputs_zg_pdf_variation["zg"] = labels["zg+jets"]["hists-pdf-variation"+str(i)][mlg_index]
+            fit_results_zg_pdf_variation.append(mlg_fit(fit_inputs_zg_pdf_variation))
 
 pileup_unc = abs(labels["wg+jets"]["hists-pileup-up"][mlg_index].Integral() - labels["wg+jets"]["hists"][mlg_index].Integral())
 electron_id_sf_unc = labels["wg+jets"]["hists-electron-id-sf-up"][mlg_index].Integral() - labels["wg+jets"]["hists"][mlg_index].Integral()
@@ -2487,11 +2492,13 @@ if lepton_name == "muon":
     for i in range(1,labels["top+jets"]["hists"][mlg_index].GetNbinsX()+1): 
         xs_inputs_muon["signal_syst_unc_due_to_top_stat_up_bin"+str(i)] = labels["top+jets"]["hists"][mlg_index].GetBinError(i)
 
-    for i in range(0,8): 
-        xs_inputs_muon["signal_syst_unc_due_to_zg_scale_variation"+str(i)] = labels["zg+jets"]["hists"][mlg_index].Integral() - labels["zg+jets"]["hists-scale-variation"+str(i)][mlg_index].Integral()
+    if labels["zg+jets"]["syst-scale"]:    
+        for i in range(0,8): 
+            xs_inputs_muon["signal_syst_unc_due_to_zg_scale_variation"+str(i)] = labels["zg+jets"]["hists"][mlg_index].Integral() - labels["zg+jets"]["hists-scale-variation"+str(i)][mlg_index].Integral()
 
-    for i in range(1,32): 
-        xs_inputs_muon["signal_syst_unc_due_to_zg_pdf_variation"+str(i)] = labels["zg+jets"]["hists"][mlg_index].Integral() - labels["zg+jets"]["hists-pdf-variation"+str(i)][mlg_index].Integral()
+    if labels["zg+jets"]["syst-pdf"]:    
+        for i in range(1,32): 
+            xs_inputs_muon["signal_syst_unc_due_to_zg_pdf_variation"+str(i)] = labels["zg+jets"]["hists"][mlg_index].Integral() - labels["zg+jets"]["hists-pdf-variation"+str(i)][mlg_index].Integral()
 
     xs_inputs_muon["signal_syst_unc_due_to_lumi_up"] = abs(0.026*(labels["zg+jets"]["hists"][mlg_index].Integral()+labels["top+jets"]["hists"][mlg_index].Integral() + labels["vv+jets"]["hists"][mlg_index].Integral()) )
 
@@ -2591,11 +2598,13 @@ elif lepton_name == "electron":
         for i in range(1,labels["top+jets"]["hists"][mlg_index].GetNbinsX()+1): 
             xs_inputs_electron["signal_syst_unc_due_to_top_stat_up_bin"+str(i)] = abs(fit_results_top_stat_up[i-1]["wg_norm"] - fit_results["wg_norm"])
 
-        for i in range(0,8): 
-            xs_inputs_electron["signal_syst_unc_due_to_zg_scale_variation"+str(i)] = fit_results_zg_scale_variation[i]["wg_norm"] - fit_results["wg_norm"]
+        if labels["zg+jets"]["syst-scale"]:    
+            for i in range(0,8): 
+                xs_inputs_electron["signal_syst_unc_due_to_zg_scale_variation"+str(i)] = fit_results_zg_scale_variation[i]["wg_norm"] - fit_results["wg_norm"]
 
-        for i in range(1,32): 
-            xs_inputs_electron["signal_syst_unc_due_to_zg_pdf_variation"+str(i)] = fit_results_zg_pdf_variation[i-1]["wg_norm"] - fit_results["wg_norm"]
+        if labels["zg+jets"]["syst-pdf"]:    
+            for i in range(1,32): 
+                xs_inputs_electron["signal_syst_unc_due_to_zg_pdf_variation"+str(i)] = fit_results_zg_pdf_variation[i-1]["wg_norm"] - fit_results["wg_norm"]
 
         xs_inputs_electron["signal_syst_unc_due_to_lumi_up"] = abs(fit_results_lumi_up["wg_norm"] - fit_results["wg_norm"])
 
@@ -2687,11 +2696,13 @@ elif lepton_name == "electron":
         for i in range(1,labels["top+jets"]["hists"][mlg_index].GetNbinsX()+1): 
             xs_inputs_electron["signal_syst_unc_due_to_top_stat_up_bin"+str(i)] = labels["top+jets"]["hists"][mlg_index].GetBinError(i)
 
-        for i in range(0,8): 
-            xs_inputs_electron["signal_syst_unc_due_to_zg_scale_variation"+str(i)] = labels["zg+jets"]["hists"][mlg_index].Integral() - labels["zg+jets"]["hists-scale-variation"+str(i)][mlg_index].Integral()
+        if labels["zg+jets"]["syst-scale"]:    
+            for i in range(0,8): 
+                xs_inputs_electron["signal_syst_unc_due_to_zg_scale_variation"+str(i)] = labels["zg+jets"]["hists"][mlg_index].Integral() - labels["zg+jets"]["hists-scale-variation"+str(i)][mlg_index].Integral()
 
-        for i in range(1,32): 
-            xs_inputs_electron["signal_syst_unc_due_to_zg_pdf_variation"+str(i)] = labels["zg+jets"]["hists"][mlg_index].Integral() - labels["zg+jets"]["hists-pdf-variation"+str(i)][mlg_index].Integral()
+        if labels["zg+jets"]["syst-pdf"]:    
+            for i in range(1,32): 
+                xs_inputs_electron["signal_syst_unc_due_to_zg_pdf_variation"+str(i)] = labels["zg+jets"]["hists"][mlg_index].Integral() - labels["zg+jets"]["hists-pdf-variation"+str(i)][mlg_index].Integral()
 
         xs_inputs_electron["signal_syst_unc_due_to_lumi_up"] = abs(0.026*(labels["zg+jets"]["hists"][mlg_index].Integral()+labels["top+jets"]["hists"][mlg_index].Integral() + labels["vv+jets"]["hists"][mlg_index].Integral()) )
 
