@@ -17,7 +17,7 @@ haddnano.py /afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019/ttsemijets.root /
 haddnano.py /afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019/wwjets.root /eos/cms/store/user/amlevin/WW_TuneCUETP8M1_13TeV-pythia8/wg-2016/*/*/*root
 haddnano.py /afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019/wzjets.root /eos/cms/store/user/amlevin/WZ_TuneCUETP8M1_13TeV-pythia8/wg-2016/*/*/*root
 haddnano.py /afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019/zzjets.root /eos/cms/store/user/amlevin/ZZ_TuneCUETP8M1_13TeV-pythia8/wg-2016/*/*/*root
-haddnano.py /afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019/zjets.root /eos/cms/store/user/amlevin/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/wg-2016/*/*/*roo
+haddnano.py /afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019/zjets.root /eos/cms/store/user/amlevin/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/wg-2016/*/*/*root
 haddnano.py /afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019/tgjets.root /eos/cms/store/user/amlevin/TGJets_leptonDecays_13TeV_amcatnlo_madspin_pythia8/wg-2016/*/*/*root
 
 #2017 data
