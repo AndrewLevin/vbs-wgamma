@@ -41,6 +41,13 @@ class wgFakeLeptonProducer(Module):
         jets = Collection(event, "Jet")
         photons = Collection(event, "Photon")
 
+        pass_HLT_Ele32_WPTight_Gsf = False
+        if event.HLT_Ele32_WPTight_Gsf_L1DoubleEG:
+            trigobjs = Collection(event, "TrigObj")
+            for i in range(0,len(trigobjs)):
+                if trigobjs[i].id == 11 and (trigobjs[i].filterBits & (1 << 10) == (1 << 10)):
+                    pass_HLT_Ele32_WPTight_Gsf = True
+
         tight_muons = []
 
         loose_but_not_tight_muons = []
@@ -86,6 +93,7 @@ class wgFakeLeptonProducer(Module):
                     loose_but_not_tight_electrons.append(i)
 
         if len(tight_muons)+ len(loose_but_not_tight_muons) == 1 and len(tight_electrons) + len(loose_but_not_tight_electrons) == 0:
+
             if not event.HLT_IsoMu24:
                 return False
 
@@ -121,7 +129,7 @@ class wgFakeLeptonProducer(Module):
 
         elif len(tight_electrons) + len(loose_but_not_tight_electrons) == 1 and len(tight_muons)+ len(loose_but_not_tight_muons) == 0:   
 
-            if not event.HLT_Ele32_WPTight_Gsf:
+            if not pass_HLT_Ele32_WPTight_Gsf:
                 return False
 
             if len(tight_electrons) == 1:

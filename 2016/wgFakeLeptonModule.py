@@ -67,7 +67,7 @@ class wgFakeLeptonProducer(Module):
             if muons[i].tightId and muons[i].pfRelIso04_all < 0.15:
                 tight_muons.append(i)
 #            elif muons[i].pfRelIso04_all < 0.4:
-            elif muons[i].pfRelIso04_all < 0.25:
+            elif muons[i].tightId and muons[i].pfRelIso04_all < 0.25:
                 loose_but_not_tight_muons.append(i)
 
         for i in range (0,len(electrons)):

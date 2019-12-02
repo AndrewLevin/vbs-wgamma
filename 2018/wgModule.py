@@ -113,12 +113,12 @@ class wgProducer(Module):
             if muons[i].pt > 20 and abs(muons[i].eta) < 2.4:
                 if muons[i].tightId and muons[i].pfRelIso04_all < 0.15:
                     tight_muons.append(i)
-                elif muons[i].pfRelIso04_all < 0.25:
+                elif muons[i].tightId and muons[i].pfRelIso04_all < 0.25:
                     loose_but_not_tight_muons.append(i)
             elif muons[i].pt > 10 and abs(muons[i].eta) < 2.4:
                 if muons[i].tightId and muons[i].pfRelIso04_all < 0.15:
                     lower_pt_muons.append(i)
-                elif muons[i].pfRelIso04_all < 0.25:
+                elif muons[i].tightId and muons[i].pfRelIso04_all < 0.25:
                     lower_pt_muons.append(i)
 
         #for processing speed-up

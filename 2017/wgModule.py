@@ -79,7 +79,7 @@ class wgProducer(Module):
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
         #do this first for processing speed-up
-        if not (event.HLT_Ele32_WPTight_Gsf_L1DoubleEG or  event.HLT_IsoMu24):
+        if not (event.HLT_Ele32_WPTight_Gsf_L1DoubleEG or event.HLT_IsoMu27):
 #        if not (event.HLT_Ele32_WPTight_Gsf or event.HLT_Ele32_WPTight_Gsf_L1DoubleEG or  event.HLT_IsoMu24):
 
             return False
@@ -93,7 +93,7 @@ class wgProducer(Module):
                 if trigobjs[i].id == 11 and (trigobjs[i].filterBits & (1 << 10) == (1 << 10)):
                     pass_HLT_Ele32_WPTight_Gsf = True
 
-        if not (pass_HLT_Ele32_WPTight_Gsf or event.HLT_IsoMu24):
+        if not (pass_HLT_Ele32_WPTight_Gsf or event.HLT_IsoMu27):
                 return False
 
         electrons = Collection(event, "Electron")
@@ -127,12 +127,12 @@ class wgProducer(Module):
             if muons[i].pt > 20 and abs(muons[i].eta) < 2.4:
                 if muons[i].tightId and muons[i].pfRelIso04_all < 0.15:
                     tight_muons.append(i)
-                elif muons[i].pfRelIso04_all < 0.25:
+                elif muons[i].tightId and muons[i].pfRelIso04_all < 0.25:
                     loose_but_not_tight_muons.append(i)
             elif muons[i].pt > 10 and abs(muons[i].eta) < 2.4:
                 if muons[i].tightId and muons[i].pfRelIso04_all < 0.15:
                     lower_pt_muons.append(i)
-                elif muons[i].pfRelIso04_all < 0.25:
+                elif muons[i].tightId and muons[i].pfRelIso04_all < 0.25:
                     lower_pt_muons.append(i)
 
         #for processing speed-up

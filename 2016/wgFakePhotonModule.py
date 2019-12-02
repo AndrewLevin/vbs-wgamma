@@ -23,6 +23,8 @@ class wgFakePhotonProducer(Module):
         self.out.branch("run",  "i")
         self.out.branch("lumi",  "i")
         self.out.branch("event",  "l")
+        self.out.branch("npu",  "I")
+        self.out.branch("npvs","I")
         self.out.branch("n_gen_neutrinos",  "I");
         self.out.branch("n_gen_leptons",  "I");
         self.out.branch("n_gen_photons",  "I");
@@ -112,7 +114,7 @@ class wgFakePhotonProducer(Module):
             if muons[i].tightId and muons[i].pfRelIso04_all < 0.15:
                 tight_muons.append(i)
 #            elif muons[i].pfRelIso04_all < 0.4:
-            elif muons[i].pfRelIso04_all < 0.25:
+            elif muons[i].tightId and muons[i].pfRelIso04_all < 0.25:
                 loose_but_not_tight_muons.append(i)
 
         for i in range (0,len(electrons)):
@@ -602,6 +604,7 @@ class wgFakePhotonProducer(Module):
                     gen_photons += genparts[i].p4()
                     n_gen_photons +=  1
 
+                    
 
         self.out.fillBranch("n_gen_leptons",n_gen_leptons)
         self.out.fillBranch("n_gen_photons",n_gen_photons)
@@ -619,6 +622,12 @@ class wgFakePhotonProducer(Module):
         self.out.fillBranch("event",event.event)
         self.out.fillBranch("lumi",event.luminosityBlock)
         self.out.fillBranch("run",event.run)
+
+        self.out.fillBranch("npvs",event.PV_npvs)
+        if hasattr(event,'Pileup_nPU'):
+            self.out.fillBranch("npu",event.Pileup_nPU)
+        else:
+            self.out.fillBranch("npu",0)
 
         return True
 

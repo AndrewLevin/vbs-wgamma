@@ -60,7 +60,6 @@ class wgProducer(Module):
         self.out.branch("njets30","I")
         self.out.branch("njets20","I")
         self.out.branch("njets15","I")
-        self.out.branch("pass_fiducial",  "B");
         self.out.branch("pass_lhe_selection",  "B");
         self.out.branch("is_lepton_tight",  "B");
         self.out.branch("gen_weight",  "F");
@@ -113,12 +112,12 @@ class wgProducer(Module):
             if muons[i].pt > 20 and abs(muons[i].eta) < 2.4:
                 if muons[i].tightId and muons[i].pfRelIso04_all < 0.15:
                     tight_muons.append(i)
-                elif muons[i].pfRelIso04_all < 0.25:
+                elif muons[i].tightId and muons[i].pfRelIso04_all < 0.25:
                     loose_but_not_tight_muons.append(i)
             elif muons[i].pt > 10 and abs(muons[i].eta) < 2.4:
                 if muons[i].tightId and muons[i].pfRelIso04_all < 0.15:
                     lower_pt_muons.append(i)
-                elif muons[i].pfRelIso04_all < 0.25:
+                elif muons[i].tightId and muons[i].pfRelIso04_all < 0.25:
                     lower_pt_muons.append(i)
 
         #for processing speed-up
@@ -763,15 +762,6 @@ class wgProducer(Module):
                     if pho_iso < 0.5:
                         gen_photon_index = i
                         n_gen_photons_fiducial +=1
-
-            if n_gen_leptons_fiducial == 1 and n_gen_photons_fiducial == 1 and deltaR(genparts[gen_lepton_index].eta,genparts[gen_lepton_index].phi,genparts[gen_photon_index].eta,genparts[gen_photon_index].phi) > 0.5:
-                self.out.fillBranch("pass_fiducial",1)
-            else:
-                self.out.fillBranch("pass_fiducial",0)
-        else:
-            self.out.fillBranch("pass_fiducial",0)
-
-
 
         self.out.fillBranch("n_gen_leptons",n_gen_leptons)
         self.out.fillBranch("n_gen_photons",n_gen_photons)
