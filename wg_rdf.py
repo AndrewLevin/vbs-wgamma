@@ -1,7 +1,6 @@
 data_driven = True
 data_driven_correction = True
 closure_test = False
-use_wjets_mc_for_fake_photon = False
 
 metlow = 0
 methigh = 1000000
@@ -63,6 +62,7 @@ parser.add_option('--overflow',dest='overflow',action='store_true',default=False
 parser.add_option('--fit',dest='fit',action='store_true',default=False)
 parser.add_option('--no_pdf_var_for_2017_and_2018',dest='no_pdf_var_for_2017_and_2018',action='store_true',default=False)
 parser.add_option('--ewdim6',dest='ewdim6',action='store_true',default=False)
+parser.add_option('--use_wjets_for_fake_photon',dest='use_wjets_for_fake_photon',action='store_true',default=False)
 parser.add_option('--float_fake_sig_cont',dest='float_fake_sig_cont',action='store_true',default=False)
 parser.add_option('--draw_ewdim6',dest='draw_ewdim6',action='store_true',default=False)
 parser.add_option('--ewdim6_scaling_only',dest='ewdim6_scaling_only',action='store_true',default=False)
@@ -202,8 +202,6 @@ ROOT.TMinuitMinimizer.UseStaticMinuit(False)
 
 if closure_test:
     from wg_labels_closuretest import labels
-elif use_wjets_mc_for_fake_photon:
-    from wg_labels_wjets import labels
 else:
     from wg_labels import labels
 #    from wg_labels_wjets import labels
@@ -1420,6 +1418,10 @@ for year in years:
                 if photon_gen_matching_for_fake_cutstring != "(":
                     photon_gen_matching_for_fake_cutstring += " || "
                 photon_gen_matching_for_fake_cutstring+="photon_gen_matching == 1"
+            if sample["non-prompt"]:
+                if photon_gen_matching_cutstring != "(":
+                    photon_gen_matching_cutstring += " || "
+                photon_gen_matching_cutstring+="photon_gen_matching == 0"
                 
             if photon_gen_matching_for_fake_cutstring != "(":    
                 photon_gen_matching_for_fake_cutstring+= ")"    
@@ -2139,15 +2141,10 @@ for i in range(len(variables)):
 
     fake_photon["hists"][i].Scale(1.0)
 
-    if use_wjets_mc_for_fake_photon:
-        fake_photon["hists"][i].Scale(0)
-
     data["hists"][i].Print("all")
     fake_photon["hists"][i].Print("all")
     fake_lepton["hists"][i].Print("all")
     labels["wg+jets"]["hists"][i].Print("all")
-
-
 
     data["hists"][i].SetMarkerStyle(ROOT.kFullCircle)
     data["hists"][i].SetLineWidth(3)
@@ -2195,6 +2192,9 @@ for i in range(len(variables)):
         if closure_test and label == "wg+jets":
             continue
 
+        if not options.use_wjets_for_fake_photon and label == "w+jets":
+            continue
+
         hsum.Add(labels[label]["hists"][i])
         hstack.Add(labels[label]["hists"][i])
 
@@ -2209,14 +2209,16 @@ for i in range(len(variables)):
         hstack.Add(e_to_p_non_res["hists"][i])
 
     if data_driven:
-        hsum.Add(fake_photon["hists"][i])
+        if not options.use_wjets_for_fake_photon:
+            hsum.Add(fake_photon["hists"][i])
         if not closure_test:
             hsum.Add(fake_lepton["hists"][i])
             hsum.Add(double_fake["hists"][i])
 
 
     if data_driven:
-        hstack.Add(fake_photon["hists"][i])
+        if not options.use_wjets_for_fake_photon:
+            hstack.Add(fake_photon["hists"][i])
         if not closure_test:
             hstack.Add(fake_lepton["hists"][i])
             hstack.Add(double_fake["hists"][i])
@@ -2266,8 +2268,9 @@ for i in range(len(variables)):
         draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,data["hists"][i],"data","lp")
 
     if data_driven :
-        j=j+1
-        draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,fake_photon["hists"][i],"fake photon","f")
+        if not options.use_wjets_for_fake_photon:
+            j=j+1
+            draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,fake_photon["hists"][i],"fake photon","f")
         if not closure_test:
             j=j+1
             if lepton_name == "muon":
@@ -2294,6 +2297,9 @@ for i in range(len(variables)):
             continue
 
         if closure_test and label == "wg+jets":
+            continue
+
+        if not options.use_wjets_for_fake_photon and label == "w+jets":
             continue
 
         j=j+1    
