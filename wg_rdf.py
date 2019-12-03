@@ -246,15 +246,15 @@ mlg_index = 9
 
 #ewdim6_filename = "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjetsewdim6.root.bak"
 ewdim6_samples = {
-"2016" : [{"xs" : 4.318, "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjetsewdim6.root"}],
-"2017" : [{"xs" : 4.318, "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjetsewdim6.root"}],
-"2018" : [{"xs" : 4.318, "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjetsewdim6.root"}]
+"2016" : [{"xs" : 4.318, "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2017/1June2019/wgjetsewdim6.root"}],
+"2017" : [{"xs" : 4.318, "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2017/1June2019/wgjetsewdim6.root"}],
+"2018" : [{"xs" : 4.318, "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2017/1June2019/wgjetsewdim6.root"}]
 }
 
 for year in years:
     for sample in ewdim6_samples[year]:
         sample["file"] = ROOT.TFile(sample["filename"])
-        sample["nweightedevents"] = sample["file"].Get("nWeightedEvents").GetBinContent(1)
+        sample["nweightedevents"] = sample["file"].Get("nEventsGenWeighted").GetBinContent(1)
 
 def getXaxisLabel(varname):
     if varname == "njets40":
@@ -929,13 +929,13 @@ ROOT.gInterpreter.Declare(eff_scale_factor_cpp)
 
 if options.ewdim6:
 
-    sm_lhe_weight = 373
+    sm_lhe_weight = 372
 
     sm_lhe_weight_hist = ROOT.TH1D('', '', n_photon_pt_bins, binning_photon_pt )
 
     sm_hist = ROOT.TH1D('', '', n_photon_pt_bins, binning_photon_pt )
 
-    cwww_reweights = [373,1,2,3,4,5,6]
+    cwww_reweights = [372,0,1,2,3,4,5]
 
     #cwww_coefficients = [0.0, 10.0,-10.0,20.0,-20.0,-30.0,30.0]
 
@@ -943,7 +943,7 @@ if options.ewdim6:
 
     cwww_hists = []
 
-    cw_reweights = [373,7,8,9,10,11,12]
+    cw_reweights = [372,6,7,8,9,10,11]
 
     #cw_coefficients = [0.0, 80.0,-80.0,160.0,-160.0,240.0,-240.0]
 
@@ -951,7 +951,7 @@ if options.ewdim6:
 
     cw_hists = []
 
-    cb_reweights = [373,13,14,15,16,17,18]
+    cb_reweights = [372,12,13,14,15,16,17]
 
     #cb_coefficients = [0.0, 80.0,-80.0,160.0,-160.0,240.0,-240.0]
 
@@ -959,7 +959,7 @@ if options.ewdim6:
 
     cb_hists = []
 
-    cpwww_reweights = [373,19,20,21,22,23,24]
+    cpwww_reweights = [372,18,19,20,21,22,23]
 
     #cpwww_coefficients = [0.0, 4.0,-4.0,8.0,-8.0,12.0,-12.0]
 
@@ -967,7 +967,7 @@ if options.ewdim6:
 
     cpwww_hists = []
 
-    cpw_reweights = [373,25,26,27,28,29,30]
+    cpw_reweights = [372,24,25,26,27,28,29]
 
     #cpw_coefficients = [0.0, 40.0,-40.0,80.0,-80.0,120.0,-120.0]
 
@@ -1083,27 +1083,27 @@ if options.ewdim6:
         rresultptrs_cpw = []
 
         for i in range(len(cwww_reweights)):
-            rinterface = rinterface.Define("cwww_weight_"+str(i),"weight*LHEWeight_rwgt_"+str(cwww_reweights[i]))
+            rinterface = rinterface.Define("cwww_weight_"+str(i),"weight*LHEReweightingWeight["+str(cwww_reweights[i])+"]")
             rresultptrs_cwww.append(rinterface.Histo1D(histogram_models[0],variables[0],"cwww_weight_"+str(i)))
             
 
         for i in range(len(cw_reweights)):
-            rinterface = rinterface.Define("cw_weight_"+str(i),"weight*LHEWeight_rwgt_"+str(cw_reweights[i]))
+            rinterface = rinterface.Define("cw_weight_"+str(i),"weight*LHEReweightingWeight["+str(cw_reweights[i])+"]")
             rresultptrs_cw.append(rinterface.Histo1D(histogram_models[0],variables[0],"cw_weight_"+str(i)))
 
         for i in range(len(cb_reweights)):
-            rinterface = rinterface.Define("cb_weight_"+str(i),"weight*LHEWeight_rwgt_"+str(cb_reweights[i]))
+            rinterface = rinterface.Define("cb_weight_"+str(i),"weight*LHEReweightingWeight["+str(cb_reweights[i])+"]")
             rresultptrs_cb.append(rinterface.Histo1D(histogram_models[0],variables[0],"cb_weight_"+str(i)))
 
         for i in range(len(cpwww_reweights)):
-            rinterface = rinterface.Define("cpwww_weight_"+str(i),"weight*LHEWeight_rwgt_"+str(cpwww_reweights[i]))
+            rinterface = rinterface.Define("cpwww_weight_"+str(i),"weight*LHEReweightingWeight["+str(cpwww_reweights[i])+"]")
             rresultptrs_cpwww.append(rinterface.Histo1D(histogram_models[0],variables[0],"cpwww_weight_"+str(i)))
 
         for i in range(len(cpw_reweights)):
-            rinterface = rinterface.Define("cpw_weight_"+str(i),"weight*LHEWeight_rwgt_"+str(cpw_reweights[i]))
+            rinterface = rinterface.Define("cpw_weight_"+str(i),"weight*LHEReweightingWeight["+str(cpw_reweights[i])+"]")
             rresultptrs_cpw.append(rinterface.Histo1D(histogram_models[0],variables[0],"cpw_weight_"+str(i)))
 
-        rinterface = rinterface.Define("sm_weight","weight*LHEWeight_rwgt_"+str(sm_lhe_weight))
+        rinterface = rinterface.Define("sm_weight","weight*LHEReweightingWeight["+str(sm_lhe_weight)+"]")
         rresultptr_sm = rinterface.Histo1D(histogram_models[0],variables[0],"sm_weight")
 
         for i in range(len(cwww_reweights)):
