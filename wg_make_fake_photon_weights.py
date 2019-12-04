@@ -11,6 +11,14 @@ from pprint import pprint
 
 ROOT.gStyle.SetOptStat(0)
 
+year = "2016"
+
+#lepton_names =["muon","electron"]
+#lepton_names =["electron","muon"]
+#lepton_names =["muon"]
+#lepton_names =["electron"]
+lepton_names =["both"]
+
 fake_fractions = {}
 
 fake_event_weights = {}
@@ -38,12 +46,6 @@ fake_event_weights["muon_endcap"] = []
 fake_event_weights["electron_barrel"] = []
 
 fake_event_weights["electron_endcap"] = []
-
-#lepton_names =["muon","electron"]
-#lepton_names =["electron","muon"]
-#lepton_names =["muon"]
-#lepton_names =["electron"]
-lepton_names =["both"]
 
 photon1_eta_ranges = ["abs(photon1_eta) < 1.4442","abs(photon1_eta) > 1.566 && abs(photon1_eta) < 2.5"]
 photon2_eta_ranges = ["abs(photon2_eta) < 1.4442","abs(photon2_eta) > 1.566 && abs(photon2_eta) < 2.5"]
@@ -76,9 +78,9 @@ photon2_recoil_cutstring = photon2_recoil_string + " > -1000 && " + photon2_reco
 #photon1_recoil_cutstring = photon1_dphilg_string+" < pi/2"
 #photon2_recoil_cutstring = photon2_dphilg_string+" < pi/2"
 
-photon1_veto_signal_selection_cutstring = "!((puppimet > 40 && puppimt > 30 && lepton_pt > 30 && photon1_pt > 25 && abs(lepton_pdg_id) == 11) || (puppimet > 40 && puppimt > 30 && lepton_pt > 25 && photon1_pt > 25 && abs(lepton_pdg_id) == 13))" 
+photon1_veto_signal_selection_cutstring = "!((puppimet > 40 && lepton_pt > 30 && photon1_pt > 25 && abs(lepton_pdg_id) == 11) || (puppimet > 40 && lepton_pt > 25 && photon1_pt > 25 && abs(lepton_pdg_id) == 13))" 
 
-photon2_veto_signal_selection_cutstring = "!((puppimet > 40 && puppimt > 30 && lepton_pt > 30 && photon2_pt > 25 && abs(lepton_pdg_id) == 11) || (puppimet > 40 && puppimt > 30 && lepton_pt > 25 && photon2_pt > 25 && abs(lepton_pdg_id) == 13))" 
+photon2_veto_signal_selection_cutstring = "!((puppimet > 40 && lepton_pt > 30 && photon2_pt > 25 && abs(lepton_pdg_id) == 11) || (puppimet > 40 && lepton_pt > 25 && photon2_pt > 25 && abs(lepton_pdg_id) == 13))" 
 
 #photon1_veto_signal_selection_cutstring = "(puppimet > 60 && puppimt < 30)"
 #photon2_veto_signal_selection_cutstring = "(puppimet > 60 && puppimt < 30)"
@@ -89,7 +91,6 @@ photon2_veto_signal_selection_cutstring = "!((puppimet > 40 && puppimt > 30 && l
 den_pho_sel = str(4) #fail sieie
 #den_pho_sel = str(3) #fail charged isolation
 
-year = "2018"
 
 #max_sieie = 0.0125
 sieie_2016_barrel = 0.01022
