@@ -135,6 +135,7 @@ elif options.phoeta == "both":
 else:
     assert(0)
 
+photon_eta_cutstring = "((abs(photon_eta) < "+str(photon_eta_max)+") && (abs(photon_eta) > "+str(photon_eta_min)+"))"
 
 f_json=open("/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/ReReco/Final/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt")
 #f_json=open("delete_this_JSON.txt")
@@ -735,6 +736,8 @@ fake_photon_weight_cpp = '''
 float get_fake_photon_weight(float eta, float pt, string year, int lepton_pdg_id, bool use_alt = false, bool stat_err_up = false)
 {
 
+    return 1;
+
     float fr = 0;
     if (year == "2016") {
        if (abs(eta) < 1.4442) {
@@ -744,13 +747,14 @@ float get_fake_photon_weight(float eta, float pt, string year, int lepton_pdg_id
           else if (pt < 50 and pt > 40) fr = 0.6152120876483476;
           else if (pt > 50) fr = 0.43976798584928795;
           else assert(0); 
+    
        }
        else if (1.566 < abs(eta) && abs(eta) < 2.5) {
           if (pt < 25 and pt > 20) fr = 0.9116595169549041;
           else if (pt < 30 and pt > 25) fr = 0.9828188073068969;
           else if (pt < 40 and pt > 30) fr = 0.9822072420595874;
           else if (pt < 50 and pt > 40) fr = 0.9764608663211498;
-          else if (pt > 50) fr = 1.0573991675594343;
+          else if (pt > 50) fr = 1.0573991675594343;;
           else assert(0); 
        }
     }
@@ -996,29 +1000,29 @@ if options.ewdim6:
 
         if options.lep == "muon":
             if year == "2016":
-                rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25 && photon_selection == 0 && is_lepton_tight == 1 && "+str(gen_matching_string))
+                rinterface = rdf.Filter(photon_eta_cutstring+" && puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25 && photon_selection == 0 && is_lepton_tight == 1 && "+str(gen_matching_string))
             elif year == "2017":
-                rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25 && "+str(gen_matching_string))
+                rinterface = rdf.Filter(photon_eta_cutstring+" && puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25 && "+str(gen_matching_string))
             elif year == "2018":
-                rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25 && "+str(gen_matching_string))
+                rinterface = rdf.Filter(photon_eta_cutstring+" && puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25 && "+str(gen_matching_string))
             else:
                 assert(0)
         elif options.lep == "electron":                
             if year == "2016":
-                rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 30 && "+str(gen_matching_string))
+                rinterface = rdf.Filter(photon_eta_cutstring+" && puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 30 && "+str(gen_matching_string))
             elif year == "2017":
-                rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35 && "+str(gen_matching_string))
+                rinterface = rdf.Filter(photon_eta_cutstring+" && puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35 && "+str(gen_matching_string))
             elif year == "2018":
-                rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35 && "+str(gen_matching_string))
+                rinterface = rdf.Filter(photon_eta_cutstring+" && puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35 && "+str(gen_matching_string))
             else:
                 assert(0)
         elif options.lep == "both":    
             if year == "2016":
-                rinterface = rdf.Filter("((puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25) || (puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 30)) && "+str(gen_matching_string))
+                rinterface = rdf.Filter(photon_eta_cutstring+" && ((puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25) || (puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 30)) && "+str(gen_matching_string))
             elif year == "2017":
-                rinterface = rdf.Filter("((puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 30) || (puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35)) && "+str(gen_matching_string))
+                rinterface = rdf.Filter(photon_eta_cutstring+" && ((puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 30) || (puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35)) && "+str(gen_matching_string))
             elif year == "2018":
-                rinterface = rdf.Filter("((puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25) || (puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35)) && "+str(gen_matching_string))
+                rinterface = rdf.Filter(photon_eta_cutstring+" && ((puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25) || (puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35)) && "+str(gen_matching_string))
             else:
                 assert(0)
         else:
@@ -1040,29 +1044,29 @@ if options.ewdim6:
 
         if options.lep == "muon":
             if year == "2016":
-                rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25 && "+str(gen_matching_string))
+                rinterface = rdf.Filter(photon_eta_cutstring+" && puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25 && "+str(gen_matching_string))
             elif year == "2017":
-                rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25 && "+str(gen_matching_string))
+                rinterface = rdf.Filter(photon_eta_cutstring+" && puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25 && "+str(gen_matching_string))
             elif year == "2018":
-                rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25 && "+str(gen_matching_string))
+                rinterface = rdf.Filter(photon_eta_cutstring+" && puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25 && "+str(gen_matching_string))
             else:
                 assert(0)
         elif options.lep == "electron":                
             if year == "2016":
-                rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 30 && "+str(gen_matching_string))
+                rinterface = rdf.Filter(photon_eta_cutstring+" && puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 30 && "+str(gen_matching_string))
             elif year == "2017":
-                rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35 && "+str(gen_matching_string))
+                rinterface = rdf.Filter(photon_eta_cutstring+" && puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35 && "+str(gen_matching_string))
             elif year == "2018":
-                rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35 && "+str(gen_matching_string))
+                rinterface = rdf.Filter(photon_eta_cutstring+" && puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35 && "+str(gen_matching_string))
             else:
                 assert(0)
         elif options.lep == "both":    
             if year == "2016":
-                rinterface = rdf.Filter("((puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25) || (puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 30)) && "+str(gen_matching_string))
+                rinterface = rdf.Filter(photon_eta_cutstring+" && ((puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25) || (puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 30)) && "+str(gen_matching_string))
             elif year == "2017":
-                rinterface = rdf.Filter("((puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 30) || (puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35)) && "+str(gen_matching_string))
+                rinterface = rdf.Filter(photon_eta_cutstring+" && ((puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 30) || (puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35)) && "+str(gen_matching_string))
             elif year == "2018":
-                rinterface = rdf.Filter("((puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25) || (puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35)) && "+str(gen_matching_string))
+                rinterface = rdf.Filter(photon_eta_cutstring+" && ((puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25) || (puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35)) && "+str(gen_matching_string))
             else:
                 assert(0)
         else:
@@ -1284,37 +1288,35 @@ for year in years:
 
     if options.lep == "muon":
         if year == "2016":
-            rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25")
+            rinterface = rdf.Filter(photon_eta_cutstring+" && puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25")
         elif year == "2017":
-            rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25")
+            rinterface = rdf.Filter(photon_eta_cutstring+" && puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25")
         elif year == "2018":
-            rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25")
+            rinterface = rdf.Filter(photon_eta_cutstring+" && puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25")
         else:
             assert(0)
     elif options.lep == "electron":                
         if year == "2016":
-            rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 30")
+            rinterface = rdf.Filter(photon_eta_cutstring+" && puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 30")
         elif year == "2017":
-            rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35")
+            rinterface = rdf.Filter(photon_eta_cutstring+" && puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35")
         elif year == "2018":
-            rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35")
+            rinterface = rdf.Filter(photon_eta_cutstring+" && puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35")
         else:
             assert(0)
     elif options.lep == "both":    
         if year == "2016":
-            rinterface = rdf.Filter("((puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25) || (puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 30))")
+            rinterface = rdf.Filter(photon_eta_cutstring+" && ((puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25) || (puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 30))")
         elif year == "2017":
-            rinterface = rdf.Filter("((puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 30) || (puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35))")
+            rinterface = rdf.Filter(photon_eta_cutstring+" && ((puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 30) || (puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35))")
         elif year == "2018":
-            rinterface = rdf.Filter("((puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25) || (puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35))")
+            rinterface = rdf.Filter(photon_eta_cutstring+" && ((puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25) || (puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35))")
         else:
             assert(0)
     else:
         assert(0)
 
     fake_photon_sieie_cut_cutstring = "((abs(photon_eta) < 1.5 && photon_sieie < "+str(fake_photon_sieie_cut_barrel)+ ") || (abs(photon_eta) > 1.5 && photon_sieie < "+str(fake_photon_sieie_cut_endcap)+ "))" 
-
-
 
     rinterface = rinterface.Define("weight","photon_selection == 0 && is_lepton_tight == 1")
     rinterface = rinterface.Define("fake_lepton_weight","photon_selection == 0 && is_lepton_tight == 0 ? get_fake_lepton_weight(lepton_eta,lepton_pt,\""+year+"\",lepton_pdg_id) : 0")
@@ -1462,29 +1464,29 @@ for year in years:
             rdf = ROOT.RDataFrame("Events",sample["filename"])
             if options.lep == "muon":
                 if year == "2016":
-                    rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25")
+                    rinterface = rdf.Filter(photon_eta_cutstring+" && puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25")
                 elif year == "2017":
-                    rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25")
+                    rinterface = rdf.Filter(photon_eta_cutstring+" && puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25")
                 elif year == "2018":
-                    rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25")
+                    rinterface = rdf.Filter(photon_eta_cutstring+" && puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25")
                 else:
                     assert(0)
             elif options.lep == "electron":                
                 if year == "2016":
-                    rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 30")
+                    rinterface = rdf.Filter(photon_eta_cutstring+" && puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 30")
                 elif year == "2017":
-                    rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 30")
+                    rinterface = rdf.Filter(photon_eta_cutstring+" && puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 30")
                 elif year == "2018":
-                    rinterface = rdf.Filter("puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35")
+                    rinterface = rdf.Filter(photon_eta_cutstring+" && puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35")
                 else:
                     assert(0)
             elif options.lep == "both":    
                 if year == "2016":
-                    rinterface = rdf.Filter("((puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25) || (puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 30))")
+                    rinterface = rdf.Filter(photon_eta_cutstring+" && ((puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25) || (puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 30))")
                 elif year == "2017":
-                    rinterface = rdf.Filter("((puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25) || (puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35))")
+                    rinterface = rdf.Filter(photon_eta_cutstring+" && ((puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25) || (puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35))")
                 elif year == "2018":
-                    rinterface = rdf.Filter("((puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25) || (puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35))")
+                    rinterface = rdf.Filter(photon_eta_cutstring+" && ((puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25) || (puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35))")
                 else:
                     assert(0)
             else:
@@ -2168,7 +2170,6 @@ for i in range(len(variables)):
 #    fake_lepton["hists"][i].Scale(2)
 
     fake_photon["hists"][i].Scale(1.0)
-
 
     data["hists"][i].Print("all")
     fake_photon["hists"][i].Print("all")
