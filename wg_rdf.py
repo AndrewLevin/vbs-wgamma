@@ -503,9 +503,9 @@ for i in range(len(variables)):
 
 for i in range(len(variables)):
     data["hists"][i].Sumw2()
-    data["hists"][i].SetName(label+" "+variables[i])
+    data["hists"][i].SetName("data "+variables[i])
     fake_photon["hists"][i].Sumw2()
-    fake_photon["hists"][i].SetName(label+" "+variables[i])
+    fake_photon["hists"][i].SetName("fake photon "+variables[i])
     fake_lepton["hists"][i].Sumw2()
     fake_lepton_stat_up["hists"][i].Sumw2()
     fake_lepton_stat_down["hists"][i].Sumw2()
