@@ -752,7 +752,7 @@ float get_fake_photon_weight(float eta, float pt, string year, int lepton_pdg_id
           else if (pt < 30 and pt > 25) fr = 0.9828188073068969;
           else if (pt < 40 and pt > 30) fr = 0.9822072420595874;
           else if (pt < 50 and pt > 40) fr = 0.9764608663211498;
-          else if (pt > 50) fr = 1.0573991675594343;;
+          else if (pt > 50) fr = 1.0573991675594343;
           else assert(0); 
        }
     }
