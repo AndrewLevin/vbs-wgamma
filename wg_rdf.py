@@ -736,8 +736,6 @@ fake_photon_weight_cpp = '''
 float get_fake_photon_weight(float eta, float pt, string year, int lepton_pdg_id, bool use_alt = false, bool stat_err_up = false)
 {
 
-    return 1;
-
     float fr = 0;
     if (year == "2016") {
        if (abs(eta) < 1.4442) {
