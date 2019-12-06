@@ -1374,6 +1374,10 @@ for year in years:
     for i in range(len(variables)):
         data["hists"][i].Add(rresultptrs[i].GetValue())
         fake_photon["hists"][i].Add(rresultptrs_fake_photon[i].GetValue())
+
+        if options.closure_test:
+            continue
+
         fake_photon_alt["hists"][i].Add(rresultptrs_fake_photon_alt[i].GetValue())
         fake_photon_stat_up["hists"][i].Add(rresultptrs_fake_photon_stat_up[i].GetValue())
         fake_lepton["hists"][i].Add(rresultptrs_fake_lepton[i].GetValue())
