@@ -1450,7 +1450,7 @@ for year in years:
                 pass
                 if photon_gen_matching_cutstring != "(":
                     photon_gen_matching_cutstring += " || "
-                photon_gen_matching_cutstring+="photon_gen_matching == 0"
+                photon_gen_matching_cutstring+="!(photon_gen_matching == 1 || photon_gen_matching == 4 || photon_gen_matching == 5 || photon_gen_matching == 6)"
                 
             if photon_gen_matching_for_fake_cutstring != "(":    
                 photon_gen_matching_for_fake_cutstring+= ")"    
