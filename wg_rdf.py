@@ -61,6 +61,7 @@ parser.add_option('--overflow',dest='overflow',action='store_true',default=False
 parser.add_option('--fit',dest='fit',action='store_true',default=False)
 parser.add_option('--closure_test',dest='closure_test',action='store_true',default=False)
 parser.add_option('--no_pdf_var_for_2017_and_2018',dest='no_pdf_var_for_2017_and_2018',action='store_true',default=False)
+parser.add_option('--no_wjets_for_2017_and_2018',dest='no_wjets_for_2017_and_2018',action='store_true',default=False)
 parser.add_option('--ewdim6',dest='ewdim6',action='store_true',default=False)
 parser.add_option('--use_wjets_for_fake_photon',dest='use_wjets_for_fake_photon',action='store_true',default=False)
 parser.add_option('--float_fake_sig_cont',dest='float_fake_sig_cont',action='store_true',default=False)
@@ -457,6 +458,7 @@ if "wg+jets" in labels:
 data = {}
 fake_signal_contamination = {}
 fake_photon = {}
+fake_photon_2016 = {}
 fake_photon_alt = {}
 fake_photon_stat_up = {}
 fake_lepton = {}
@@ -472,6 +474,7 @@ ewdim6 = {}
 data["hists"] = []
 fake_signal_contamination["hists"] = []
 fake_photon["hists"] = []
+fake_photon_2016["hists"] = []
 fake_photon_alt["hists"] = []
 fake_photon_stat_up["hists"] = []
 fake_lepton["hists"] = []
@@ -487,6 +490,7 @@ ewdim6["hists"] = []
 for i in range(len(variables)):
     data["hists"].append(histogram_models[i].GetHistogram())
     fake_photon["hists"].append(histogram_models[i].GetHistogram())
+    fake_photon_2016["hists"].append(histogram_models[i].GetHistogram())
     fake_photon_alt["hists"].append(histogram_models[i].GetHistogram())
     fake_photon_stat_up["hists"].append(histogram_models[i].GetHistogram())
     fake_lepton["hists"].append(histogram_models[i].GetHistogram())
@@ -505,7 +509,9 @@ for i in range(len(variables)):
     data["hists"][i].Sumw2()
     data["hists"][i].SetName("data "+variables[i])
     fake_photon["hists"][i].Sumw2()
+    fake_photon_2016["hists"][i].Sumw2()
     fake_photon["hists"][i].SetName("fake photon "+variables[i])
+    fake_photon_2016["hists"][i].SetName("fake photon 2016 "+variables[i])
     fake_lepton["hists"][i].Sumw2()
     fake_lepton_stat_up["hists"][i].Sumw2()
     fake_lepton_stat_down["hists"][i].Sumw2()
@@ -1226,15 +1232,14 @@ data_mlg_tree.Branch('m',array_data_mlg,'m/F')
 
 for year in years:
 
-    for year in years:
-        if year == "2016":
-            lumi=35.9
-        elif year == "2017":
-            lumi=41.5
-        elif year == "2018":
-            lumi=59.6
-        else:
-            assert(0)
+    if year == "2016":
+        lumi=35.9
+    elif year == "2017":
+        lumi=41.5
+    elif year == "2018":
+        lumi=59.6
+    else:
+        assert(0)
 
     if lepton_name == "muon":
         if not options.closure_test:
@@ -1375,6 +1380,8 @@ for year in years:
 
     for i in range(len(variables)):
         data["hists"][i].Add(rresultptrs[i].GetValue())
+        if year == "2016":    
+            fake_photon_2016["hists"][i].Add(rresultptrs_fake_photon[i].GetValue())
         fake_photon["hists"][i].Add(rresultptrs_fake_photon[i].GetValue())
 
         if options.closure_test:
@@ -1390,6 +1397,8 @@ for year in years:
         double_fake_stat_up["hists"][i].Add(rresultptrs_double_fake_stat_up[i].GetValue())
         rresultptrs_double_fake[i].GetPtr().Scale(-1)
         rresultptrs_double_fake_alt[i].GetPtr().Scale(-1)
+        if year == "2016":    
+            fake_photon_2016["hists"][i].Add(rresultptrs_double_fake[i].GetValue())
         fake_photon["hists"][i].Add(rresultptrs_double_fake[i].GetValue())
         fake_photon_alt["hists"][i].Add(rresultptrs_double_fake_alt[i].GetValue())
         fake_lepton["hists"][i].Add(rresultptrs_double_fake[i].GetValue())
@@ -1399,6 +1408,9 @@ hists = []
 
 for year in years:
     for label in labels.keys():
+
+        if label == "w+jets" and (year == "2017" or year == "2018") and options.no_wjets_for_2017_and_2018:
+            continue
 
         if year == "2016":
             lumi=35.9
@@ -1681,6 +1693,8 @@ for year in years:
                     fake_signal_contamination["hists"][i].Add(rresultptrs_fake_photon[i].GetValue())
                     fake_signal_contamination["hists"][i].Add(rresultptrs_double_fake[i].GetValue())
 
+                if year == "2016":    
+                    fake_photon_2016["hists"][i].Add(rresultptrs_fake_photon[i].GetValue())
                 fake_photon["hists"][i].Add(rresultptrs_fake_photon[i].GetValue())
                 fake_photon_alt["hists"][i].Add(rresultptrs_fake_photon_alt[i].GetValue())
                 fake_photon_stat_up["hists"][i].Add(rresultptrs_fake_photon_stat_up[i].GetValue())
@@ -2055,6 +2069,13 @@ if lepton_name == "electron" and options.fit:
     fit_inputs_fake_photon_alt["fake_photon"] = fake_photon_alt["hists"][mlg_index]
     fit_inputs_fake_photon_alt["label"] = "fake_photon_alt"
     fit_results_fake_photon_alt = mlg_fit(fit_inputs_fake_photon_alt)
+
+    fit_inputs_fake_photon_wjets = dict(fit_inputs)
+    fit_inputs_fake_photon_wjets["fake_photon"] = labels["w+jets"]["hists"][mlg_index].Clone("fake photon wjets")
+    if options.no_wjets_for_2017_and_2018:
+        fit_inputs_fake_photon_wjets["fake_photon"].Scale(fake_photon["hists"][mlg_index].Integral()/fake_photon_2016["hists"][mlg_index].Integral())
+    fit_inputs_fake_photon_wjets["label"] = "fake_photon_wjets"
+    fit_results_fake_photon_wjets = mlg_fit(fit_inputs_fake_photon_wjets)
 
     fit_inputs_lumi_up= dict(fit_inputs)
     fit_inputs_lumi_up["zg"] = labels["zg+jets"]["hists"][mlg_index].Clone("zg+jets lumi up")
@@ -2441,6 +2462,8 @@ fake_photon["hists"][mlg_index].Print("all")
 fake_photon_alt["hists"][mlg_index].Print("all")
 fake_photon_stat_up["hists"][mlg_index].Print("all")
 
+
+
 if lepton_name == "muon":
 
     xs_times_lumi = 0
@@ -2465,7 +2488,8 @@ if lepton_name == "muon":
         "signal_data_muon" : n_signal,
         "signal_mc_xs_data_mc" : labels["wg+jets"]["hists"][mlg_index].Integral(),
         "signal_syst_unc_due_to_pileup" : abs(labels["top+jets"]["hists-pileup-up"][mlg_index].Integral()+ labels["zg+jets"]["hists-pileup-up"][mlg_index].Integral()+labels["vv+jets"]["hists-pileup-up"][mlg_index].Integral()-labels["top+jets"]["hists"][mlg_index].Integral()- labels["zg+jets"]["hists"][mlg_index].Integral()-labels["vv+jets"]["hists"][mlg_index].Integral()),
-        "signal_syst_unc_due_to_fake_photon_muon" : abs(fake_photon_alt["hists"][mlg_index].Integral() - fake_photon["hists"][mlg_index].Integral()),
+        "signal_syst_unc_due_to_fake_photon_alt_muon" : abs(fake_photon_alt["hists"][mlg_index].Integral() - fake_photon["hists"][mlg_index].Integral()),
+
         "signal_syst_unc_due_to_fake_lepton_muon" : abs(fake_lepton["hists"][mlg_index].Integral()*1.3 - fake_lepton["hists"][mlg_index].Integral()),
         "signal_stat_unc_muon" : n_signal_error,
         "signal_mc_xs_data_mc_syst_unc_due_to_pileup" : pileup_unc,
@@ -2473,6 +2497,11 @@ if lepton_name == "muon":
         "signal_mc_xs_data_mc_syst_unc_due_to_muon_iso_sf_muon" : muon_iso_sf_unc,
         "signal_mc_xs_data_mc_syst_unc_due_to_photon_id_sf_muon" : photon_id_sf_unc
         }
+
+    if options.no_wjets_for_2017_and_2018:
+        xs_inputs_muon["signal_syst_unc_due_to_fake_photon_wjets_muon"] = abs(labels["w+jets"]["hists"][mlg_index].Integral() - fake_photon_2016["hists"][mlg_index].Integral())*fake_photon["hists"][mlg_index].Integral()/fake_photon_2016["hists"][mlg_index].Integral()
+    else:    
+        xs_inputs_muon["signal_syst_unc_due_to_fake_photon_wjets_muon"] = abs(labels["w+jets"]["hists"][mlg_index].Integral() - fake_photon["hists"][mlg_index].Integral())
 
     for i in range(1,32):
         xs_inputs_muon["signal_mc_xs_data_mc_pdf_variation"+str(i)] = labels["wg+jets"]["hists-pdf-variation"+str(i)][mlg_index].Integral()
@@ -2571,7 +2600,8 @@ elif lepton_name == "electron":
             "signal_mc_xs_data_mc" : labels["wg+jets"]["hists"][mlg_index].Integral(),
             "signal_data_electron" : fit_results["wg_norm"],
             "signal_syst_unc_due_to_pileup" : abs(fit_results_pileup_up["wg_norm"]-fit_results["wg_norm"]),
-            "signal_syst_unc_due_to_fake_photon_electron" : abs(fit_results_fake_photon_alt["wg_norm"]-fit_results["wg_norm"]),
+            "signal_syst_unc_due_to_fake_photon_alt_electron" : abs(fit_results_fake_photon_alt["wg_norm"]-fit_results["wg_norm"]),
+            "signal_syst_unc_due_to_fake_photon_wjets_electron" : abs(fit_results_fake_photon_wjets["wg_norm"]-fit_results["wg_norm"]),
             "signal_syst_unc_due_to_fake_lepton_electron" : abs(fit_results_fake_lepton_syst["wg_norm"]-fit_results["wg_norm"]),
             "signal_stat_unc_electron" : fit_results["wg_norm_err"],
             "signal_mc_xs_data_mc_electron" : labels["wg+jets"]["hists"][mlg_index].Integral(),
@@ -2678,6 +2708,11 @@ elif lepton_name == "electron":
             "signal_mc_xs_data_mc_syst_unc_due_to_electron_reco_sf_electron" : electron_reco_sf_unc,
             "signal_mc_xs_data_mc_syst_unc_due_to_photon_id_sf_electron" : photon_id_sf_unc
             }
+
+        if options.no_wjets_for_2017_and_2018:
+            xs_inputs_electron["signal_syst_unc_due_to_fake_photon_wjets_electron"] = abs(labels["w+jets"]["hists"][mlg_index].Integral() - fake_photon_2016["hists"][mlg_index].Integral())*fake_photon["hists"][mlg_index].Integral()/fake_photon_2016["hists"][mlg_index].Integral()
+        else:    
+            xs_inputs_electron["signal_syst_unc_due_to_fake_photon_wjets_electron"] = abs(labels["w+jets"]["hists"][mlg_index].Integral() - fake_photon["hists"][mlg_index].Integral())
         
         for i in range(1,32):
             xs_inputs_electron["signal_mc_xs_data_mc_pdf_variation"+str(i)] = labels["wg+jets"]["hists-pdf-variation"+str(i)][mlg_index].Integral()
