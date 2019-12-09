@@ -216,7 +216,7 @@ signal_muon  =  xs_inputs_muon["signal_data_muon"]
 
 signal_unc_due_to_lumi_muon = xs_inputs_muon["signal_syst_unc_due_to_lumi_up"]
 signal_syst_unc_due_to_pileup_muon = xs_inputs_muon["signal_syst_unc_due_to_pileup"]
-signal_syst_unc_due_to_fake_photon_muon  =  xs_inputs_muon["signal_syst_unc_due_to_fake_photon_muon"]
+signal_syst_unc_due_to_fake_photon_muon  =  xs_inputs_muon["signal_syst_unc_due_to_fake_photon_alt_muon"]
 signal_syst_unc_due_to_fake_lepton_muon  =  xs_inputs_muon["signal_syst_unc_due_to_fake_lepton_muon"]
 signal_stat_unc_muon  =  xs_inputs_muon["signal_stat_unc_muon"]
 n_weighted_selected_data_mc_sf_muon  =  xs_inputs_muon["signal_mc_xs_data_mc"]
@@ -227,7 +227,7 @@ n_weighted_selected_data_mc_sf_syst_unc_due_to_pdf_muon  =  0
 n_weighted_selected_data_mc_sf_syst_unc_due_to_qcd_scale_muon  =  0
 
 signal_electron  =  xs_inputs_electron["signal_data_electron"]
-signal_syst_unc_due_to_fake_photon_electron  =  xs_inputs_electron["signal_syst_unc_due_to_fake_photon_electron"]
+signal_syst_unc_due_to_fake_photon_electron  =  xs_inputs_electron["signal_syst_unc_due_to_fake_photon_alt_electron"]
 signal_unc_due_to_lumi_electron = xs_inputs_electron["signal_syst_unc_due_to_lumi_up"]
 signal_syst_unc_due_to_pileup_electron = xs_inputs_electron["signal_syst_unc_due_to_pileup"]
 
