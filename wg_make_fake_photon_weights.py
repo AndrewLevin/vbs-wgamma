@@ -161,6 +161,8 @@ else:
 
 data_fake_photon_samples = [{"file" : ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/data_fake_photon.root")}]
 
+#data_fake_photon_samples = []
+
 #muon_data_fake_photon_samples = []
 #electron_data_fake_photon_samples = []
 
