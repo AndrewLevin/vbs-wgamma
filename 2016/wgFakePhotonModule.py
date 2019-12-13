@@ -52,6 +52,8 @@ class wgFakePhotonProducer(Module):
         self.out.branch("lepton_pt",  "F")
         self.out.branch("lepton_eta",  "F")
         self.out.branch("lepton_phi",  "F")
+        self.out.branch("photon1_genjet_matching",  "I")
+        self.out.branch("photon2_genjet_matching",  "I")
         self.out.branch("photon1_gen_matching",  "I")
         self.out.branch("photon2_gen_matching",  "I")
         self.out.branch("photon1_gen_matching_old",  "I")
@@ -80,6 +82,7 @@ class wgFakePhotonProducer(Module):
         muons = Collection(event, "Muon")
         jets = Collection(event, "Jet")
         photons = Collection(event, "Photon")
+        genjets = Collection(event, "GenJet")
 
         pass_selection1 = False
         pass_selection2 = False                
@@ -388,6 +391,13 @@ class wgFakePhotonProducer(Module):
             isdirectprompttaudecayproduct_mask = (1 << 5) #isDirectPromptTauDecayProduct
 
 
+            photon1_genjet_matching = 0
+
+            if hasattr(event,'nGenJet'):
+                for i in range(0,len(genjets)):
+                    if genjets[i].pt > 10 and deltaR(genjets[i].eta,genjets[i].phi,photons[selected_tight_or_control_photons[0]].eta,photons[selected_tight_or_control_photons[0]].phi) < 0.5:
+                        photon1_genjet_matching = 1
+
             if hasattr(photons[selected_tight_or_control_photons[0]],'genPartIdx'):
 
                 if photons[selected_tight_or_control_photons[0]].genPartIdx >= 0:
@@ -464,6 +474,7 @@ class wgFakePhotonProducer(Module):
             self.out.fillBranch("photon1_gen_matching",photon1_gen_matching)
             self.out.fillBranch("photon1_genpart_pdgid",photon1_genpart_pdgid)
             self.out.fillBranch("photon1_genpart_pt",photon1_genpart_pt)
+            self.out.fillBranch("photon1_genjet_matching",photon1_genjet_matching)
             self.out.fillBranch("photon1_moth_genpart_pdgid",photon1_moth_genpart_pdgid)
             self.out.fillBranch("photon1_moth_genpart_pt",photon1_moth_genpart_pt)
             self.out.fillBranch("photon1_gen_matching_old",photon1_gen_matching_old)
@@ -477,6 +488,7 @@ class wgFakePhotonProducer(Module):
             self.out.fillBranch("photon1_gen_matching",0)
             self.out.fillBranch("photon1_genpart_pdgid",0)
             self.out.fillBranch("photon1_genpart_pt",0)
+            self.out.fillBranch("photon1_genjet_matching",0)
             self.out.fillBranch("photon1_moth_genpart_pdgid",0)
             self.out.fillBranch("photon1_moth_genpart_pt",0)
             self.out.fillBranch("photon1_gen_matching_old",0)
@@ -495,6 +507,15 @@ class wgFakePhotonProducer(Module):
             isfromhardprocess_mask = (1 << 8) #isFromHardProcess 
             isprompttaudecayproduct_mask = (1 << 4) #isPromptTauDecayProduct
             isdirectprompttaudecayproduct_mask = (1 << 5) #isDirectPromptTauDecayProduct
+
+
+            photon2_genjet_matching = 0
+
+            if hasattr(event,'nGenJet'):
+                for i in range(0,len(genjets)):
+                    if genjets[i].pt > 10 and deltaR(genjets[i].eta,genjets[i].phi,photons[selected_fake_template_photons[0]].eta,photons[selected_fake_template_photons[0]].phi) < 0.5:
+                        photon2_genjet_matching = 1
+
 
 
             if hasattr(photons[selected_fake_template_photons[0]],'genPartIdx'):
@@ -550,6 +571,7 @@ class wgFakePhotonProducer(Module):
             self.out.fillBranch("photon2_gen_matching",photon2_gen_matching)
             self.out.fillBranch("photon2_genpart_pdgid",photon2_genpart_pdgid)
             self.out.fillBranch("photon2_genpart_pt",photon2_genpart_pt)
+            self.out.fillBranch("photon2_genjet_matching",photon2_genjet_matching)
             self.out.fillBranch("photon2_moth_genpart_pdgid",photon2_moth_genpart_pdgid)
             self.out.fillBranch("photon2_moth_genpart_pt",photon2_moth_genpart_pt)
             self.out.fillBranch("photon2_gen_matching_old",photon2_gen_matching_old)
@@ -564,6 +586,7 @@ class wgFakePhotonProducer(Module):
             self.out.fillBranch("photon2_gen_matching",0)
             self.out.fillBranch("photon2_genpart_pdgid",0)
             self.out.fillBranch("photon2_genpart_pt",0)
+            self.out.fillBranch("photon2_genjet_matching",0)
             self.out.fillBranch("photon2_moth_genpart_pdgid",0)
             self.out.fillBranch("photon2_moth_genpart_pt",0)
             self.out.fillBranch("photon2_gen_matching_old",0)

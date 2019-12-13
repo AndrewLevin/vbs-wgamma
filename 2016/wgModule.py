@@ -38,6 +38,7 @@ class wgProducer(Module):
         self.out.branch("lepton_pt",  "F");
         self.out.branch("lepton_phi",  "F");
         self.out.branch("lepton_eta",  "F");
+        self.out.branch("photon_genjet_matching",  "I");
         self.out.branch("photon_pt",  "F");
         self.out.branch("photon_phi",  "F");
         self.out.branch("photon_eta",  "F");
@@ -85,6 +86,7 @@ class wgProducer(Module):
         muons = Collection(event, "Muon")
         jets = Collection(event, "Jet")
         photons = Collection(event, "Photon")
+        genjets = Collection(event, "GenJet")
 
         if hasattr(event,'nGenPart'):
             genparts = Collection(event, "GenPart")
@@ -714,6 +716,15 @@ class wgProducer(Module):
         gen_leptons = ROOT.TLorentzVector()
         gen_neutrinos = ROOT.TLorentzVector()
         gen_photons  = ROOT.TLorentzVector()
+
+        photon_genjet_matching = 0
+
+        if hasattr(event,'nGenJet'):
+            for i in range(0,len(genjets)):
+                if genjets[i].pt > 10 and deltaR(genjets[i].eta,genjets[i].phi,photons[tight_photons[0]].eta,photons[tight_photons[0]].phi) < 0.5:
+                    photon_genjet_matching = 1
+
+        self.out.fillBranch("photon_genjet_matching",photon_genjet_matching)
 
         if hasattr(event,'nGenPart'):    
 
