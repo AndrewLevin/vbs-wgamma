@@ -213,8 +213,8 @@ mlg_fit_upper_bound = 400
 #variables = ["photon_pt","dphilg","met","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","lepton_phi","photon_phi","njets40","mt","npvs","drlg"]
 #variables_labels = ["ewdim6_photon_pt","dphilg","met","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","lepton_phi","photon_phi","njets40","mt","npvs","drlg"]
 
-variables = ["photon_pt_overflow","detalg","dphilmet","dphilg","puppimet","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","mlg","lepton_phi","photon_phi","njets40","mt","npvs","drlg","photon_pt","met","photon_recoil"]
-variables_labels = ["ewdim6_photon_pt","detalg","dphilmet","dphilg","puppimet","lepton_pt","lepton_eta","photon_pt","photon_eta","fit_mlg","mlg","lepton_phi","photon_phi","njets40","mt","npvs","drlg","photon_pt_20to180","met","photon_recoil"]
+variables = ["photon_pt_overflow","detalg","dphilmet","dphilg","puppimet","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","mlg","lepton_phi","photon_phi","njets40","mt","puppimt","npvs","drlg","photon_pt","met","photon_recoil"]
+variables_labels = ["ewdim6_photon_pt","detalg","dphilmet","dphilg","puppimet","lepton_pt","lepton_eta","photon_pt","photon_eta","fit_mlg","mlg","lepton_phi","photon_phi","njets40","mt","puppimt","npvs","drlg","photon_pt_20to180","met","photon_recoil"]
 
 
 assert(len(variables) == len(variables_labels))
@@ -237,7 +237,7 @@ variable_definitions = [
 ]
 
 
-histogram_models = [ROOT.RDF.TH1DModel('', '', n_photon_pt_bins, binning_photon_pt ),ROOT.RDF.TH1DModel('','',16,0,6),ROOT.RDF.TH1DModel('','',16,0,pi),ROOT.RDF.TH1DModel('','',16,0,pi), ROOT.RDF.TH1DModel("met", "", 15 , 0., 300 ), ROOT.RDF.TH1DModel('lepton_pt', '', 8, 20., 180 ), ROOT.RDF.TH1DModel('lepton_eta', '', 10, -2.5, 2.5 ), ROOT.RDF.TH1DModel('', '', n_photon_pt_bins, binning_photon_pt ), ROOT.RDF.TH1DModel('photon_eta', '', 10, -2.5, 2.5 ), ROOT.RDF.TH1DModel("mlg","",mlg_fit_upper_bound/2,0,mlg_fit_upper_bound), ROOT.RDF.TH1DModel("mlg","",100,0,200),ROOT.RDF.TH1DModel("lepton_phi","",14,-3.5,3.5), ROOT.RDF.TH1DModel("photon_phi","",14,-3.5,3.5), ROOT.RDF.TH1DModel("njets40","",7,-0.5,6.5), ROOT.RDF.TH1DModel("mt","",10,0,200), ROOT.RDF.TH1DModel("npvs","",51,-0.5,50.5), ROOT.RDF.TH1DModel("drlg","",16,0,5), ROOT.RDF.TH1DModel('photon_pt', '', 8, 20., 180 ),ROOT.RDF.TH1DModel("met", "", 15 , 0., 300 ),ROOT.RDF.TH1DModel('photon_recoil', '', 20, -70., 130 )] 
+histogram_models = [ROOT.RDF.TH1DModel('', '', n_photon_pt_bins, binning_photon_pt ),ROOT.RDF.TH1DModel('','',16,0,6),ROOT.RDF.TH1DModel('','',16,0,pi),ROOT.RDF.TH1DModel('','',16,0,pi), ROOT.RDF.TH1DModel("met", "", 15 , 0., 300 ), ROOT.RDF.TH1DModel('lepton_pt', '', 8, 20., 180 ), ROOT.RDF.TH1DModel('lepton_eta', '', 10, -2.5, 2.5 ), ROOT.RDF.TH1DModel('', '', n_photon_pt_bins, binning_photon_pt ), ROOT.RDF.TH1DModel('photon_eta', '', 10, -2.5, 2.5 ), ROOT.RDF.TH1DModel("mlg","",mlg_fit_upper_bound/2,0,mlg_fit_upper_bound), ROOT.RDF.TH1DModel("mlg","",100,0,200),ROOT.RDF.TH1DModel("lepton_phi","",14,-3.5,3.5), ROOT.RDF.TH1DModel("photon_phi","",14,-3.5,3.5), ROOT.RDF.TH1DModel("njets40","",7,-0.5,6.5), ROOT.RDF.TH1DModel("mt","",10,0,200), ROOT.RDF.TH1DModel("puppimt","",10,0,200), ROOT.RDF.TH1DModel("npvs","",51,-0.5,50.5), ROOT.RDF.TH1DModel("drlg","",16,0,5), ROOT.RDF.TH1DModel('photon_pt', '', 8, 20., 180 ),ROOT.RDF.TH1DModel("met", "", 15 , 0., 300 ),ROOT.RDF.TH1DModel('photon_recoil', '', 20, -70., 130 )] 
 
 assert(len(variables) == len(histogram_models))
 
@@ -274,6 +274,8 @@ def getXaxisLabel(varname):
         return "number of PVs"
     elif varname == "mt":
         return "m_{t} (GeV)"
+    elif varname == "puppimt":
+        return "Puppi m_{t} (GeV)"
     elif varname == "corrmt":
         return "corrected m_{t} (GeV)"
     elif varname == "mlg":
