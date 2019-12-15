@@ -213,18 +213,9 @@ mlg_fit_upper_bound = 400
 #variables = ["photon_pt","dphilg","met","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","lepton_phi","photon_phi","njets40","mt","npvs","drlg"]
 #variables_labels = ["ewdim6_photon_pt","dphilg","met","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","lepton_phi","photon_phi","njets40","mt","npvs","drlg"]
 
-variables = ["photon_pt","detalg","dphilmet","dphilg","puppimet","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","mlg","lepton_phi","photon_phi","njets40","mt","npvs","drlg","photon_pt","met","photon_recoil"]
+variables = ["photon_pt_overflow","detalg","dphilmet","dphilg","puppimet","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","mlg","lepton_phi","photon_phi","njets40","mt","npvs","drlg","photon_pt","met","photon_recoil"]
 variables_labels = ["ewdim6_photon_pt","detalg","dphilmet","dphilg","puppimet","lepton_pt","lepton_eta","photon_pt","photon_eta","fit_mlg","mlg","lepton_phi","photon_phi","njets40","mt","npvs","drlg","photon_pt_20to180","met","photon_recoil"]
 
-
-
-variable_definitions = [
-["detalg" , "abs(lepton_eta-photon_eta)"],
-["dphilmet" , "abs(lepton_phi - metphi) > TMath::Pi() ? abs(abs(lepton_phi - metphi) - 2*TMath::Pi()) : abs(lepton_phi - metphi)"],
-["dphilg" , "abs(lepton_phi - photon_phi) > TMath::Pi() ? abs(abs(lepton_phi - photon_phi) - 2*TMath::Pi()) : abs(lepton_phi - photon_phi)"],
-["drlg" , "sqrt(dphilg*dphilg+detalg*detalg)" ],
-["photon_recoil","cos(photon_phi)*(-lepton_pt*cos(lepton_phi)-puppimet*cos(puppimetphi)) + sin(photon_phi)*(-lepton_pt*sin(lepton_phi) -puppimet*sin(puppimetphi))"]
-]
 
 assert(len(variables) == len(variables_labels))
 
@@ -236,9 +227,21 @@ binning_photon_pt = array('f',[400,500,600,900,1500])
 
 n_photon_pt_bins = len(binning_photon_pt)-1
 
+variable_definitions = [
+["detalg" , "abs(lepton_eta-photon_eta)"],
+["dphilmet" , "abs(lepton_phi - metphi) > TMath::Pi() ? abs(abs(lepton_phi - metphi) - 2*TMath::Pi()) : abs(lepton_phi - metphi)"],
+["dphilg" , "abs(lepton_phi - photon_phi) > TMath::Pi() ? abs(abs(lepton_phi - photon_phi) - 2*TMath::Pi()) : abs(lepton_phi - photon_phi)"],
+["drlg" , "sqrt(dphilg*dphilg+detalg*detalg)" ],
+["photon_recoil","cos(photon_phi)*(-lepton_pt*cos(lepton_phi)-puppimet*cos(puppimetphi)) + sin(photon_phi)*(-lepton_pt*sin(lepton_phi) -puppimet*sin(puppimetphi))"],
+["photon_pt_overflow","TMath::Min(float(photon_pt),float("+str(   (binning_photon_pt[n_photon_pt_bins] + binning_photon_pt[n_photon_pt_bins-1])/2) +"))"  ]
+]
+
+
 histogram_models = [ROOT.RDF.TH1DModel('', '', n_photon_pt_bins, binning_photon_pt ),ROOT.RDF.TH1DModel('','',16,0,6),ROOT.RDF.TH1DModel('','',16,0,pi),ROOT.RDF.TH1DModel('','',16,0,pi), ROOT.RDF.TH1DModel("met", "", 15 , 0., 300 ), ROOT.RDF.TH1DModel('lepton_pt', '', 8, 20., 180 ), ROOT.RDF.TH1DModel('lepton_eta', '', 10, -2.5, 2.5 ), ROOT.RDF.TH1DModel('', '', n_photon_pt_bins, binning_photon_pt ), ROOT.RDF.TH1DModel('photon_eta', '', 10, -2.5, 2.5 ), ROOT.RDF.TH1DModel("mlg","",mlg_fit_upper_bound/2,0,mlg_fit_upper_bound), ROOT.RDF.TH1DModel("mlg","",100,0,200),ROOT.RDF.TH1DModel("lepton_phi","",14,-3.5,3.5), ROOT.RDF.TH1DModel("photon_phi","",14,-3.5,3.5), ROOT.RDF.TH1DModel("njets40","",7,-0.5,6.5), ROOT.RDF.TH1DModel("mt","",10,0,200), ROOT.RDF.TH1DModel("npvs","",51,-0.5,50.5), ROOT.RDF.TH1DModel("drlg","",16,0,5), ROOT.RDF.TH1DModel('photon_pt', '', 8, 20., 180 ),ROOT.RDF.TH1DModel("met", "", 15 , 0., 300 ),ROOT.RDF.TH1DModel('photon_recoil', '', 20, -70., 130 )] 
 
 assert(len(variables) == len(histogram_models))
+
+
 
 mlg_index = 9
 
@@ -288,6 +291,8 @@ def getXaxisLabel(varname):
     elif varname == "lepton_phi":
         return "lepton #phi"
     elif varname == "photon_pt":
+        return "photon p_{T} (GeV)"
+    elif varname == "photon_pt_overflow":
         return "photon p_{T} (GeV)"
     elif varname == "photon_eta":
         return "photon #eta"    
@@ -944,41 +949,41 @@ if options.ewdim6:
 
     cwww_reweights = [372,0,1,2,3,4,5]
 
-    #cwww_coefficients = [0.0, 10.0,-10.0,20.0,-20.0,-30.0,30.0]
+    cwww_coefficients = [0.0, 10.0,-10.0,20.0,-20.0,-30.0,30.0]
 
-    cwww_coefficients = [0.0, 1.0,-1.0,2.0,-2.0,-3.0,3.0]
+    #cwww_coefficients = [0.0, 1.0,-1.0,2.0,-2.0,-3.0,3.0]
 
     cwww_hists = []
 
     cw_reweights = [372,6,7,8,9,10,11]
 
-    #cw_coefficients = [0.0, 80.0,-80.0,160.0,-160.0,240.0,-240.0]
+    cw_coefficients = [0.0, 80.0,-80.0,160.0,-160.0,240.0,-240.0]
 
-    cw_coefficients = [0.0, 17.0,-17.0,34.0,-34.0,51.0,-51.0]
+    #cw_coefficients = [0.0, 17.0,-17.0,34.0,-34.0,51.0,-51.0]
 
     cw_hists = []
 
     cb_reweights = [372,12,13,14,15,16,17]
 
-    #cb_coefficients = [0.0, 80.0,-80.0,160.0,-160.0,240.0,-240.0]
+    cb_coefficients = [0.0, 80.0,-80.0,160.0,-160.0,240.0,-240.0]
 
-    cb_coefficients = [0.0, 17.0,-17.0,34.0,-34.0,51.0,-51.0]
+    #cb_coefficients = [0.0, 17.0,-17.0,34.0,-34.0,51.0,-51.0]
 
     cb_hists = []
 
     cpwww_reweights = [372,18,19,20,21,22,23]
 
-    #cpwww_coefficients = [0.0, 4.0,-4.0,8.0,-8.0,12.0,-12.0]
+    cpwww_coefficients = [0.0, 4.0,-4.0,8.0,-8.0,12.0,-12.0]
 
-    cpwww_coefficients = [0.0, 0.5,-0.5,1.0,-1.0,1.5,-1.5]
+    #cpwww_coefficients = [0.0, 0.5,-0.5,1.0,-1.0,1.5,-1.5]
 
     cpwww_hists = []
 
     cpw_reweights = [372,24,25,26,27,28,29]
 
-    #cpw_coefficients = [0.0, 40.0,-40.0,80.0,-80.0,120.0,-120.0]
+    cpw_coefficients = [0.0, 40.0,-40.0,80.0,-80.0,120.0,-120.0]
 
-    cpw_coefficients = [0.0, 8.0,-8.0,16.0,-16.0,24.0,-24.0]
+    #cpw_coefficients = [0.0, 8.0,-8.0,16.0,-16.0,24.0,-24.0]
 
     cpw_hists = []
 
@@ -1037,7 +1042,12 @@ if options.ewdim6:
 
         rinterface = rinterface.Define("xs_weight",str(labels["wg+jets"]["samples"][year][0]["xs"]*1000*lumi/labels["wg+jets"]["samples"][year][0]["nweightedevents"]) + "*gen_weight/abs(gen_weight)")  
 
-        rresultptr = rinterface.Histo1D(histogram_models[0],variables[0],"xs_weight")
+        rinterface = rinterface.Define("weight","xs_weight*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\") : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\"))")    
+
+        for variable_definition in variable_definitions:
+            rinterface = rinterface.Define(variable_definition[0],variable_definition[1])
+
+        rresultptr = rinterface.Histo1D(histogram_models[0],variables[0],"weight")
 
         sm_hist.Add(rresultptr.GetValue())
 
@@ -1083,6 +1093,9 @@ if options.ewdim6:
 
         rinterface = rinterface.Define("weight","xs_weight*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\") : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\"))")    
 
+        for variable_definition in variable_definitions:
+            rinterface = rinterface.Define(variable_definition[0],variable_definition[1])
+
         rresultptrs_cwww = []
         rresultptrs_cw = []
         rresultptrs_cb = []
@@ -1093,7 +1106,6 @@ if options.ewdim6:
             rinterface = rinterface.Define("cwww_weight_"+str(i),"weight*LHEReweightingWeight["+str(cwww_reweights[i])+"]")
             rresultptrs_cwww.append(rinterface.Histo1D(histogram_models[0],variables[0],"cwww_weight_"+str(i)))
             
-
         for i in range(len(cw_reweights)):
             rinterface = rinterface.Define("cw_weight_"+str(i),"weight*LHEReweightingWeight["+str(cw_reweights[i])+"]")
             rresultptrs_cw.append(rinterface.Histo1D(histogram_models[0],variables[0],"cw_weight_"+str(i)))
@@ -1112,6 +1124,8 @@ if options.ewdim6:
 
         rinterface = rinterface.Define("sm_weight","weight*LHEReweightingWeight["+str(sm_lhe_weight)+"]")
         rresultptr_sm = rinterface.Histo1D(histogram_models[0],variables[0],"sm_weight")
+
+
 
         for i in range(len(cwww_reweights)):
             cwww_hists[i].Add(rresultptrs_cwww[i].GetValue())
@@ -1157,7 +1171,7 @@ if options.ewdim6:
 
     for i in range(1,cwww_hists[0].GetNbinsX()+1):
         ROOT.gROOT.cd() #so that the histogram created in the next line is not put in a file that is closed
-        cwww_scaling_hists[i]=ROOT.TH1D("ewdim6_scaling_bin_"+str(i),"ewdim6_scaling_bin_"+str(i),len(cwww_coefficients),cwww_hist_min,cwww_hist_max);
+        cwww_scaling_hists[i]=ROOT.TH1D("ewdim6_scaling_bin_"+str(i),"ewdim6_scaling_bin_"+str(i),len(cwww_coefficients),cwww_hist_min,cwww_hist_max)
 
         for j in range(0,len(cwww_hists)):
             assert(sm_lhe_weight_hist.GetBinContent(i) > 0)
@@ -1170,13 +1184,13 @@ if options.ewdim6:
     cwww_scaling_outfile.Close()
 
     for i in range(1,cw_hists[0].GetNbinsX()+1):
-        cw_scaling_hist=ROOT.TH1D("ewdim6_scaling_bin_"+str(i),"ewdim6_scaling_bin_"+str(i),len(cw_coefficients),cw_hist_min,cw_hist_max);
+        cw_scaling_hist=ROOT.TH1D("ewdim6_scaling_bin_"+str(i),"ewdim6_scaling_bin_"+str(i),len(cw_coefficients),cw_hist_min,cw_hist_max)
 
         for j in range(0,len(cw_hists)):
             assert(sm_lhe_weight_hist.GetBinContent(i) > 0)
 
             cw_scaling_hist.SetBinContent(cw_scaling_hist.GetXaxis().FindFixBin(cw_coefficients[j]), cw_hists[j].GetBinContent(i)/sm_lhe_weight_hist.GetBinContent(i))
-        
+            
         cw_scaling_outfile.cd()
         cw_scaling_hist.Write()
 
