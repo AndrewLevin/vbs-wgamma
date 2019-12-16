@@ -3,8 +3,8 @@ import math
 
 
 
-xs_inputs_muon = json.load(open("xs_inputs_muon.txt"))
-xs_inputs_electron = json.load(open("xs_inputs_electron.txt"))
+xs_inputs_muon = json.load(open("xs_inputs/xs_inputs_muon.txt"))
+xs_inputs_electron = json.load(open("xs_inputs/xs_inputs_electron.txt"))
 
 from pprint import pprint
 
@@ -216,7 +216,8 @@ signal_muon  =  xs_inputs_muon["signal_data_muon"]
 
 signal_unc_due_to_lumi_muon = xs_inputs_muon["signal_syst_unc_due_to_lumi_up"]
 signal_syst_unc_due_to_pileup_muon = xs_inputs_muon["signal_syst_unc_due_to_pileup"]
-signal_syst_unc_due_to_fake_photon_muon  =  xs_inputs_muon["signal_syst_unc_due_to_fake_photon_alt_muon"]
+signal_syst_unc_due_to_fake_photon_alt_muon  =  xs_inputs_muon["signal_syst_unc_due_to_fake_photon_alt_muon"]
+signal_syst_unc_due_to_fake_photon_wjets_muon  =  xs_inputs_muon["signal_syst_unc_due_to_fake_photon_wjets_muon"]
 signal_syst_unc_due_to_fake_lepton_muon  =  xs_inputs_muon["signal_syst_unc_due_to_fake_lepton_muon"]
 signal_stat_unc_muon  =  xs_inputs_muon["signal_stat_unc_muon"]
 n_weighted_selected_data_mc_sf_muon  =  xs_inputs_muon["signal_mc_xs_data_mc"]
@@ -226,10 +227,17 @@ n_weighted_selected_data_mc_sf_syst_unc_due_to_photon_id_sf_muon  =  xs_inputs_m
 n_weighted_selected_data_mc_sf_syst_unc_due_to_pdf_muon  =  0
 n_weighted_selected_data_mc_sf_syst_unc_due_to_qcd_scale_muon  =  0
 
+
+
+signal_syst_unc_due_to_fake_photon_muon = math.sqrt(pow(signal_syst_unc_due_to_fake_photon_alt_muon,2) + pow(signal_syst_unc_due_to_fake_photon_wjets_muon,2))
+
 signal_electron  =  xs_inputs_electron["signal_data_electron"]
-signal_syst_unc_due_to_fake_photon_electron  =  xs_inputs_electron["signal_syst_unc_due_to_fake_photon_alt_electron"]
+signal_syst_unc_due_to_fake_photon_alt_electron  =  xs_inputs_electron["signal_syst_unc_due_to_fake_photon_alt_electron"]
+signal_syst_unc_due_to_fake_photon_wjets_electron  =  xs_inputs_electron["signal_syst_unc_due_to_fake_photon_wjets_electron"]
 signal_unc_due_to_lumi_electron = xs_inputs_electron["signal_syst_unc_due_to_lumi_up"]
 signal_syst_unc_due_to_pileup_electron = xs_inputs_electron["signal_syst_unc_due_to_pileup"]
+
+signal_syst_unc_due_to_fake_photon_electron = math.sqrt(pow(signal_syst_unc_due_to_fake_photon_alt_electron,2) + pow(signal_syst_unc_due_to_fake_photon_wjets_electron,2))
 
 signal_syst_unc_due_to_fake_lepton_electron  =  xs_inputs_electron["signal_syst_unc_due_to_fake_lepton_electron"]
 signal_stat_unc_electron  =  xs_inputs_electron["signal_stat_unc_electron"]
@@ -272,11 +280,11 @@ xs_electron =  signal_electron/(n_weighted_selected_data_mc_sf_electron/fiducial
 
 xs_muon =  signal_muon/(n_weighted_selected_data_mc_sf_muon/fiducial)/lumi
 
-lumi_err =  signal/(n_weighted_selected_data_mc_sf*0.975/fiducial)/lumi - xs
+lumi_err =  signal/(n_weighted_selected_data_mc_sf*0.982/fiducial)/lumi - xs
 
-lumi_err_electron =  signal_electron/(n_weighted_selected_data_mc_sf_electron*0.975/fiducial)/lumi - xs_electron
+lumi_err_electron =  signal_electron/(n_weighted_selected_data_mc_sf_electron*0.982/fiducial)/lumi - xs_electron
 
-lumi_err_muon =  signal_muon/(n_weighted_selected_data_mc_sf_muon*0.975/fiducial)/lumi - xs_muon
+lumi_err_muon =  signal_muon/(n_weighted_selected_data_mc_sf_muon*0.982/fiducial)/lumi - xs_muon
 
 stat_err = (signal+signal_stat_unc)/(n_weighted_selected_data_mc_sf/fiducial)/lumi - xs
 
