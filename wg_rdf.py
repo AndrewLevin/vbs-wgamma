@@ -69,14 +69,12 @@ parser.add_option('--draw_ewdim6',dest='draw_ewdim6',action='store_true',default
 parser.add_option('--ewdim6_scaling_only',dest='ewdim6_scaling_only',action='store_true',default=False)
 parser.add_option('--make_recoil_trees',dest='make_recoil_trees',action='store_true',default=False)
 parser.add_option('--make_plots',dest='make_plots',action='store_true',default=False)
-parser.add_option('--blinding_cut',dest='blinding_cut',default=1000000)
+parser.add_option('--blind',dest='blind',action='store_true',default=False)
 
 parser.add_option('-i',dest='inputfile')
 parser.add_option('-o',dest='outputdir',default="/eos/user/a/amlevin/www/tmp/")
 
 (options,args) = parser.parse_args()
-
-blinding_cut = float(options.blinding_cut)
 
 if options.ewdim6_scaling_only and not options.ewdim6:
     assert(0)
@@ -1170,6 +1168,7 @@ if options.ewdim6:
     sm_lhe_weight_hist.Print("all")
 
     cwww_scaling_hists = {}
+    cb_scaling_hists = {}
 
     for i in range(1,cwww_hists[0].GetNbinsX()+1):
         ROOT.gROOT.cd() #so that the histogram created in the next line is not put in a file that is closed
@@ -1199,15 +1198,16 @@ if options.ewdim6:
     cw_scaling_outfile.Close()
 
     for i in range(1,cb_hists[0].GetNbinsX()+1):
-        cb_scaling_hist=ROOT.TH1D("ewdim6_scaling_bin_"+str(i),"ewdim6_scaling_bin_"+str(i),len(cb_coefficients),cb_hist_min,cb_hist_max);
+        ROOT.gROOT.cd() #so that the histogram created in the next line is not put in a file that is closed
+        cb_scaling_hists[i]=ROOT.TH1D("ewdim6_scaling_bin_"+str(i),"ewdim6_scaling_bin_"+str(i),len(cb_coefficients),cb_hist_min,cb_hist_max);
 
         for j in range(0,len(cb_hists)):
             assert(sm_lhe_weight_hist.GetBinContent(i) > 0)
 
-            cb_scaling_hist.SetBinContent(cb_scaling_hist.GetXaxis().FindFixBin(cb_coefficients[j]), cb_hists[j].GetBinContent(i)/sm_lhe_weight_hist.GetBinContent(i))
+            cb_scaling_hists[i].SetBinContent(cb_scaling_hists[i].GetXaxis().FindFixBin(cb_coefficients[j]), cb_hists[j].GetBinContent(i)/sm_lhe_weight_hist.GetBinContent(i))
         
         cb_scaling_outfile.cd()
-        cb_scaling_hist.Write()
+        cb_scaling_hists[i].Write()
 
     cb_scaling_outfile.Close()
 
@@ -1527,7 +1527,7 @@ for year in years:
             else:
                 assert(0)
 
-            rinterface = rinterface.Define("xs_weight",str(sample["xs"]*1000*lumi/sample["nweightedevents"]) + "*gen_weight/abs(gen_weight)")    
+            rinterface = rinterface.Define("xs_weight",str(sample["xs"]*1000*lumi/sample["nweightedevents"]) + "*gen_weight/abs(gen_weight)") 
 
             if year == "2016" or year == "2017":    
                 prefire_weight_string = "PrefireWeight"
@@ -1709,6 +1709,7 @@ for year in years:
                     fake_signal_contamination["hists"][i].Add(rresultptrs_fake_photon[i].GetValue())
                     fake_signal_contamination["hists"][i].Add(rresultptrs_double_fake[i].GetValue())
 
+                    
                 if year == "2016":    
                     fake_photon_2016["hists"][i].Add(rresultptrs_fake_photon[i].GetValue())
                 fake_photon["hists"][i].Add(rresultptrs_fake_photon[i].GetValue())
@@ -2209,9 +2210,12 @@ if "wg+jets" in labels:
 if options.draw_ewdim6:
     for i in range(1,n_photon_pt_bins+1):
         #hardcoded to use bin 6 of the scaling histogram for now 
-        ewdim6["hists"][0].SetBinContent(i,cwww_scaling_hists[i].GetBinContent(6)*labels["wg+jets"]["hists"][0].GetBinContent(i))
+        ewdim6["hists"][0].SetBinContent(i,cwww_scaling_hists[i].GetBinContent(3)*labels["wg+jets"]["hists"][0].GetBinContent(i))
 
 for i in range(len(variables)):
+
+    if options.blind:
+        data["hists"][i].Scale(0)
 
 #    fake_lepton["hists"][i].Scale(2)
 
