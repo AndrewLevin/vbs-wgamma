@@ -1016,7 +1016,7 @@ if options.ewdim6:
             if year == "2016":
                 rinterface = rdf.Filter(photon_eta_cutstring+" && puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25 && photon_selection == 0 && is_lepton_tight == 1 && "+str(gen_matching_string))
             elif year == "2017":
-                rinterface = rdf.Filter(photon_eta_cutstring+" && puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25 && "+str(gen_matching_string))
+                rinterface = rdf.Filter(photon_eta_cutstring+" && puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 30 && "+str(gen_matching_string))
             elif year == "2018":
                 rinterface = rdf.Filter(photon_eta_cutstring+" && puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25 && "+str(gen_matching_string))
             else:
@@ -1065,7 +1065,7 @@ if options.ewdim6:
             if year == "2016":
                 rinterface = rdf.Filter(photon_eta_cutstring+" && puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25 && "+str(gen_matching_string))
             elif year == "2017":
-                rinterface = rdf.Filter(photon_eta_cutstring+" && puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25 && "+str(gen_matching_string))
+                rinterface = rdf.Filter(photon_eta_cutstring+" && puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 30 && "+str(gen_matching_string))
             elif year == "2018":
                 rinterface = rdf.Filter(photon_eta_cutstring+" && puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25 && "+str(gen_matching_string))
             else:
@@ -1312,7 +1312,7 @@ for year in years:
         if year == "2016":
             rinterface = rdf.Filter(photon_eta_cutstring+" && puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25")
         elif year == "2017":
-            rinterface = rdf.Filter(photon_eta_cutstring+" && puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25")
+            rinterface = rdf.Filter(photon_eta_cutstring+" && puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 30")
         elif year == "2018":
             rinterface = rdf.Filter(photon_eta_cutstring+" && puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25")
         else:
@@ -1501,7 +1501,7 @@ for year in years:
                 if year == "2016":
                     rinterface = rdf.Filter(photon_eta_cutstring+" && puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25")
                 elif year == "2017":
-                    rinterface = rdf.Filter(photon_eta_cutstring+" && puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25")
+                    rinterface = rdf.Filter(photon_eta_cutstring+" && puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 30")
                 elif year == "2018":
                     rinterface = rdf.Filter(photon_eta_cutstring+" && puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25")
                 else:
@@ -1510,7 +1510,7 @@ for year in years:
                 if year == "2016":
                     rinterface = rdf.Filter(photon_eta_cutstring+" && puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 30")
                 elif year == "2017":
-                    rinterface = rdf.Filter(photon_eta_cutstring+" && puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 30")
+                    rinterface = rdf.Filter(photon_eta_cutstring+" && puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35")
                 elif year == "2018":
                     rinterface = rdf.Filter(photon_eta_cutstring+" && puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35")
                 else:
@@ -1519,7 +1519,7 @@ for year in years:
                 if year == "2016":
                     rinterface = rdf.Filter(photon_eta_cutstring+" && ((puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25) || (puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 30))")
                 elif year == "2017":
-                    rinterface = rdf.Filter(photon_eta_cutstring+" && ((puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25) || (puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35))")
+                    rinterface = rdf.Filter(photon_eta_cutstring+" && ((puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 30) || (puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35))")
                 elif year == "2018":
                     rinterface = rdf.Filter(photon_eta_cutstring+" && ((puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25) || (puppimet > 40 && puppimt > 0 && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35))")
                 else:
@@ -1527,7 +1527,7 @@ for year in years:
             else:
                 assert(0)
 
-            rinterface = rinterface.Define("xs_weight",str(sample["xs"]*1000*lumi/sample["nweightedevents"]) + "*gen_weight/abs(gen_weight)") 
+            rinterface = rinterface.Define("xs_weight",str(sample["xs"]*1000*lumi/sample["nweightedevents"]) + "*gen_weight/abs(gen_weight)")    
 
             if year == "2016" or year == "2017":    
                 prefire_weight_string = "PrefireWeight"
@@ -2023,6 +2023,7 @@ def mlg_fit(inputs):
     print "wg_plus_fake_wg_contamination_norm.getVal() = "+str(wg_plus_fake_wg_contamination_norm.getVal())
     print "wg_plus_fake_wg_contamination_norm.getVal()*inputs[\"wg\"].Integral()/(inputs[\"wg\"].Integral() + inputs[\"fake-wg-contamination\"]) = "+str(wg_plus_fake_wg_contamination_norm.getVal()*inputs["wg"].Integral()/(inputs["wg"].Integral() + inputs["fake-wg-contamination"].Integral()))
 
+    mlg_fit_results["bwcb_norm"] = bwcb_norm.getVal()
     if options.float_fake_sig_cont:
         mlg_fit_results["wg_norm"] = wg_plus_fake_wg_contamination_norm.getVal()*inputs["wg"].Integral()/(inputs["wg"].Integral() + inputs["fake-wg-contamination"].Integral())
         mlg_fit_results["wg_norm_err"] = wg_plus_fake_wg_contamination_norm.getError()*inputs["wg"].Integral()/(inputs["wg"].Integral() + inputs["fake-wg-contamination"].Integral())
@@ -2450,6 +2451,12 @@ double_fake_integral = double_fake["hists"][mlg_index].IntegralAndError(1,double
 data_integral_error = ROOT.Double()
 data_integral = data["hists"][mlg_index].IntegralAndError(1,data["hists"][mlg_index].GetXaxis().GetNbins(),data_integral_error)
 
+e_to_p_integral_error = ROOT.Double()
+e_to_p_integral = e_to_p["hists"][mlg_index].IntegralAndError(1,e_to_p["hists"][mlg_index].GetXaxis().GetNbins(),e_to_p_integral_error)
+
+e_to_p_non_res_integral_error = ROOT.Double()
+e_to_p_non_res_integral = e_to_p_non_res["hists"][mlg_index].IntegralAndError(1,e_to_p_non_res["hists"][mlg_index].GetXaxis().GetNbins(),e_to_p_non_res_integral_error)
+
 fake_signal_contamination_integral_error = ROOT.Double()
 fake_signal_contamination_integral = fake_signal_contamination["hists"][mlg_index].IntegralAndError(1,fake_signal_contamination["hists"][mlg_index].GetXaxis().GetNbins(),fake_signal_contamination_integral_error)
 
@@ -2463,10 +2470,15 @@ print "fake photon = "+str(fake_photon_integral)+" +/- "+str(fake_photon_integra
 print "fake lepton = "+str(fake_lepton_integral)+" +/- "+str(fake_lepton_integral_error)
 print "double fake = "+str(double_fake_integral)+" +/- "+str(double_fake_integral_error)
 print "data = "+str(data_integral)+" +/- "+str(data_integral_error)
+print "e_to_p = "+str(e_to_p_integral)+" +/- "+str(e_to_p_integral_error)
+print "e_to_p_non_res = "+str(e_to_p_non_res_integral)+" +/- "+str(e_to_p_non_res_integral_error)
 
-n_signal = data_integral - double_fake_integral - fake_photon_integral - fake_lepton_integral - top_jets_integral - vv_jets_integral - zg_jets_integral
+if options.fit:
+    print "fit_results[\"bwcb_norm\"] = "+str(fit_results["bwcb_norm"])
 
-n_signal_error = sqrt(pow(data_integral_error,2) + pow(double_fake_integral_error,2) + pow(fake_lepton_integral_error,2)+ pow(fake_photon_integral_error,2)+pow(top_jets_integral_error,2)+ pow(vv_jets_integral_error,2)+ pow(zg_jets_integral_error,2))
+n_signal = data_integral - double_fake_integral - fake_photon_integral - fake_lepton_integral - top_jets_integral - vv_jets_integral - zg_jets_integral - e_to_p_non_res_integral
+
+n_signal_error = sqrt(pow(data_integral_error,2) + pow(double_fake_integral_error,2) + pow(fake_lepton_integral_error,2)+ pow(fake_photon_integral_error,2)+pow(top_jets_integral_error,2)+ pow(vv_jets_integral_error,2)+ pow(zg_jets_integral_error,2)+pow(e_to_p_non_res_integral_error,2))
 
 print "n_signal = "+str(n_signal) + " +/- " + str(n_signal_error)
 
