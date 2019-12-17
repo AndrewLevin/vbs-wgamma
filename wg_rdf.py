@@ -1124,7 +1124,10 @@ if options.ewdim6:
     sm_lhe_weight_hist.Print("all")
 
     cwww_scaling_hists = {}
+    cw_scaling_hists = {}
     cb_scaling_hists = {}
+    cpw_scaling_hists = {}
+    cpwww_scaling_hists = {}
 
     for i in range(1,cwww_hists[0].GetNbinsX()+1):
         ROOT.gROOT.cd() #so that the histogram created in the next line is not put in a file that is closed
@@ -1141,15 +1144,15 @@ if options.ewdim6:
     cwww_scaling_outfile.Close()
 
     for i in range(1,cw_hists[0].GetNbinsX()+1):
-        cw_scaling_hist=ROOT.TH1D("ewdim6_scaling_bin_"+str(i),"ewdim6_scaling_bin_"+str(i),len(cw_coefficients),cw_hist_min,cw_hist_max)
+        cw_scaling_hists[i]=ROOT.TH1D("ewdim6_scaling_bin_"+str(i),"ewdim6_scaling_bin_"+str(i),len(cw_coefficients),cw_hist_min,cw_hist_max)
 
         for j in range(0,len(cw_hists)):
             assert(sm_lhe_weight_hist.GetBinContent(i) > 0)
 
-            cw_scaling_hist.SetBinContent(cw_scaling_hist.GetXaxis().FindFixBin(cw_coefficients[j]), cw_hists[j].GetBinContent(i)/sm_lhe_weight_hist.GetBinContent(i))
+            cw_scaling_hists[i].SetBinContent(cw_scaling_hists[i].GetXaxis().FindFixBin(cw_coefficients[j]), cw_hists[j].GetBinContent(i)/sm_lhe_weight_hist.GetBinContent(i))
             
         cw_scaling_outfile.cd()
-        cw_scaling_hist.Write()
+        cw_scaling_hists[i].Write()
 
     cw_scaling_outfile.Close()
 
@@ -1168,28 +1171,28 @@ if options.ewdim6:
     cb_scaling_outfile.Close()
 
     for i in range(1,cpwww_hists[0].GetNbinsX()+1):
-        cpwww_scaling_hist=ROOT.TH1D("ewdim6_scaling_bin_"+str(i),"ewdim6_scaling_bin_"+str(i),len(cpwww_coefficients),cpwww_hist_min,cpwww_hist_max);
+        cpwww_scaling_hists[i]=ROOT.TH1D("ewdim6_scaling_bin_"+str(i),"ewdim6_scaling_bin_"+str(i),len(cpwww_coefficients),cpwww_hist_min,cpwww_hist_max);
 
         for j in range(0,len(cpwww_hists)):
             assert(sm_lhe_weight_hist.GetBinContent(i) > 0)
 
-            cpwww_scaling_hist.SetBinContent(cpwww_scaling_hist.GetXaxis().FindFixBin(cpwww_coefficients[j]), cpwww_hists[j].GetBinContent(i)/sm_lhe_weight_hist.GetBinContent(i))
+            cpwww_scaling_hists[i].SetBinContent(cpwww_scaling_hists[i].GetXaxis().FindFixBin(cpwww_coefficients[j]), cpwww_hists[j].GetBinContent(i)/sm_lhe_weight_hist.GetBinContent(i))
         
         cpwww_scaling_outfile.cd()
-        cpwww_scaling_hist.Write()
+        cpwww_scaling_hists[i].Write()
 
     cpwww_scaling_outfile.Close()
 
     for i in range(1,cpw_hists[0].GetNbinsX()+1):
-        cpw_scaling_hist=ROOT.TH1D("ewdim6_scaling_bin_"+str(i),"ewdim6_scaling_bin_"+str(i),len(cpw_coefficients),cpw_hist_min,cpw_hist_max);
+        cpw_scaling_hists[i]=ROOT.TH1D("ewdim6_scaling_bin_"+str(i),"ewdim6_scaling_bin_"+str(i),len(cpw_coefficients),cpw_hist_min,cpw_hist_max);
 
         for j in range(0,len(cpw_hists)):
             assert(sm_lhe_weight_hist.GetBinContent(i) > 0)
 
-            cpw_scaling_hist.SetBinContent(cpw_scaling_hist.GetXaxis().FindFixBin(cpw_coefficients[j]), cpw_hists[j].GetBinContent(i)/sm_lhe_weight_hist.GetBinContent(i))
+            cpw_scaling_hists[i].SetBinContent(cpw_scaling_hists[i].GetXaxis().FindFixBin(cpw_coefficients[j]), cpw_hists[j].GetBinContent(i)/sm_lhe_weight_hist.GetBinContent(i))
         
         cpw_scaling_outfile.cd()
-        cpw_scaling_hist.Write()
+        cpw_scaling_hists[i].Write()
 
     cpw_scaling_outfile.Close()
 
@@ -2154,7 +2157,8 @@ if "wg+jets" in labels:
 if options.draw_ewdim6:
     for i in range(1,n_photon_pt_bins+1):
         #hardcoded to use bin 6 of the scaling histogram for now 
-        ewdim6["hists"][0].SetBinContent(i,cwww_scaling_hists[i].GetBinContent(3)*labels["wg+jets"]["hists"][0].GetBinContent(i))
+#        ewdim6["hists"][0].SetBinContent(i,cwww_scaling_hists[i].GetBinContent(3)*labels["wg+jets"]["hists"][0].GetBinContent(i))
+        ewdim6["hists"][0].SetBinContent(i,cb_scaling_hists[i].GetBinContent(5)*labels["wg+jets"]["hists"][0].GetBinContent(i))
 
 for i in range(len(variables)):
 
