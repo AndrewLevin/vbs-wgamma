@@ -67,7 +67,6 @@ parser.add_option('--use_wjets_for_fake_photon',dest='use_wjets_for_fake_photon'
 parser.add_option('--float_fake_sig_cont',dest='float_fake_sig_cont',action='store_true',default=False)
 parser.add_option('--draw_ewdim6',dest='draw_ewdim6',action='store_true',default=False)
 parser.add_option('--ewdim6_scaling_only',dest='ewdim6_scaling_only',action='store_true',default=False)
-parser.add_option('--make_recoil_trees',dest='make_recoil_trees',action='store_true',default=False)
 parser.add_option('--make_plots',dest='make_plots',action='store_true',default=False)
 parser.add_option('--blind',dest='blind',action='store_true',default=False)
 
@@ -159,41 +158,6 @@ import ROOT
 ROOT.gROOT.cd()
 
 ROOT.ROOT.EnableImplicitMT()
-
-if options.make_recoil_trees:
-
-    from array import array
-
-    recoil_outfile = ROOT.TFile("recoil.root",'recreate')
-
-    mc_recoil_tree = ROOT.TTree("mc_recoil_tree","mc recoil tree")
-
-    mc_u1= array( 'f', [ 0 ] )
-    mc_recoil_tree.Branch( 'u1', mc_u1, 'u1/F')
-
-    mc_u2= array( 'f', [ 0 ] )
-    mc_recoil_tree.Branch( 'u2', mc_u2, 'u2/F')
-
-    mc_zpt= array( 'f', [ 0 ] )
-    mc_recoil_tree.Branch( 'zpt', mc_zpt, 'zpt/F')
-
-    mc_weight= array( 'f', [ 0 ] )
-    mc_recoil_tree.Branch( 'weight', mc_weight, 'weight/F')
-
-
-
-ROOT.gROOT.ProcessLine("#include \"/afs/cern.ch/user/a/amlevin/recoil_corrections/MetTools/RecoilCorrections/RecoilCorrector.hh\"")
-
-#recoilCorrector = ROOT.RecoilCorrector("/afs/cern.ch/user/a/amlevin/recoil_corrections/MetTools/RecoilCorrections/mcweightsmyptbinning/fits_pf.root","grPF")
-wgrecoilCorrector = ROOT.RecoilCorrector("/afs/cern.ch/user/a/amlevin/recoil_corrections/MetTools/RecoilCorrections/wgmcweightsmyptbinning/fits_pf.root","grPF")
-wgrecoilCorrector.addMCFile("/afs/cern.ch/user/a/amlevin/recoil_corrections/MetTools/RecoilCorrections/mcweightsmyptbinning/fits_pf.root")
-wgrecoilCorrector.addDataFile("/afs/cern.ch/user/a/amlevin/recoil_corrections/MetTools/RecoilCorrections/datamyptbinning/fits_pf.root")
-wgrecoilCorrector.addFileWithGraph("/afs/cern.ch/user/a/amlevin/recoil_corrections/MetTools/RecoilCorrections/datamyptbinning/fits_pf.root")
-
-zgrecoilCorrector = ROOT.RecoilCorrector("/afs/cern.ch/user/a/amlevin/recoil_corrections/MetTools/RecoilCorrections/zgmcweightsmyptbinning/fits_pf.root","grPF")
-zgrecoilCorrector.addMCFile("/afs/cern.ch/user/a/amlevin/recoil_corrections/MetTools/RecoilCorrections/mcweightsmyptbinning/fits_pf.root")
-zgrecoilCorrector.addDataFile("/afs/cern.ch/user/a/amlevin/recoil_corrections/MetTools/RecoilCorrections/datamyptbinning/fits_pf.root")
-zgrecoilCorrector.addFileWithGraph("/afs/cern.ch/user/a/amlevin/recoil_corrections/MetTools/RecoilCorrections/datamyptbinning/fits_pf.root")
 
 #when the TMinuit object is reused, the random seed is not reset after each fit, so the fit result can change when it is run on the same input 
 ROOT.TMinuitMinimizer.UseStaticMinuit(False)
@@ -1738,14 +1702,6 @@ for year in years:
 
 for hist in hists:
     hists.Print("all")
-
-if options.make_recoil_trees:
-
-    recoil_outfile.cd()
-
-    mc_recoil_tree.Write()
-
-    recoil_outfile.Close()
 
 def mlg_fit(inputs):
 
