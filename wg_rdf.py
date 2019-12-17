@@ -10,14 +10,6 @@ puppimethigh = 1000000
 njets40min = 0
 njets40max = 1000000
 
-def fillHistogram(hist,value,weight=1):
-    if options.overflow:
-       if value > hist.GetBinLowEdge(hist.GetNbinsX()):
-            value = hist.GetBinCenter(hist.GetNbinsX())
-    hist.Fill(value,weight)
-
-import ctypes
-
 import json
 
 import sys
@@ -1987,10 +1979,6 @@ def mlg_fit(inputs):
     else:
         mlg_fit_results["wg_norm"] = wg_norm.getVal()
         mlg_fit_results["wg_norm_err"] = wg_norm.getError()
-
-#instead of resetting after each fit, turn the static minuit feature off (see above near "import ROOT")
-#    ROOT.gMinuit.mncler()
-#    ROOT.gMinuit.mnrn15(ROOT.Double(3),ctypes.c_int(12345))
 
     return mlg_fit_results
 
