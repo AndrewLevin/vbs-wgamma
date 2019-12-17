@@ -2157,8 +2157,7 @@ if "wg+jets" in labels:
 if options.draw_ewdim6:
     for i in range(1,n_photon_pt_bins+1):
         #hardcoded to use bin 6 of the scaling histogram for now 
-#        ewdim6["hists"][0].SetBinContent(i,cwww_scaling_hists[i].GetBinContent(3)*labels["wg+jets"]["hists"][0].GetBinContent(i))
-        ewdim6["hists"][0].SetBinContent(i,cb_scaling_hists[i].GetBinContent(5)*labels["wg+jets"]["hists"][0].GetBinContent(i))
+        ewdim6["hists"][0].SetBinContent(i,cwww_scaling_hists[i].GetBinContent(3)*labels["wg+jets"]["hists"][0].GetBinContent(i))
 
 for i in range(len(variables)):
 
