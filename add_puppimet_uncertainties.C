@@ -2,6 +2,7 @@
 
 #include "TChain.h"
 #include "TFile.h"
+#include "TH1D.h"
 #include <iostream>
 #include <map>
 #include <vector>
@@ -15,6 +16,17 @@ void add_puppimet_uncertainties (TString infile, TString outfile, TString puppim
     TFile fout(outfile,"recreate");
 
     fout.cd();
+
+    TH1D * nEvents;
+    TH1D * nEventsGenWeighted;
+
+    fin.GetObject("nEvents",nEvents);
+    
+    fout.WriteObject(nEvents,"nEvents");
+
+    fin.GetObject("nEventsGenWeighted",nEventsGenWeighted);
+    
+    fout.WriteObject(nEventsGenWeighted,"nEventsGenWeighted");
 
     TTree * tnew  = torig->CloneTree();
 
