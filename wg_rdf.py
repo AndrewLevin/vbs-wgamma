@@ -322,6 +322,7 @@ for label in labels.keys():
     labels[label]["hists-muon-iso-sf-up"] = {}
     labels[label]["hists-photon-id-sf-up"] = {}
     labels[label]["hists-pileup-up"] = {}
+    labels[label]["hists-prefire-up"] = {}
 
     if labels[label]["syst-pdf"]:
         for i in range(0,32):
@@ -340,12 +341,14 @@ for label in labels.keys():
         labels[label]["hists"][i].Sumw2()
 
         labels[label]["hists-pileup-up"][i] = histogram_models[i].GetHistogram()
+        labels[label]["hists-prefire-up"][i] = histogram_models[i].GetHistogram()
         labels[label]["hists-electron-id-sf-up"][i] = histogram_models[i].GetHistogram()
         labels[label]["hists-electron-reco-sf-up"][i] = histogram_models[i].GetHistogram()
         labels[label]["hists-muon-id-sf-up"][i] = histogram_models[i].GetHistogram()
         labels[label]["hists-muon-iso-sf-up"][i] = histogram_models[i].GetHistogram()
         labels[label]["hists-photon-id-sf-up"][i] = histogram_models[i].GetHistogram()
         labels[label]["hists-pileup-up"][i].Sumw2()
+        labels[label]["hists-prefire-up"][i].Sumw2()
         labels[label]["hists-electron-id-sf-up"][i].Sumw2()
         labels[label]["hists-electron-reco-sf-up"][i].Sumw2()
         labels[label]["hists-muon-id-sf-up"][i].Sumw2()
@@ -1490,10 +1493,13 @@ for year in years:
 
             if year == "2016" or year == "2017":    
                 prefire_weight_string = "PrefireWeight"
+                prefire_up_weight_string = "PrefireWeight_Up"
             else:    
                 prefire_weight_string = "1"
+                prefire_up_weight_string = "1"
 
             rinterface = rinterface.Define("base_weight","xs_weight*puWeight*"+prefire_weight_string+"*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\") : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\"))")      
+            rinterface = rinterface.Define("prefire_up_base_weight","xs_weight*puWeight*"+prefire_up_weight_string+"*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\") : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\"))")    
             rinterface = rinterface.Define("pileup_up_base_weight","xs_weight*puWeightUp*"+prefire_weight_string+"*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\") : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\"))")    
             rinterface = rinterface.Define("electron_id_sf_up_base_weight","xs_weight*puWeight*"+prefire_weight_string+"*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\") : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\",true))")                  
             rinterface = rinterface.Define("electron_reco_sf_up_base_weight","xs_weight*puWeight*"+prefire_weight_string+"*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\") : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\",false,true))")    
@@ -1509,6 +1515,7 @@ for year in years:
 
 
             rinterface = rinterface.Define("pileup_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + ")*pileup_up_base_weight")
+            rinterface = rinterface.Define("prefire_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + ")*prefire_up_base_weight")
             rinterface = rinterface.Define("electron_id_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + ")*electron_id_sf_up_base_weight")
             rinterface = rinterface.Define("electron_reco_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + ")*electron_reco_sf_up_base_weight")
             rinterface = rinterface.Define("muon_id_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + ")*muon_id_sf_up_base_weight")
@@ -1583,7 +1590,8 @@ for year in years:
             rresultptrs_double_fake = []    
             rresultptrs_double_fake_alt = []    
             rresultptrs_double_fake_stat_up = []    
-            rresultptrs_pileup_up = []    
+            rresultptrs_pileup_up = []
+            rresultptrs_prefire_up = []    
             rresultptrs_electron_id_sf_up = []    
             rresultptrs_electron_reco_sf_up = []    
             rresultptrs_muon_id_sf_up = []    
@@ -1601,6 +1609,7 @@ for year in years:
                 if labels[label]["color"] != None:
                     rresultptrs.append(rinterface.Histo1D(histogram_models[i],variables[i],"weight"))
                     rresultptrs_pileup_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"pileup_up_weight"))
+                    rresultptrs_prefire_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"prefire_up_weight"))
                     rresultptrs_electron_id_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"electron_id_sf_up_weight"))
                     rresultptrs_electron_reco_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"electron_reco_sf_up_weight"))
                     rresultptrs_muon_id_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"muon_id_sf_up_weight"))
@@ -1638,6 +1647,7 @@ for year in years:
                 if labels[label]["color"] != None:
                     labels[label]["hists"][i].Add(rresultptrs[i].GetValue())
                     labels[label]["hists-pileup-up"][i].Add(rresultptrs_pileup_up[i].GetValue())
+                    labels[label]["hists-prefire-up"][i].Add(rresultptrs_prefire_up[i].GetValue())
                     labels[label]["hists-electron-id-sf-up"][i].Add(rresultptrs_electron_id_sf_up[i].GetValue())
                     labels[label]["hists-electron-reco-sf-up"][i].Add(rresultptrs_electron_reco_sf_up[i].GetValue())
                     labels[label]["hists-muon-id-sf-up"][i].Add(rresultptrs_muon_id_sf_up[i].GetValue())
@@ -2025,6 +2035,14 @@ if lepton_name == "electron" and options.fit:
     fit_inputs_pileup_up["vv"] = labels["vv+jets"]["hists-pileup-up"][mlg_index]
     fit_results_pileup_up = mlg_fit(fit_inputs_pileup_up)
 
+    fit_inputs_prefire_up = dict(fit_inputs)
+    fit_inputs_prefire_up["label"] = "prefire_up"
+    fit_inputs_prefire_up["zg"] = labels["zg+jets"]["hists-prefire-up"][mlg_index]
+    fit_inputs_prefire_up["wg"] = labels["wg+jets"]["hists-prefire-up"][mlg_index]
+    fit_inputs_prefire_up["top"] = labels["top+jets"]["hists-prefire-up"][mlg_index]
+    fit_inputs_prefire_up["vv"] = labels["vv+jets"]["hists-prefire-up"][mlg_index]
+    fit_results_prefire_up = mlg_fit(fit_inputs_prefire_up)
+
     fit_inputs_fake_lepton_stat_down = dict(fit_inputs)
     fit_inputs_fake_lepton_stat_down["label"] = "fake_lepton_stat_down"
     fit_inputs_fake_lepton_stat_down["fake_lepton"] = fake_lepton_stat_down["hists"][mlg_index]
@@ -2140,6 +2158,7 @@ if lepton_name == "electron" and options.fit:
 
 
 if "wg+jets" in labels:
+    prefire_unc = abs(labels["wg+jets"]["hists-prefire-up"][mlg_index].Integral() - labels["wg+jets"]["hists"][mlg_index].Integral())
     pileup_unc = abs(labels["wg+jets"]["hists-pileup-up"][mlg_index].Integral() - labels["wg+jets"]["hists"][mlg_index].Integral())
     electron_id_sf_unc = labels["wg+jets"]["hists-electron-id-sf-up"][mlg_index].Integral() - labels["wg+jets"]["hists"][mlg_index].Integral()
     electron_reco_sf_unc = labels["wg+jets"]["hists-electron-reco-sf-up"][mlg_index].Integral() - labels["wg+jets"]["hists"][mlg_index].Integral()
@@ -2467,10 +2486,12 @@ if lepton_name == "muon":
         "signal_data_muon" : n_signal,
         "signal_mc_xs_data_mc" : labels["wg+jets"]["hists"][mlg_index].Integral(),
         "signal_syst_unc_due_to_pileup" : abs(labels["top+jets"]["hists-pileup-up"][mlg_index].Integral()+ labels["zg+jets"]["hists-pileup-up"][mlg_index].Integral()+labels["vv+jets"]["hists-pileup-up"][mlg_index].Integral()-labels["top+jets"]["hists"][mlg_index].Integral()- labels["zg+jets"]["hists"][mlg_index].Integral()-labels["vv+jets"]["hists"][mlg_index].Integral()),
+        "signal_syst_unc_due_to_prefire" : abs(labels["top+jets"]["hists-prefire-up"][mlg_index].Integral()+ labels["zg+jets"]["hists-prefire-up"][mlg_index].Integral()+labels["vv+jets"]["hists-prefire-up"][mlg_index].Integral()-labels["top+jets"]["hists"][mlg_index].Integral()- labels["zg+jets"]["hists"][mlg_index].Integral()-labels["vv+jets"]["hists"][mlg_index].Integral()),
         "signal_syst_unc_due_to_fake_photon_alt_muon" : abs(fake_photon_alt["hists"][mlg_index].Integral() - fake_photon["hists"][mlg_index].Integral()),
 
         "signal_syst_unc_due_to_fake_lepton_muon" : abs(fake_lepton["hists"][mlg_index].Integral()*1.3 - fake_lepton["hists"][mlg_index].Integral()),
         "signal_stat_unc_muon" : n_signal_error,
+        "signal_mc_xs_data_mc_syst_unc_due_to_prefire" : prefire_unc,
         "signal_mc_xs_data_mc_syst_unc_due_to_pileup" : pileup_unc,
         "signal_mc_xs_data_mc_syst_unc_due_to_muon_id_sf_muon" : muon_id_sf_unc,
         "signal_mc_xs_data_mc_syst_unc_due_to_muon_iso_sf_muon" : muon_iso_sf_unc,
@@ -2579,6 +2600,7 @@ elif lepton_name == "electron":
             "signal_mc_xs_data_mc" : labels["wg+jets"]["hists"][mlg_index].Integral(),
             "signal_data_electron" : fit_results["wg_norm"],
             "signal_syst_unc_due_to_pileup" : abs(fit_results_pileup_up["wg_norm"]-fit_results["wg_norm"]),
+            "signal_syst_unc_due_to_prefire" : abs(fit_results_prefire_up["wg_norm"]-fit_results["wg_norm"]),
             "signal_syst_unc_due_to_fake_photon_alt_electron" : abs(fit_results_fake_photon_alt["wg_norm"]-fit_results["wg_norm"]),
             "signal_syst_unc_due_to_fake_photon_wjets_electron" : abs(fit_results_fake_photon_wjets["wg_norm"]-fit_results["wg_norm"]),
             "signal_syst_unc_due_to_fake_lepton_electron" : abs(fit_results_fake_lepton_syst["wg_norm"]-fit_results["wg_norm"]),
@@ -2679,10 +2701,12 @@ elif lepton_name == "electron":
             "signal_data_electron" : n_signal,
             "signal_mc_xs_data_mc" : labels["wg+jets"]["hists"][mlg_index].Integral(),
             "signal_syst_unc_due_to_pileup" : abs(labels["top+jets"]["hists-pileup-up"][mlg_index].Integral()+ labels["zg+jets"]["hists-pileup-up"][mlg_index].Integral()+labels["vv+jets"]["hists-pileup-up"][mlg_index].Integral()-labels["top+jets"]["hists"][mlg_index].Integral()- labels["zg+jets"]["hists"][mlg_index].Integral()-labels["vv+jets"]["hists"][mlg_index].Integral()),
+            "signal_syst_unc_due_to_prefire" : abs(labels["top+jets"]["hists-prefire-up"][mlg_index].Integral()+ labels["zg+jets"]["hists-prefire-up"][mlg_index].Integral()+labels["vv+jets"]["hists-prefire-up"][mlg_index].Integral()-labels["top+jets"]["hists"][mlg_index].Integral()- labels["zg+jets"]["hists"][mlg_index].Integral()-labels["vv+jets"]["hists"][mlg_index].Integral()),
             "signal_syst_unc_due_to_fake_photon_electron" : abs(fake_photon_alt["hists"][mlg_index].Integral() - fake_photon["hists"][mlg_index].Integral()),
             "signal_syst_unc_due_to_fake_lepton_electron" : abs(fake_lepton["hists"][mlg_index].Integral()*1.3 - fake_lepton["hists"][mlg_index].Integral()),
             "signal_stat_unc_electron" : n_signal_error,
             "signal_mc_xs_data_mc_syst_unc_due_to_pileup" : pileup_unc,
+            "signal_mc_xs_data_mc_syst_unc_due_to_pileup" : prefire_unc,
             "signal_mc_xs_data_mc_syst_unc_due_to_electron_id_sf_electron" : electron_id_sf_unc,
             "signal_mc_xs_data_mc_syst_unc_due_to_electron_reco_sf_electron" : electron_reco_sf_unc,
             "signal_mc_xs_data_mc_syst_unc_due_to_photon_id_sf_electron" : photon_id_sf_unc
