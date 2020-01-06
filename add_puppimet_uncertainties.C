@@ -23,7 +23,7 @@ void add_puppimet_uncertainties (TString infile, TString outfile, TString puppim
 
     TList *list = fin.GetListOfKeys();
 
-    for (UInt_t i = 0; i < list->GetEntries(); i++){
+    for (Int_t i = 0; i < list->GetEntries(); i++){
         TKey *key = (TKey*)list->At(i);
         if (std::strcmp(key->GetClassName(),"TH1D") == 0){
             TH1D * obj = (TH1D*) key->ReadObj();
