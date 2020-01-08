@@ -1,10 +1,11 @@
 import json
 import math
 
+#xs_inputs_muon = json.load(open("xs_inputs/xs_inputs_muon.txt"))
+#xs_inputs_electron = json.load(open("xs_inputs/xs_inputs_electron.txt"))
 
-
-xs_inputs_muon = json.load(open("xs_inputs/xs_inputs_muon.txt"))
-xs_inputs_electron = json.load(open("xs_inputs/xs_inputs_electron.txt"))
+xs_inputs_muon = json.load(open("xs_inputs_muon.txt"))
+xs_inputs_electron = json.load(open("xs_inputs_electron.txt"))
 
 from pprint import pprint
 
@@ -216,6 +217,9 @@ signal_muon  =  xs_inputs_muon["signal_data_muon"]
 
 signal_unc_due_to_lumi_muon = xs_inputs_muon["signal_syst_unc_due_to_lumi_up"]
 signal_syst_unc_due_to_pileup_muon = xs_inputs_muon["signal_syst_unc_due_to_pileup"]
+signal_syst_unc_due_to_prefire_muon = xs_inputs_muon["signal_syst_unc_due_to_prefire"]
+signal_syst_unc_due_to_jer_muon = xs_inputs_muon["signal_syst_unc_due_to_jer"]
+signal_syst_unc_due_to_jes_muon = xs_inputs_muon["signal_syst_unc_due_to_jes"]
 signal_syst_unc_due_to_fake_photon_alt_muon  =  xs_inputs_muon["signal_syst_unc_due_to_fake_photon_alt_muon"]
 signal_syst_unc_due_to_fake_photon_wjets_muon  =  xs_inputs_muon["signal_syst_unc_due_to_fake_photon_wjets_muon"]
 signal_syst_unc_due_to_fake_lepton_muon  =  xs_inputs_muon["signal_syst_unc_due_to_fake_lepton_muon"]
@@ -236,6 +240,9 @@ signal_syst_unc_due_to_fake_photon_alt_electron  =  xs_inputs_electron["signal_s
 signal_syst_unc_due_to_fake_photon_wjets_electron  =  xs_inputs_electron["signal_syst_unc_due_to_fake_photon_wjets_electron"]
 signal_unc_due_to_lumi_electron = xs_inputs_electron["signal_syst_unc_due_to_lumi_up"]
 signal_syst_unc_due_to_pileup_electron = xs_inputs_electron["signal_syst_unc_due_to_pileup"]
+signal_syst_unc_due_to_prefire_electron = xs_inputs_electron["signal_syst_unc_due_to_prefire"]
+signal_syst_unc_due_to_jer_electron = xs_inputs_electron["signal_syst_unc_due_to_jer"]
+signal_syst_unc_due_to_jes_electron = xs_inputs_electron["signal_syst_unc_due_to_jes"]
 
 signal_syst_unc_due_to_fake_photon_electron = math.sqrt(pow(signal_syst_unc_due_to_fake_photon_alt_electron,2) + pow(signal_syst_unc_due_to_fake_photon_wjets_electron,2))
 
@@ -253,10 +260,25 @@ n_weighted_selected_data_mc_sf_syst_unc_due_to_pileup_muon = xs_inputs_muon["sig
 n_weighted_selected_data_mc_sf_syst_unc_due_to_pileup_electron = xs_inputs_electron["signal_mc_xs_data_mc_syst_unc_due_to_pileup"]
 n_weighted_selected_data_mc_sf_syst_unc_due_to_pileup = xs_inputs_muon["signal_mc_xs_data_mc_syst_unc_due_to_pileup"]+xs_inputs_electron["signal_mc_xs_data_mc_syst_unc_due_to_pileup"]
 
+n_weighted_selected_data_mc_sf_syst_unc_due_to_prefire_muon = xs_inputs_muon["signal_mc_xs_data_mc_syst_unc_due_to_prefire"]
+n_weighted_selected_data_mc_sf_syst_unc_due_to_prefire_electron = xs_inputs_electron["signal_mc_xs_data_mc_syst_unc_due_to_prefire"]
+n_weighted_selected_data_mc_sf_syst_unc_due_to_prefire = xs_inputs_muon["signal_mc_xs_data_mc_syst_unc_due_to_prefire"]+xs_inputs_electron["signal_mc_xs_data_mc_syst_unc_due_to_prefire"]
+
+n_weighted_selected_data_mc_sf_syst_unc_due_to_jer_muon = xs_inputs_muon["signal_mc_xs_data_mc_syst_unc_due_to_jer"]
+n_weighted_selected_data_mc_sf_syst_unc_due_to_jer_electron = xs_inputs_electron["signal_mc_xs_data_mc_syst_unc_due_to_jer"]
+n_weighted_selected_data_mc_sf_syst_unc_due_to_jer = xs_inputs_muon["signal_mc_xs_data_mc_syst_unc_due_to_jer"]+xs_inputs_electron["signal_mc_xs_data_mc_syst_unc_due_to_jer"]
+
+n_weighted_selected_data_mc_sf_syst_unc_due_to_jes_muon = xs_inputs_muon["signal_mc_xs_data_mc_syst_unc_due_to_jes"]
+n_weighted_selected_data_mc_sf_syst_unc_due_to_jes_electron = xs_inputs_electron["signal_mc_xs_data_mc_syst_unc_due_to_jes"]
+n_weighted_selected_data_mc_sf_syst_unc_due_to_jes = xs_inputs_muon["signal_mc_xs_data_mc_syst_unc_due_to_jes"]+xs_inputs_electron["signal_mc_xs_data_mc_syst_unc_due_to_jes"]
+
 
 signal = signal_muon+signal_electron
 
 signal_syst_unc_due_to_pileup = signal_syst_unc_due_to_pileup_electron+signal_syst_unc_due_to_pileup_muon
+signal_syst_unc_due_to_prefire = signal_syst_unc_due_to_pileup_electron+signal_syst_unc_due_to_prefire_muon
+signal_syst_unc_due_to_jer = signal_syst_unc_due_to_pileup_electron+signal_syst_unc_due_to_jer_muon
+signal_syst_unc_due_to_jes = signal_syst_unc_due_to_pileup_electron+signal_syst_unc_due_to_jes_muon
 
 signal_syst_unc_due_to_lumi = signal_unc_due_to_lumi_electron + signal_unc_due_to_lumi_muon
 
@@ -349,6 +371,23 @@ syst_err_signal_pileup_muon = (signal_muon+signal_syst_unc_due_to_pileup_muon)/(
 
 syst_err_signal_pileup_electron = (signal_electron+signal_syst_unc_due_to_pileup_electron)/(n_weighted_selected_data_mc_sf_electron/fiducial)/lumi - xs_electron
 
+syst_err_signal_prefire = (signal+signal_syst_unc_due_to_prefire)/(n_weighted_selected_data_mc_sf/fiducial)/lumi - xs
+
+syst_err_signal_prefire_muon = (signal_muon+signal_syst_unc_due_to_prefire_muon)/(n_weighted_selected_data_mc_sf_muon/fiducial)/lumi - xs_muon
+
+syst_err_signal_prefire_electron = (signal_electron+signal_syst_unc_due_to_prefire_electron)/(n_weighted_selected_data_mc_sf_electron/fiducial)/lumi - xs_electron
+
+syst_err_signal_jer = (signal+signal_syst_unc_due_to_jer)/(n_weighted_selected_data_mc_sf/fiducial)/lumi - xs
+
+syst_err_signal_jer_muon = (signal_muon+signal_syst_unc_due_to_jer_muon)/(n_weighted_selected_data_mc_sf_muon/fiducial)/lumi - xs_muon
+
+syst_err_signal_jer_electron = (signal_electron+signal_syst_unc_due_to_jer_electron)/(n_weighted_selected_data_mc_sf_electron/fiducial)/lumi - xs_electron
+
+syst_err_signal_jes = (signal+signal_syst_unc_due_to_jes)/(n_weighted_selected_data_mc_sf/fiducial)/lumi - xs
+
+syst_err_signal_jes_muon = (signal_muon+signal_syst_unc_due_to_jes_muon)/(n_weighted_selected_data_mc_sf_muon/fiducial)/lumi - xs_muon
+
+syst_err_signal_jes_electron = (signal_electron+signal_syst_unc_due_to_jes_electron)/(n_weighted_selected_data_mc_sf_electron/fiducial)/lumi - xs_electron
 
 syst_err_signal_lumi = (signal+signal_syst_unc_due_to_lumi)/(n_weighted_selected_data_mc_sf/fiducial)/lumi - xs
 
@@ -465,6 +504,24 @@ err_on_acc_due_to_pileup_electron = (((n_weighted_selected_data_mc_sf_electron +
 
 err_on_acc_due_to_pileup_muon = (((n_weighted_selected_data_mc_sf_muon +n_weighted_selected_data_mc_sf_syst_unc_due_to_pileup_muon)/fiducial) - acc_muon)
 
+err_on_acc_due_to_prefire = (((n_weighted_selected_data_mc_sf + n_weighted_selected_data_mc_sf_syst_unc_due_to_prefire_electron + n_weighted_selected_data_mc_sf_syst_unc_due_to_prefire_muon)/fiducial) - acc)
+
+err_on_acc_due_to_prefire_electron = (((n_weighted_selected_data_mc_sf_electron + n_weighted_selected_data_mc_sf_syst_unc_due_to_prefire_electron)/fiducial) - acc_electron)
+
+err_on_acc_due_to_prefire_muon = (((n_weighted_selected_data_mc_sf_muon +n_weighted_selected_data_mc_sf_syst_unc_due_to_prefire_muon)/fiducial) - acc_muon)
+
+err_on_acc_due_to_jer = (((n_weighted_selected_data_mc_sf + n_weighted_selected_data_mc_sf_syst_unc_due_to_jer_electron + n_weighted_selected_data_mc_sf_syst_unc_due_to_jer_muon)/fiducial) - acc)
+
+err_on_acc_due_to_jer_electron = (((n_weighted_selected_data_mc_sf_electron + n_weighted_selected_data_mc_sf_syst_unc_due_to_jer_electron)/fiducial) - acc_electron)
+
+err_on_acc_due_to_jer_muon = (((n_weighted_selected_data_mc_sf_muon +n_weighted_selected_data_mc_sf_syst_unc_due_to_jer_muon)/fiducial) - acc_muon)
+
+err_on_acc_due_to_jes = (((n_weighted_selected_data_mc_sf + n_weighted_selected_data_mc_sf_syst_unc_due_to_jes_electron + n_weighted_selected_data_mc_sf_syst_unc_due_to_jes_muon)/fiducial) - acc)
+
+err_on_acc_due_to_jes_electron = (((n_weighted_selected_data_mc_sf_electron + n_weighted_selected_data_mc_sf_syst_unc_due_to_jes_electron)/fiducial) - acc_electron)
+
+err_on_acc_due_to_jes_muon = (((n_weighted_selected_data_mc_sf_muon +n_weighted_selected_data_mc_sf_syst_unc_due_to_jes_muon)/fiducial) - acc_muon)
+
 err_on_acc_due_to_photon_id_sf = (((n_weighted_selected_data_mc_sf + n_weighted_selected_data_mc_sf_syst_unc_due_to_photon_id_sf_electron + n_weighted_selected_data_mc_sf_syst_unc_due_to_photon_id_sf_muon)/fiducial) - acc)
 
 err_on_acc_due_to_photon_id_sf_electron = (((n_weighted_selected_data_mc_sf_electron + n_weighted_selected_data_mc_sf_syst_unc_due_to_photon_id_sf_electron)/fiducial) - acc_electron)
@@ -537,6 +594,12 @@ print """
 \\hline \\hline
 pileup & %0.2f & %0.2f &  %0.2f \\\\
 \\hline
+prefire & %0.2f & %0.2f &  %0.2f \\\\
+\\hline
+jer & %0.2f & %0.2f &  %0.2f \\\\
+\\hline
+jes & %0.2f & %0.2f &  %0.2f \\\\
+\\hline
 electron ID SF & %0.2f & 0 &  %0.2f \\\\
 \\hline
 electron reconstruction SF & %0.2f & 0 & %0.2f \\\\
@@ -560,6 +623,15 @@ PDF & %0.2f & %0.2f & %0.2f \\\\
 100*err_on_acc_due_to_pileup/acc,
 100*err_on_acc_due_to_pileup_muon/acc_muon,
 100*err_on_acc_due_to_pileup_electron/acc_electron,
+100*err_on_acc_due_to_prefire/acc,
+100*err_on_acc_due_to_prefire_muon/acc_muon,
+100*err_on_acc_due_to_prefire_electron/acc_electron,
+100*err_on_acc_due_to_jer/acc,
+100*err_on_acc_due_to_jer_muon/acc_muon,
+100*err_on_acc_due_to_jer_electron/acc_electron,
+100*err_on_acc_due_to_jes/acc,
+100*err_on_acc_due_to_jes_muon/acc_muon,
+100*err_on_acc_due_to_jes_electron/acc_electron,
 100*err_on_acc_due_to_electron_id_sf/acc,
 100*err_on_acc_due_to_electron_id_sf_electron/acc_electron,
 100*err_on_acc_due_to_electron_reco_sf/acc,
@@ -588,6 +660,12 @@ print """
 \\hline \\hline
 pileup & %0.2f & %0.2f &  %0.2f \\\\
 \\hline
+prefire & %0.2f & %0.2f &  %0.2f \\\\
+\\hline
+jer & %0.2f & %0.2f &  %0.2f \\\\
+\\hline
+jes & %0.2f & %0.2f &  %0.2f \\\\
+\\hline
 fake photon method & %0.2f & %0.2f &  %0.2f \\\\
 \\hline
 fake lepton method & %0.2f & %0.2f & %0.2f \\\\
@@ -611,6 +689,15 @@ lumi &  %0.2f & %0.2f & %0.2f \\\\
 100*signal_syst_unc_due_to_pileup/signal,
 100*signal_syst_unc_due_to_pileup_muon/signal_muon,
 100*signal_syst_unc_due_to_pileup_electron/signal_electron,
+100*signal_syst_unc_due_to_prefire/signal,
+100*signal_syst_unc_due_to_prefire_muon/signal_muon,
+100*signal_syst_unc_due_to_prefire_electron/signal_electron,
+100*signal_syst_unc_due_to_jer/signal,
+100*signal_syst_unc_due_to_jer_muon/signal_muon,
+100*signal_syst_unc_due_to_jer_electron/signal_electron,
+100*signal_syst_unc_due_to_jes/signal,
+100*signal_syst_unc_due_to_jes_muon/signal_muon,
+100*signal_syst_unc_due_to_jes_electron/signal_electron,
 100*signal_syst_unc_due_to_fake_photon/signal,
 100*signal_syst_unc_due_to_fake_photon_muon/signal_muon,
 100*signal_syst_unc_due_to_fake_photon_electron/signal_electron,
