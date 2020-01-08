@@ -1,11 +1,11 @@
 import json
 import math
 
-#xs_inputs_muon = json.load(open("xs_inputs/xs_inputs_muon.txt"))
-#xs_inputs_electron = json.load(open("xs_inputs/xs_inputs_electron.txt"))
+xs_inputs_muon = json.load(open("xs_inputs/xs_inputs_muon.txt"))
+xs_inputs_electron = json.load(open("xs_inputs/xs_inputs_electron.txt"))
 
-xs_inputs_muon = json.load(open("xs_inputs_muon.txt"))
-xs_inputs_electron = json.load(open("xs_inputs_electron.txt"))
+#xs_inputs_muon = json.load(open("xs_inputs_muon.txt"))
+#xs_inputs_electron = json.load(open("xs_inputs_electron.txt"))
 
 from pprint import pprint
 
