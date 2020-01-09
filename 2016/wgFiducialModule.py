@@ -15,7 +15,17 @@ class wgFiducialProducer(Module):
         pass
     def beginFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         self.out = wrappedOutputTree
-        self.out.branch("pass_fiducial",  "B");
+        self.out.branch("pass_fid_selection",  "B");
+        self.out.branch("fid_met_pt",  "F");
+        self.out.branch("fid_met_phi",  "F");
+        self.out.branch("fid_lepton_pt",  "F");
+        self.out.branch("fid_lepton_phi",  "F");
+        self.out.branch("fid_lepton_eta",  "F");
+        self.out.branch("fid_lepton_mass",  "F");
+        self.out.branch("fid_photon_pt",  "F");
+        self.out.branch("fid_photon_phi",  "F");
+        self.out.branch("fid_photon_eta",  "F");
+        self.out.branch("fid_photon_mass",  "F");
 
     def endFile(self, inputFile, outputFile, inputTree, wrappedOutputTree):
         prevdir = ROOT.gDirectory
@@ -75,17 +85,27 @@ class wgFiducialProducer(Module):
                             gen_photon_index = j
                         n_gen_photons +=1
 
-        pass_fiducial = False
+        pass_fid_selection = False
 
         if n_gen_leptons >= 1 and n_gen_photons >= 1:
 #            if deltaR(genparts[gen_lepton_index].eta,genparts[gen_lepton_index].phi,genparts[gen_photon_index].eta,genparts[gen_photon_index].phi) > 0.5 and genparts[gen_lepton_index].pt > 25 and genparts[gen_photon_index].pt > 25 and abs(genparts[gen_lepton_index].eta) < 2.5 and abs(genparts[gen_photon_index].eta) < 2.5 and event.GenMET_pt > 40:
             if deltaR(genparts[gen_lepton_index].eta,genparts[gen_lepton_index].phi,genparts[gen_photon_index].eta,genparts[gen_photon_index].phi) > 0.5 and genparts[gen_lepton_index].pt > 25 and genparts[gen_photon_index].pt > 25 and abs(genparts[gen_lepton_index].eta) < 2.5 and abs(genparts[gen_photon_index].eta) < 2.5 and event.GenMET_pt > 40 and (genparts[gen_photon_index].statusFlags & (1 << 0) == (1 << 0) and ((genparts[gen_lepton_index].statusFlags & (1 << 0) == (1 << 0)) or (genparts[gen_lepton_index].statusFlags & (1 << 5) == (1 << 5)))):
-                pass_fiducial = True
+                pass_fid_selection = True
 
-        if pass_fiducial:    
-            self.out.fillBranch("pass_fiducial",1)
+        if pass_fid_selection:    
+            self.out.fillBranch("pass_fid_selection",1)
+            self.out.fillBranch("fid_met_pt",event.GenMET_pt)
+            self.out.fillBranch("fid_met_phi",event.GenMET_phi)
+            self.out.fillBranch("fid_lepton_pt",genparts[gen_lepton_index].pt)
+            self.out.fillBranch("fid_lepton_eta",genparts[gen_lepton_index].eta)
+            self.out.fillBranch("fid_lepton_phi",genparts[gen_lepton_index].phi)
+            self.out.fillBranch("fid_lepton_mass",genparts[gen_lepton_index].mass)
+            self.out.fillBranch("fid_photon_pt",genparts[gen_photon_index].pt)
+            self.out.fillBranch("fid_photon_eta",genparts[gen_photon_index].eta)
+            self.out.fillBranch("fid_photon_phi",genparts[gen_photon_index].phi)
+            self.out.fillBranch("fid_photon_mass",genparts[gen_photon_index].mass)
         else:    
-            self.out.fillBranch("pass_fiducial",0)
+            self.out.fillBranch("pass_fid_selection",0)
 
         return True
 
