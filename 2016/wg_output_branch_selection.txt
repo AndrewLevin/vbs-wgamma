@@ -55,6 +55,8 @@ keep n_lhe_partons
 keep n_lhe_photons
 keep n_lower_pt_leptons
 keep photon_gen_matching
+keep photon_genjet_matching
+keep photon_mergedgen_matching
 keep photon_vidNestedWPBitmap
 keep photon_sieie
 keep photon_pfRelIso03_chg

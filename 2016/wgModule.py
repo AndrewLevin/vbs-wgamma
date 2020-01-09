@@ -809,7 +809,7 @@ class wgProducer(Module):
 
         photon_mergedgen_matching = 0
 
-        if hasattr(event,"MergedGenPart"):
+        if hasattr(event,"nMergedGenPart"):
            for i in range(0,len(mergedgenparts)):
                if mergedgenparts[i].status == 1 and deltaR(photons[tight_photons[0]].eta,photons[tight_photons[0]].phi,mergedgenparts[i].eta,mergedgenparts[i].phi) < 0.3:     
                    if mergedgenparts[i].pt > photon_mergedgen_matching:
