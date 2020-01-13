@@ -23,6 +23,7 @@ class wgProducer(Module):
         self.out.branch("run",  "i");
         self.out.branch("lumi",  "i");
         self.out.branch("event",  "l");
+        self.out.branch("pass_selection",  "B");
         self.out.branch("npu",  "I");
         self.out.branch("ntruepu",  "F");
         self.out.branch("n_gen_neutrinos",  "I");
@@ -60,7 +61,6 @@ class wgProducer(Module):
         self.out.branch("njets30","I")
         self.out.branch("njets20","I")
         self.out.branch("njets15","I")
-        self.out.branch("pass_fiducial",  "B");
         self.out.branch("pass_lhe_selection",  "B");
         self.out.branch("is_lepton_tight",  "B");
         self.out.branch("gen_weight",  "F");
@@ -80,7 +80,8 @@ class wgProducer(Module):
         """process event, return True (go to next module) or False (fail, go to next event)"""
         #do this first for processing speed-up
         if not (event.HLT_Ele32_WPTight_Gsf or event.HLT_IsoMu24):
-            return False
+            self.out.fillBranch("pass_selection",0)
+            return True
 
         electrons = Collection(event, "Electron")
         muons = Collection(event, "Muon")
@@ -123,7 +124,8 @@ class wgProducer(Module):
 
         #for processing speed-up
         if len(tight_muons) + len(loose_but_not_tight_muons) > 1:
-            return False
+            self.out.fillBranch("pass_selection",0)
+            return True
 
 
         for i in range (0,len(electrons)):
@@ -141,7 +143,8 @@ class wgProducer(Module):
                         lower_pt_electrons.append(i)
 
         if len(tight_muons) + len(loose_but_not_tight_muons) +  len(tight_electrons) + len(loose_but_not_tight_electrons) > 1:
-            return False
+            self.out.fillBranch("pass_selection",0)
+            return True
 
         for i in range (0,len(photons)):
 
@@ -243,7 +246,8 @@ class wgProducer(Module):
 
 
         if len(tight_photons) == 0:
-            return False
+            self.out.fillBranch("pass_selection",0)
+            return True
 
 
         njets50 = 0
@@ -303,26 +307,29 @@ class wgProducer(Module):
                 njets15+=1
 
         if photons[tight_photons[0]].pt < 20:
-            return False
+            self.out.fillBranch("pass_selection",0)
+            return True
 
         #if not (abs(photons[tight_photons[0]].eta) < 1.4442):
         #if not (abs(photons[tight_photons[0]].eta) < 1.4442):
-        #    return False        
+        #    return True        
 
         if not ((abs(photons[tight_photons[0]].eta) < 1.4442) or (1.566 < abs(photons[tight_photons[0]].eta) and abs(photons[tight_photons[0]].eta) < 2.5) ):
-            return False        
+            self.out.fillBranch("pass_selection",0)
+            return True        
 
         #if photons[tight_photons[0]].cutBased == 0 or photons[tight_photons[0]].cutBased == 1:
-        #    return False
+        #    return True
 
 #        if not photons[tight_photons[0]].electronVeto:
-#            return False
+#            return True
 
         if photons[tight_photons[0]].pixelSeed:
-            return False
+            self.out.fillBranch("pass_selection",0)
+            return True
 
         #if event.MET_pt < 35:
-        #    return False
+        #    return True
 
         isprompt_mask = (1 << 0) #isPrompt
         isdirectprompttaudecayproduct_mask = (1 << 5) #isDirectPromptTauDecayProduct
@@ -333,25 +340,31 @@ class wgProducer(Module):
         if len(tight_muons) == 1:
 
             if not event.HLT_IsoMu24:
-                return False
+                self.out.fillBranch("pass_selection",0)
+                return True
         
             if deltaR(photons[tight_photons[0]].eta,photons[tight_photons[0]].phi,muons[tight_muons[0]].eta,muons[tight_muons[0]].phi) < 0.5:
-                return False
+                self.out.fillBranch("pass_selection",0)
+                return True
 
             if muons[tight_muons[0]].pt < 25:
-                return False
+                self.out.fillBranch("pass_selection",0)
+                return True
 
             if abs(muons[tight_muons[0]].eta) > 2.4:
-                return False
+                self.out.fillBranch("pass_selection",0)
+                return True
 
             if muons[tight_muons[0]].pfRelIso04_all > 0.15:
-                return False
+                self.out.fillBranch("pass_selection",0)
+                return True
 
             if not muons[tight_muons[0]].tightId:
-                return False
+                self.out.fillBranch("pass_selection",0)
+                return True
 
             #if sqrt(2*muons[tight_muons[0]].pt*event.MET_pt*(1 - cos(event.MET_phi - muons[tight_muons[0]].phi))) < 30:
-            #    return False
+            #    return True
 
             if debug:
                 print "selected muon event: " + str(event.event) + " " + str(event.luminosityBlock) + " " + str(event.run)
@@ -405,19 +418,23 @@ class wgProducer(Module):
 
 
             if not event.HLT_IsoMu24:
-                return False
+                self.out.fillBranch("pass_selection",0)
+                return True
         
             if deltaR(photons[tight_photons[0]].eta,photons[tight_photons[0]].phi,muons[loose_but_not_tight_muons[0]].eta,muons[loose_but_not_tight_muons[0]].phi) < 0.5:
-                return False
+                self.out.fillBranch("pass_selection",0)
+                return True
 
             if muons[loose_but_not_tight_muons[0]].pt < 25:
-                return False
+                self.out.fillBranch("pass_selection",0)
+                return True
 
             if abs(muons[loose_but_not_tight_muons[0]].eta) > 2.4:
-                return False
+                self.out.fillBranch("pass_selection",0)
+                return True
 
             #if sqrt(2*muons[loose_but_not_tight_muons[0]].pt*event.MET_pt*(1 - cos(event.MET_phi - muons[loose_but_not_tight_muons[0]].phi))) < 30:
-            #    return False
+            #    return True
 
             mask1 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) | (1 << 11) | (1 << 13) #all cuts applied
             mask2 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) | (1 << 11)
@@ -468,19 +485,24 @@ class wgProducer(Module):
         elif len(tight_electrons) == 1:
 
             if not event.HLT_Ele32_WPTight_Gsf:
-                return False
+                self.out.fillBranch("pass_selection",0)
+                return True
 
             if electrons[tight_electrons[0]].cutBased == 0 or electrons[tight_electrons[0]].cutBased == 1:
-                return False
+                self.out.fillBranch("pass_selection",0)
+                return True
 
             if deltaR(photons[tight_photons[0]].eta,photons[tight_photons[0]].phi,electrons[tight_electrons[0]].eta,electrons[tight_electrons[0]].phi) < 0.5:
-                return False
+                self.out.fillBranch("pass_selection",0)
+                return True
 
             if electrons[tight_electrons[0]].pt < 30:
-                return False
+                self.out.fillBranch("pass_selection",0)
+                return True
 
             if abs(electrons[tight_electrons[0]].eta) > 2.5:
-                return False
+                self.out.fillBranch("pass_selection",0)
+                return True
 
             if debug:
                 print "selected electron event: " + str(event.event) + " " + str(event.luminosityBlock) + " " + str(event.run)
@@ -535,16 +557,20 @@ class wgProducer(Module):
 
                         
             if not event.HLT_Ele32_WPTight_Gsf:
-                return False
+                self.out.fillBranch("pass_selection",0)
+                return True
 
             if deltaR(photons[tight_photons[0]].eta,photons[tight_photons[0]].phi,electrons[loose_but_not_tight_electrons[0]].eta,electrons[loose_but_not_tight_electrons[0]].phi) < 0.5:
-                return False
+                self.out.fillBranch("pass_selection",0)
+                return True
 
             if electrons[loose_but_not_tight_electrons[0]].pt < 30:
-                return False
+                self.out.fillBranch("pass_selection",0)
+                return True
 
             if abs(electrons[loose_but_not_tight_electrons[0]].eta) > 2.5:
-                return False
+                self.out.fillBranch("pass_selection",0)
+                return True
 
             mask1 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) | (1 << 11) | (1 << 13) #all cuts applied
             mask2 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) | (1 << 11)
@@ -595,7 +621,8 @@ class wgProducer(Module):
             self.out.fillBranch("is_lepton_tight",0)
 
         else:
-            return False
+            self.out.fillBranch("pass_selection",0)
+            return True
 
         photon_gen_matching=0
 
@@ -758,14 +785,6 @@ class wgProducer(Module):
                         gen_photon_index = i
                         n_gen_photons_fiducial +=1
 
-            if n_gen_leptons_fiducial == 1 and n_gen_photons_fiducial == 1 and deltaR(genparts[gen_lepton_index].eta,genparts[gen_lepton_index].phi,genparts[gen_photon_index].eta,genparts[gen_photon_index].phi) > 0.5:
-                self.out.fillBranch("pass_fiducial",1)
-            else:
-                self.out.fillBranch("pass_fiducial",0)
-        else:
-            self.out.fillBranch("pass_fiducial",0)
-
-
 
         self.out.fillBranch("n_gen_leptons",n_gen_leptons)
         self.out.fillBranch("n_gen_photons",n_gen_photons)
@@ -797,6 +816,8 @@ class wgProducer(Module):
         self.out.fillBranch("rawmetphi",event.RawMET_phi)
         self.out.fillBranch("metphi",event.MET_phi)
 
+        
+        self.out.fillBranch("pass_selection",1)
         return True
 
 wgModule = lambda : wgProducer()
