@@ -1,4 +1,4 @@
-B1;136;0c#!/usr/bin/env python
+#!/usr/bin/env python
 import os, sys
 import ROOT
 ROOT.PyConfig.IgnoreCommandLineOptions = True
