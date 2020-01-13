@@ -2,7 +2,8 @@ drop *
 keep LHEPdfWeight 
 keep LHEScaleWeight 
 keep LHEReweightingWeight
-keep pass_fiducial
+keep pass_fid_selection
+keep pass_selection
 keep puWeight
 keep puWeightUp
 keep puWeightDown
@@ -62,3 +63,13 @@ keep photon_gen_matching_old
 keep PrefireWeight
 keep PrefireWeight_Up
 keep PrefireWeight_Down
+keep fid_lepton_pt
+keep fid_lepton_phi
+keep fid_lepton_eta
+keep fid_lepton_mass
+keep fid_photon_pt
+keep fid_photon_phi
+keep fid_photon_eta
+keep fid_photon_mass
+keep fid_met_pt
+keep fid_met_phi
