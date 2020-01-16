@@ -520,6 +520,8 @@ for i in range(len(variables)):
 
     hsum.SetMaximum(hsum.GetMaximum()*1.55)
 
+    set_axis_fonts(hsum,"x",getXaxisLabel(variables[i]))
+
     hsum.Draw("hist")
     hstack.Draw("hist same")
 
@@ -541,8 +543,6 @@ for i in range(len(variables)):
     j=2
     draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,wjets_fake["hists"][i],"instrumental","f")
 
-
-    set_axis_fonts(hstack.GetHistogram(),"x",getXaxisLabel(variables[i]))
 
 #    hstack.Draw("hist same")
 

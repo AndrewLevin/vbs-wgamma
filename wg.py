@@ -39,6 +39,7 @@ parser = optparse.OptionParser()
 
 parser.add_option('--lep',dest='lep',default='both')
 parser.add_option('--year',dest='year',default='all')
+parser.add_option('--zveto',dest='zveto',action='store_true',default=False)
 parser.add_option('--phoeta',dest='phoeta',default='both')
 parser.add_option('--overflow',dest='overflow',action='store_true',default=False)
 parser.add_option('--fit',dest='fit',action='store_true',default=False)
@@ -141,31 +142,36 @@ def get_filter_string(year,isdata=True):
     else:    
         puppimet_cutstring = "(puppimet > 40)"
 
+    if options.zveto:
+        zveto_cutstring = "(mlg < 60 || mlg > 120)"
+    else:
+        zveto_cutstring = "1"
+
     if options.lep == "muon":
         if year == "2016":
-            return "(" + photon_eta_cutstring+" && " + puppimet_cutstring + " && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25)"
+            return "(" + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25)"
         elif year == "2017":
-            return "(" + photon_eta_cutstring+" && " + puppimet_cutstring + " && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 30)"
+            return "(" + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 30)"
         elif year == "2018":
-            return "(" + photon_eta_cutstring+" && " + puppimet_cutstring + " && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25)"
+            return "(" + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25)"
         else:
             assert(0)
     elif options.lep == "electron":                
         if year == "2016":
-            return "(" + photon_eta_cutstring+" && " + puppimet_cutstring + " && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 30)"
+            return "(" + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 30)"
         elif year == "2017":
-            return "(" + photon_eta_cutstring+" && " + puppimet_cutstring + " && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35)"
+            return "(" + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35)"
         elif year == "2018":
-            return "(" + photon_eta_cutstring+" && " + puppimet_cutstring + " && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35)"
+            return "(" + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35)"
         else:
             assert(0)
     elif options.lep == "both":    
         if year == "2016":
-            return "(" + photon_eta_cutstring+" && " + puppimet_cutstring + " && ((abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25) || (abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 30)))"
+            return "(" + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && ((abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25) || (abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 30)))"
         elif year == "2017":
-            return "(" + photon_eta_cutstring+" && " + puppimet_cutstring + " && ((abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 30) || (abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35)))"
+            return "(" + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && ((abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 30) || (abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35)))"
         elif year == "2018":
-            return "(" + photon_eta_cutstring+" && " + puppimet_cutstring + " && ((abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25) || (abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35)))"
+            return "(" + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && ((abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25) || (abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35)))"
         else:
             assert(0)
     else:
@@ -240,9 +246,9 @@ mlg_index = 9
 
 #ewdim6_filename = "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjetsewdim6.root.bak"
 ewdim6_samples = {
-"2016" : [{"xs" : 4.318, "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2017/1June2019/wgjetsewdim6.root"}],
-"2017" : [{"xs" : 4.318, "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2017/1June2019/wgjetsewdim6.root"}],
-"2018" : [{"xs" : 4.318, "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2017/1June2019/wgjetsewdim6.root"}]
+"2016" : [{"xs" : 4.318, "filename" : "/afs/cern.ch/work/a/amlevin/tmp/wgjetsewdim6.root"}],
+"2017" : [{"xs" : 4.318, "filename" : "/afs/cern.ch/work/a/amlevin/tmp/wgjetsewdim6.root"}],
+"2018" : [{"xs" : 4.318, "filename" : "/afs/cern.ch/work/a/amlevin/tmp/wgjetsewdim6.root"}]
 }
 
 for year in years:
@@ -268,13 +274,13 @@ def getXaxisLabel(varname):
     elif varname == "mt":
         return "m_{t} (GeV)"
     elif varname == "puppimt":
-        return "Puppi m_{t} (GeV)"
+        return "m_{t} (GeV)"
     elif varname == "corrmt":
         return "corrected m_{t} (GeV)"
     elif varname == "mlg":
         return "m_{lg} (GeV)"
     elif varname == "puppimet":
-        return "Puppi MET (GeV)"
+        return "MET (GeV)"
     elif varname == "met":
         return "MET (GeV)"
     elif varname == "corrmet":
@@ -2144,7 +2150,7 @@ if "wg+jets" in labels:
 if options.draw_ewdim6:
     for i in range(1,n_photon_pt_bins+1):
         #hardcoded to use bin 6 of the scaling histogram for now 
-        ewdim6["hists"][0].SetBinContent(i,cwww_scaling_hists[i].GetBinContent(3)*labels["wg+jets"]["hists"][0].GetBinContent(i))
+        ewdim6["hists"][0].SetBinContent(i,cb_scaling_hists[i].GetBinContent(4)*labels["wg+jets"]["hists"][0].GetBinContent(i))
 
 for i in range(len(variables)):
 
