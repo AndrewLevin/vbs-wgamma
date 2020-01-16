@@ -249,6 +249,7 @@ wjets_real["hists"] = []
 wjets_fake["hists"] = []
 
 sample = {"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019/wjets.root", "xs" : 60430.0}
+#sample = {"filename" : "/afs/cern.ch/work/a/amlevin/tmp/wjets.root", "xs" : 60430.0}
 
 
 
@@ -455,6 +456,9 @@ rinterface = rinterface.Define("base_weight",get_postfilter_selection_string()+"
 rinterface = rinterface.Define("weight_pileup","(photon_genjet_matching == 0 && photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + ")*base_weight")
 rinterface = rinterface.Define("weight_fake","(photon_genjet_matching == 1 && !(photon_gen_matching == 3) && photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + ")*base_weight")
 rinterface = rinterface.Define("weight_real","(photon_genjet_matching == 1 && photon_gen_matching == 3 && photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + ")*base_weight")
+#rinterface = rinterface.Define("weight_pileup","(photon_mergedgen_matching <= 5 && photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + ")*base_weight")
+#rinterface = rinterface.Define("weight_fake","(photon_mergedgen_matching > 5 && !(photon_gen_matching == 3) && photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + ")*base_weight")
+#rinterface = rinterface.Define("weight_real","(photon_mergedgen_matching > 5 && photon_gen_matching == 3 && photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + ")*base_weight")
 
 for variable_definition in variable_definitions:
     rinterface = rinterface.Define(variable_definition[0],variable_definition[1])
@@ -535,7 +539,7 @@ for i in range(len(variables)):
     j=1
     draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,wjets_real["hists"][i],"real","f")
     j=2
-    draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,wjets_fake["hists"][i],"fake","f")
+    draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,wjets_fake["hists"][i],"instrumental","f")
 
 
     set_axis_fonts(hstack.GetHistogram(),"x",getXaxisLabel(variables[i]))
