@@ -14,8 +14,6 @@ keep LHEPart_pdgId
 keep LHEPdfWeight
 keep LHEScaleWeight
 keep LHEReweightingWeight
-keep RawMET_phi
-keep RawMET_pt
 keep GenMET_pt
 keep GenMET_phi
 keep MET_pt
@@ -24,8 +22,6 @@ keep MET_MetUnclustEnUpDeltaX
 keep MET_MetUnclustEnUpDeltaY
 keep PuppiMET_pt
 keep PuppiMET_phi
-keep RawMET_pt
-keep RawMET_phi
 keep PV_npvs
 keep GenJet_eta
 keep GenJet_phi
@@ -73,6 +69,7 @@ keep Jet_mass
 keep Jet_puId
 keep Jet_jetId
 keep Jet_rawFactor
+keep Jet_area
 keep Pileup_nPU
 keep Pileup_nTrueInt
 keep Photon_pt
@@ -87,6 +84,8 @@ keep Photon_electronVeto
 keep Photon_pixelSeed
 keep Photon_eCorr
 keep Photon_vidNestedWPBitmap
+keep Photon_isScEtaEE
+keep Photon_isScEtaEB
 keep HLT_Ele27_WPTight_Gsf
 keep HLT_IsoMu24
 keep HLT_IsoTkMu24
