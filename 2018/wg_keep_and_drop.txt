@@ -11,9 +11,11 @@ keep LHEPart_mass
 keep LHEPart_pdgId
 keep LHEPdfWeight
 keep LHEScaleWeight
-keep LHEWeight_rwgt_*
+keep LHEReweightingWeight
 keep MET_pt
 keep MET_phi
+keep GenMET_pt
+keep GenMET_phi
 keep MET_MetUnclustEnUpDeltaX
 keep MET_MetUnclustEnUpDeltaY
 keep PuppiMET_pt
@@ -33,6 +35,13 @@ keep GenPart_pdgId
 keep GenPart_statusFlags
 keep GenPart_status
 keep GenPart_genPartIdxMother
+keep MergedGenPart_eta
+keep MergedGenPart_phi
+keep MergedGenPart_mass
+keep MergedGenPart_pt
+keep MergedGenPart_pdgId
+keep MergedGenPart_statusFlags
+keep MergedGenPart_status
 keep Electron_pt
 keep Electron_eta
 keep Electron_phi
