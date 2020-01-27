@@ -14,9 +14,9 @@ from PhysicsTools.NanoAODTools.postprocessing.modules.common.countHistogramsModu
 from PhysicsTools.NanoAODTools.postprocessing.modules.common.PrefireCorr import *
 from PhysicsTools.NanoAODTools.postprocessing.modules.common.puWeightProducer import *
 
-p=PostProcessor(".",["infile.root"],None,"wg_keep_and_drop.txt",[countHistogramsModule(),wgModule(),wgFilterModule(),puWeight_2016(),PrefCorr()],provenance=True,justcount=False,fwkJobReport=True,noOut=False,outputbranchsel = "wg_output_branch_selection.txt")
+#p=PostProcessor(".",["infile.root"],None,"wg_keep_and_drop.txt",[countHistogramsModule(),wgModule(),wgFilterModule(),puWeight_2016(),PrefCorr()],provenance=True,justcount=False,fwkJobReport=True,noOut=False,outputbranchsel = "wg_output_branch_selection.txt")
 
-#p=PostProcessor(".",["infile.root"],None,"wg_keep_and_drop.txt",[countHistogramsModule(),wgFiducialModule(),countHistogramsFiducialModule(),wgModule(),wgFilterModule(),puWeight_2016(),PrefCorr()],provenance=True,justcount=False,fwkJobReport=True,noOut=False,outputbranchsel = "wg_output_branch_selection.txt")
+p=PostProcessor(".",["infile.root"],None,"wg_keep_and_drop.txt",[countHistogramsModule(),wgFiducialModule(),countHistogramsFiducialModule(),wgModule(),wgFilterModule(),puWeight_2016(),PrefCorr()],provenance=True,justcount=False,fwkJobReport=True,noOut=False,outputbranchsel = "wg_output_branch_selection.txt")
 
 p.run()
 

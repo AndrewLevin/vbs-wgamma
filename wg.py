@@ -149,29 +149,29 @@ def get_filter_string(year,isdata=True):
 
     if options.lep == "muon":
         if year == "2016":
-            return "(" + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25)"
+            return "(pass_selection && " + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25)"
         elif year == "2017":
-            return "(" + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 30)"
+            return "(pass_selection && " + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 30)"
         elif year == "2018":
-            return "(" + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25)"
+            return "(pass_selection && " + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25)"
         else:
             assert(0)
     elif options.lep == "electron":                
         if year == "2016":
-            return "(" + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 30)"
+            return "(pass_selection && " + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 30)"
         elif year == "2017":
-            return "(" + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35)"
+            return "(pass_selection && " + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35)"
         elif year == "2018":
-            return "(" + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35)"
+            return "(pass_selection && " + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35)"
         else:
             assert(0)
     elif options.lep == "both":    
         if year == "2016":
-            return "(" + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && ((abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25) || (abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 30)))"
+            return "(pass_selection && " + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && ((abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25) || (abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 30)))"
         elif year == "2017":
-            return "(" + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && ((abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 30) || (abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35)))"
+            return "(pass_selection && " + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && ((abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 30) || (abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35)))"
         elif year == "2018":
-            return "(" + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && ((abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25) || (abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35)))"
+            return "(pass_selection && " + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && ((abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25) || (abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35)))"
         else:
             assert(0)
     else:
@@ -212,8 +212,8 @@ mlg_fit_upper_bound = 400
 #variables = ["photon_pt","dphilg","met","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","lepton_phi","photon_phi","njets40","mt","npvs","drlg"]
 #variables_labels = ["ewdim6_photon_pt","dphilg","met","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","lepton_phi","photon_phi","njets40","mt","npvs","drlg"]
 
-variables = ["photon_pt_overflow","detalg","dphilmet","dphilg","puppimet","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","mlg","lepton_phi","photon_phi","njets40","mt","puppimt","npvs","drlg","photon_pt","met","photon_recoil"]
-variables_labels = ["ewdim6_photon_pt","detalg","dphilmet","dphilg","puppimet","lepton_pt","lepton_eta","photon_pt","photon_eta","fit_mlg","mlg","lepton_phi","photon_phi","njets40","mt","puppimt","npvs","drlg","photon_pt_20to180","met","photon_recoil"]
+variables = ["photon_pt_overflow","detalg","dphilpuppimet","dphilg","puppimet","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","mlg","lepton_phi","photon_phi","njets40","mt","puppimt","npvs","drlg","photon_pt","met","photon_recoil","dphigpuppimet","puppimetphi"]
+variables_labels = ["ewdim6_photon_pt","detalg","dphilpuppimet","dphilg","puppimet","lepton_pt","lepton_eta","photon_pt","photon_eta","fit_mlg","mlg","lepton_phi","photon_phi","njets40","mt","puppimt","npvs","drlg","photon_pt_20to180","met","photon_recoil","dphigpuppimet","puppimetphi"]
 
 
 assert(len(variables) == len(variables_labels))
@@ -228,7 +228,8 @@ n_photon_pt_bins = len(binning_photon_pt)-1
 
 variable_definitions = [
 ["detalg" , "abs(lepton_eta-photon_eta)"],
-["dphilmet" , "abs(lepton_phi - metphi) > TMath::Pi() ? abs(abs(lepton_phi - metphi) - 2*TMath::Pi()) : abs(lepton_phi - metphi)"],
+["dphilpuppimet" , "abs(lepton_phi - puppimetphi) > TMath::Pi() ? abs(abs(lepton_phi - puppimetphi) - 2*TMath::Pi()) : abs(lepton_phi - puppimetphi)"],
+["dphigpuppimet" , "abs(photon_phi - puppimetphi) > TMath::Pi() ? abs(abs(photon_phi - puppimetphi) - 2*TMath::Pi()) : abs(photon_phi - puppimetphi)"],
 ["dphilg" , "abs(lepton_phi - photon_phi) > TMath::Pi() ? abs(abs(lepton_phi - photon_phi) - 2*TMath::Pi()) : abs(lepton_phi - photon_phi)"],
 ["drlg" , "sqrt(dphilg*dphilg+detalg*detalg)" ],
 ["photon_recoil","cos(photon_phi)*(-lepton_pt*cos(lepton_phi)-puppimet*cos(puppimetphi)) + sin(photon_phi)*(-lepton_pt*sin(lepton_phi) -puppimet*sin(puppimetphi))"],
@@ -236,7 +237,31 @@ variable_definitions = [
 ]
 
 
-histogram_models = [ROOT.RDF.TH1DModel('', '', n_photon_pt_bins, binning_photon_pt ),ROOT.RDF.TH1DModel('','',16,0,6),ROOT.RDF.TH1DModel('','',16,0,pi),ROOT.RDF.TH1DModel('','',16,0,pi), ROOT.RDF.TH1DModel("met", "", 15 , 0., 300 ), ROOT.RDF.TH1DModel('lepton_pt', '', 8, 20., 180 ), ROOT.RDF.TH1DModel('lepton_eta', '', 10, -2.5, 2.5 ), ROOT.RDF.TH1DModel('', '', n_photon_pt_bins, binning_photon_pt ), ROOT.RDF.TH1DModel('photon_eta', '', 10, -2.5, 2.5 ), ROOT.RDF.TH1DModel("mlg","",mlg_fit_upper_bound/2,0,mlg_fit_upper_bound), ROOT.RDF.TH1DModel("mlg","",100,0,200),ROOT.RDF.TH1DModel("lepton_phi","",14,-3.5,3.5), ROOT.RDF.TH1DModel("photon_phi","",14,-3.5,3.5), ROOT.RDF.TH1DModel("njets40","",7,-0.5,6.5), ROOT.RDF.TH1DModel("mt","",10,0,200), ROOT.RDF.TH1DModel("puppimt","",10,0,200), ROOT.RDF.TH1DModel("npvs","",51,-0.5,50.5), ROOT.RDF.TH1DModel("drlg","",16,0,5), ROOT.RDF.TH1DModel('photon_pt', '', 8, 20., 180 ),ROOT.RDF.TH1DModel("met", "", 15 , 0., 300 ),ROOT.RDF.TH1DModel('photon_recoil', '', 20, -70., 130 )] 
+histogram_models = [
+ROOT.RDF.TH1DModel('', '', n_photon_pt_bins, binning_photon_pt ),
+ROOT.RDF.TH1DModel('','',50,0,5), #detalg
+ROOT.RDF.TH1DModel('','',48,0,pi), #dphilmet
+ROOT.RDF.TH1DModel('','',48,0,pi), #dphilg
+ROOT.RDF.TH1DModel("met", "", 40, 40., 200 ), 
+ROOT.RDF.TH1DModel('lepton_pt', '', 48, 20., 180 ), 
+ROOT.RDF.TH1DModel('lepton_eta', '', 50, -2.5, 2.5 ),
+ROOT.RDF.TH1DModel('', '', n_photon_pt_bins, binning_photon_pt ), 
+ROOT.RDF.TH1DModel('photon_eta', '', 50, -2.5, 2.5 ), 
+ROOT.RDF.TH1DModel("mlg","",mlg_fit_upper_bound/2,0,mlg_fit_upper_bound), 
+ROOT.RDF.TH1DModel("mlg","",100,0,200),
+ROOT.RDF.TH1DModel("lepton_phi","",56,-3.5,3.5), 
+ROOT.RDF.TH1DModel("photon_phi","",56,-3.5,3.5), 
+ROOT.RDF.TH1DModel("","",7,-0.5,6.5), #njets40
+ROOT.RDF.TH1DModel("mt","",10,0,200), 
+ROOT.RDF.TH1DModel("puppimt","",40,40,200), 
+ROOT.RDF.TH1DModel("npvs","",51,-0.5,50.5), 
+ROOT.RDF.TH1DModel("","",50,0,5), #drlg
+ROOT.RDF.TH1DModel('photon_pt', '', 48, 20., 180 ),
+ROOT.RDF.TH1DModel("met", "", 15 , 0., 300 ),
+ROOT.RDF.TH1DModel('photon_recoil', '', 20, -70., 130 ),
+ROOT.RDF.TH1DModel('','',48,0,pi), #dphigmet
+ROOT.RDF.TH1DModel("","",56,-3.5,3.5), #puppimetphi
+] 
 
 assert(len(variables) == len(histogram_models))
 
@@ -260,10 +285,12 @@ def getXaxisLabel(varname):
     if varname == "njets40":
         return "number of jets"
     elif varname == "detalg":
-        return "#Delta #eta(l,g)"
-    elif varname == "dphilmet":
+        return "#Delta#eta(l,g)"
+    elif varname == "dphilpuppimet":
         return "#Delta#phi(l,MET)"
-    elif varname == "corrdphilmet":
+    elif varname == "dphigpuppimet":
+        return "#Delta#phi(g,MET)"
+    elif varname == "corrdphilpuppimet":
         return "corrected #Delta#phi(l,MET)"
     elif varname == "drlg":
         return "#Delta R(l,g)"
@@ -291,6 +318,8 @@ def getXaxisLabel(varname):
         return "lepton #eta"
     elif varname == "lepton_phi":
         return "lepton #phi"
+    elif varname == "puppimetphi":
+        return "MET #phi"
     elif varname == "photon_pt":
         return "photon p_{T} (GeV)"
     elif varname == "photon_pt_overflow":
@@ -1217,6 +1246,7 @@ for year in years:
             data_filename = "/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/single_muon.root"
         else:
             data_filename = "/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/wjets.root"
+
     elif lepton_name == "electron":
         if not options.closure_test:
             if year != "2018":
@@ -1225,6 +1255,7 @@ for year in years:
                 data_filename = "/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/egamma.root"
         else:
             data_filename = "/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/wjets.root"
+
     elif lepton_name == "both":
         if not options.closure_test:
             if year != "2018":
@@ -1455,7 +1486,7 @@ for year in years:
             rinterface = rinterface.Define("weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + ")*base_weight")
 
             if label == "wg+jets":
-                rinterface = rinterface.Define("weight_pass_fiducial","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && pass_fiducial)*base_weight")
+                rinterface = rinterface.Define("weight_pass_fiducial","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && pass_fid_selection)*base_weight")
 
 
             rinterface = rinterface.Define("pileup_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + ")*pileup_up_base_weight")

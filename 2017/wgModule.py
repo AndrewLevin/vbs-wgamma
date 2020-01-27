@@ -69,6 +69,8 @@ class wgProducer(Module):
         self.out.branch("n_lhe_partons",  "I");
         self.out.branch("n_lhe_photons",  "I");
         self.out.branch("n_lower_pt_leptons",  "I");
+        self.out.branch("photon_isScEtaEB","B")
+        self.out.branch("photon_isScEtaEE","B")
         self.out.branch("photon_gen_matching",  "I");
         self.out.branch("photon_vidNestedWPBitmap",  "I");
         self.out.branch("photon_sieie",  "F");
@@ -78,6 +80,11 @@ class wgProducer(Module):
         pass
     def analyze(self, event):
         """process event, return True (go to next module) or False (fail, go to next event)"""
+
+        self.out.fillBranch("event",event.event)
+        self.out.fillBranch("lumi",event.luminosityBlock)
+        self.out.fillBranch("run",event.run)
+
         #do this first for processing speed-up
         if not (event.HLT_Ele32_WPTight_Gsf_L1DoubleEG or event.HLT_IsoMu27):
 #        if not (event.HLT_Ele32_WPTight_Gsf or event.HLT_Ele32_WPTight_Gsf_L1DoubleEG or  event.HLT_IsoMu24):
@@ -166,7 +173,8 @@ class wgProducer(Module):
                 continue
 
             #if not ((abs(photons[i].eta) < 1.4442) or (1.566 < abs(photons[i].eta) and abs(photons[i].eta) < 2.5) ):
-            if not ((abs(photons[i].eta) < 1.4442) or (1.566 < abs(photons[i].eta) and abs(photons[i].eta) < 2.5) ):
+#            if not ((abs(photons[i].eta) < 1.4442) or (1.566 < abs(photons[i].eta) and abs(photons[i].eta) < 2.5) ):
+            if not (photons[i].isScEtaEE or photons[i].isScEtaEB):    
                 continue
 
             mask1 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) | (1 << 11) | (1 << 13)
@@ -216,7 +224,8 @@ class wgProducer(Module):
                 continue
 
             #if not ((abs(photons[i].eta) < 1.4442) or (1.566 < abs(photons[i].eta) and abs(photons[i].eta) < 2.5) ):
-            if not ((abs(photons[i].eta) < 1.4442) or (1.566 < abs(photons[i].eta) and abs(photons[i].eta) < 2.5) ):
+#            if not ((abs(photons[i].eta) < 1.4442) or (1.566 < abs(photons[i].eta) and abs(photons[i].eta) < 2.5) ):
+            if not (photons[i].isScEtaEE or photons[i].isScEtaEB):    
                 continue
 
             mask1 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) | (1 << 11) | (1 << 13)
@@ -328,7 +337,8 @@ class wgProducer(Module):
         #if not (abs(photons[tight_photons[0]].eta) < 1.4442):
         #    return True        
 
-        if not ((abs(photons[tight_photons[0]].eta) < 1.4442) or (1.566 < abs(photons[tight_photons[0]].eta) and abs(photons[tight_photons[0]].eta) < 2.5) ):
+#        if not ((abs(photons[tight_photons[0]].eta) < 1.4442) or (1.566 < abs(photons[tight_photons[0]].eta) and abs(photons[tight_photons[0]].eta) < 2.5) ):
+        if not (photons[tight_photons[0]].isScEtaEE or photons[tight_photons[0]].isScEtaEB):    
             self.out.fillBranch("pass_selection",0)
             return True        
 
@@ -425,6 +435,8 @@ class wgProducer(Module):
             self.out.fillBranch("photon_pt",photons[tight_photons[0]].pt)
             self.out.fillBranch("photon_eta",photons[tight_photons[0]].eta)
             self.out.fillBranch("photon_phi",photons[tight_photons[0]].phi)
+            self.out.fillBranch("photon_isScEtaEE",photons[tight_photons[0]].isScEtaEE)
+            self.out.fillBranch("photon_isScEtaEB",photons[tight_photons[0]].isScEtaEB)
             self.out.fillBranch("mlg",(muons[tight_muons[0]].p4() + photons[tight_photons[0]].p4()).M())
             self.out.fillBranch("is_lepton_tight",1)
 
@@ -493,6 +505,8 @@ class wgProducer(Module):
             self.out.fillBranch("photon_sieie",photons[tight_photons[0]].sieie)
             self.out.fillBranch("photon_eta",photons[tight_photons[0]].eta)
             self.out.fillBranch("photon_phi",photons[tight_photons[0]].phi)
+            self.out.fillBranch("photon_isScEtaEE",photons[tight_photons[0]].isScEtaEE)
+            self.out.fillBranch("photon_isScEtaEB",photons[tight_photons[0]].isScEtaEB)
             self.out.fillBranch("mlg",(muons[loose_but_not_tight_muons[0]].p4() + photons[tight_photons[0]].p4()).M())
             self.out.fillBranch("is_lepton_tight",0)
 
@@ -564,6 +578,8 @@ class wgProducer(Module):
             self.out.fillBranch("photon_sieie",photons[tight_photons[0]].sieie)
             self.out.fillBranch("photon_eta",photons[tight_photons[0]].eta)
             self.out.fillBranch("photon_phi",photons[tight_photons[0]].phi)
+            self.out.fillBranch("photon_isScEtaEE",photons[tight_photons[0]].isScEtaEE)
+            self.out.fillBranch("photon_isScEtaEB",photons[tight_photons[0]].isScEtaEB)
             self.out.fillBranch("mlg",(electrons[tight_electrons[0]].p4()+photons[tight_photons[0]].p4()).M())
             self.out.fillBranch("is_lepton_tight",1)
 
@@ -631,6 +647,8 @@ class wgProducer(Module):
             self.out.fillBranch("photon_sieie",photons[tight_photons[0]].sieie)
             self.out.fillBranch("photon_eta",photons[tight_photons[0]].eta)
             self.out.fillBranch("photon_phi",photons[tight_photons[0]].phi)
+            self.out.fillBranch("photon_isScEtaEE",photons[tight_photons[0]].isScEtaEE)
+            self.out.fillBranch("photon_isScEtaEB",photons[tight_photons[0]].isScEtaEB)
             self.out.fillBranch("mlg",(electrons[loose_but_not_tight_electrons[0]].p4()+photons[tight_photons[0]].p4()).M())
             self.out.fillBranch("is_lepton_tight",0)
 
@@ -814,9 +832,6 @@ class wgProducer(Module):
         self.out.fillBranch("njets20",njets20)
         self.out.fillBranch("njets15",njets15)
         self.out.fillBranch("npvs",event.PV_npvs)
-        self.out.fillBranch("event",event.event)
-        self.out.fillBranch("lumi",event.luminosityBlock)
-        self.out.fillBranch("run",event.run)
         self.out.fillBranch("met",event.MET_pt)
         self.out.fillBranch("metup",sqrt(pow(event.MET_pt*cos(event.MET_phi) + event.MET_MetUnclustEnUpDeltaX,2) + pow(event.MET_pt*sin(event.MET_phi) + event.MET_MetUnclustEnUpDeltaY,2)))
         self.out.fillBranch("puppimet",event.PuppiMET_pt)

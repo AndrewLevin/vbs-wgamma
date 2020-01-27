@@ -84,6 +84,8 @@ keep Photon_eCorr
 keep Photon_vidNestedWPBitmap
 keep Photon_genPartFlav
 keep Photon_genPartIdx
+keep Photon_isScEtaEE
+keep Photon_isScEtaEB
 keep HLT_Ele27_WPTight_Gsf
 keep HLT_Ele35_WPTight_Gsf
 keep HLT_Ele32_WPTight_Gsf

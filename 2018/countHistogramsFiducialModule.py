@@ -243,7 +243,7 @@ class countHistogramsFiducialProducer(Module):
         self.h_nweightedeventspassfidselection_pdfweight102.Write()
         prevdir.cd()        
     def analyze(self, event):
-        if event.pass_fiducial:    
+        if event.pass_fid_selection:    
             if event.Generator_weight > 0:
                 self.h_nweightedeventspassfidselection.Fill(0.5)
                 self.h_nweightedeventspassfidselection_qcdscaleweight0.Fill(0.5,event.LHEScaleWeight[0])
