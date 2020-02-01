@@ -42,11 +42,15 @@ class wgFakePhotonProducer(Module):
         self.out.branch("photon1_pt",  "F")
         self.out.branch("photon1_phi",  "F")
         self.out.branch("photon1_eta",  "F")
+        self.out.branch("photon1_isScEtaEE",  "B")
+        self.out.branch("photon1_isScEtaEB",  "B")
         self.out.branch("photon2_sieie",  "F")
         self.out.branch("photon2_pfRelIso03_chg",  "F")
         self.out.branch("photon2_pt",  "F")
         self.out.branch("photon2_phi",  "F")
         self.out.branch("photon2_eta",  "F")
+        self.out.branch("photon2_isScEtaEE",  "B")
+        self.out.branch("photon2_isScEtaEB",  "B")
         self.out.branch("gen_weight",  "F")
         self.out.branch("lepton_pdg_id",  "I")
         self.out.branch("lepton_pt",  "F")
@@ -137,7 +141,8 @@ class wgFakePhotonProducer(Module):
             if photons[i].pt < 20:
                 continue
 
-            if not ((abs(photons[i].eta) < 1.4442) or (1.566 < abs(photons[i].eta) and abs(photons[i].eta) < 2.5) ):
+#            if not ((abs(photons[i].eta) < 1.4442) or (1.566 < abs(photons[i].eta) and abs(photons[i].eta) < 2.5) ):
+            if not (photons[i].isScEtaEE or photons[i].isScEtaEB):    
             #if not (abs(photons[i].eta) < 1.4442):
                 continue
 
@@ -190,7 +195,8 @@ class wgFakePhotonProducer(Module):
             if photons[i].pt < 20:
                 continue
 
-            if not ((abs(photons[i].eta) < 1.4442) or (1.566 < abs(photons[i].eta) and abs(photons[i].eta) < 2.5) ):
+#            if not ((abs(photons[i].eta) < 1.4442) or (1.566 < abs(photons[i].eta) and abs(photons[i].eta) < 2.5) ):
+            if not (photons[i].isScEtaEE or photons[i].isScEtaEB):    
             #if not (abs(photons[i].eta) < 1.4442):
                 continue
 
@@ -242,7 +248,8 @@ class wgFakePhotonProducer(Module):
             if photons[i].pt < 20:
                 continue
 
-            if not ((abs(photons[i].eta) < 1.4442) or (1.566 < abs(photons[i].eta) and abs(photons[i].eta) < 2.5) ):
+#            if not ((abs(photons[i].eta) < 1.4442) or (1.566 < abs(photons[i].eta) and abs(photons[i].eta) < 2.5) ):
+            if not (photons[i].isScEtaEE or photons[i].isScEtaEB):    
             #if not (abs(photons[i].eta) < 1.4442):
                 continue
 
@@ -461,6 +468,8 @@ class wgFakePhotonProducer(Module):
             self.out.fillBranch("photon1_pt",photons[selected_tight_or_control_photons[0]].pt)
             self.out.fillBranch("photon1_phi",photons[selected_tight_or_control_photons[0]].phi)
             self.out.fillBranch("photon1_eta",photons[selected_tight_or_control_photons[0]].eta)
+            self.out.fillBranch("photon1_isScEtaEE",photons[selected_tight_or_control_photons[0]].isScEtaEE)
+            self.out.fillBranch("photon1_isScEtaEB",photons[selected_tight_or_control_photons[0]].isScEtaEB)
             self.out.fillBranch("photon1_gen_matching",photon1_gen_matching)
             self.out.fillBranch("photon1_genpart_pdgid",photon1_genpart_pdgid)
             self.out.fillBranch("photon1_genpart_pt",photon1_genpart_pt)
@@ -474,6 +483,8 @@ class wgFakePhotonProducer(Module):
             self.out.fillBranch("photon1_pt",0)
             self.out.fillBranch("photon1_phi",0)
             self.out.fillBranch("photon1_eta",0)
+            self.out.fillBranch("photon1_isScEtaEE",0)
+            self.out.fillBranch("photon1_isScEtaEB",0)
             self.out.fillBranch("photon1_gen_matching",0)
             self.out.fillBranch("photon1_genpart_pdgid",0)
             self.out.fillBranch("photon1_genpart_pt",0)
@@ -547,6 +558,8 @@ class wgFakePhotonProducer(Module):
             self.out.fillBranch("photon2_pt",photons[selected_fake_template_photons[0]].pt)
             self.out.fillBranch("photon2_phi",photons[selected_fake_template_photons[0]].phi)
             self.out.fillBranch("photon2_eta",photons[selected_fake_template_photons[0]].eta)
+            self.out.fillBranch("photon2_isScEtaEE",photons[selected_fake_template_photons[0]].isScEtaEE)
+            self.out.fillBranch("photon2_isScEtaEB",photons[selected_fake_template_photons[0]].isScEtaEB)
             self.out.fillBranch("photon2_gen_matching",photon2_gen_matching)
             self.out.fillBranch("photon2_genpart_pdgid",photon2_genpart_pdgid)
             self.out.fillBranch("photon2_genpart_pt",photon2_genpart_pt)
@@ -561,6 +574,8 @@ class wgFakePhotonProducer(Module):
             self.out.fillBranch("photon2_pt",0)
             self.out.fillBranch("photon2_phi",0)
             self.out.fillBranch("photon2_eta",0)
+            self.out.fillBranch("photon2_isScEtaEE",0)
+            self.out.fillBranch("photon2_isScEtaEB",0)
             self.out.fillBranch("photon2_gen_matching",0)
             self.out.fillBranch("photon2_genpart_pdgid",0)
             self.out.fillBranch("photon2_genpart_pt",0)

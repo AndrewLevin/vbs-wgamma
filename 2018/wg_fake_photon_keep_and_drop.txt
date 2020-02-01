@@ -51,6 +51,9 @@ keep HLT_Ele32_WPTight_Gsf_L1DoubleEG
 keep Photon_vidNestedWPBitmap
 keep Photon_pt
 keep Photon_eta
+keep Photon_isScEtaEE
+keep Photon_isScEtaEB
+keep Photon_eta
 keep Photon_phi
 keep Photon_mass
 keep Photon_cutBased

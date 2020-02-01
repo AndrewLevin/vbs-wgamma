@@ -24,6 +24,8 @@ class wgRealPhotonTemplateProducer(Module):
         self.out.branch("photon_pt",  "F");
         self.out.branch("lepton_pt",  "F");
         self.out.branch("photon_eta",  "F");
+        self.out.branch("photon_isScEtaEE",  "B");
+        self.out.branch("photon_isScEtaEB",  "B");
         self.out.branch("gen_weight",  "F");
         self.out.branch("lepton_pdg_id",  "I");
         self.out.branch("met",  "F");
@@ -110,7 +112,7 @@ class wgRealPhotonTemplateProducer(Module):
             if photons[i].pt < 20:
                 continue
 
-            if not ((abs(photons[i].eta) < 1.4442) or (1.566 < abs(photons[i].eta) and abs(photons[i].eta) < 2.5) ):
+            if not (photons[i].isScEtaEE or photons[i].isScEtaEB):
                 continue
 
             if photons[i].pixelSeed:
@@ -184,6 +186,8 @@ class wgRealPhotonTemplateProducer(Module):
         self.out.fillBranch("photon_sieie",photons[selected_photons[0]].sieie)
         self.out.fillBranch("photon_pt",photons[selected_photons[0]].pt)
         self.out.fillBranch("photon_eta",photons[selected_photons[0]].eta)
+        self.out.fillBranch("photon_isScEtaEE",photons[selected_photons[0]].isScEtaEE)
+        self.out.fillBranch("photon_isScEtaEB",photons[selected_photons[0]].isScEtaEB)
         self.out.fillBranch("met",event.MET_pt)
         self.out.fillBranch("puppimet",event.PuppiMET_pt)
 

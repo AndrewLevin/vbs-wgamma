@@ -11,7 +11,10 @@ from pprint import pprint
 
 ROOT.gStyle.SetOptStat(0)
 
-year = "2016"
+#outdir="/eos/user/a/amlevin/www/wg/fake-photon-fits-mc/"
+outdir="/eos/user/a/amlevin/www/wg/fake-photon-fits/"
+
+year = "2017"
 
 #lepton_names =["muon","electron"]
 #lepton_names =["electron","muon"]
@@ -47,8 +50,8 @@ fake_event_weights["electron_barrel"] = []
 
 fake_event_weights["electron_endcap"] = []
 
-photon1_eta_ranges = ["abs(photon1_eta) < 1.4442","abs(photon1_eta) > 1.566 && abs(photon1_eta) < 2.5"]
-photon2_eta_ranges = ["abs(photon2_eta) < 1.4442","abs(photon2_eta) > 1.566 && abs(photon2_eta) < 2.5"]
+photon1_eta_ranges = ["photon1_isScEtaEB","photon1_isScEtaEE"]
+photon2_eta_ranges = ["photon2_isScEtaEB","photon2_isScEtaEE"]
 
 #photon1_pt_range_cutstrings = ["photon1_pt > 20 && photon1_pt < 25","photon1_pt > 25 && photon1_pt < 30","photon1_pt > 30 && photon1_pt < 40","photon1_pt > 40 && photon1_pt < 50","photon1_pt > 50 && photon1_pt < 70","photon1_pt > 70 && photon1_pt < 100","photon1_pt > 100 && photon1_pt < 135","photon1_pt > 135 && photon1_pt < 400"]
 
@@ -150,7 +153,9 @@ mc_fake_photon_samples = []
 
 #mc_fake_photon_samples = [{"file" : ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/wjets_fake_photon.root"),"xs" : 60430.0, "subtract" : False, "prompt" : False},{"file" : ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/wgjets_fake_photon.root"),"xs" : 178.6, "subtract" : False, "prompt" : True}]
 
-muon_data_fake_photon_samples = [{"file" : ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/single_muon_fake_photon.root")}]
+#mc_fake_photon_samples = [{"file" : ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/wjets_fake_photon.root"),"xs" : 60430.0, "subtract" : False, "prompt" : False}]
+
+#muon_data_fake_photon_samples = [{"file" : ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/single_muon_fake_photon.root")}]
 
 if year == "2016" or year == "2017":
     electron_data_fake_photon_samples = [{"file" : ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/single_electron_fake_photon.root")}]
@@ -204,7 +209,7 @@ for lepton_name in lepton_names:
 
             print "Processing " + lepton_name + ", " + photon1_eta_range + ", " + photon1_pt_range_cutstring
 
-            if photon1_eta_range == "abs(photon1_eta) < 1.4442":
+            if photon1_eta_range == "photon1_isScEtaEB":
                 sieie_cut = sieie_barrel
                 n_bins = 128
                 sieie_lower = 0.00
@@ -266,10 +271,12 @@ for lepton_name in lepton_names:
 #                    photon1_gen_matching_cutstring = "photon1_gen_matching_old > 0"
 #                    photon2_gen_matching_cutstring = "photon2_gen_matching_old > 0"
                 else:
-                    photon1_gen_matching_cutstring = "!(photon1_gen_matching == 6 || photon1_gen_matching == 5 || photon1_gen_matching == 4 || photon1_gen_matching == 1)"
-                    photon2_gen_matching_cutstring = "!(photon2_gen_matching == 6 || photon2_gen_matching == 5 || photon2_gen_matching == 4 || photon2_gen_matching == 1)"    
-#                    photon1_gen_matching_cutstring = "!(photon1_gen_matching == 6 || photon1_gen_matching == 5 || photon1_gen_matching == 4 || photon1_gen_matching == 1) && (photon1_genpart_pdgid == 22)"
-#                    photon2_gen_matching_cutstring = "!(photon2_gen_matching == 6 || photon2_gen_matching == 5 || photon2_gen_matching == 4 || photon2_gen_matching == 1) && (photon2_genpart_pdgid == 22)"
+#                    photon1_gen_matching_cutstring = "!(photon1_gen_matching == 6 || photon1_gen_matching == 5 || photon1_gen_matching == 4 || photon1_gen_matching == 1)"
+#                    photon2_gen_matching_cutstring = "!(photon2_gen_matching == 6 || photon2_gen_matching == 5 || photon2_gen_matching == 4 || photon2_gen_matching == 1)"    
+#                    photon1_gen_matching_cutstring = "((photon1_genjet_matching == 1) && !(photon1_gen_matching == 6 || photon1_gen_matching == 5 || photon1_gen_matching == 4 || photon1_gen_matching == 1))"
+#                    photon2_gen_matching_cutstring = "((photon2_genjet_matching == 1) && !(photon2_gen_matching == 6 || photon2_gen_matching == 5 || photon2_gen_matching == 4 || photon2_gen_matching == 1))"
+                    photon1_gen_matching_cutstring = "((photon1_genjet_matching == 0) && (photon1_gen_matching == 0))"
+                    photon2_gen_matching_cutstring = "((photon2_genjet_matching == 0) && (photon2_gen_matching == 0))"
 #                    photon1_gen_matching_cutstring = "photon1_gen_matching_old == 0"
 #                    photon2_gen_matching_cutstring = "photon2_gen_matching_old == 0"
 
@@ -327,11 +334,11 @@ for lepton_name in lepton_names:
 
                     pass_eta_range = False
 
-                    if photon1_eta_range == "abs(photon1_eta) < 1.4442":
-                        if abs(real_photon_template_tree.photon_eta) < 1.4442:
+                    if photon1_eta_range == "photon1_isScEtaEB":
+                        if real_photon_template_tree.photon_isScEtaEB == '\x01':
                             pass_eta_range = True
-                    elif photon1_eta_range == "abs(photon1_eta) > 1.566 && abs(photon1_eta) < 2.5":
-                        if 1.4442 < abs(real_photon_template_tree.photon_eta) and abs(real_photon_template_tree.photon_eta) < 2.5:
+                    elif photon1_eta_range == "photon1_isScEtaEE":
+                        if real_photon_template_tree.photon_isScEtaEE == '\x01':
                             pass_eta_range = True
                     else:
                         assert(0)
@@ -404,9 +411,9 @@ for lepton_name in lepton_names:
 
 
 
-                if photon1_eta_range == "abs(photon1_eta) < 1.4442":
+                if photon1_eta_range == "photon1_isScEtaEB":
                     eta_range_no_spaces = "barrel"
-                elif photon1_eta_range == "abs(photon1_eta) > 1.566 && abs(photon1_eta) < 2.5":
+                elif photon1_eta_range == "photon1_isScEtaEE":
                     eta_range_no_spaces = "endcap"
                 else:
                     assert(0)
@@ -425,14 +432,14 @@ for lepton_name in lepton_names:
                     assert(0)
 
 
-                c1.SaveAs("/eos/user/a/amlevin/www/wg/"+year+"/fake-photon/"+lepton_name+"/"+eta_range_no_spaces+"/real_photon_template_"+photon_pt_range_cutstring_no_spaces+".png")
+                c1.SaveAs(outdir+year+"/"+lepton_name+"/"+eta_range_no_spaces+"/real_photon_template_"+photon_pt_range_cutstring_no_spaces+".png")
 
                 fake_photon_template_hist.GetXaxis().SetTitle("\sigma_{i \eta i \eta}")
                 fake_photon_template_hist.SetLineWidth(2)
                 fake_photon_template_hist.SetTitle("")
                 fake_photon_template_hist.Draw()
 
-                c1.SaveAs("/eos/user/a/amlevin/www/wg/"+year+"/fake-photon/"+lepton_name+"/"+eta_range_no_spaces+"/fake_photon_template_"+photon_pt_range_cutstring_no_spaces+".png")
+                c1.SaveAs(outdir+year+"/"+lepton_name+"/"+eta_range_no_spaces+"/fake_photon_template_"+photon_pt_range_cutstring_no_spaces+".png")
 
 
                 ffitter.Fit()
@@ -441,7 +448,7 @@ for lepton_name in lepton_names:
                 total_hist.SetLineWidth(2)            
                 total_hist.Draw()
 
-                c1.SaveAs("/eos/user/a/amlevin/www/wg/"+year+"/fake-photon/"+lepton_name+"/"+eta_range_no_spaces+"/total_"+photon_pt_range_cutstring_no_spaces+".png")
+                c1.SaveAs(outdir+year+"/"+lepton_name+"/"+eta_range_no_spaces+"/total_"+photon_pt_range_cutstring_no_spaces+".png")
 
                 total_hist.SetLineColor(ROOT.kBlack)
                 total_hist.SetMarkerColor(ROOT.kBlack)
@@ -476,8 +483,7 @@ for lepton_name in lepton_names:
                 legend1.AddEntry(red_th1f,"fit result","lp")
                 legend1.Draw("same")
 
-                c1.SaveAs("/eos/user/a/amlevin/www/wg/"+year+"/fake-photon/"+lepton_name+"/"+eta_range_no_spaces+"/fit_"+photon_pt_range_cutstring_no_spaces+".png")
-
+                c1.SaveAs(outdir+year+"/"+lepton_name+"/"+eta_range_no_spaces+"/fit_"+photon_pt_range_cutstring_no_spaces+".png")
 
                 c1.ForceUpdate()
                 c1.Modified()
@@ -519,7 +525,7 @@ for lepton_name in lepton_names:
                 c1.ForceUpdate()
                 c1.Modified()
 
-                c1.SaveAs("/eos/user/a/amlevin/www/wg/"+year+"/fake-photon/"+lepton_name+"/"+eta_range_no_spaces+"/components_"+photon_pt_range_cutstring_no_spaces+".png")
+                c1.SaveAs(outdir+year+"/"+lepton_name+"/"+eta_range_no_spaces+"/components_"+photon_pt_range_cutstring_no_spaces+".png")
 
                 
                 print total_hist.GetXaxis().FindFixBin( sieie_cut )
@@ -552,12 +558,12 @@ for lepton_name in lepton_names:
 
             print "denominator = "+str(denominator)    
                 
-            if photon1_eta_range == "abs(photon1_eta) < 1.4442":
+            if photon1_eta_range == "photon1_isScEtaEB":
                 fake_fractions[lepton_name+ "_barrel"].append(list(array_fake_fraction))
             else:
                 fake_fractions[lepton_name+ "_endcap"].append(list(array_fake_fraction))
 
-            if photon1_eta_range == "abs(photon1_eta) < 1.4442":
+            if photon1_eta_range == "photon1_isScEtaEB":
                 fake_event_weights[lepton_name+"_barrel"].append(list(array_fake_event_weight))
             else:
                 fake_event_weights[lepton_name+"_endcap"].append(list(array_fake_event_weight))

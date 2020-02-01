@@ -43,6 +43,7 @@ keep Jet_puId
 keep Jet_jetId
 keep Jet_rawFactor
 keep HLT_IsoMu24
+keep HLT_IsoMu27
 keep HLT_IsoTkMu24
 keep HLT_Ele27_WPTight_Gsf
 keep HLT_Ele35_WPTight_Gsf
@@ -50,6 +51,9 @@ keep HLT_Ele32_WPTight_Gsf
 keep HLT_Ele32_WPTight_Gsf_L1DoubleEG
 keep Photon_vidNestedWPBitmap
 keep Photon_pt
+keep Photon_eta
+keep Photon_isScEtaEE
+keep Photon_isScEtaEB
 keep Photon_eta
 keep Photon_phi
 keep Photon_mass

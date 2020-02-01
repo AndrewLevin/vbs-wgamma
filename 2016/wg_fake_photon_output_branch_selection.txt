@@ -1,7 +1,4 @@
 drop *
-keep puWeight
-keep puWeightUp
-keep puWeightDown
 keep run
 keep lumi
 keep event
@@ -26,7 +23,6 @@ keep photon1_phi
 keep photon1_eta
 keep photon1_isScEtaEE
 keep photon1_isScEtaEB
-keep photon1_eta
 keep photon2_sieie
 keep photon2_pfRelIso03_chg
 keep photon2_pt
@@ -39,6 +35,8 @@ keep lepton_pdg_id
 keep lepton_pt
 keep lepton_eta
 keep lepton_phi
+keep photon1_genjet_matching
+keep photon2_genjet_matching
 keep photon1_gen_matching
 keep photon2_gen_matching
 keep photon1_gen_matching_old
@@ -59,3 +57,9 @@ keep puppimet
 keep puppimetphi
 keep pass_selection1
 keep pass_selection2
+keep puWeight
+keep puWeightUp
+keep puWeightDown
+keep PrefireWeight
+keep PrefireWeight_Up
+keep PrefireWeight_Down
