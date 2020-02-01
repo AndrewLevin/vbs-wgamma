@@ -269,11 +269,10 @@ assert(len(variables) == len(histogram_models))
 
 mlg_index = 9
 
-#ewdim6_filename = "/afs/cern.ch/work/a/amlevin/data/wg/2016/wgjetsewdim6.root.bak"
 ewdim6_samples = {
-"2016" : [{"xs" : 4.318, "filename" : "/afs/cern.ch/work/a/amlevin/tmp/wgjetsewdim6.root"}],
-"2017" : [{"xs" : 4.318, "filename" : "/afs/cern.ch/work/a/amlevin/tmp/wgjetsewdim6.root"}],
-"2018" : [{"xs" : 4.318, "filename" : "/afs/cern.ch/work/a/amlevin/tmp/wgjetsewdim6.root"}]
+"2016" : [{"xs" : 4.318, "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2017/1June2019/wgjetsewdim6.root"}],
+"2017" : [{"xs" : 4.318, "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2017/1June2019/wgjetsewdim6.root"}],
+"2018" : [{"xs" : 4.318, "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2017/1June2019/wgjetsewdim6.root"}]
 }
 
 for year in years:
@@ -986,41 +985,41 @@ if options.ewdim6:
 
     cwww_reweights = [372,0,1,2,3,4,5]
 
-    cwww_coefficients = [0.0, 10.0,-10.0,20.0,-20.0,-30.0,30.0]
+    #cwww_coefficients = [0.0, 10.0,-10.0,20.0,-20.0,-30.0,30.0]
 
-    #cwww_coefficients = [0.0, 1.0,-1.0,2.0,-2.0,-3.0,3.0]
+    cwww_coefficients = [0.0, 1.0,-1.0,2.0,-2.0,-3.0,3.0]
 
     cwww_hists = []
 
     cw_reweights = [372,6,7,8,9,10,11]
 
-    cw_coefficients = [0.0, 80.0,-80.0,160.0,-160.0,240.0,-240.0]
+    #cw_coefficients = [0.0, 80.0,-80.0,160.0,-160.0,240.0,-240.0]
 
-    #cw_coefficients = [0.0, 17.0,-17.0,34.0,-34.0,51.0,-51.0]
+    cw_coefficients = [0.0, 17.0,-17.0,34.0,-34.0,51.0,-51.0]
 
     cw_hists = []
 
     cb_reweights = [372,12,13,14,15,16,17]
 
-    cb_coefficients = [0.0, 80.0,-80.0,160.0,-160.0,240.0,-240.0]
+    #cb_coefficients = [0.0, 80.0,-80.0,160.0,-160.0,240.0,-240.0]
 
-    #cb_coefficients = [0.0, 17.0,-17.0,34.0,-34.0,51.0,-51.0]
+    cb_coefficients = [0.0, 17.0,-17.0,34.0,-34.0,51.0,-51.0]
 
     cb_hists = []
 
     cpwww_reweights = [372,18,19,20,21,22,23]
 
-    cpwww_coefficients = [0.0, 4.0,-4.0,8.0,-8.0,12.0,-12.0]
+    #cpwww_coefficients = [0.0, 4.0,-4.0,8.0,-8.0,12.0,-12.0]
 
-    #cpwww_coefficients = [0.0, 0.5,-0.5,1.0,-1.0,1.5,-1.5]
+    cpwww_coefficients = [0.0, 0.5,-0.5,1.0,-1.0,1.5,-1.5]
 
     cpwww_hists = []
 
     cpw_reweights = [372,24,25,26,27,28,29]
 
-    cpw_coefficients = [0.0, 40.0,-40.0,80.0,-80.0,120.0,-120.0]
+    #cpw_coefficients = [0.0, 40.0,-40.0,80.0,-80.0,120.0,-120.0]
 
-    #cpw_coefficients = [0.0, 8.0,-8.0,16.0,-16.0,24.0,-24.0]
+    cpw_coefficients = [0.0, 8.0,-8.0,16.0,-16.0,24.0,-24.0]
 
     cpw_hists = []
 
@@ -2181,7 +2180,7 @@ if "wg+jets" in labels:
 if options.draw_ewdim6:
     for i in range(1,n_photon_pt_bins+1):
         #hardcoded to use bin 6 of the scaling histogram for now 
-        ewdim6["hists"][0].SetBinContent(i,cb_scaling_hists[i].GetBinContent(4)*labels["wg+jets"]["hists"][0].GetBinContent(i))
+        ewdim6["hists"][0].SetBinContent(i,cb_scaling_hists[i].GetBinContent(5)*labels["wg+jets"]["hists"][0].GetBinContent(i))
 
 for i in range(len(variables)):
 
