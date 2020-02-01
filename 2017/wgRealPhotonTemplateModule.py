@@ -112,7 +112,6 @@ class wgRealPhotonTemplateProducer(Module):
             if photons[i].pt < 20:
                 continue
 
-#            if not ((abs(photons[i].eta) < 1.4442) or (1.566 < abs(photons[i].eta) and abs(photons[i].eta) < 2.5) ):
             if not (photons[i].isScEtaEE or photons[i].isScEtaEB):    
                 continue
 

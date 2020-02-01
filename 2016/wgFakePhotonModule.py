@@ -51,7 +51,6 @@ class wgFakePhotonProducer(Module):
         self.out.branch("photon2_eta",  "F")
         self.out.branch("photon2_isScEtaEE",  "B")
         self.out.branch("photon2_isScEtaEB",  "B")
-        self.out.branch("photon2_eta",  "F")
         self.out.branch("gen_weight",  "F")
         self.out.branch("lepton_pdg_id",  "I")
         self.out.branch("lepton_pt",  "F")
@@ -147,9 +146,7 @@ class wgFakePhotonProducer(Module):
             if photons[i].pt < 20:
                 continue
 
-#            if not ((abs(photons[i].eta) < 1.4442) or (1.566 < abs(photons[i].eta) and abs(photons[i].eta) < 2.5) ):
             if not (photons[i].isScEtaEE or photons[i].isScEtaEB):    
-            #if not (abs(photons[i].eta) < 1.4442):
                 continue
 
             mask1 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) | (1 << 11) | (1 << 13)
@@ -168,9 +165,6 @@ class wgFakePhotonProducer(Module):
             if not((bitmap == mask1) or (bitmap == mask2) or (bitmap == mask3) or (bitmap == mask4) or (bitmap == mask5)):
                 continue
 
-            #if abs(photons[i].eta) < 1.4442:
-            #    print photons[i].pfRelIso03_chg*photons[i].pt/photons[i].eCorr
-
 #            if not photons[i].electronVeto:
 #                continue
 
@@ -201,9 +195,7 @@ class wgFakePhotonProducer(Module):
             if photons[i].pt < 20:
                 continue
 
-            #if not ((abs(photons[i].eta) < 1.4442) or (1.566 < abs(photons[i].eta) and abs(photons[i].eta) < 2.5) ):
             if not (photons[i].isScEtaEE or photons[i].isScEtaEB):
-            #if not (abs(photons[i].eta) < 1.4442):
                 continue
 
             mask1 = (1 << 1) | (1 << 3) | (1 << 5) | (1 << 7) | (1 << 9) | (1 << 11) | (1 << 13)
@@ -221,8 +213,6 @@ class wgFakePhotonProducer(Module):
             if not((bitmap == mask1) or (bitmap == mask2) or (bitmap == mask3) or (bitmap == mask4) or (bitmap == mask5)):
                 continue
 
-            #if abs(photons[i].eta) < 1.4442:
-            #    print photons[i].pfRelIso03_chg*photons[i].pt/photons[i].eCorr
 
 #            if not photons[i].electronVeto:
 #                continue
@@ -254,9 +244,7 @@ class wgFakePhotonProducer(Module):
             if photons[i].pt < 20:
                 continue
 
-#            if not ((abs(photons[i].eta) < 1.4442) or (1.566 < abs(photons[i].eta) and abs(photons[i].eta) < 2.5) ):
             if not (photons[i].isScEtaEE or photons[i].isScEtaEB):    
-            #if not (abs(photons[i].eta) < 1.4442):
                 continue
 
             #invert the medium photon ID with the sigma_ietaieta cut removed
