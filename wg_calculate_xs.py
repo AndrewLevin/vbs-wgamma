@@ -1,11 +1,11 @@
 import json
 import math
 
-xs_inputs_muon = json.load(open("xs_inputs/xs_inputs_muon.txt"))
-xs_inputs_electron = json.load(open("xs_inputs/xs_inputs_electron.txt"))
+#xs_inputs_muon = json.load(open("xs_inputs/xs_inputs_muon.txt"))
+#xs_inputs_electron = json.load(open("xs_inputs/xs_inputs_electron.txt"))
 
-#xs_inputs_muon = json.load(open("xs_inputs_muon.txt"))
-#xs_inputs_electron = json.load(open("xs_inputs_electron.txt"))
+xs_inputs_muon = json.load(open("xs_inputs_muon.txt"))
+xs_inputs_electron = json.load(open("xs_inputs_electron.txt"))
 
 from pprint import pprint
 
@@ -227,11 +227,10 @@ signal_stat_unc_muon  =  xs_inputs_muon["signal_stat_unc_muon"]
 n_weighted_selected_data_mc_sf_muon  =  xs_inputs_muon["signal_mc_xs_data_mc"]
 n_weighted_selected_data_mc_sf_syst_unc_due_to_muon_id_sf_muon  =  xs_inputs_muon["signal_mc_xs_data_mc_syst_unc_due_to_muon_id_sf_muon"]
 n_weighted_selected_data_mc_sf_syst_unc_due_to_muon_iso_sf_muon  =  xs_inputs_muon["signal_mc_xs_data_mc_syst_unc_due_to_muon_iso_sf_muon"]
+n_weighted_selected_data_mc_sf_syst_unc_due_to_muon_hlt_sf_muon  =  xs_inputs_muon["signal_mc_xs_data_mc_syst_unc_due_to_muon_hlt_sf_muon"]
 n_weighted_selected_data_mc_sf_syst_unc_due_to_photon_id_sf_muon  =  xs_inputs_muon["signal_mc_xs_data_mc_syst_unc_due_to_photon_id_sf_muon"]
 n_weighted_selected_data_mc_sf_syst_unc_due_to_pdf_muon  =  0
 n_weighted_selected_data_mc_sf_syst_unc_due_to_qcd_scale_muon  =  0
-
-
 
 signal_syst_unc_due_to_fake_photon_muon = math.sqrt(pow(signal_syst_unc_due_to_fake_photon_alt_muon,2) + pow(signal_syst_unc_due_to_fake_photon_wjets_muon,2))
 
@@ -251,6 +250,7 @@ signal_stat_unc_electron  =  xs_inputs_electron["signal_stat_unc_electron"]
 n_weighted_selected_data_mc_sf_electron  =  xs_inputs_electron["signal_mc_xs_data_mc"]
 n_weighted_selected_data_mc_sf_syst_unc_due_to_electron_id_sf_electron  =  xs_inputs_electron["signal_mc_xs_data_mc_syst_unc_due_to_electron_id_sf_electron"]
 n_weighted_selected_data_mc_sf_syst_unc_due_to_electron_reco_sf_electron  =  xs_inputs_electron["signal_mc_xs_data_mc_syst_unc_due_to_electron_reco_sf_electron"]
+n_weighted_selected_data_mc_sf_syst_unc_due_to_electron_hlt_sf_electron  =  xs_inputs_electron["signal_mc_xs_data_mc_syst_unc_due_to_electron_hlt_sf_electron"]
 n_weighted_selected_data_mc_sf_syst_unc_due_to_photon_id_sf_electron =   xs_inputs_electron["signal_mc_xs_data_mc_syst_unc_due_to_photon_id_sf_electron"]
 n_weighted_selected_data_mc_sf_syst_unc_due_to_pdf_electron  =  0
 n_weighted_selected_data_mc_sf_syst_unc_due_to_qcd_scale_electron  =  0
@@ -290,11 +290,11 @@ n_weighted_selected_data_mc_sf = n_weighted_selected_data_mc_sf_electron + n_wei
 
 signal_stat_unc = math.sqrt(pow(signal_stat_unc_electron,2) + pow(signal_stat_unc_muon,2))
 
-n_weighted_selected_data_mc_sf_syst_unc = math.sqrt(pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_pileup,2)+pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_muon_id_sf_muon,2)+pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_muon_iso_sf_muon,2)+pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_photon_id_sf_muon,2)+pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_pdf_muon,2)+pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_qcd_scale_muon,2)+pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_electron_id_sf_electron,2)+pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_electron_reco_sf_electron,2)+pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_photon_id_sf_electron,2)+pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_pdf_electron,2)+pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_qcd_scale_electron,2)+pow(unc_due_to_mc_stat_muon,2)+pow(unc_due_to_data_driven_stat_muon,2)+pow(unc_due_to_mc_stat_electron,2)+pow(unc_due_to_data_driven_stat_electron,2))
+n_weighted_selected_data_mc_sf_syst_unc = math.sqrt(pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_pileup,2)+pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_muon_id_sf_muon,2)+pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_muon_iso_sf_muon,2)+pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_muon_hlt_sf_muon,2)+pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_photon_id_sf_muon,2)+pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_pdf_muon,2)+pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_qcd_scale_muon,2)+pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_electron_id_sf_electron,2)+pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_electron_reco_sf_electron,2)+pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_electron_hlt_sf_electron,2)+pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_photon_id_sf_electron,2)+pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_pdf_electron,2)+pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_qcd_scale_electron,2)+pow(unc_due_to_mc_stat_muon,2)+pow(unc_due_to_data_driven_stat_muon,2)+pow(unc_due_to_mc_stat_electron,2)+pow(unc_due_to_data_driven_stat_electron,2))
 
-n_weighted_selected_data_mc_sf_syst_unc_muon = math.sqrt(pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_muon_id_sf_muon,2)+pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_muon_iso_sf_muon,2)+pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_photon_id_sf_muon,2)+pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_pdf_muon,2)+pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_qcd_scale_muon,2)+pow(unc_due_to_mc_stat_muon,2)+pow(unc_due_to_data_driven_stat_muon,2)  + pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_pileup_muon,2) )
+n_weighted_selected_data_mc_sf_syst_unc_muon = math.sqrt(pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_muon_id_sf_muon,2)+pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_muon_iso_sf_muon,2)+pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_muon_hlt_sf_muon,2)+pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_photon_id_sf_muon,2)+pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_pdf_muon,2)+pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_qcd_scale_muon,2)+pow(unc_due_to_mc_stat_muon,2)+pow(unc_due_to_data_driven_stat_muon,2)  + pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_pileup_muon,2) )
 
-n_weighted_selected_data_mc_sf_syst_unc_electron = math.sqrt(pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_electron_id_sf_electron,2)+pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_electron_reco_sf_electron,2)+pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_photon_id_sf_electron,2)+pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_pdf_electron,2)+pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_qcd_scale_electron,2)+pow(unc_due_to_mc_stat_electron,2)+pow(unc_due_to_data_driven_stat_electron,2) + pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_pileup_electron,2))
+n_weighted_selected_data_mc_sf_syst_unc_electron = math.sqrt(pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_electron_id_sf_electron,2)+pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_electron_reco_sf_electron,2)+pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_electron_reco_sf_electron,2)+pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_photon_id_sf_electron,2)+pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_pdf_electron,2)+pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_qcd_scale_electron,2)+pow(unc_due_to_mc_stat_electron,2)+pow(unc_due_to_data_driven_stat_electron,2) + pow(n_weighted_selected_data_mc_sf_syst_unc_due_to_pileup_electron,2))
 
 xs =  signal/(n_weighted_selected_data_mc_sf/fiducial)/lumi
 
@@ -418,6 +418,8 @@ print "acc_electron = "+str(acc_electron)
 acc_muon = n_weighted_selected_data_mc_sf_muon/fiducial
 
 for i in range(1,32):
+    print xs_inputs_muon["xs_times_lumi_pdf_variation"+str(i)] 
+    print xs_inputs_electron["xs_times_lumi_pdf_variation"+str(i)] 
     assert(xs_inputs_muon["xs_times_lumi_pdf_variation"+str(i)] == xs_inputs_electron["xs_times_lumi_pdf_variation"+str(i)])
 
 mean_pdf_acc=0
@@ -532,6 +534,10 @@ err_on_acc_due_to_electron_reco_sf = (((n_weighted_selected_data_mc_sf + n_weigh
 
 err_on_acc_due_to_electron_reco_sf_electron = (((n_weighted_selected_data_mc_sf_electron + n_weighted_selected_data_mc_sf_syst_unc_due_to_electron_reco_sf_electron)/fiducial) - acc_electron)
 
+err_on_acc_due_to_electron_hlt_sf = (((n_weighted_selected_data_mc_sf + n_weighted_selected_data_mc_sf_syst_unc_due_to_electron_hlt_sf_electron)/fiducial) - acc)
+
+err_on_acc_due_to_electron_hlt_sf_electron = (((n_weighted_selected_data_mc_sf_electron + n_weighted_selected_data_mc_sf_syst_unc_due_to_electron_hlt_sf_electron)/fiducial) - acc_electron)
+
 err_on_acc_due_to_electron_id_sf = (((n_weighted_selected_data_mc_sf + n_weighted_selected_data_mc_sf_syst_unc_due_to_electron_id_sf_electron)/fiducial) - acc)
 
 err_on_acc_due_to_electron_id_sf_electron = (((n_weighted_selected_data_mc_sf_electron + n_weighted_selected_data_mc_sf_syst_unc_due_to_electron_id_sf_electron)/fiducial) - acc_electron)
@@ -544,7 +550,11 @@ err_on_acc_due_to_muon_iso_sf = (((n_weighted_selected_data_mc_sf + n_weighted_s
 
 err_on_acc_due_to_muon_iso_sf_muon = (((n_weighted_selected_data_mc_sf_muon + n_weighted_selected_data_mc_sf_syst_unc_due_to_muon_iso_sf_muon)/fiducial) - acc_muon)
 
-err_on_acc = math.sqrt(pow(err_on_acc_due_to_qcd_scale,2)+pow(err_on_acc_due_to_pdf,2)+pow(err_on_acc_due_to_electron_id_sf,2) + pow(err_on_acc_due_to_electron_reco_sf,2)+pow(err_on_acc_due_to_muon_id_sf,2)+pow(err_on_acc_due_to_muon_iso_sf,2)+pow(err_on_acc_due_to_photon_id_sf,2) + pow(err_on_acc_due_to_pileup,2))
+err_on_acc_due_to_muon_hlt_sf = (((n_weighted_selected_data_mc_sf + n_weighted_selected_data_mc_sf_syst_unc_due_to_muon_hlt_sf_muon)/fiducial) - acc)
+
+err_on_acc_due_to_muon_hlt_sf_muon = (((n_weighted_selected_data_mc_sf_muon + n_weighted_selected_data_mc_sf_syst_unc_due_to_muon_hlt_sf_muon)/fiducial) - acc_muon)
+
+err_on_acc = math.sqrt(pow(err_on_acc_due_to_qcd_scale,2)+pow(err_on_acc_due_to_pdf,2)+pow(err_on_acc_due_to_electron_id_sf,2) + pow(err_on_acc_due_to_electron_reco_sf,2)+pow(err_on_acc_due_to_electron_hlt_sf,2)+pow(err_on_acc_due_to_muon_id_sf,2)+pow(err_on_acc_due_to_muon_iso_sf,2)+pow(err_on_acc_due_to_muon_hlt_sf,2)+pow(err_on_acc_due_to_photon_id_sf,2) + pow(err_on_acc_due_to_pileup,2))
 
 print err_on_acc_due_to_muon_id_sf
 print n_weighted_selected_data_mc_sf_syst_unc_due_to_muon_id_sf_muon
@@ -552,9 +562,9 @@ print n_weighted_selected_data_mc_sf_syst_unc_due_to_muon_iso_sf_muon
 #import sys
 #sys.exit(0)
 
-err_on_acc_muon = math.sqrt(pow(err_on_acc_due_to_qcd_scale_muon,2)+pow(err_on_acc_due_to_pdf_muon,2)+pow(err_on_acc_due_to_muon_id_sf_muon,2)+pow(err_on_acc_due_to_muon_iso_sf_muon,2)+pow(err_on_acc_due_to_photon_id_sf_muon,2) + pow(err_on_acc_due_to_pileup_muon,2))
+err_on_acc_muon = math.sqrt(pow(err_on_acc_due_to_qcd_scale_muon,2)+pow(err_on_acc_due_to_pdf_muon,2)+pow(err_on_acc_due_to_muon_id_sf_muon,2)+pow(err_on_acc_due_to_muon_iso_sf_muon,2)++pow(err_on_acc_due_to_muon_hlt_sf_muon,2)+pow(err_on_acc_due_to_photon_id_sf_muon,2) + pow(err_on_acc_due_to_pileup_muon,2))
 
-err_on_acc_electron = math.sqrt(pow(err_on_acc_due_to_qcd_scale_electron,2)+pow(err_on_acc_due_to_pdf_electron,2)+pow(err_on_acc_due_to_electron_id_sf_electron,2) + pow(err_on_acc_due_to_electron_reco_sf_electron,2)+pow(err_on_acc_due_to_photon_id_sf_electron,2) + pow(err_on_acc_due_to_pileup_electron,2))
+err_on_acc_electron = math.sqrt(pow(err_on_acc_due_to_qcd_scale_electron,2)+pow(err_on_acc_due_to_pdf_electron,2)+pow(err_on_acc_due_to_electron_id_sf_electron,2) + pow(err_on_acc_due_to_electron_reco_sf_electron,2)+pow(err_on_acc_due_to_electron_hlt_sf_electron,2)+pow(err_on_acc_due_to_photon_id_sf_electron,2) + pow(err_on_acc_due_to_pileup_electron,2))
 
 print "acc = %.6f \pm %.6f "%(acc,err_on_acc)
 print "acc_muon = %.6f \pm %.6f "%(acc_muon,err_on_acc_muon)
@@ -604,9 +614,13 @@ electron ID SF & %0.2f & 0 &  %0.2f \\\\
 \\hline
 electron reconstruction SF & %0.2f & 0 & %0.2f \\\\
 \\hline
+electron HLT SF & %0.2f & 0 & %0.2f \\\\
+\\hline
 muon ID SF & %0.2f & %0.2f & 0 \\\\
 \\hline
 muon isolation SF &  %0.2f & %0.2f & 0 \\\\
+\\hline
+muon HLT SF &  %0.2f & %0.2f & 0 \\\\
 \\hline
 photon ID SF & %0.2f & %0.2f & %0.2f \\\\
 \\hline
@@ -636,10 +650,14 @@ PDF & %0.2f & %0.2f & %0.2f \\\\
 100*err_on_acc_due_to_electron_id_sf_electron/acc_electron,
 100*err_on_acc_due_to_electron_reco_sf/acc,
 100*err_on_acc_due_to_electron_reco_sf_electron/acc_electron,
+100*err_on_acc_due_to_electron_hlt_sf/acc,
+100*err_on_acc_due_to_electron_hlt_sf_electron/acc_electron,
 100*err_on_acc_due_to_muon_id_sf/acc,
 100*err_on_acc_due_to_muon_id_sf_muon/acc_muon,
 100*err_on_acc_due_to_muon_iso_sf/acc,
 100*err_on_acc_due_to_muon_iso_sf_muon/acc_muon,
+100*err_on_acc_due_to_muon_hlt_sf/acc,
+100*err_on_acc_due_to_muon_hlt_sf_muon/acc_muon,
 100*err_on_acc_due_to_photon_id_sf/acc,
 100*err_on_acc_due_to_photon_id_sf_muon/acc_muon,
 100*err_on_acc_due_to_photon_id_sf_electron/acc_electron,
