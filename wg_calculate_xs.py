@@ -1,11 +1,17 @@
+import argparse
+
+parser = argparse.ArgumentParser()
+
+parser.add_argument("--muon_inputs",type=str,help="Cross section inputs for muon channel",default="/afs/cern.ch/user/a/amlevin/wg/xs_inputs/xs_inputs_muon.txt") 
+parser.add_argument("--electron_inputs",type=str,help="Cross section inputs for electron channel",default="/afs/cern.ch/user/a/amlevin/wg/xs_inputs/xs_inputs_electron.txt") 
+
+args = parser.parse_args()
+
 import json
 import math
 
-#xs_inputs_muon = json.load(open("xs_inputs/xs_inputs_muon.txt"))
-#xs_inputs_electron = json.load(open("xs_inputs/xs_inputs_electron.txt"))
-
-xs_inputs_muon = json.load(open("xs_inputs_muon.txt"))
-xs_inputs_electron = json.load(open("xs_inputs_electron.txt"))
+xs_inputs_muon = json.load(open(args.muon_inputs))
+xs_inputs_electron = json.load(open(args.electron_inputs))
 
 from pprint import pprint
 
