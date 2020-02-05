@@ -149,11 +149,11 @@ def get_filter_string(year,isdata=True):
 
     if options.lep == "muon":
         if year == "2016":
-            return "(pass_selection && " + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25)"
+            return "(pass_selection && " + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 26)"
         elif year == "2017":
             return "(pass_selection && " + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 30)"
         elif year == "2018":
-            return "(pass_selection && " + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25)"
+            return "(pass_selection && " + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 26)"
         else:
             assert(0)
     elif options.lep == "electron":                
@@ -167,11 +167,11 @@ def get_filter_string(year,isdata=True):
             assert(0)
     elif options.lep == "both":    
         if year == "2016":
-            return "(pass_selection && " + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && ((abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25) || (abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 30)))"
+            return "(pass_selection && " + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && ((abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 26) || (abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 30)))"
         elif year == "2017":
             return "(pass_selection && " + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && ((abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 30) || (abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35)))"
         elif year == "2018":
-            return "(pass_selection && " + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && ((abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 25) || (abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35)))"
+            return "(pass_selection && " + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && ((abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 26) || (abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35)))"
         else:
             assert(0)
     else:
@@ -391,8 +391,10 @@ for label in labels.keys():
 
     labels[label]["hists-electron-id-sf-up"] = {}
     labels[label]["hists-electron-reco-sf-up"] = {}
+    labels[label]["hists-electron-hlt-sf-up"] = {}
     labels[label]["hists-muon-id-sf-up"] = {}
     labels[label]["hists-muon-iso-sf-up"] = {}
+    labels[label]["hists-muon-hlt-sf-up"] = {}
     labels[label]["hists-photon-id-sf-up"] = {}
     labels[label]["hists-pileup-up"] = {}
     labels[label]["hists-prefire-up"] = {}
@@ -421,15 +423,19 @@ for label in labels.keys():
         labels[label]["hists-jer-up"][i] = histogram_models[i].GetHistogram()
         labels[label]["hists-electron-id-sf-up"][i] = histogram_models[i].GetHistogram()
         labels[label]["hists-electron-reco-sf-up"][i] = histogram_models[i].GetHistogram()
+        labels[label]["hists-electron-hlt-sf-up"][i] = histogram_models[i].GetHistogram()
         labels[label]["hists-muon-id-sf-up"][i] = histogram_models[i].GetHistogram()
         labels[label]["hists-muon-iso-sf-up"][i] = histogram_models[i].GetHistogram()
+        labels[label]["hists-muon-hlt-sf-up"][i] = histogram_models[i].GetHistogram()
         labels[label]["hists-photon-id-sf-up"][i] = histogram_models[i].GetHistogram()
         labels[label]["hists-pileup-up"][i].Sumw2()
         labels[label]["hists-prefire-up"][i].Sumw2()
         labels[label]["hists-electron-id-sf-up"][i].Sumw2()
         labels[label]["hists-electron-reco-sf-up"][i].Sumw2()
+        labels[label]["hists-electron-hlt-sf-up"][i].Sumw2()
         labels[label]["hists-muon-id-sf-up"][i].Sumw2()
         labels[label]["hists-muon-iso-sf-up"][i].Sumw2()
+        labels[label]["hists-muon-hlt-sf-up"][i].Sumw2()
         labels[label]["hists-photon-id-sf-up"][i].Sumw2()
         
 
@@ -526,6 +532,14 @@ double_fake_alt["hists"] = []
 double_fake_stat_up["hists"] = []
 e_to_p_non_res["hists"] = []
 e_to_p["hists"] = []
+e_to_p["hists-electron-id-sf-up"] = []
+e_to_p["hists-electron-reco-sf-up"] = []
+e_to_p["hists-electron-hlt-sf-up"] = []
+e_to_p["hists-photon-id-sf-up"] = []
+e_to_p["hists-pileup-up"] = []
+e_to_p["hists-prefire-up"] = []
+e_to_p["hists-jes-up"] = []
+e_to_p["hists-jer-up"] = []
 ewdim6["hists"] = []
 
 for i in range(len(variables)):
@@ -542,6 +556,14 @@ for i in range(len(variables)):
     double_fake_stat_up["hists"].append(histogram_models[i].GetHistogram())
     e_to_p_non_res["hists"].append(histogram_models[i].GetHistogram())
     e_to_p["hists"].append(histogram_models[i].GetHistogram())
+    e_to_p["hists-electron-id-sf-up"].append(histogram_models[i].GetHistogram())
+    e_to_p["hists-electron-reco-sf-up"].append(histogram_models[i].GetHistogram())
+    e_to_p["hists-electron-hlt-sf-up"].append(histogram_models[i].GetHistogram())
+    e_to_p["hists-photon-id-sf-up"].append(histogram_models[i].GetHistogram())
+    e_to_p["hists-pileup-up"].append(histogram_models[i].GetHistogram())
+    e_to_p["hists-prefire-up"].append(histogram_models[i].GetHistogram())
+    e_to_p["hists-jes-up"].append(histogram_models[i].GetHistogram())
+    e_to_p["hists-jer-up"].append(histogram_models[i].GetHistogram())
     fake_signal_contamination["hists"].append(histogram_models[i].GetHistogram())
     ewdim6["hists"].append(histogram_models[i].GetHistogram())
 
@@ -563,6 +585,14 @@ for i in range(len(variables)):
     double_fake_stat_up["hists"][i].Sumw2()
     e_to_p_non_res["hists"][i].Sumw2()
     e_to_p["hists"][i].Sumw2()
+    e_to_p["hists-electron-id-sf-up"][i].Sumw2()
+    e_to_p["hists-electron-reco-sf-up"][i].Sumw2()
+    e_to_p["hists-electron-hlt-sf-up"][i].Sumw2()
+    e_to_p["hists-photon-id-sf-up"][i].Sumw2()
+    e_to_p["hists-pileup-up"][i].Sumw2()
+    e_to_p["hists-prefire-up"][i].Sumw2()
+    e_to_p["hists-jes-up"][i].Sumw2()
+    e_to_p["hists-jer-up"][i].Sumw2()
     ewdim6["hists"][i].Sumw2()
     fake_signal_contamination["hists"][i].Sumw2()
 
@@ -599,6 +629,15 @@ TH2F * electron_reco_2017_sf = (TH2F*)electron_reco_2017_sf_file.Get("EGamma_SF2
 TFile electron_reco_2018_sf_file("eff_scale_factors/2018/egammaEffi.txt_EGM2D_updatedAll.root" ,"read");
 TH2F * electron_reco_2018_sf = (TH2F*)electron_reco_2018_sf_file.Get("EGamma_SF2D");
 
+TFile electron_hlt_2016_sf_file("eff_scale_factors/2016/electron_hlt_sfs_2016.root","read");
+TH2D * electron_hlt_2016_sf = (TH2D*) electron_hlt_2016_sf_file.Get("hlt_sfs_etapt");
+
+TFile electron_hlt_2017_sf_file("eff_scale_factors/2017/electron_hlt_sfs_2017.root","read");
+TH2D * electron_hlt_2017_sf = (TH2D*)electron_hlt_2017_sf_file.Get("hlt_sfs_etapt");
+
+TFile electron_hlt_2018_sf_file("eff_scale_factors/2018/electron_hlt_sfs_2018.root" ,"read");
+TH2D * electron_hlt_2018_sf = (TH2D*)electron_hlt_2018_sf_file.Get("hlt_sfs_etapt");
+
 TFile muon_iso_2016_sf_file("eff_scale_factors/2016/RunBCDEF_SF_ISO.root","read");
 TH2D * muon_iso_2016_sf = (TH2D*) muon_iso_2016_sf_file.Get("NUM_TightRelIso_DEN_TightIDandIPCut_eta_pt");
 
@@ -617,36 +656,86 @@ TH2D * muon_iso_2018_sf = (TH2D*) muon_iso_2018_sf_file.Get("NUM_TightRelIso_DEN
 TFile muon_id_2018_sf_file("eff_scale_factors/2018/RunABCD_SF_ID.root","read");
 TH2D * muon_id_2018_sf = (TH2D*)muon_id_2018_sf_file.Get("NUM_TightID_DEN_TrackerMuons_pt_abseta");
 
-float electron_efficiency_scale_factor(float pt, float eta, string year,bool id_err_up=false, bool reco_err_up=false) {
+TFile muon_hlt_2016_sf_file("eff_scale_factors/2016/EfficienciesStudies_2016_trigger_EfficienciesAndSF_RunGtoH.root","read");
+TH2F * muon_hlt_2016_sf = (TH2F*) muon_hlt_2016_sf_file.Get("IsoMu24_OR_IsoTkMu24_PtEtaBins/abseta_pt_ratio");
+
+TFile muon_hlt_2017_sf_file("eff_scale_factors/2017/EfficienciesAndSF_RunBtoF_Nov17Nov2017.root","read");
+TH2F * muon_hlt_2017_sf = (TH2F*) muon_hlt_2017_sf_file.Get("IsoMu27_PtEtaBins/abseta_pt_ratio");
+
+TFile muon_hlt_2018_sf_file("eff_scale_factors/2018/EfficienciesStudies_2018_trigger_EfficienciesAndSF_2018Data_BeforeMuonHLTUpdate.root","read");
+TH2F * muon_hlt_2018_sf = (TH2F*) muon_hlt_2018_sf_file.Get("IsoMu24_PtEtaBins/abseta_pt_ratio");
+
+
+float electron_efficiency_scale_factor(float pt, float eta, string year,bool id_err_up=false, bool reco_err_up=false, bool hlt_err_up=false) {
 
     TH2F * electron_reco_sf = 0;
     TH2F * electron_id_sf = 0;
+    TH2D * electron_hlt_sf = 0;
 
     if (year == "2016") {
         electron_reco_sf = electron_reco_2016_sf;
         electron_id_sf = electron_id_2016_sf;
+        electron_hlt_sf = electron_hlt_2016_sf;
     }
     else if (year == "2017"){
         electron_reco_sf = electron_reco_2017_sf;
         electron_id_sf = electron_id_2017_sf;
+        electron_hlt_sf = electron_hlt_2017_sf;
     }
     else if (year == "2018") {
         electron_reco_sf = electron_reco_2018_sf;
         electron_id_sf = electron_id_2018_sf;
+        electron_hlt_sf = electron_hlt_2018_sf;
     }
     else
         assert(0);
 
+    int electron_id_sf_xaxisbin = -1;
+    int electron_id_sf_yaxisbin = -1;
+
+    if (year == "2016") {    
+        electron_id_sf_xaxisbin = electron_id_sf->GetXaxis()->FindFixBin(eta);
+        electron_id_sf_yaxisbin = electron_id_sf->GetYaxis()->FindFixBin(TMath::Min(pt,float(electron_id_sf->GetYaxis()->GetBinCenter(electron_id_sf->GetNbinsY()))));
+    }
+    else if (year == "2017") {
+        electron_id_sf_xaxisbin = electron_id_sf->GetXaxis()->FindFixBin(eta);
+        electron_id_sf_yaxisbin = electron_id_sf->GetYaxis()->FindFixBin(TMath::Min(pt,float(electron_id_sf->GetYaxis()->GetBinCenter(electron_id_sf->GetNbinsY()))));
+    }
+    else if (year == "2018") {
+        electron_id_sf_xaxisbin = electron_id_sf->GetXaxis()->FindFixBin(eta);
+        electron_id_sf_yaxisbin = electron_id_sf->GetYaxis()->FindFixBin(TMath::Min(pt,float(electron_id_sf->GetYaxis()->GetBinCenter(electron_id_sf->GetNbinsY()))));
+    }
+    else assert(0);
+
+    int electron_hlt_sf_xaxisbin = -1;
+    int electron_hlt_sf_yaxisbin = -1;
+
+    if (year == "2016") {    
+        electron_hlt_sf_xaxisbin = electron_hlt_sf->GetXaxis()->FindFixBin(eta);
+        electron_hlt_sf_yaxisbin = electron_hlt_sf->GetYaxis()->FindFixBin(TMath::Min(pt,float(electron_hlt_sf->GetYaxis()->GetBinCenter(electron_hlt_sf->GetNbinsY()))));
+    }
+    else if (year == "2017") {
+        electron_hlt_sf_xaxisbin = electron_hlt_sf->GetXaxis()->FindFixBin(eta);
+        electron_hlt_sf_yaxisbin = electron_hlt_sf->GetYaxis()->FindFixBin(TMath::Min(pt,float(electron_hlt_sf->GetYaxis()->GetBinCenter(electron_hlt_sf->GetNbinsY()))));
+    }
+    else if (year == "2018") {
+        electron_hlt_sf_xaxisbin = electron_hlt_sf->GetXaxis()->FindFixBin(eta);
+        electron_hlt_sf_yaxisbin = electron_hlt_sf->GetYaxis()->FindFixBin(TMath::Min(pt,float(electron_hlt_sf->GetYaxis()->GetBinCenter(electron_hlt_sf->GetNbinsY()))));
+    }
+    else assert(0);
+
+
+    float sf_id = electron_id_sf->GetBinContent(electron_id_sf_xaxisbin,electron_id_sf_yaxisbin); 
+    if (id_err_up) sf_id += electron_id_sf->GetBinError(electron_id_sf_xaxisbin,electron_id_sf_yaxisbin) ;
 
     //the reco 2D histogram is really a 1D histogram
-    float sf_id=electron_id_sf->GetBinContent(electron_id_sf->GetXaxis()->FindFixBin(eta),electron_id_sf->GetYaxis()->FindFixBin(pt));
-    if (id_err_up) sf_id+=electron_id_sf->GetBinError(electron_id_sf->GetXaxis()->FindFixBin(eta),electron_id_sf->GetYaxis()->FindFixBin(pt));
-
     float sf_reco=electron_reco_sf->GetBinContent(electron_reco_sf->GetXaxis()->FindFixBin(eta),1);
-
     if (reco_err_up) sf_reco+=electron_reco_sf->GetBinError(electron_reco_sf->GetXaxis()->FindFixBin(eta),1);
-    
-    return sf_id*sf_reco;
+
+    float sf_hlt = electron_hlt_sf->GetBinContent(electron_hlt_sf_xaxisbin,electron_hlt_sf_yaxisbin); 
+    if (hlt_err_up) sf_hlt += electron_hlt_sf->GetBinError(electron_hlt_sf_xaxisbin,electron_hlt_sf_yaxisbin) ;
+
+    return sf_id*sf_reco*sf_hlt;
 }
 
 float photon_efficiency_scale_factor(float pt,float eta,string year,bool err_up=false){
@@ -668,22 +757,26 @@ float photon_efficiency_scale_factor(float pt,float eta,string year,bool err_up=
     return sf;
 }
 
-float muon_efficiency_scale_factor(float pt,float eta,string year,bool iso_err_up=false,bool id_err_up=false) {
+float muon_efficiency_scale_factor(float pt,float eta,string year,bool iso_err_up=false,bool id_err_up=false, bool hlt_err_up=false) {
 
     TH2D * muon_iso_sf = 0;
     TH2D * muon_id_sf = 0;
+    TH2F * muon_hlt_sf = 0;
 
     if (year == "2016") {
         muon_iso_sf = muon_iso_2016_sf;
         muon_id_sf = muon_id_2016_sf;
+        muon_hlt_sf = muon_hlt_2016_sf;
     }
     else if (year == "2017") {
         muon_iso_sf = muon_iso_2017_sf;
         muon_id_sf = muon_id_2017_sf;
+        muon_hlt_sf = muon_hlt_2017_sf;
     }
     else if (year == "2018"){
         muon_iso_sf = muon_iso_2018_sf;
         muon_id_sf = muon_id_2018_sf;
+        muon_hlt_sf = muon_hlt_2018_sf;
     }
     else assert(0);
 
@@ -721,6 +814,23 @@ float muon_efficiency_scale_factor(float pt,float eta,string year,bool iso_err_u
     }
     else assert(0);
 
+    int muon_hlt_sf_xaxisbin = -1;
+    int muon_hlt_sf_yaxisbin = -1;
+
+    if (year == "2016") {    
+        muon_hlt_sf_xaxisbin = muon_hlt_sf->GetXaxis()->FindFixBin(abs(eta));
+        muon_hlt_sf_yaxisbin = muon_hlt_sf->GetYaxis()->FindFixBin(TMath::Min(pt,float(muon_hlt_sf->GetYaxis()->GetBinCenter(muon_hlt_sf->GetNbinsY()))));
+    }
+    else if (year == "2017") {
+        muon_hlt_sf_xaxisbin = muon_hlt_sf->GetXaxis()->FindFixBin(abs(eta));
+        muon_hlt_sf_yaxisbin = muon_hlt_sf->GetYaxis()->FindFixBin(TMath::Min(pt,float(muon_hlt_sf->GetYaxis()->GetBinCenter(muon_hlt_sf->GetNbinsY()))));
+    }
+    else if (year == "2018") {
+        muon_hlt_sf_xaxisbin = muon_hlt_sf->GetXaxis()->FindFixBin(abs(eta));
+        muon_hlt_sf_yaxisbin = muon_hlt_sf->GetYaxis()->FindFixBin(TMath::Min(pt,float(muon_hlt_sf->GetYaxis()->GetBinCenter(muon_hlt_sf->GetNbinsY()))));
+    }
+    else assert(0);
+
     float iso_sf = muon_iso_sf->GetBinContent(muon_iso_sf_xaxisbin,muon_iso_sf_yaxisbin);
 
     if (iso_err_up) iso_sf += muon_iso_sf->GetBinError(muon_iso_sf_xaxisbin,muon_iso_sf_yaxisbin);
@@ -729,7 +839,11 @@ float muon_efficiency_scale_factor(float pt,float eta,string year,bool iso_err_u
     
     if (id_err_up) id_sf += muon_id_sf->GetBinError(muon_id_sf_xaxisbin,muon_id_sf_yaxisbin) ;
 
-    return iso_sf * id_sf;
+    float hlt_sf = muon_hlt_sf->GetBinContent(muon_hlt_sf_xaxisbin,muon_hlt_sf_yaxisbin); 
+    
+    if (hlt_err_up) hlt_sf += muon_hlt_sf->GetBinError(muon_hlt_sf_xaxisbin,muon_hlt_sf_yaxisbin) ;
+
+    return iso_sf * id_sf * hlt_sf;
 
 }
 
@@ -1475,25 +1589,28 @@ for year in years:
             rinterface = rinterface.Define("pileup_up_base_weight",get_postfilter_selection_string()+"*xs_weight*puWeightUp*"+prefire_weight_string+"*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\") : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\"))")    
             rinterface = rinterface.Define("electron_id_sf_up_base_weight",get_postfilter_selection_string()+"*xs_weight*puWeight*"+prefire_weight_string+"*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\") : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\",true))")                  
             rinterface = rinterface.Define("electron_reco_sf_up_base_weight",get_postfilter_selection_string()+"*xs_weight*puWeight*"+prefire_weight_string+"*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\") : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\",false,true))")    
+            rinterface = rinterface.Define("electron_hlt_sf_up_base_weight",get_postfilter_selection_string()+"*xs_weight*puWeight*"+prefire_weight_string+"*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\") : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\",false,false,true))")    
             rinterface = rinterface.Define("muon_id_sf_up_base_weight",get_postfilter_selection_string()+"*xs_weight*puWeight*"+prefire_weight_string+"*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\",false,true) : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\"))")                  
             rinterface = rinterface.Define("muon_iso_sf_up_base_weight",get_postfilter_selection_string()+"*xs_weight*puWeight*"+prefire_weight_string+"*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\",true) : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\"))")    
+            rinterface = rinterface.Define("muon_hlt_sf_up_base_weight",get_postfilter_selection_string()+"*xs_weight*puWeight*"+prefire_weight_string+"*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\",false,false,true) : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\"))")    
             rinterface = rinterface.Define("photon_id_sf_up_base_weight",get_postfilter_selection_string()+"*xs_weight*puWeight*"+prefire_weight_string+"*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\",true)*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\") : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\"))") 
             if label != "w+jets":
-                rinterface = rinterface.Define("jes_up_base_weight",get_postfilter_selection_string("JESUp")+"*xs_weight*puWeight*"+prefire_weight_string+"*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\",true)*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\") : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\"))") 
-                rinterface = rinterface.Define("jer_up_base_weight",get_postfilter_selection_string("JERUp")+"*xs_weight*puWeight*"+prefire_weight_string+"*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\",true)*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\") : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\"))") 
+                rinterface = rinterface.Define("jes_up_base_weight",get_postfilter_selection_string("JESUp")+"*xs_weight*puWeight*"+prefire_weight_string+"*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\") : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\"))") 
+                rinterface = rinterface.Define("jer_up_base_weight",get_postfilter_selection_string("JERUp")+"*xs_weight*puWeight*"+prefire_weight_string+"*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\") : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\"))") 
 
             rinterface = rinterface.Define("weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + ")*base_weight")
 
             if label == "wg+jets":
                 rinterface = rinterface.Define("weight_pass_fiducial","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && pass_fid_selection)*base_weight")
 
-
             rinterface = rinterface.Define("pileup_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + ")*pileup_up_base_weight")
             rinterface = rinterface.Define("prefire_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + ")*prefire_up_base_weight")
             rinterface = rinterface.Define("electron_id_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + ")*electron_id_sf_up_base_weight")
             rinterface = rinterface.Define("electron_reco_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + ")*electron_reco_sf_up_base_weight")
+            rinterface = rinterface.Define("electron_hlt_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + ")*electron_hlt_sf_up_base_weight")
             rinterface = rinterface.Define("muon_id_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + ")*muon_id_sf_up_base_weight")
             rinterface = rinterface.Define("muon_iso_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + ")*muon_iso_sf_up_base_weight")
+            rinterface = rinterface.Define("muon_hlt_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + ")*muon_hlt_sf_up_base_weight")
             rinterface = rinterface.Define("photon_id_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + ")*photon_id_sf_up_base_weight")
 
             if label != "w+jets":
@@ -1538,6 +1655,15 @@ for year in years:
 
             if sample["e_to_p"]:
                 rinterface = rinterface.Define("e_to_p_weight","photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1 ? base_weight : 0")
+                rinterface = rinterface.Define("e_to_p_pileup_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1)*pileup_up_base_weight")
+                rinterface = rinterface.Define("e_to_p_prefire_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1)*prefire_up_base_weight")
+                rinterface = rinterface.Define("e_to_p_electron_id_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1)*electron_id_sf_up_base_weight")
+                rinterface = rinterface.Define("e_to_p_electron_reco_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1)*electron_reco_sf_up_base_weight")
+                rinterface = rinterface.Define("e_to_p_electron_hlt_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1)*electron_hlt_sf_up_base_weight")
+                rinterface = rinterface.Define("e_to_p_photon_id_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1)*photon_id_sf_up_base_weight")
+                rinterface = rinterface.Define("e_to_p_jes_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1)*jes_up_base_weight")
+                rinterface = rinterface.Define("e_to_p_jer_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1)*jer_up_base_weight")
+
                 
             if sample["e_to_p_non_res"]:
                 rinterface = rinterface.Define("e_to_p_non_res_weight","photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1 ? base_weight : 0") 
@@ -1575,11 +1701,22 @@ for year in years:
                 rresultptrs_jer_up = []    
             rresultptrs_electron_id_sf_up = []    
             rresultptrs_electron_reco_sf_up = []    
+            rresultptrs_electron_hlt_sf_up = []    
             rresultptrs_muon_id_sf_up = []    
             rresultptrs_muon_iso_sf_up = []    
+            rresultptrs_muon_hlt_sf_up = []    
             rresultptrs_photon_id_sf_up = []    
             if sample["e_to_p"]:
                 rresultptrs_e_to_p = []    
+                rresultptrs_e_to_p_electron_id_sf_up = []    
+                rresultptrs_e_to_p_electron_reco_sf_up = []    
+                rresultptrs_e_to_p_electron_hlt_sf_up = []    
+                rresultptrs_e_to_p_photon_id_sf_up = []    
+                rresultptrs_e_to_p_pileup_up = []    
+                rresultptrs_e_to_p_prefire_up = []    
+                rresultptrs_e_to_p_jes_up = []    
+                rresultptrs_e_to_p_jer_up = []    
+
             if sample["e_to_p_non_res"]:
                 rresultptrs_e_to_p_non_res = []    
             if label == "wg+jets":
@@ -1591,10 +1728,12 @@ for year in years:
                     rresultptrs.append(rinterface.Histo1D(histogram_models[i],variables[i],"weight"))
                     rresultptrs_pileup_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"pileup_up_weight"))
                     rresultptrs_prefire_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"prefire_up_weight"))
-                    rresultptrs_electron_id_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"electron_id_sf_up_weight"))
-                    rresultptrs_electron_reco_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"electron_reco_sf_up_weight"))
                     rresultptrs_muon_id_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"muon_id_sf_up_weight"))
                     rresultptrs_muon_iso_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"muon_iso_sf_up_weight"))
+                    rresultptrs_muon_hlt_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"muon_hlt_sf_up_weight"))
+                    rresultptrs_electron_id_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"electron_id_sf_up_weight"))
+                    rresultptrs_electron_reco_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"electron_reco_sf_up_weight"))
+                    rresultptrs_electron_hlt_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"electron_hlt_sf_up_weight"))
                     rresultptrs_photon_id_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"photon_id_sf_up_weight"))
                     if label == "wg+jets":
                         rresultptrs_pass_fiducial.append(rinterface.Histo1D(histogram_models[i],variables[i],"weight_pass_fiducial"))
@@ -1623,6 +1762,15 @@ for year in years:
 
                 if sample["e_to_p"]:
                     rresultptrs_e_to_p.append(rinterface.Histo1D(histogram_models[i],variables[i],"e_to_p_weight"))
+                    rresultptrs_e_to_p_electron_id_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"e_to_p_electron_id_sf_up_weight"))
+                    rresultptrs_e_to_p_electron_reco_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"e_to_p_electron_reco_sf_up_weight"))
+                    rresultptrs_e_to_p_electron_hlt_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"e_to_p_electron_hlt_sf_up_weight"))
+                    rresultptrs_e_to_p_photon_id_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"e_to_p_photon_id_sf_up_weight"))
+                    rresultptrs_e_to_p_pileup_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"e_to_p_pileup_up_weight"))
+                    rresultptrs_e_to_p_prefire_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"e_to_p_prefire_up_weight"))
+                    rresultptrs_e_to_p_jes_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"e_to_p_jes_up_weight"))
+                    rresultptrs_e_to_p_jer_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"e_to_p_jer_up_weight"))
+
                 if sample["e_to_p_non_res"]:
                     rresultptrs_e_to_p_non_res.append(rinterface.Histo1D(histogram_models[i],variables[i],"e_to_p_non_res_weight"))
 
@@ -1633,8 +1781,10 @@ for year in years:
                     labels[label]["hists-prefire-up"][i].Add(rresultptrs_prefire_up[i].GetValue())
                     labels[label]["hists-electron-id-sf-up"][i].Add(rresultptrs_electron_id_sf_up[i].GetValue())
                     labels[label]["hists-electron-reco-sf-up"][i].Add(rresultptrs_electron_reco_sf_up[i].GetValue())
+                    labels[label]["hists-electron-hlt-sf-up"][i].Add(rresultptrs_electron_hlt_sf_up[i].GetValue())
                     labels[label]["hists-muon-id-sf-up"][i].Add(rresultptrs_muon_id_sf_up[i].GetValue())
                     labels[label]["hists-muon-iso-sf-up"][i].Add(rresultptrs_muon_iso_sf_up[i].GetValue())
+                    labels[label]["hists-muon-hlt-sf-up"][i].Add(rresultptrs_muon_hlt_sf_up[i].GetValue())
                     labels[label]["hists-photon-id-sf-up"][i].Add(rresultptrs_photon_id_sf_up[i].GetValue())
                     if label == "wg+jets":
                         labels[label]["hists-pass-fiducial"][i].Add(rresultptrs_pass_fiducial[i].GetValue())
@@ -1678,6 +1828,14 @@ for year in years:
                 double_fake_stat_up["hists"][i].Add(rresultptrs_double_fake_stat_up[i].GetValue())
                 if sample["e_to_p"]:
                     e_to_p["hists"][i].Add(rresultptrs_e_to_p[i].GetValue())
+                    e_to_p["hists-electron-id-sf-up"][i].Add(rresultptrs_e_to_p_electron_id_sf_up[i].GetValue())
+                    e_to_p["hists-electron-reco-sf-up"][i].Add(rresultptrs_e_to_p_electron_reco_sf_up[i].GetValue())
+                    e_to_p["hists-electron-hlt-sf-up"][i].Add(rresultptrs_e_to_p_electron_hlt_sf_up[i].GetValue())
+                    e_to_p["hists-photon-id-sf-up"][i].Add(rresultptrs_e_to_p_photon_id_sf_up[i].GetValue())
+                    e_to_p["hists-pileup-up"][i].Add(rresultptrs_e_to_p_pileup_up[i].GetValue())
+                    e_to_p["hists-prefire-up"][i].Add(rresultptrs_e_to_p_prefire_up[i].GetValue())
+                    e_to_p["hists-jes-up"][i].Add(rresultptrs_e_to_p_jes_up[i].GetValue())
+                    e_to_p["hists-jer-up"][i].Add(rresultptrs_e_to_p_jer_up[i].GetValue())
 
                 if sample["e_to_p_non_res"]:
                     e_to_p_non_res["hists"][i].Add(rresultptrs_e_to_p_non_res[i].GetValue())
@@ -2166,8 +2324,10 @@ if "wg+jets" in labels:
     jer_unc = abs(labels["wg+jets"]["hists-jer-up"][mlg_index].Integral() - labels["wg+jets"]["hists"][mlg_index].Integral())
     electron_id_sf_unc = labels["wg+jets"]["hists-electron-id-sf-up"][mlg_index].Integral() - labels["wg+jets"]["hists"][mlg_index].Integral()
     electron_reco_sf_unc = labels["wg+jets"]["hists-electron-reco-sf-up"][mlg_index].Integral() - labels["wg+jets"]["hists"][mlg_index].Integral()
+    electron_hlt_sf_unc = labels["wg+jets"]["hists-electron-hlt-sf-up"][mlg_index].Integral() - labels["wg+jets"]["hists"][mlg_index].Integral()
     muon_id_sf_unc = labels["wg+jets"]["hists-muon-id-sf-up"][mlg_index].Integral() - labels["wg+jets"]["hists"][mlg_index].Integral()
     muon_iso_sf_unc = labels["wg+jets"]["hists-muon-iso-sf-up"][mlg_index].Integral() - labels["wg+jets"]["hists"][mlg_index].Integral()
+    muon_hlt_sf_unc = labels["wg+jets"]["hists-muon-hlt-sf-up"][mlg_index].Integral() - labels["wg+jets"]["hists"][mlg_index].Integral()
     photon_id_sf_unc = labels["wg+jets"]["hists-photon-id-sf-up"][mlg_index].Integral() - labels["wg+jets"]["hists"][mlg_index].Integral()
 
     print labels["wg+jets"]["hists-muon-iso-sf-up"][mlg_index].Integral()
@@ -2503,6 +2663,7 @@ if lepton_name == "muon":
         "signal_mc_xs_data_mc_syst_unc_due_to_pileup" : pileup_unc,
         "signal_mc_xs_data_mc_syst_unc_due_to_muon_id_sf_muon" : muon_id_sf_unc,
         "signal_mc_xs_data_mc_syst_unc_due_to_muon_iso_sf_muon" : muon_iso_sf_unc,
+        "signal_mc_xs_data_mc_syst_unc_due_to_muon_hlt_sf_muon" : muon_hlt_sf_unc,
         "signal_mc_xs_data_mc_syst_unc_due_to_photon_id_sf_muon" : photon_id_sf_unc
         }
 
@@ -2622,6 +2783,7 @@ elif lepton_name == "electron":
             "signal_mc_xs_data_mc_syst_unc_due_to_jer" : jer_unc,
             "signal_mc_xs_data_mc_syst_unc_due_to_jes" : jes_unc,
             "signal_mc_xs_data_mc_syst_unc_due_to_electron_reco_sf_electron" : electron_reco_sf_unc,
+            "signal_mc_xs_data_mc_syst_unc_due_to_electron_hlt_sf_electron" : electron_hlt_sf_unc,
             "signal_mc_xs_data_mc_syst_unc_due_to_photon_id_sf_electron" : photon_id_sf_unc
             }
 
@@ -2726,6 +2888,7 @@ elif lepton_name == "electron":
             "signal_mc_xs_data_mc_syst_unc_due_to_jer" : jer_unc,
             "signal_mc_xs_data_mc_syst_unc_due_to_electron_id_sf_electron" : electron_id_sf_unc,
             "signal_mc_xs_data_mc_syst_unc_due_to_electron_reco_sf_electron" : electron_reco_sf_unc,
+            "signal_mc_xs_data_mc_syst_unc_due_to_electron_hlt_sf_electron" : electron_hlt_sf_unc,
             "signal_mc_xs_data_mc_syst_unc_due_to_photon_id_sf_electron" : photon_id_sf_unc
             }
 
@@ -2822,7 +2985,7 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
     dcard.write(" bin1")
     
     for label in labels.keys():
-        if label == "no label" or label == "wg+jets":
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
             continue
         dcard.write(" bin1")
 
@@ -2836,7 +2999,7 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
     dcard.write(" Wg")
         
     for label in labels.keys():
-        if label == "no label" or label == "wg+jets":
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
             continue
         dcard.write(" " + label)
 
@@ -2848,14 +3011,14 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
     dcard.write("process")
     dcard.write(" 0")
     
-    for j in range(1,len(labels.keys())+3):
+    for j in range(1,len(labels.keys())+2):
         dcard.write(" " + str(j))
     dcard.write('\n')    
     dcard.write('rate')
     dcard.write(' '+str(sm_lhe_weight_hist.GetBinContent(i)))
 #    dcard.write(' '+str(labels["wg+jets"]["hists"][0].GetBinContent(i)))
     for label in labels.keys():
-        if label == "no label" or label == "wg+jets":
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
             continue
         if labels[label]["hists"][0].GetBinContent(i) > 0:
             dcard.write(" "+ str(labels[label]["hists"][0].GetBinContent(i)))
@@ -2896,7 +3059,7 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
     dcard.write(" 1.027")
 
     for label in labels.keys():
-        if label == "no label" or label == "wg+jets":
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
             continue
         dcard.write(" 1.027")
 
@@ -2912,7 +3075,7 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
         
 #        dcard.write("mcstat_ewdim6_bin"+str(i)+" lnN "+str(1+labels["wg+jets"]["hists"][0].GetBinError(i)/labels["wg+jets"]["hists"][0].GetBinContent(i)))
         for label in labels.keys():
-            if label == "no label" or label == "wg+jets":
+            if label == "no label" or label == "wg+jets" or label == "w+jets":
                 continue
             dcard.write(" -")
 
@@ -2923,7 +3086,7 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
         dcard.write("\n")  
 
     for label in labels.keys():
-        if label == "no label" or label == "wg+jets":
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
             continue
 
         if labels[label]["hists"][0].GetBinContent(i) > 0:
@@ -2931,7 +3094,7 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
             dcard.write(" -")
 
             for l in labels.keys():
-                if l == "no label" or l == "wg+jets":
+                if l == "no label" or l == "wg+jets" or label == "w+jets":
                     continue
                 if l == label:
                     dcard.write(" "+str(1+labels[label]["hists"][0].GetBinError(i)/labels[label]["hists"][0].GetBinContent(i)))
@@ -2947,7 +3110,7 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
     if fake_lepton["hists"][0].GetBinContent(i) > 0:        
         dcard.write("fake_lepton_syst lnN -")
         for label in labels.keys():
-            if label == "no label" or label == "wg+jets":
+            if label == "no label" or label == "wg+jets" or label == "w+jets":
                 continue
             dcard.write(" -")
 
@@ -2960,7 +3123,7 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
     if fake_lepton["hists"][0].GetBinContent(i) > 0:        
         dcard.write("fake_lepton_stat lnN -")
         for label in labels.keys():
-            if label == "no label" or label == "wg+jets":
+            if label == "no label" or label == "wg+jets" or label == "w+jets":
                 continue
             dcard.write(" -")
 
@@ -2973,7 +3136,7 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
     if fake_photon["hists"][0].GetBinContent(i) > 0:        
         dcard.write("fake_photon_stat lnN -")
         for label in labels.keys():
-            if label == "no label" or label == "wg+jets":
+            if label == "no label" or label == "wg+jets" or label == "w+jets" :
                 continue
             dcard.write(" -")
 
@@ -2982,3 +3145,192 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
         dcard.write(" -")                
         dcard.write(" -")                
         dcard.write("\n")  
+
+    dcard.write("muon_id_sf lnN "+str(labels["wg+jets"]["hists-muon-id-sf-up"][0].GetBinContent(i)/labels["wg+jets"]["hists"][0].GetBinContent(i)))
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        if labels[label]["hists"][0].GetBinContent(i) > 0:
+            dcard.write(" "+str(labels[label]["hists-muon-id-sf-up"][0].GetBinContent(i)/labels[label]["hists"][0].GetBinContent(i)))
+        else:    
+            dcard.write(" -")
+
+    dcard.write(" -")
+    dcard.write(" -")                
+    dcard.write(" -")                
+    dcard.write(" -")            
+    dcard.write("\n")  
+
+    dcard.write("muon_hlt_sf lnN "+str(labels["wg+jets"]["hists-muon-hlt-sf-up"][0].GetBinContent(i)/labels["wg+jets"]["hists"][0].GetBinContent(i)))
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        if labels[label]["hists"][0].GetBinContent(i) > 0:
+            dcard.write(" "+str(labels[label]["hists-muon-hlt-sf-up"][0].GetBinContent(i)/labels[label]["hists"][0].GetBinContent(i)))
+        else:    
+            dcard.write(" -")
+
+    dcard.write(" -")
+    dcard.write(" -")                
+    dcard.write(" -")                
+    dcard.write(" -")            
+    dcard.write("\n")  
+
+    dcard.write("muon_iso_sf lnN "+str(labels["wg+jets"]["hists-muon-iso-sf-up"][0].GetBinContent(i)/labels["wg+jets"]["hists"][0].GetBinContent(i)))
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        if labels[label]["hists"][0].GetBinContent(i) > 0:
+            dcard.write(" "+str(labels[label]["hists-muon-iso-sf-up"][0].GetBinContent(i)/labels[label]["hists"][0].GetBinContent(i)))
+        else:    
+            dcard.write(" -")
+
+    dcard.write(" -")
+    dcard.write(" -")                
+    dcard.write(" -")                
+    dcard.write(" -")            
+    dcard.write("\n")  
+
+    dcard.write("electron_hlt_sf lnN "+str(labels["wg+jets"]["hists-electron-hlt-sf-up"][0].GetBinContent(i)/labels["wg+jets"]["hists"][0].GetBinContent(i)))
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        if labels[label]["hists"][0].GetBinContent(i) > 0:
+            dcard.write(" "+str(labels[label]["hists-electron-hlt-sf-up"][0].GetBinContent(i)/labels[label]["hists"][0].GetBinContent(i)))
+        else:    
+            dcard.write(" -")
+
+    dcard.write(" -")
+    dcard.write(" -")                
+    dcard.write(" -")                
+    if e_to_p["hists"][0].GetBinContent(i) > 0:
+        dcard.write(" "+str(e_to_p["hists-electron-hlt-sf-up"][0].GetBinContent(i)/e_to_p["hists"][0].GetBinContent(i)))
+    else:    
+        dcard.write(" -")            
+    dcard.write("\n")  
+
+    dcard.write("electron_id_sf lnN "+str(labels["wg+jets"]["hists-electron-id-sf-up"][0].GetBinContent(i)/labels["wg+jets"]["hists"][0].GetBinContent(i)))
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        if labels[label]["hists"][0].GetBinContent(i) > 0:
+            dcard.write(" "+str(labels[label]["hists-electron-id-sf-up"][0].GetBinContent(i)/labels[label]["hists"][0].GetBinContent(i)))
+        else:    
+            dcard.write(" -")
+
+    dcard.write(" -")
+    dcard.write(" -")                
+    dcard.write(" -")                
+    if e_to_p["hists"][0].GetBinContent(i) > 0:
+        dcard.write(" "+str(e_to_p["hists-electron-id-sf-up"][0].GetBinContent(i)/e_to_p["hists"][0].GetBinContent(i)))
+    else:    
+        dcard.write(" -")            
+    dcard.write("\n")  
+
+    dcard.write("electron_reco_sf lnN "+str(labels["wg+jets"]["hists-electron-reco-sf-up"][0].GetBinContent(i)/labels["wg+jets"]["hists"][0].GetBinContent(i)))
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        if labels[label]["hists"][0].GetBinContent(i) > 0:
+            dcard.write(" "+str(labels[label]["hists-electron-reco-sf-up"][0].GetBinContent(i)/labels[label]["hists"][0].GetBinContent(i)))
+        else:    
+            dcard.write(" -")
+
+    dcard.write(" -")
+    dcard.write(" -")                
+    dcard.write(" -")                
+    if e_to_p["hists"][0].GetBinContent(i) > 0:
+        dcard.write(" "+str(e_to_p["hists-electron-reco-sf-up"][0].GetBinContent(i)/e_to_p["hists"][0].GetBinContent(i)))
+    else:    
+        dcard.write(" -")            
+    dcard.write("\n")  
+
+    dcard.write("photon_id_sf lnN "+str(labels["wg+jets"]["hists-photon-id-sf-up"][0].GetBinContent(i)/labels["wg+jets"]["hists"][0].GetBinContent(i)))
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        if labels[label]["hists"][0].GetBinContent(i) > 0:
+            dcard.write(" "+str(labels[label]["hists-photon-id-sf-up"][0].GetBinContent(i)/labels[label]["hists"][0].GetBinContent(i)))
+        else:    
+            dcard.write(" -")
+
+    dcard.write(" -")
+    dcard.write(" -")                
+    dcard.write(" -")                
+    if e_to_p["hists"][0].GetBinContent(i) > 0:
+        dcard.write(" "+str(e_to_p["hists-photon-id-sf-up"][0].GetBinContent(i)/e_to_p["hists"][0].GetBinContent(i)))
+    else:    
+        dcard.write(" -")            
+    dcard.write("\n")  
+
+    dcard.write("jes lnN "+str(labels["wg+jets"]["hists-jes-up"][0].GetBinContent(i)/labels["wg+jets"]["hists"][0].GetBinContent(i)))
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        if labels[label]["hists"][0].GetBinContent(i) > 0:
+            dcard.write(" "+str(labels[label]["hists-jes-up"][0].GetBinContent(i)/labels[label]["hists"][0].GetBinContent(i)))
+        else:    
+            dcard.write(" -")
+
+    dcard.write(" -")
+    dcard.write(" -")                
+    dcard.write(" -")                
+    if e_to_p["hists"][0].GetBinContent(i) > 0:
+        dcard.write(" "+str(e_to_p["hists-jes-up"][0].GetBinContent(i)/e_to_p["hists"][0].GetBinContent(i)))
+    else:    
+        dcard.write(" -")            
+    dcard.write("\n")  
+
+    dcard.write("jer lnN "+str(labels["wg+jets"]["hists-jer-up"][0].GetBinContent(i)/labels["wg+jets"]["hists"][0].GetBinContent(i)))
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        if labels[label]["hists"][0].GetBinContent(i) > 0:
+            dcard.write(" "+str(labels[label]["hists-jer-up"][0].GetBinContent(i)/labels[label]["hists"][0].GetBinContent(i)))
+        else:    
+            dcard.write(" -")
+
+    dcard.write(" -")
+    dcard.write(" -")                
+    dcard.write(" -")                
+    if e_to_p["hists"][0].GetBinContent(i) > 0:
+        dcard.write(" "+str(e_to_p["hists-jer-up"][0].GetBinContent(i)/e_to_p["hists"][0].GetBinContent(i)))
+    else:    
+        dcard.write(" -")            
+    dcard.write("\n")  
+
+    dcard.write("prefire lnN "+str(labels["wg+jets"]["hists-prefire-up"][0].GetBinContent(i)/labels["wg+jets"]["hists"][0].GetBinContent(i)))
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        if labels[label]["hists"][0].GetBinContent(i) > 0:
+            dcard.write(" "+str(labels[label]["hists-prefire-up"][0].GetBinContent(i)/labels[label]["hists"][0].GetBinContent(i)))
+        else:    
+            dcard.write(" -")
+
+    dcard.write(" -")
+    dcard.write(" -")                
+    dcard.write(" -")            
+    if e_to_p["hists"][0].GetBinContent(i) > 0:
+        dcard.write(" "+str(e_to_p["hists-prefire-up"][0].GetBinContent(i)/e_to_p["hists"][0].GetBinContent(i)))
+    else:    
+        dcard.write(" -")            
+    dcard.write("\n")  
+
+    dcard.write("pileup lnN "+str(labels["wg+jets"]["hists-pileup-up"][0].GetBinContent(i)/labels["wg+jets"]["hists"][0].GetBinContent(i)))
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        if labels[label]["hists"][0].GetBinContent(i) > 0:
+            dcard.write(" "+str(labels[label]["hists-pileup-up"][0].GetBinContent(i)/labels[label]["hists"][0].GetBinContent(i)))
+        else:    
+            dcard.write(" -")
+
+    dcard.write(" -")
+    dcard.write(" -")                
+    dcard.write(" -")        
+    if e_to_p["hists"][0].GetBinContent(i) > 0:
+        dcard.write(" "+str(e_to_p["hists-pileup-up"][0].GetBinContent(i)/e_to_p["hists"][0].GetBinContent(i)))
+    else:    
+        dcard.write(" -")        
+    dcard.write("\n")  
