@@ -1,13 +1,13 @@
-wjets_nlines=`cat delete_this.txt | wc -l`
+wjets_nlines=`cat wjets_events.txt | wc -l`
 
 i=1
 
 while (( $(($i-1)) < $wjets_nlines )); do
 
-wjets_lumi=`cat delete_this.txt | head -n$i | tail -n1 | awk '{print $1}'`
-wjets_event=`cat delete_this.txt | head -n$i | tail -n1 | awk '{print $2}'`
-wjets_eta=`cat delete_this.txt | head -n$i | tail -n1 | awk '{print $3}'`
-wjets_phi=`cat delete_this.txt | head -n$i | tail -n1 | awk '{print $4}'`
+wjets_lumi=`cat wjets_events.txt | head -n$i | tail -n1 | awk '{print $1}'`
+wjets_event=`cat wjets_events.txt | head -n$i | tail -n1 | awk '{print $2}'`
+wjets_eta=`cat wjets_events.txt | head -n$i | tail -n1 | awk '{print $3}'`
+wjets_phi=`cat wjets_events.txt | head -n$i | tail -n1 | awk '{print $4}'`
 
 inlfn=`cat wjets_lfns_lumis.txt | grep ","${wjets_lumi}"," | awk '{print $1}'`
 
