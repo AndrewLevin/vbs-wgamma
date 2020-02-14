@@ -1,8 +1,8 @@
-wjets_nlines=`cat delete_this.txt | wc -w`
+wjets_nlines=`cat delete_this.txt | wc -l`
 
 i=1
 
-while (($i < $wjets_nlines )); do
+while (( $(($i-1)) < $wjets_nlines )); do
 
 wjets_lumi=`cat delete_this.txt | head -n$i | tail -n1 | awk '{print $1}'`
 wjets_event=`cat delete_this.txt | head -n$i | tail -n1 | awk '{print $2}'`
