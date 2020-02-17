@@ -21,11 +21,11 @@ j=1
 
 singlelumi=1
 
-nlines=`echo $ret | wc -w`
+nwords=`echo $ret | wc -w`
 
 #echo $nlines
 
-while (( $(($j+2)) < $nlines )); 
+while (( $(($j+1)) < $nwords )); 
 do 
 
 lumi=`echo $ret | awk '{print $'$(($j+1))'}'`
@@ -33,6 +33,7 @@ event=`echo $ret | awk '{print $'$(($j+2))'}'`
 lastevent=$event
 #echo $run" "$lumi" "$event
 j=$(($j+3))
+
 if ! [ $lumi == $firstlumi ];
     then
     singlelumi=0;
@@ -40,12 +41,17 @@ fi
 
 done;
 
+i=$(($i+1))
+
+if  ! (( $singlelumi )); 
+then
+    continue;
+fi
+
 #minbiasfilename=`dasgoclient --query "file,run,lumi dataset=/MinBias_TuneCUETP8M1_13TeV-pythia8/RunIISummer15GS-MCRUN2_71_V1_ext1-v1/GEN-SIM"  | grep ","$firstlumi"," | awk '{print $1}'`
 minbiasfilename=`cat minbias_lfns_lumis.txt | grep ","$firstlumi"," | awk '{print $1}'`
 
 python print_gen_particles.py  --infile root://cms-xrd-global.cern.ch/$minbiasfilename --lumi $lumi --evmin $firstevent --evmax $lastevent --eta $wjets_eta --phi $wjets_phi
-
-i=$(($i+1))
 
 done;
 
