@@ -80,13 +80,10 @@ for event in events:
 #        continue
 
 
-    print event.eventAuxiliary().event()
-
-
     event.getByLabel(genParticlesLabel, genparticles)
 
-    print "genparticles:"
-    print ""
+#    print "genparticles:"
+#    print ""
 
     for genparticle in genparticles.product():
 
