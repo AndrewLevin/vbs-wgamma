@@ -1,3 +1,4 @@
+date
 wjets_nlines=`cat wjets_events.txt | wc -l`
 
 i=1
@@ -54,4 +55,4 @@ minbiasfilename=`cat minbias_lfns_lumis.txt | grep ","$firstlumi"," | awk '{prin
 python print_gen_particles.py  --infile root://cms-xrd-global.cern.ch/$minbiasfilename --lumi $lumi --evmin $firstevent --evmax $lastevent --eta $wjets_eta --phi $wjets_phi
 
 done;
-
+date
