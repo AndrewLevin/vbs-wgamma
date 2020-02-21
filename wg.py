@@ -31,6 +31,18 @@ def deltaR(eta1,phi1,eta2=None,phi2=None):
     ## otherwise                                                                                                                                                     
     return hypot(eta1-eta2, deltaPhi(phi1,phi2))
 
+#make the Down shape from the Up shape
+def makeDownShape(histUp,hist):
+
+    hist_clone=hist.Clone()
+    histUp_clone=histUp.Clone()
+
+    hist_clone.Scale(2)
+    histUp_clone.Scale(-1)
+
+    hist_clone.Add(histUp_clone)
+
+    return hist_clone
 
 dict_lumi = {"2016" : 35.9, "2017" : 41.5, "2018" : 59.6}
 
@@ -247,6 +259,7 @@ ROOT.RDF.TH1DModel('lepton_pt', '', 48, 20., 180 ),
 ROOT.RDF.TH1DModel('lepton_eta', '', 50, -2.5, 2.5 ),
 ROOT.RDF.TH1DModel('', '', n_photon_pt_bins, binning_photon_pt ), 
 ROOT.RDF.TH1DModel('photon_eta', '', 50, -2.5, 2.5 ), 
+#ROOT.RDF.TH1DModel("mlg","",mlg_fit_upper_bound/2,0,mlg_fit_upper_bound), 
 ROOT.RDF.TH1DModel("mlg","",mlg_fit_upper_bound/2,0,mlg_fit_upper_bound), 
 ROOT.RDF.TH1DModel("mlg","",100,0,200),
 ROOT.RDF.TH1DModel("lepton_phi","",56,-3.5,3.5), 
@@ -1342,6 +1355,8 @@ data_mlg_tree = ROOT.TTree()
 array_data_mlg=array('f',[0])
 
 data_mlg_tree.Branch('m',array_data_mlg,'m/F')
+
+
 
 for year in years:
 
@@ -2969,6 +2984,1166 @@ elif lepton_name == "electron":
     f_electron = open("xs_inputs_electron.txt","w")
 
     json.dump(xs_inputs_electron,f_electron)
+
+
+#for i in range(fake_lepton["hists"][mlg_index].GetNbinsX()+2):
+#    if fake_lepton["hists"][mlg_index].GetBinContent(i) < 0:
+#        fake_lepton["hists"][mlg_index].SetBinContent(i,0.001)
+#    if fake_photon["hists"][mlg_index].GetBinContent(i) < 0:
+#        fake_photon["hists"][mlg_index].SetBinContent(i,0.001)
+#    if fake_photon_alt["hists"][mlg_index].GetBinContent(i) < 0:
+#        fake_photon_alt["hists"][mlg_index].SetBinContent(i,0.001)
+#    if double_fake["hists"][mlg_index].GetBinContent(i) < 0:
+#        double_fake["hists"][mlg_index].SetBinContent(i,0.001)
+#    if e_to_p_non_res["hists"][mlg_index].GetBinContent(i) < 0:
+#        e_to_p_non_res["hists"][mlg_index].SetBinContent(i,0.001)
+#    if labels["w+jets"]["hists"][mlg_index].GetBinContent(i) < 0:
+#        labels["w+jets"]["hists"][mlg_index].SetBinContent(i,0.001)
+
+zgjets_scale_syst=histogram_models[mlg_index].GetHistogram()
+
+for i in range(labels["zg+jets"]["hists-scale-variation0"][mlg_index].GetNbinsX()+2):
+    zgjets_scale_syst.SetBinContent(i,labels["zg+jets"]["hists"][mlg_index].GetBinContent(i)+max(
+        abs(labels["zg+jets"]["hists-scale-variation0"][mlg_index].GetBinContent(i) - labels["zg+jets"]["hists"][mlg_index].GetBinContent(i)),
+        abs(labels["zg+jets"]["hists-scale-variation1"][mlg_index].GetBinContent(i) - labels["zg+jets"]["hists"][mlg_index].GetBinContent(i)),
+        abs(labels["zg+jets"]["hists-scale-variation3"][mlg_index].GetBinContent(i) - labels["zg+jets"]["hists"][mlg_index].GetBinContent(i)),
+        abs(labels["zg+jets"]["hists-scale-variation4"][mlg_index].GetBinContent(i) - labels["zg+jets"]["hists"][mlg_index].GetBinContent(i)),
+        abs(labels["zg+jets"]["hists-scale-variation5"][mlg_index].GetBinContent(i) - labels["zg+jets"]["hists"][mlg_index].GetBinContent(i)),
+        abs(labels["zg+jets"]["hists-scale-variation6"][mlg_index].GetBinContent(i) - labels["zg+jets"]["hists"][mlg_index].GetBinContent(i))))
+
+if options.lep == "muon":
+
+    dcard = open("datacard_mu_chan.txt",'w')
+
+    print >> dcard, "imax 1 number of channels"
+    print >> dcard, "jmax * number of background"
+    print >> dcard, "kmax * number of nuisance parameters"
+
+    print >> dcard, "Observation "+str(data["hists"][mlg_index].Integral())
+    dcard.write("bin")
+    dcard.write(" mu_chan")
+
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        dcard.write(" mu_chan")
+
+    dcard.write(" mu_chan")
+    dcard.write(" mu_chan")
+    dcard.write(" mu_chan")
+    dcard.write(" mu_chan")
+    dcard.write('\n')    
+    
+    dcard.write("process")
+    dcard.write(" Wg")
+        
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        dcard.write(" " + label.replace("+",""))
+
+    dcard.write(" fake_photon")
+    dcard.write(" fake_lepton")
+    dcard.write(" double_fake")
+    dcard.write(" e_to_p_non_res")
+    dcard.write('\n')    
+    dcard.write("process")
+    dcard.write(" 0")
+
+    for j in range(1,len(labels.keys())+2):
+        dcard.write(" " + str(j))
+    dcard.write('\n')    
+    dcard.write('rate')
+    dcard.write(' '+str(labels["wg+jets"]["hists"][mlg_index].Integral()))
+
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        dcard.write(" "+ str(labels[label]["hists"][mlg_index].Integral()))
+
+    dcard.write(" "+str(fake_photon["hists"][mlg_index].Integral())) 
+    dcard.write(" "+str(fake_lepton["hists"][mlg_index].Integral())) 
+    dcard.write(" "+str(double_fake["hists"][mlg_index].Integral())) 
+    dcard.write(" "+str(e_to_p_non_res["hists"][mlg_index].Integral())) 
+   
+    dcard.write('\n')    
+
+    dcard.write("lumi_13tev lnN")
+    dcard.write(" 1.027")
+
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        dcard.write(" 1.027")
+
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" 1.027")
+    
+    dcard.write('\n')    
+
+    dcard.write("pileup lnN")
+    dcard.write(" "+str(labels["wg+jets"]["hists-pileup-up"][mlg_index].Integral()/labels["wg+jets"]["hists"][mlg_index].Integral()))
+
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        dcard.write(" "+str(labels[label]["hists-pileup-up"][mlg_index].Integral()/labels[label]["hists"][mlg_index].Integral()))
+
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+
+    dcard.write('\n')    
+
+    dcard.write("prefire lnN")
+    dcard.write(" "+str(labels["wg+jets"]["hists-prefire-up"][mlg_index].Integral()/labels["wg+jets"]["hists"][mlg_index].Integral()))
+
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        dcard.write(" "+str(labels[label]["hists-prefire-up"][mlg_index].Integral()/labels[label]["hists"][mlg_index].Integral()))
+
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+
+    dcard.write('\n')    
+
+    dcard.write("jes lnN")
+    dcard.write(" "+str(labels["wg+jets"]["hists-jes-up"][mlg_index].Integral()/labels["wg+jets"]["hists"][mlg_index].Integral()))
+
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        dcard.write(" "+str(labels[label]["hists-jes-up"][mlg_index].Integral()/labels[label]["hists"][mlg_index].Integral()))
+
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+
+    dcard.write('\n')    
+
+    dcard.write("jer lnN")
+    dcard.write(" "+str(labels["wg+jets"]["hists-jer-up"][mlg_index].Integral()/labels["wg+jets"]["hists"][mlg_index].Integral()))
+
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        dcard.write(" "+str(labels[label]["hists-jer-up"][mlg_index].Integral()/labels[label]["hists"][mlg_index].Integral()))
+
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+
+    dcard.write('\n')    
+
+    dcard.write("muonidsf lnN")
+    dcard.write(" "+str(labels["wg+jets"]["hists-muon-id-sf-up"][mlg_index].Integral()/labels["wg+jets"]["hists"][mlg_index].Integral()))
+
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        dcard.write(" "+str(labels[label]["hists-muon-id-sf-up"][mlg_index].Integral()/labels[label]["hists"][mlg_index].Integral()))
+
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+
+    dcard.write('\n')    
+
+    dcard.write("muonisosf lnN")
+    dcard.write(" "+str(labels["wg+jets"]["hists-muon-iso-sf-up"][mlg_index].Integral()/labels["wg+jets"]["hists"][mlg_index].Integral()))
+
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        dcard.write(" "+str(labels[label]["hists-muon-iso-sf-up"][mlg_index].Integral()/labels[label]["hists"][mlg_index].Integral()))
+
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+
+    dcard.write('\n')    
+
+    dcard.write("muonhltsf lnN")
+    dcard.write(" "+str(labels["wg+jets"]["hists-muon-hlt-sf-up"][mlg_index].Integral()/labels["wg+jets"]["hists"][mlg_index].Integral()))
+
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        dcard.write(" "+str(labels[label]["hists-muon-hlt-sf-up"][mlg_index].Integral()/labels[label]["hists"][mlg_index].Integral()))
+
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+
+    dcard.write('\n')    
+
+    dcard.write("fakephotonsyst1 lnN")
+    dcard.write(" -")
+
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        dcard.write(" -")
+
+    dcard.write(" "+str(fake_photon_alt["hists"][mlg_index].Integral()/fake_photon["hists"][mlg_index].Integral()))
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+
+    dcard.write('\n')    
+
+    dcard.write("fakephotonsyst2 lnN")
+    dcard.write(" -")
+
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        dcard.write(" -")
+
+    dcard.write(" "+str(labels["w+jets"]["hists"][mlg_index].Integral()/fake_photon["hists"][mlg_index].Integral()))
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+
+    dcard.write('\n')    
+
+    dcard.write("wgscale lnN")
+    dcard.write(" "+str(1))
+
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        dcard.write(" -")
+
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+
+    dcard.write('\n')    
+
+    dcard.write("zgscale lnN")
+    dcard.write(" -")
+
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        
+        if label == "zg+jets":
+            dcard.write(" "+str(zgjets_scale_syst.Integral()/(labels["zg+jets"]["hists"][mlg_index].Integral())))
+        else:    
+            dcard.write(" -")
+
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+
+    dcard.write('\n')    
+
+    dcard.write("fakelepton lnN")
+    dcard.write(" -")
+
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        dcard.write(" -")
+
+    dcard.write(" -")
+    dcard.write(" 1.3")
+    dcard.write(" 1.3")
+    dcard.write(" -")
+    
+    dcard.write('\n')    
+
+elif options.lep == "electron":
+
+    dcard = open("datacard_el_chan.txt",'w')
+
+    print >> dcard, "imax 1 number of channels"
+    print >> dcard, "jmax * number of background"
+    print >> dcard, "kmax * number of nuisance parameters"
+
+    print >> dcard, "shapes data_obs el_chan datacard_el_chan_shapes.root data_obs"
+    print >> dcard, "shapes Wg el_chan datacard_el_chan_shapes.root wg wg_$SYSTEMATIC" 
+
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+            print >> dcard, "shapes "+label.replace("+","")+" el_chan datacard_el_chan_shapes.root "+label.replace("+","")+ " " +label.replace("+","") + "_$SYSTEMATIC" 
+
+    print >> dcard, "shapes fake_photon el_chan datacard_el_chan_shapes.root fakephoton fakephoton_$SYSTEMATIC" 
+    print >> dcard, "shapes fake_lepton el_chan datacard_el_chan_shapes.root fakelepton fakelepton_$SYSTEMATIC"
+    print >> dcard, "shapes double_fake el_chan datacard_el_chan_shapes.root doublefake doublefake_$SYSTEMATIC" 
+    print >> dcard, "shapes e_to_p_non_res el_chan datacard_el_chan_shapes.root etopnonres etopnonres_$SYSTEMATIC" 
+    
+    print >> dcard, "Observation "+str(data["hists"][mlg_index].Integral())
+    dcard.write("bin")
+    dcard.write(" el_chan")
+
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        dcard.write(" el_chan")
+
+    dcard.write(" el_chan")
+    dcard.write(" el_chan")
+    dcard.write(" el_chan")
+    dcard.write(" el_chan")
+    dcard.write('\n')    
+    
+    dcard.write("process")
+    dcard.write(" Wg")
+        
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        dcard.write(" " + label.replace("+",""))
+
+    dcard.write(" fake_photon")
+    dcard.write(" fake_lepton")
+    dcard.write(" double_fake")
+    dcard.write(" e_to_p_non_res")
+    dcard.write('\n')    
+    dcard.write("process")
+    dcard.write(" 0")
+
+    for j in range(1,len(labels.keys())+2):
+        dcard.write(" " + str(j))
+    dcard.write('\n')    
+    dcard.write('rate')
+    dcard.write(' '+str(labels["wg+jets"]["hists"][mlg_index].Integral()))
+
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        dcard.write(" "+ str(labels[label]["hists"][mlg_index].Integral()))
+
+    dcard.write(" "+str(fake_photon["hists"][mlg_index].Integral())) 
+    dcard.write(" "+str(fake_lepton["hists"][mlg_index].Integral())) 
+    dcard.write(" "+str(double_fake["hists"][mlg_index].Integral())) 
+    dcard.write(" "+str(e_to_p_non_res["hists"][mlg_index].Integral())) 
+   
+    dcard.write('\n')    
+
+    dcard.write("lumi_13tev lnN")
+    dcard.write(" 1.027")
+
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        dcard.write(" 1.027")
+
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" 1.027")
+    
+    dcard.write('\n')    
+
+    dcard.write("pileup shape1")
+    dcard.write(" 1.0")
+
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        dcard.write(" 1.0")
+
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+
+    dcard.write('\n')    
+
+    dcard.write("prefire shape1")
+    dcard.write(" 1.0")
+
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        dcard.write(" 1.0")
+
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+
+    dcard.write('\n')    
+    
+    dcard.write("jes shape1")
+    dcard.write(" 1.0")
+
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        dcard.write(" 1.0")
+
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+    
+    dcard.write('\n')    
+    
+    dcard.write("jer shape1")
+    dcard.write(" 1.0")
+
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        dcard.write(" 1.0")
+
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+    
+    dcard.write('\n')    
+    
+#    dcard.write("muonidsf shape1")
+#    dcard.write(" 1.0")
+
+#    for label in labels.keys():
+#        if label == "no label" or label == "wg+jets" or label == "w+jets":
+#            continue
+#        dcard.write(" 1.0")
+
+#    dcard.write(" -")
+#    dcard.write(" -")
+#    dcard.write(" -")
+#    dcard.write(" -")
+    
+#    dcard.write('\n')    
+    
+#    dcard.write("muonhltsf shape1")
+#    dcard.write(" 1.0")
+
+#    for label in labels.keys():
+#        if label == "no label" or label == "wg+jets" or label == "w+jets":
+#            continue
+#        dcard.write(" 1.0")
+
+#    dcard.write(" -")
+#    dcard.write(" -")
+#    dcard.write(" -")
+#    dcard.write(" -")
+    
+#    dcard.write('\n')    
+
+#    dcard.write("muonisosf shape1")
+#    dcard.write(" 1.0")
+
+#    for label in labels.keys():
+#        if label == "no label" or label == "wg+jets" or label == "w+jets":
+#            continue
+#        dcard.write(" 1.0")
+
+#    dcard.write(" -")
+#    dcard.write(" -")
+#    dcard.write(" -")
+#    dcard.write(" -")
+
+#    dcard.write('\n')    
+    
+    dcard.write("electronrecosf shape1")
+    dcard.write(" 1.0")
+
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        dcard.write(" 1.0")
+
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+    
+    dcard.write('\n')    
+    
+    dcard.write("electronidsf shape1")
+    dcard.write(" 1.0")
+
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        dcard.write(" 1.0")
+
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+    
+    dcard.write('\n')    
+    
+    dcard.write("electronhltsf shape1")
+    dcard.write(" 1.0")
+
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        dcard.write(" 1.0")
+
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+    
+    dcard.write('\n')    
+    
+    dcard.write("fakephotonsyst1 shape1")
+    dcard.write(" -")
+
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        dcard.write(" -")
+
+    dcard.write(" 1.0")
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+
+    dcard.write('\n')    
+    
+    dcard.write("fakephotonsyst2 shape1")
+    dcard.write(" -")
+
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        dcard.write(" -")
+
+    dcard.write(" 1.0")
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+
+    dcard.write('\n')    
+
+    dcard.write("fakelepton lnN")
+    dcard.write(" -")
+
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        dcard.write(" -")
+
+    dcard.write(" -")
+    dcard.write(" 1.3")
+    dcard.write(" -")
+    dcard.write(" -")
+    
+    dcard.write('\n')    
+    
+    dcard.write("wgscale shape1")
+    dcard.write(" 1.0")
+
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        dcard.write(" -")
+
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+
+    dcard.write('\n')    
+
+    dcard.write("zgscale shape1")
+    dcard.write(" -")
+
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        
+        if label == "zg+jets":
+            dcard.write(" 1.0")
+        else:    
+            dcard.write(" -")
+
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+
+    dcard.write('\n')    
+
+    dcard.write("* autoMCStats -1")
+
+    dcard.close()
+
+    electron_shapes = ROOT.TFile.Open("datacard_el_chan_shapes.root","recreate")
+
+    electron_shapes.cd()
+
+    data["hists"][mlg_index].Write("data_obs")
+    labels["wg+jets"]["hists"][mlg_index].Write("wg")
+    labels["top+jets"]["hists"][mlg_index].Write("topjets")
+    labels["zg+jets"]["hists"][mlg_index].Write("zgjets")
+    labels["vv+jets"]["hists"][mlg_index].Write("vvjets")
+    e_to_p_non_res["hists"][mlg_index].Write("etopnonres")
+    e_to_p["hists"][mlg_index].Write("etop")
+    fake_photon["hists"][mlg_index].Write("fakephoton")
+    fake_lepton["hists"][mlg_index].Write("fakelepton")
+    double_fake["hists"][mlg_index].Write("doublefake")
+
+    zgjets_scale_syst.Write("zgjets_zgscaleUp")
+    makeDownShape(zgjets_scale_syst,labels["zg+jets"]["hists"][mlg_index]).Write("zgjets_zgscaleDown")
+
+    wgjets_scale_syst=histogram_models[mlg_index].GetHistogram()
+
+    for i in range(labels["wg+jets"]["hists-scale-variation0"][mlg_index].GetNbinsX()+1):
+        wgjets_scale_syst.SetBinContent(i,labels["wg+jets"]["hists"][mlg_index].GetBinContent(i)+labels["wg+jets"]["hists"][mlg_index].Integral()*max(
+            abs(labels["wg+jets"]["hists-scale-variation0"][mlg_index].GetBinContent(i)/labels["wg+jets"]["hists-scale-variation0"][mlg_index].Integral() - labels["wg+jets"]["hists"][mlg_index].GetBinContent(i)/labels["wg+jets"]["hists"][mlg_index].Integral()),
+            abs(labels["wg+jets"]["hists-scale-variation1"][mlg_index].GetBinContent(i)/labels["wg+jets"]["hists-scale-variation1"][mlg_index].Integral() - labels["wg+jets"]["hists"][mlg_index].GetBinContent(i)/labels["wg+jets"]["hists"][mlg_index].Integral()),
+            abs(labels["wg+jets"]["hists-scale-variation3"][mlg_index].GetBinContent(i)/labels["wg+jets"]["hists-scale-variation3"][mlg_index].Integral() - labels["wg+jets"]["hists"][mlg_index].GetBinContent(i)/labels["wg+jets"]["hists"][mlg_index].Integral()),
+            abs(labels["wg+jets"]["hists-scale-variation4"][mlg_index].GetBinContent(i)/labels["wg+jets"]["hists-scale-variation4"][mlg_index].Integral() - labels["wg+jets"]["hists"][mlg_index].GetBinContent(i)/labels["wg+jets"]["hists"][mlg_index].Integral()),
+            abs(labels["wg+jets"]["hists-scale-variation5"][mlg_index].GetBinContent(i)/labels["wg+jets"]["hists-scale-variation5"][mlg_index].Integral() - labels["wg+jets"]["hists"][mlg_index].GetBinContent(i)/labels["wg+jets"]["hists"][mlg_index].Integral()),
+            abs(labels["wg+jets"]["hists-scale-variation6"][mlg_index].GetBinContent(i)/labels["wg+jets"]["hists-scale-variation6"][mlg_index].Integral() - labels["wg+jets"]["hists"][mlg_index].GetBinContent(i)/labels["wg+jets"]["hists"][mlg_index].Integral())))
+    
+    wgjets_scale_syst.Write("wg_wgscaleUp")
+    makeDownShape(wgjets_scale_syst,labels["wg+jets"]["hists"][mlg_index]).Write("wg_wgscaleDown")
+
+    fake_photon_alt["hists"][mlg_index].Write("fakephoton_fakephotonsyst1Up")
+    makeDownShape(fake_photon_alt["hists"][mlg_index],fake_photon["hists"][mlg_index]).Write("fakephoton_fakephotonsyst1Down")
+
+    labels["w+jets"]["hists"][mlg_index].Write("fakephoton_fakephotonsyst2Up")
+    makeDownShape(labels["w+jets"]["hists"][mlg_index],fake_photon["hists"][mlg_index]).Write("fakephoton_fakephotonsyst2Down")
+
+    labels["top+jets"]["hists-pileup-up"][mlg_index].Write("topjets_pileupUp")
+    makeDownShape(labels["top+jets"]["hists-pileup-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]).Write("topjets_pileupDown")
+    labels["zg+jets"]["hists-pileup-up"][mlg_index].Write("zgjets_pileupUp")
+    makeDownShape(labels["zg+jets"]["hists-pileup-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]).Write("zgjets_pileupDown")
+    labels["vv+jets"]["hists-pileup-up"][mlg_index].Write("vvjets_pileupUp")
+    makeDownShape(labels["vv+jets"]["hists-pileup-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]).Write("vvjets_pileupDown")
+    labels["wg+jets"]["hists-pileup-up"][mlg_index].Write("wg_pileupUp")
+    makeDownShape(labels["wg+jets"]["hists-pileup-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]).Write("wg_pileupDown")
+    
+    labels["top+jets"]["hists-prefire-up"][mlg_index].Write("topjets_prefireUp")
+    makeDownShape(labels["top+jets"]["hists-prefire-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]).Write("topjets_prefireDown")
+    labels["zg+jets"]["hists-prefire-up"][mlg_index].Write("zgjets_prefireUp")
+    makeDownShape(labels["zg+jets"]["hists-prefire-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]).Write("zgjets_prefireDown")
+    labels["vv+jets"]["hists-prefire-up"][mlg_index].Write("vvjets_prefireUp")
+    makeDownShape(labels["vv+jets"]["hists-prefire-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]).Write("vvjets_prefireDown")
+    labels["wg+jets"]["hists-prefire-up"][mlg_index].Write("wg_prefireUp")
+    makeDownShape(labels["wg+jets"]["hists-prefire-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]).Write("wg_prefireDown")
+
+    labels["top+jets"]["hists-muon-id-sf-up"][mlg_index].Write("topjets_muonidsfUp")
+    makeDownShape(labels["top+jets"]["hists-muon-id-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]).Write("topjets_muonidsfDown")
+    labels["zg+jets"]["hists-muon-id-sf-up"][mlg_index].Write("zgjets_muonidsfUp")
+    makeDownShape(labels["zg+jets"]["hists-muon-id-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]).Write("zgjets_muonidsfDown")
+    labels["vv+jets"]["hists-muon-id-sf-up"][mlg_index].Write("vvjets_muonidsfUp")
+    makeDownShape(labels["vv+jets"]["hists-muon-id-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]).Write("vvjets_muonidsfDown")
+    labels["wg+jets"]["hists-muon-id-sf-up"][mlg_index].Write("wg_muonidsfUp")
+    makeDownShape(labels["wg+jets"]["hists-muon-id-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]).Write("wg_muonidsfDown")
+    
+    labels["top+jets"]["hists-muon-iso-sf-up"][mlg_index].Write("topjets_muonisosfUp")
+    makeDownShape(labels["top+jets"]["hists-muon-iso-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]).Write("topjets_muonisosfDown")
+    labels["zg+jets"]["hists-muon-iso-sf-up"][mlg_index].Write("zgjets_muonisosfUp")
+    makeDownShape(labels["zg+jets"]["hists-muon-iso-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]).Write("zgjets_muonisosfDown")
+    labels["vv+jets"]["hists-muon-iso-sf-up"][mlg_index].Write("vvjets_muonisosfUp")
+    makeDownShape(labels["vv+jets"]["hists-muon-iso-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]).Write("vvjets_muonisosfDown")
+    labels["wg+jets"]["hists-muon-iso-sf-up"][mlg_index].Write("wg_muonisosfUp")
+    makeDownShape(labels["wg+jets"]["hists-muon-iso-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]).Write("wg_muonisosfDown")
+    
+    labels["top+jets"]["hists-muon-hlt-sf-up"][mlg_index].Write("topjets_muonhltsfUp")
+    makeDownShape(labels["top+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]).Write("topjets_muonhltsfDown")
+    labels["zg+jets"]["hists-muon-hlt-sf-up"][mlg_index].Write("zgjets_muonhltsfUp")
+    makeDownShape(labels["zg+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]).Write("zgjets_muonhltsfDown")
+    labels["vv+jets"]["hists-muon-hlt-sf-up"][mlg_index].Write("vvjets_muonhltsfUp")
+    makeDownShape(labels["vv+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]).Write("vvjets_muonhltsfDown")
+    labels["wg+jets"]["hists-muon-hlt-sf-up"][mlg_index].Write("wg_muonhltsfUp")
+    makeDownShape(labels["wg+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]).Write("wg_muonhltsfDown")
+    
+    labels["top+jets"]["hists-electron-reco-sf-up"][mlg_index].Write("topjets_electronrecosfUp")
+    makeDownShape(labels["top+jets"]["hists-electron-reco-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]).Write("topjets_electronrecosfDown")
+    labels["zg+jets"]["hists-electron-reco-sf-up"][mlg_index].Write("zgjets_electronrecosfUp")
+    makeDownShape(labels["vv+jets"]["hists-electron-reco-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]).Write("zgjets_electronrecosfDown")
+    labels["vv+jets"]["hists-electron-reco-sf-up"][mlg_index].Write("vvjets_electronrecosfUp")
+    makeDownShape(labels["vv+jets"]["hists-electron-reco-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]).Write("vvjets_electronrecosfDown")
+    labels["wg+jets"]["hists-electron-reco-sf-up"][mlg_index].Write("wg_electronrecosfUp")
+    makeDownShape(labels["wg+jets"]["hists-electron-reco-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]).Write("wg_electronrecosfDown")
+
+    labels["top+jets"]["hists-electron-id-sf-up"][mlg_index].Write("topjets_electronidsfUp")
+    makeDownShape(labels["top+jets"]["hists-electron-id-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]).Write("topjets_electronidsfDown")
+    labels["zg+jets"]["hists-electron-id-sf-up"][mlg_index].Write("zgjets_electronidsfUp")
+    makeDownShape(labels["vv+jets"]["hists-electron-id-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]).Write("zgjets_electronidsfDown")
+    labels["vv+jets"]["hists-electron-id-sf-up"][mlg_index].Write("vvjets_electronidsfUp")
+    makeDownShape(labels["vv+jets"]["hists-electron-id-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]).Write("vvjets_electronidsfDown")
+    labels["wg+jets"]["hists-electron-id-sf-up"][mlg_index].Write("wg_electronidsfUp")
+    makeDownShape(labels["wg+jets"]["hists-electron-id-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]).Write("wg_electronidsfDown")
+
+    labels["top+jets"]["hists-electron-hlt-sf-up"][mlg_index].Write("topjets_electronhltsfUp")
+    makeDownShape(labels["top+jets"]["hists-electron-hlt-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]).Write("topjets_electronhltsfDown")
+    labels["zg+jets"]["hists-electron-hlt-sf-up"][mlg_index].Write("zgjets_electronhltsfUp")
+    makeDownShape(labels["vv+jets"]["hists-electron-hlt-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]).Write("zgjets_electronhltsfDown")
+    labels["vv+jets"]["hists-electron-hlt-sf-up"][mlg_index].Write("vvjets_electronhltsfUp")
+    makeDownShape(labels["vv+jets"]["hists-electron-hlt-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]).Write("vvjets_electronhltsfDown")
+    labels["wg+jets"]["hists-electron-hlt-sf-up"][mlg_index].Write("wg_electronhltsfUp")
+    makeDownShape(labels["wg+jets"]["hists-electron-hlt-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]).Write("wg_electronhltsfDown")
+    
+    labels["top+jets"]["hists-jes-up"][mlg_index].Write("topjets_jesUp")
+    makeDownShape(labels["top+jets"]["hists-jes-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]).Write("topjets_jesDown")
+    labels["zg+jets"]["hists-jes-up"][mlg_index].Write("zgjets_jesUp")
+    makeDownShape(labels["zg+jets"]["hists-jes-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]).Write("zgjets_jesDown")
+    labels["vv+jets"]["hists-jes-up"][mlg_index].Write("vvjets_jesUp")
+    makeDownShape(labels["vv+jets"]["hists-jes-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]).Write("vvjets_jesDown")
+    labels["wg+jets"]["hists-jes-up"][mlg_index].Write("wg_jesUp")
+    makeDownShape(labels["wg+jets"]["hists-jes-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]).Write("wg_jesDown")
+    
+    labels["top+jets"]["hists-jer-up"][mlg_index].Write("topjets_jerUp")
+    makeDownShape(labels["top+jets"]["hists-jer-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]).Write("topjets_jerDown")
+    labels["zg+jets"]["hists-jer-up"][mlg_index].Write("zgjets_jerUp")
+    makeDownShape(labels["zg+jets"]["hists-jer-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]).Write("zgjets_jerDown")
+    labels["vv+jets"]["hists-jer-up"][mlg_index].Write("vvjets_jerUp")
+    makeDownShape(labels["vv+jets"]["hists-jer-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]).Write("vvjets_jerDown")
+    labels["wg+jets"]["hists-jer-up"][mlg_index].Write("wg_jerUp")
+    makeDownShape(labels["wg+jets"]["hists-jer-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]).Write("wg_jerDown")
+
+    bwcb_norm = ROOT.RooRealVar("bwcb_norm","",152671.0,0,1000000);    
+    bwcbbin_norm = ROOT.RooRealVar("bwcbbin_norm","",152671.0,152671.0/2,152671.0*2);    
+
+    m= ROOT.RooRealVar("m","",0,mlg_fit_upper_bound)
+    m0=ROOT.RooRealVar("m0", "",2.48320,-4,4)
+    sigma=ROOT.RooRealVar("sigma", "",1.75029,0.1,3)
+    alpha=ROOT.RooRealVar("alpha", "",2.48320,0,10)
+    n=ROOT.RooRealVar("n", "",2.11960,2.11960,2.11960)
+    cb = ROOT.RooCBShape("cb", "", m, m0, sigma, alpha, n)
+    mass = ROOT.RooRealVar("mass","",91.9311,89.855-5,89.855+5)
+    width = ROOT.RooRealVar("width","",3.3244,0.5*3.3244/4.0,10*3.3244/3.0);
+    bw = ROOT.RooBreitWigner("bw","",m,mass,width)
+
+    RooFFTConvPdf_bwcb = ROOT.RooFFTConvPdf("bwcb","Breit Wigner convolved with a Crystal Ball",m,bw,cb)
+
+    RooParametricShapeBinPdf_bwcb=ROOT.RooParametricShapeBinPdf("bwcbbin","",RooFFTConvPdf_bwcb,m,ROOT.RooArgList(m0,sigma,alpha,n,cb,mass,width,bw,m),histogram_models[mlg_index].GetHistogram())
+    
+    RooDataHist_wg = ROOT.RooDataHist("wg","",ROOT.RooArgList(m),labels["wg+jets"]["hists"][mlg_index])
+#RooHistPdf_wg = ROOT.RooHistPdf("wg","",ROOT.RooArgSet(m),RooDataHist_wg)
+
+    RooDataHist_vvjets = ROOT.RooDataHist("vvjets","",ROOT.RooArgList(m),labels["vv+jets"]["hists"][mlg_index])
+#RooHistPdf_vvjets = ROOT.RooHistPdf("vvjets","",ROOT.RooArgSet(m),RooDataHist_vvjets)
+
+    RooDataHist_zgjets = ROOT.RooDataHist("zgjets","",ROOT.RooArgList(m),labels["zg+jets"]["hists"][mlg_index])
+#RooHistPdf_zgjets = ROOT.RooHistPdf("zgjets","",ROOT.RooArgSet(m),RooDataHist_zgjets)
+
+    RooDataHist_topjets = ROOT.RooDataHist("topjets","",ROOT.RooArgList(m),labels["top+jets"]["hists"][mlg_index])
+#RooHistPdf_topjets = ROOT.RooHistPdf("topjets","",ROOT.RooArgSet(m),RooDataHist_topjets)
+
+    RooDataHist_fake_lepton = ROOT.RooDataHist("fakelepton","",ROOT.RooArgList(m),fake_lepton["hists"][mlg_index])
+#RooHistPdf_fake_lepton = ROOT.RooHistPdf("fakelepton","",ROOT.RooArgSet(m),RooDataHist_fake_lepton)
+
+    RooDataHist_fake_photon = ROOT.RooDataHist("fakephoton","",ROOT.RooArgList(m),fake_photon["hists"][mlg_index])
+#RooHistPdf_fake_photon = ROOT.RooHistPdf("fakephoton","",ROOT.RooArgSet(m),RooDataHist_fake_photon)
+
+    RooDataHist_double_fake = ROOT.RooDataHist("doublefake","",ROOT.RooArgList(m),double_fake["hists"][mlg_index])
+#RooHistPdf_double_fake = ROOT.RooHistPdf("doublefake","",ROOT.RooArgSet(m),RooDataHist_double_fake)
+
+    RooDataHist_e_to_p_non_res = ROOT.RooDataHist("etopnonres","",ROOT.RooArgList(m),e_to_p_non_res["hists"][mlg_index])
+#RooHistPdf_e_to_p_non_res = ROOT.RooHistPdf("etopnonres","",ROOT.RooArgSet(m),RooDataHist_e_to_p_non_res)
+
+#wg scale
+
+    RooDataHist_wg_scale_up = ROOT.RooDataHist("wg_wgscaleUp","",ROOT.RooArgList(m),wgjets_scale_syst)
+    RooDataHist_wg_scale_down = ROOT.RooDataHist("wg_wgscaleDown","",ROOT.RooArgList(m),makeDownShape(wgjets_scale_syst,labels["wg+jets"]["hists"][mlg_index]))
+
+#zg scale
+
+    RooDataHist_zg_scale_up = ROOT.RooDataHist("zgjets_zgscaleUp","",ROOT.RooArgList(m),zgjets_scale_syst)
+    RooDataHist_zg_scale_down = ROOT.RooDataHist("zgjets_zgscaleDown","",ROOT.RooArgList(m),makeDownShape(zgjets_scale_syst,labels["zg+jets"]["hists"][mlg_index]))
+
+#fake photon syst 1
+
+    RooDataHist_fake_photon_syst1_up = ROOT.RooDataHist("fakephoton_fakephotonsyst1Up","",ROOT.RooArgList(m),fake_photon_alt["hists"][mlg_index])
+#RooHistPdf_fake_photon_syst1_up = ROOT.RooHistPdf("fakephoton_fakephotonsyst1Up","",ROOT.RooArgSet(m),RooDataHist_fake_photon_syst1_up)
+
+    RooDataHist_fake_photon_syst1_down = ROOT.RooDataHist("fakephoton_fakephotonsyst1Down","",ROOT.RooArgList(m),makeDownShape(fake_photon_alt["hists"][mlg_index],fake_photon["hists"][mlg_index]))
+#RooHistPdf_fake_photon_syst1_down = ROOT.RooHistPdf("fakephoton_fakephotonsyst1Down","",ROOT.RooArgSet(m),RooDataHist_fake_photon_syst1_down)
+
+#fake photon syst 2
+
+    RooDataHist_fake_photon_syst2_up = ROOT.RooDataHist("fakephoton_fakephotonsyst2Up","",ROOT.RooArgList(m),labels["w+jets"]["hists"][mlg_index])
+#RooHistPdf_fake_photon_syst2_up = ROOT.RooHistPdf("fakephoton_fakephotonsyst2Up","",ROOT.RooArgSet(m),RooDataHist_fake_photon_syst2_up)
+
+    RooDataHist_fake_photon_syst2_down = ROOT.RooDataHist("fakephoton_fakephotonsyst2Down","",ROOT.RooArgList(m),makeDownShape(labels["w+jets"]["hists"][mlg_index],fake_photon["hists"][mlg_index]))
+#RooHistPdf_fake_photon_syst2_down = ROOT.RooHistPdf("fakephoton_fakephotonsyst2Down","",ROOT.RooArgSet(m),RooDataHist_fake_photon_syst2_down)
+
+
+#pileup
+
+    RooDataHist_wg_pileup_up = ROOT.RooDataHist("wg_pileupUp","",ROOT.RooArgList(m),labels["wg+jets"]["hists-pileup-up"][mlg_index])
+#RooHistPdf_wg_pileup_up = ROOT.RooHistPdf("wg_pileupUp","",ROOT.RooArgSet(m),RooDataHist_wg_pileup_up)
+    RooDataHist_wg_pileup_down = ROOT.RooDataHist("wg_pileupDown","",ROOT.RooArgList(m),makeDownShape(labels["wg+jets"]["hists-pileup-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]))
+#RooHistPdf_wg_pileup_down = ROOT.RooHistPdf("wg_pileupDown","",ROOT.RooArgSet(m),RooDataHist_wg_pileup_down)
+
+    RooDataHist_topjets_pileup_up = ROOT.RooDataHist("topjets_pileupUp","",ROOT.RooArgList(m),labels["top+jets"]["hists-pileup-up"][mlg_index])
+#RooHistPdf_topjets_pileup_up = ROOT.RooHistPdf("topjets_pileupUp","",ROOT.RooArgSet(m),RooDataHist_topjets_pileup_up)
+    RooDataHist_topjets_pileup_down = ROOT.RooDataHist("topjets_pileupDown","",ROOT.RooArgList(m),makeDownShape(labels["top+jets"]["hists-pileup-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]))
+#RooHistPdf_topjets_pileup_down = ROOT.RooHistPdf("topjets_pileupDown","",ROOT.RooArgSet(m),RooDataHist_topjets_pileup_down)
+
+    RooDataHist_zgjets_pileup_up = ROOT.RooDataHist("zgjets_pileupUp","",ROOT.RooArgList(m),labels["zg+jets"]["hists-pileup-up"][mlg_index])
+#RooHistPdf_zgjets_pileup_up = ROOT.RooHistPdf("zgjets_pileupUp","",ROOT.RooArgSet(m),RooDataHist_zgjets_pileup_up)
+    RooDataHist_zgjets_pileup_down = ROOT.RooDataHist("zgjets_pileupDown","",ROOT.RooArgList(m),makeDownShape(labels["zg+jets"]["hists-pileup-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]))
+#RooHistPdf_zgjets_pileup_down = ROOT.RooHistPdf("zgjets_pileupDown","",ROOT.RooArgSet(m),RooDataHist_zgjets_pileup_down)
+
+    RooDataHist_vvjets_pileup_up = ROOT.RooDataHist("vvjets_pileupUp","",ROOT.RooArgList(m),labels["vv+jets"]["hists-pileup-up"][mlg_index])
+#RooHistPdf_vvjets_pileup_up = ROOT.RooHistPdf("vvjets_pileupUp","",ROOT.RooArgSet(m),RooDataHist_vvjets_pileup_up)
+    RooDataHist_vvjets_pileup_down = ROOT.RooDataHist("vvjets_pileupDown","",ROOT.RooArgList(m),makeDownShape(labels["vv+jets"]["hists-pileup-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]))
+#RooHistPdf_vvjets_pileup_down = ROOT.RooHistPdf("vvjets_pileupDown","",ROOT.RooArgSet(m),RooDataHist_vvjets_pileup_down)
+
+#prefire
+
+    RooDataHist_wg_prefire_up = ROOT.RooDataHist("wg_prefireUp","",ROOT.RooArgList(m),labels["wg+jets"]["hists-prefire-up"][mlg_index])
+#RooHistPdf_wg_prefire_up = ROOT.RooHistPdf("wg_prefireUp","",ROOT.RooArgSet(m),RooDataHist_wg_prefire_up)
+    RooDataHist_wg_prefire_down = ROOT.RooDataHist("wg_prefireDown","",ROOT.RooArgList(m),makeDownShape(labels["wg+jets"]["hists-prefire-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]))
+#RooHistPdf_wg_prefire_down = ROOT.RooHistPdf("wg_prefireDown","",ROOT.RooArgSet(m),RooDataHist_wg_prefire_down)
+
+    RooDataHist_topjets_prefire_up = ROOT.RooDataHist("topjets_prefireUp","",ROOT.RooArgList(m),labels["top+jets"]["hists-prefire-up"][mlg_index])
+#RooHistPdf_topjets_prefire_up = ROOT.RooHistPdf("topjets_prefireUp","",ROOT.RooArgSet(m),RooDataHist_topjets_prefire_up)
+    RooDataHist_topjets_prefire_down = ROOT.RooDataHist("topjets_prefireDown","",ROOT.RooArgList(m),makeDownShape(labels["top+jets"]["hists-prefire-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]))
+#RooHistPdf_topjets_prefire_down = ROOT.RooHistPdf("topjets_prefireDown","",ROOT.RooArgSet(m),RooDataHist_topjets_prefire_down)
+
+    RooDataHist_zgjets_prefire_up = ROOT.RooDataHist("zgjets_prefireUp","",ROOT.RooArgList(m),labels["zg+jets"]["hists-prefire-up"][mlg_index])
+#RooHistPdf_zgjets_prefire_up = ROOT.RooHistPdf("zgjets_prefireUp","",ROOT.RooArgSet(m),RooDataHist_zgjets_prefire_up)
+    RooDataHist_zgjets_prefire_down = ROOT.RooDataHist("zgjets_prefireDown","",ROOT.RooArgList(m),makeDownShape(labels["zg+jets"]["hists-prefire-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]))
+#RooHistPdf_zgjets_prefire_down = ROOT.RooHistPdf("zgjets_prefireDown","",ROOT.RooArgSet(m),RooDataHist_zgjets_prefire_down)
+
+    RooDataHist_vvjets_prefire_up = ROOT.RooDataHist("vvjets_prefireUp","",ROOT.RooArgList(m),labels["vv+jets"]["hists-prefire-up"][mlg_index])
+#RooHistPdf_vvjets_prefire_up = ROOT.RooHistPdf("vvjets_prefireUp","",ROOT.RooArgSet(m),RooDataHist_vvjets_prefire_up)
+    RooDataHist_vvjets_prefire_down = ROOT.RooDataHist("vvjets_prefireDown","",ROOT.RooArgList(m),makeDownShape(labels["vv+jets"]["hists-prefire-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]))
+#RooHistPdf_vvjets_prefire_down = ROOT.RooHistPdf("vvjets_prefireDown","",ROOT.RooArgSet(m),RooDataHist_vvjets_prefire_down)
+
+#jes sf
+
+    RooDataHist_wg_jes_up = ROOT.RooDataHist("wg_jesUp","",ROOT.RooArgList(m),labels["wg+jets"]["hists-jes-up"][mlg_index])
+#RooHistPdf_wg_jes_up = ROOT.RooHistPdf("wg_jesUp","",ROOT.RooArgSet(m),RooDataHist_wg_jes_up)
+    RooDataHist_wg_jes_down = ROOT.RooDataHist("wg_jesDown","",ROOT.RooArgList(m),makeDownShape(labels["wg+jets"]["hists-jes-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]))
+#RooHistPdf_wg_jes_down = ROOT.RooHistPdf("wg_jesDown","",ROOT.RooArgSet(m),RooDataHist_wg_jes_down)
+
+    RooDataHist_topjets_jes_up = ROOT.RooDataHist("topjets_jesUp","",ROOT.RooArgList(m),labels["top+jets"]["hists-jes-up"][mlg_index])
+#RooHistPdf_topjets_jes_up = ROOT.RooHistPdf("topjets_jesUp","",ROOT.RooArgSet(m),RooDataHist_topjets_jes_up)
+    RooDataHist_topjets_jes_down = ROOT.RooDataHist("topjets_jesDown","",ROOT.RooArgList(m),makeDownShape(labels["top+jets"]["hists-jes-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]))
+#RooHistPdf_topjets_jes_down = ROOT.RooHistPdf("topjets_jesDown","",ROOT.RooArgSet(m),RooDataHist_topjets_jes_down)
+
+    RooDataHist_zgjets_jes_up = ROOT.RooDataHist("zgjets_jesUp","",ROOT.RooArgList(m),labels["zg+jets"]["hists-jes-up"][mlg_index])
+#RooHistPdf_zgjets_jes_up = ROOT.RooHistPdf("zgjets_jesUp","",ROOT.RooArgSet(m),RooDataHist_zgjets_jes_up)
+    RooDataHist_zgjets_jes_down = ROOT.RooDataHist("zgjets_jesDown","",ROOT.RooArgList(m),makeDownShape(labels["zg+jets"]["hists-jes-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]))
+#RooHistPdf_zgjets_jes_down = ROOT.RooHistPdf("zgjets_jesDown","",ROOT.RooArgSet(m),RooDataHist_zgjets_jes_down)
+
+    RooDataHist_vvjets_jes_up = ROOT.RooDataHist("vvjets_jesUp","",ROOT.RooArgList(m),labels["vv+jets"]["hists-jes-up"][mlg_index])
+#RooHistPdf_vvjets_jes_up = ROOT.RooHistPdf("vvjets_jesUp","",ROOT.RooArgSet(m),RooDataHist_vvjets_jes_up)
+    RooDataHist_vvjets_jes_down = ROOT.RooDataHist("vvjets_jesDown","",ROOT.RooArgList(m),makeDownShape(labels["vv+jets"]["hists-jes-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]))
+#RooHistPdf_vvjets_jes_down = ROOT.RooHistPdf("vvjets_jesDown","",ROOT.RooArgSet(m),RooDataHist_vvjets_jes_down)
+
+#jer sf
+
+    RooDataHist_wg_jer_up = ROOT.RooDataHist("wg_jerUp","",ROOT.RooArgList(m),labels["wg+jets"]["hists-jer-up"][mlg_index])
+#RooHistPdf_wg_jer_up = ROOT.RooHistPdf("wg_jerUp","",ROOT.RooArgSet(m),RooDataHist_wg_jer_up)
+    RooDataHist_wg_jer_down = ROOT.RooDataHist("wg_jerDown","",ROOT.RooArgList(m),makeDownShape(labels["wg+jets"]["hists-jer-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]))
+#RooHistPdf_wg_jer_down = ROOT.RooHistPdf("wg_jerDown","",ROOT.RooArgSet(m),RooDataHist_wg_jer_down)
+
+    RooDataHist_topjets_jer_up = ROOT.RooDataHist("topjets_jerUp","",ROOT.RooArgList(m),labels["top+jets"]["hists-jer-up"][mlg_index])
+#RooHistPdf_topjets_jer_up = ROOT.RooHistPdf("topjets_jerUp","",ROOT.RooArgSet(m),RooDataHist_topjets_jer_up)
+    RooDataHist_topjets_jer_down = ROOT.RooDataHist("topjets_jerDown","",ROOT.RooArgList(m),makeDownShape(labels["top+jets"]["hists-jer-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]))
+#RooHistPdf_topjets_jer_down = ROOT.RooHistPdf("topjets_jerDown","",ROOT.RooArgSet(m),RooDataHist_topjets_jer_down)
+
+    RooDataHist_zgjets_jer_up = ROOT.RooDataHist("zgjets_jerUp","",ROOT.RooArgList(m),labels["zg+jets"]["hists-jer-up"][mlg_index])
+#RooHistPdf_zgjets_jer_up = ROOT.RooHistPdf("zgjets_jerUp","",ROOT.RooArgSet(m),RooDataHist_zgjets_jer_up)
+    RooDataHist_zgjets_jer_down = ROOT.RooDataHist("zgjets_jerDown","",ROOT.RooArgList(m),makeDownShape(labels["zg+jets"]["hists-jer-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]))
+#RooHistPdf_zgjets_jer_down = ROOT.RooHistPdf("zgjets_jerDown","",ROOT.RooArgSet(m),RooDataHist_zgjets_jer_down)
+
+    RooDataHist_vvjets_jer_up = ROOT.RooDataHist("vvjets_jerUp","",ROOT.RooArgList(m),labels["vv+jets"]["hists-jer-up"][mlg_index])
+#RooHistPdf_vvjets_jer_up = ROOT.RooHistPdf("vvjets_jerUp","",ROOT.RooArgSet(m),RooDataHist_vvjets_jer_up)
+    RooDataHist_vvjets_jer_down = ROOT.RooDataHist("vvjets_jerDown","",ROOT.RooArgList(m),makeDownShape(labels["vv+jets"]["hists-jer-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]))
+#RooHistPdf_vvjets_jer_down = ROOT.RooHistPdf("vvjets_jerDown","",ROOT.RooArgSet(m),RooDataHist_vvjets_jer_down)
+
+#electron reco sf
+
+    RooDataHist_wg_electronrecosf_up = ROOT.RooDataHist("wg_electronrecosfUp","",ROOT.RooArgList(m),labels["wg+jets"]["hists-electron-reco-sf-up"][mlg_index])
+#RooHistPdf_wg_electronrecosf_up = ROOT.RooHistPdf("wg_electronrecosfUp","",ROOT.RooArgSet(m),RooDataHist_wg_electronrecosf_up)
+    RooDataHist_wg_electronrecosf_down = ROOT.RooDataHist("wg_electronrecosfDown","",ROOT.RooArgList(m),makeDownShape(labels["wg+jets"]["hists-electron-reco-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]))
+#RooHistPdf_wg_electronrecosf_down = ROOT.RooHistPdf("wg_electronrecosfDown","",ROOT.RooArgSet(m),RooDataHist_wg_electronrecosf_down)
+
+    RooDataHist_topjets_electronrecosf_up = ROOT.RooDataHist("topjets_electronrecosfUp","",ROOT.RooArgList(m),labels["top+jets"]["hists-electron-reco-sf-up"][mlg_index])
+#RooHistPdf_topjets_electronrecosf_up = ROOT.RooHistPdf("topjets_electronrecosfUp","",ROOT.RooArgSet(m),RooDataHist_topjets_electronrecosf_up)
+    RooDataHist_topjets_electronrecosf_down = ROOT.RooDataHist("topjets_electronrecosfDown","",ROOT.RooArgList(m),makeDownShape(labels["top+jets"]["hists-electron-reco-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]))
+#RooHistPdf_topjets_electronrecosf_down = ROOT.RooHistPdf("topjets_electronrecosfDown","",ROOT.RooArgSet(m),RooDataHist_topjets_electronrecosf_down)
+
+    RooDataHist_zgjets_electronrecosf_up = ROOT.RooDataHist("zgjets_electronrecosfUp","",ROOT.RooArgList(m),labels["zg+jets"]["hists-electron-reco-sf-up"][mlg_index])
+#RooHistPdf_zgjets_electronrecosf_up = ROOT.RooHistPdf("zgjets_electronrecosfUp","",ROOT.RooArgSet(m),RooDataHist_zgjets_electronrecosf_up)
+    RooDataHist_zgjets_electronrecosf_down = ROOT.RooDataHist("zgjets_electronrecosfDown","",ROOT.RooArgList(m),makeDownShape(labels["zg+jets"]["hists-electron-reco-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]))
+#RooHistPdf_zgjets_electronrecosf_down = ROOT.RooHistPdf("zgjets_electronrecosfDown","",ROOT.RooArgSet(m),RooDataHist_zgjets_electronrecosf_down)
+
+    RooDataHist_vvjets_electronrecosf_up = ROOT.RooDataHist("vvjets_electronrecosfUp","",ROOT.RooArgList(m),labels["vv+jets"]["hists-electron-reco-sf-up"][mlg_index])
+#RooHistPdf_vvjets_electronrecosf_up = ROOT.RooHistPdf("vvjets_electronrecosfUp","",ROOT.RooArgSet(m),RooDataHist_vvjets_electronrecosf_up)
+    RooDataHist_vvjets_electronrecosf_down = ROOT.RooDataHist("vvjets_electronrecosfDown","",ROOT.RooArgList(m),makeDownShape(labels["vv+jets"]["hists-electron-reco-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]))
+#RooHistPdf_vvjets_electronrecosf_down = ROOT.RooHistPdf("vvjets_electronrecosfDown","",ROOT.RooArgSet(m),RooDataHist_vvjets_electronrecosf_down)
+
+
+#electron id sf
+
+    RooDataHist_wg_electronidsf_up = ROOT.RooDataHist("wg_electronidsfUp","",ROOT.RooArgList(m),labels["wg+jets"]["hists-electron-id-sf-up"][mlg_index])
+#RooHistPdf_wg_electronidsf_up = ROOT.RooHistPdf("wg_electronidsfUp","",ROOT.RooArgSet(m),RooDataHist_wg_electronidsf_up)
+    RooDataHist_wg_electronidsf_down = ROOT.RooDataHist("wg_electronidsfDown","",ROOT.RooArgList(m),makeDownShape(labels["wg+jets"]["hists-electron-id-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]))
+#RooHistPdf_wg_electronidsf_down = ROOT.RooHistPdf("wg_electronidsfDown","",ROOT.RooArgSet(m),RooDataHist_wg_electronidsf_down)
+
+    RooDataHist_topjets_electronidsf_up = ROOT.RooDataHist("topjets_electronidsfUp","",ROOT.RooArgList(m),labels["top+jets"]["hists-electron-id-sf-up"][mlg_index])
+#RooHistPdf_topjets_electronidsf_up = ROOT.RooHistPdf("topjets_electronidsfUp","",ROOT.RooArgSet(m),RooDataHist_topjets_electronidsf_up)
+    RooDataHist_topjets_electronidsf_down = ROOT.RooDataHist("topjets_electronidsfDown","",ROOT.RooArgList(m),makeDownShape(labels["top+jets"]["hists-electron-id-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]))
+#RooHistPdf_topjets_electronidsf_down = ROOT.RooHistPdf("topjets_electronidsfDown","",ROOT.RooArgSet(m),RooDataHist_topjets_electronidsf_down)
+
+    RooDataHist_zgjets_electronidsf_up = ROOT.RooDataHist("zgjets_electronidsfUp","",ROOT.RooArgList(m),labels["zg+jets"]["hists-electron-id-sf-up"][mlg_index])
+#RooHistPdf_zgjets_electronidsf_up = ROOT.RooHistPdf("zgjets_electronidsfUp","",ROOT.RooArgSet(m),RooDataHist_zgjets_electronidsf_up)
+    RooDataHist_zgjets_electronidsf_down = ROOT.RooDataHist("zgjets_electronidsfDown","",ROOT.RooArgList(m),makeDownShape(labels["zg+jets"]["hists-electron-id-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]))
+#RooHistPdf_zgjets_electronidsf_down = ROOT.RooHistPdf("zgjets_electronidsfDown","",ROOT.RooArgSet(m),RooDataHist_zgjets_electronidsf_down)
+
+    RooDataHist_vvjets_electronidsf_up = ROOT.RooDataHist("vvjets_electronidsfUp","",ROOT.RooArgList(m),labels["vv+jets"]["hists-electron-id-sf-up"][mlg_index])
+#RooHistPdf_vvjets_electronidsf_up = ROOT.RooHistPdf("vvjets_electronidsfUp","",ROOT.RooArgSet(m),RooDataHist_vvjets_electronidsf_up)
+    RooDataHist_vvjets_electronidsf_down = ROOT.RooDataHist("vvjets_electronidsfDown","",ROOT.RooArgList(m),makeDownShape(labels["vv+jets"]["hists-electron-id-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]))
+#RooHistPdf_vvjets_electronidsf_down = ROOT.RooHistPdf("vvjets_electronidsfDown","",ROOT.RooArgSet(m),RooDataHist_vvjets_electronidsf_down)
+
+
+#electron hlt sf
+
+    RooDataHist_wg_electronhltsf_up = ROOT.RooDataHist("wg_electronhltsfUp","",ROOT.RooArgList(m),labels["wg+jets"]["hists-electron-hlt-sf-up"][mlg_index])
+#RooHistPdf_wg_electronhltsf_up = ROOT.RooHistPdf("wg_electronhltsfUp","",ROOT.RooArgSet(m),RooDataHist_wg_electronhltsf_up)
+    RooDataHist_wg_electronhltsf_down = ROOT.RooDataHist("wg_electronhltsfDown","",ROOT.RooArgList(m),makeDownShape(labels["wg+jets"]["hists-electron-hlt-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]))
+#RooHistPdf_wg_electronhltsf_down = ROOT.RooHistPdf("wg_electronhltsfDown","",ROOT.RooArgSet(m),RooDataHist_wg_electronhltsf_down)
+
+    RooDataHist_topjets_electronhltsf_up = ROOT.RooDataHist("topjets_electronhltsfUp","",ROOT.RooArgList(m),labels["top+jets"]["hists-electron-hlt-sf-up"][mlg_index])
+#RooHistPdf_topjets_electronhltsf_up = ROOT.RooHistPdf("topjets_electronhltsfUp","",ROOT.RooArgSet(m),RooDataHist_topjets_electronhltsf_up)
+    RooDataHist_topjets_electronhltsf_down = ROOT.RooDataHist("topjets_electronhltsfDown","",ROOT.RooArgList(m),makeDownShape(labels["top+jets"]["hists-electron-hlt-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]))
+#RooHistPdf_topjets_electronhltsf_down = ROOT.RooHistPdf("topjets_electronhltsfDown","",ROOT.RooArgSet(m),RooDataHist_topjets_electronhltsf_down)
+
+    RooDataHist_zgjets_electronhltsf_up = ROOT.RooDataHist("zgjets_electronhltsfUp","",ROOT.RooArgList(m),labels["zg+jets"]["hists-electron-hlt-sf-up"][mlg_index])
+#RooHistPdf_zgjets_electronhltsf_up = ROOT.RooHistPdf("zgjets_electronhltsfUp","",ROOT.RooArgSet(m),RooDataHist_zgjets_electronhltsf_up)
+    RooDataHist_zgjets_electronhltsf_down = ROOT.RooDataHist("zgjets_electronhltsfDown","",ROOT.RooArgList(m),makeDownShape(labels["zg+jets"]["hists-electron-hlt-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]))
+#RooHistPdf_zgjets_electronhltsf_down = ROOT.RooHistPdf("zgjets_electronhltsfDown","",ROOT.RooArgSet(m),RooDataHist_zgjets_electronhltsf_down)
+
+    RooDataHist_vvjets_electronhltsf_up = ROOT.RooDataHist("vvjets_electronhltsfUp","",ROOT.RooArgList(m),labels["vv+jets"]["hists-electron-hlt-sf-up"][mlg_index])
+#RooHistPdf_vvjets_electronhltsf_up = ROOT.RooHistPdf("vvjets_electronhltsfUp","",ROOT.RooArgSet(m),RooDataHist_vvjets_electronhltsf_up)
+    RooDataHist_vvjets_electronhltsf_down = ROOT.RooDataHist("vvjets_electronhltsfDown","",ROOT.RooArgList(m),makeDownShape(labels["vv+jets"]["hists-electron-hlt-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]))
+#RooHistPdf_vvjets_electronhltsf_down = ROOT.RooHistPdf("vvjets_electronhltsfDown","",ROOT.RooArgSet(m),RooDataHist_vvjets_electronhltsf_down)
+
+#muon hlt sf
+
+    RooDataHist_wg_muonhltsf_up = ROOT.RooDataHist("wg_muonhltsfUp","",ROOT.RooArgList(m),labels["wg+jets"]["hists-muon-hlt-sf-up"][mlg_index])
+#RooHistPdf_wg_muonhltsf_up = ROOT.RooHistPdf("wg_muonhltsfUp","",ROOT.RooArgSet(m),RooDataHist_wg_muonhltsf_up)
+    RooDataHist_wg_muonhltsf_down = ROOT.RooDataHist("wg_muonhltsfDown","",ROOT.RooArgList(m),makeDownShape(labels["wg+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]))
+#RooHistPdf_wg_muonhltsf_down = ROOT.RooHistPdf("wg_muonhltsfDown","",ROOT.RooArgSet(m),RooDataHist_wg_muonhltsf_down)
+
+    RooDataHist_topjets_muonhltsf_up = ROOT.RooDataHist("topjets_muonhltsfUp","",ROOT.RooArgList(m),labels["top+jets"]["hists-muon-hlt-sf-up"][mlg_index])
+#RooHistPdf_topjets_muonhltsf_up = ROOT.RooHistPdf("topjets_muonhltsfUp","",ROOT.RooArgSet(m),RooDataHist_topjets_muonhltsf_up)
+    RooDataHist_topjets_muonhltsf_down = ROOT.RooDataHist("topjets_muonhltsfDown","",ROOT.RooArgList(m),makeDownShape(labels["top+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]))
+#RooHistPdf_topjets_muonhltsf_down = ROOT.RooHistPdf("topjets_muonhltsfDown","",ROOT.RooArgSet(m),RooDataHist_topjets_muonhltsf_down)
+
+    RooDataHist_zgjets_muonhltsf_up = ROOT.RooDataHist("zgjets_muonhltsfUp","",ROOT.RooArgList(m),labels["zg+jets"]["hists-muon-hlt-sf-up"][mlg_index])
+#RooHistPdf_zgjets_muonhltsf_up = ROOT.RooHistPdf("zgjets_muonhltsfUp","",ROOT.RooArgSet(m),RooDataHist_zgjets_muonhltsf_up)
+    RooDataHist_zgjets_muonhltsf_down = ROOT.RooDataHist("zgjets_muonhltsfDown","",ROOT.RooArgList(m),makeDownShape(labels["zg+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]))
+#RooHistPdf_zgjets_muonhltsf_down = ROOT.RooHistPdf("zgjets_muonhltsfDown","",ROOT.RooArgSet(m),RooDataHist_zgjets_muonhltsf_down)
+
+    RooDataHist_vvjets_muonhltsf_up = ROOT.RooDataHist("vvjets_muonhltsfUp","",ROOT.RooArgList(m),labels["vv+jets"]["hists-muon-hlt-sf-up"][mlg_index])
+#RooHistPdf_vvjets_muonhltsf_up = ROOT.RooHistPdf("vvjets_muonhltsfUp","",ROOT.RooArgSet(m),RooDataHist_vvjets_muonhltsf_up)
+    RooDataHist_vvjets_muonhltsf_down = ROOT.RooDataHist("vvjets_muonhltsfDown","",ROOT.RooArgList(m),makeDownShape(labels["vv+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]))
+#RooHistPdf_vvjets_muonhltsf_down = ROOT.RooHistPdf("vvjets_muonhltsfDown","",ROOT.RooArgSet(m),RooDataHist_vvjets_muonhltsf_down)
+
+#muon iso sf
+
+    RooDataHist_wg_muonisosf_up = ROOT.RooDataHist("wg_muonisosfUp","",ROOT.RooArgList(m),labels["wg+jets"]["hists-muon-iso-sf-up"][mlg_index])
+#RooHistPdf_wg_muonisosf_up = ROOT.RooHistPdf("wg_muonisosfUp","",ROOT.RooArgSet(m),RooDataHist_wg_muonisosf_up)
+    RooDataHist_wg_muonisosf_down = ROOT.RooDataHist("wg_muonisosfDown","",ROOT.RooArgList(m),makeDownShape(labels["wg+jets"]["hists-muon-iso-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]))
+#RooHistPdf_wg_muonisosf_down = ROOT.RooHistPdf("wg_muonisosfDown","",ROOT.RooArgSet(m),RooDataHist_wg_muonisosf_down)
+
+    RooDataHist_topjets_muonisosf_up = ROOT.RooDataHist("topjets_muonisosfUp","",ROOT.RooArgList(m),labels["top+jets"]["hists-muon-iso-sf-up"][mlg_index])
+#RooHistPdf_topjets_muonisosf_up = ROOT.RooHistPdf("topjets_muonisosfUp","",ROOT.RooArgSet(m),RooDataHist_topjets_muonisosf_up)
+    RooDataHist_topjets_muonisosf_down = ROOT.RooDataHist("topjets_muonisosfDown","",ROOT.RooArgList(m),makeDownShape(labels["top+jets"]["hists-muon-iso-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]))
+#RooHistPdf_topjets_muonisosf_down = ROOT.RooHistPdf("topjets_muonisosfDown","",ROOT.RooArgSet(m),RooDataHist_topjets_muonisosf_down)
+
+    RooDataHist_zgjets_muonisosf_up = ROOT.RooDataHist("zgjets_muonisosfUp","",ROOT.RooArgList(m),labels["zg+jets"]["hists-muon-iso-sf-up"][mlg_index])
+#RooHistPdf_zgjets_muonisosf_up = ROOT.RooHistPdf("zgjets_muonisosfUp","",ROOT.RooArgSet(m),RooDataHist_zgjets_muonisosf_up)
+    RooDataHist_zgjets_muonisosf_down = ROOT.RooDataHist("zgjets_muonisosfDown","",ROOT.RooArgList(m),makeDownShape(labels["zg+jets"]["hists-muon-iso-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]))
+#RooHistPdf_zgjets_muonisosf_down = ROOT.RooHistPdf("zgjets_muonisosfDown","",ROOT.RooArgSet(m),RooDataHist_zgjets_muonisosf_down)
+
+    RooDataHist_vvjets_muonisosf_up = ROOT.RooDataHist("vvjets_muonisosfUp","",ROOT.RooArgList(m),labels["vv+jets"]["hists-muon-iso-sf-up"][mlg_index])
+#RooHistPdf_vvjets_muonisosf_up = ROOT.RooHistPdf("vvjets_muonisosfUp","",ROOT.RooArgSet(m),RooDataHist_vvjets_muonisosf_up)
+    RooDataHist_vvjets_muonisosf_down = ROOT.RooDataHist("vvjets_muonisosfDown","",ROOT.RooArgList(m),makeDownShape(labels["vv+jets"]["hists-muon-iso-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]))
+#RooHistPdf_vvjets_muonisosf_down = ROOT.RooHistPdf("vvjets_muonisosfDown","",ROOT.RooArgSet(m),RooDataHist_vvjets_muonisosf_down)
+
+#muon id sf
+
+    RooDataHist_wg_muonidsf_up = ROOT.RooDataHist("wg_muonidsfUp","",ROOT.RooArgList(m),labels["wg+jets"]["hists-muon-id-sf-up"][mlg_index])
+#RooHistPdf_wg_muonidsf_up = ROOT.RooHistPdf("wg_muonidsfUp","",ROOT.RooArgSet(m),RooDataHist_wg_muonidsf_up)
+    RooDataHist_wg_muonidsf_down = ROOT.RooDataHist("wg_muonidsfDown","",ROOT.RooArgList(m),makeDownShape(labels["wg+jets"]["hists-muon-id-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]))
+#RooHistPdf_wg_muonidsf_down = ROOT.RooHistPdf("wg_muonidsfDown","",ROOT.RooArgSet(m),RooDataHist_wg_muonidsf_down)
+
+    RooDataHist_topjets_muonidsf_up = ROOT.RooDataHist("topjets_muonidsfUp","",ROOT.RooArgList(m),labels["top+jets"]["hists-muon-id-sf-up"][mlg_index])
+#RooHistPdf_topjets_muonidsf_up = ROOT.RooHistPdf("topjets_muonidsfUp","",ROOT.RooArgSet(m),RooDataHist_topjets_muonidsf_up)
+    RooDataHist_topjets_muonidsf_down = ROOT.RooDataHist("topjets_muonidsfDown","",ROOT.RooArgList(m),makeDownShape(labels["top+jets"]["hists-muon-id-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]))
+#RooHistPdf_topjets_muonidsf_down = ROOT.RooHistPdf("topjets_muonidsfDown","",ROOT.RooArgSet(m),RooDataHist_topjets_muonidsf_down)
+
+    RooDataHist_zgjets_muonidsf_up = ROOT.RooDataHist("zgjets_muonidsfUp","",ROOT.RooArgList(m),labels["zg+jets"]["hists-muon-id-sf-up"][mlg_index])
+#RooHistPdf_zgjets_muonidsf_up = ROOT.RooHistPdf("zgjets_muonidsfUp","",ROOT.RooArgSet(m),RooDataHist_zgjets_muonidsf_up)
+    RooDataHist_zgjets_muonidsf_down = ROOT.RooDataHist("zgjets_muonidsfDown","",ROOT.RooArgList(m),makeDownShape(labels["zg+jets"]["hists-muon-id-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]))
+#RooHistPdf_zgjets_muonidsf_down = ROOT.RooHistPdf("zgjets_muonidsfDown","",ROOT.RooArgSet(m),RooDataHist_zgjets_muonidsf_down)
+
+    RooDataHist_vvjets_muonidsf_up = ROOT.RooDataHist("vvjets_muonidsfUp","",ROOT.RooArgList(m),labels["vv+jets"]["hists-muon-id-sf-up"][mlg_index])
+#RooHistPdf_vvjets_muonidsf_up = ROOT.RooHistPdf("vvjets_muonidsfUp","",ROOT.RooArgSet(m),RooDataHist_vvjets_muonidsf_up)
+    RooDataHist_vvjets_muonidsf_down = ROOT.RooDataHist("vvjets_muonidsfDown","",ROOT.RooArgList(m),makeDownShape(labels["vv+jets"]["hists-muon-id-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]))
+#RooHistPdf_vvjets_muonidsf_down = ROOT.RooHistPdf("vvjets_muonidsfDown","",ROOT.RooArgSet(m),RooDataHist_vvjets_muonidsf_down)
+
+#print "RooParametricShapeBinPdf_bwcb.getNorm() = " + str(RooParametricShapeBinPdf_bwcb.getNorm()) 
+
+
+    ws=ROOT.RooWorkspace()
+
+#ws.import(...) does not work because import is a keyword in python
+
+#getattr(ws,"import")(bwcb_norm)
+
+    getattr(ws,"import")(m)
+    getattr(ws,"import")(m0)
+    getattr(ws,"import")(sigma)
+    getattr(ws,"import")(alpha)
+    getattr(ws,"import")(n)
+    getattr(ws,"import")(width)
+    getattr(ws,"import")(mass)
+    getattr(ws,"import")(bw)
+    getattr(ws,"import")(cb)
+    getattr(ws,"import")(RooFFTConvPdf_bwcb,ROOT.RooFit.RecycleConflictNodes())
+    getattr(ws,"import")(RooParametricShapeBinPdf_bwcb,ROOT.RooFit.RecycleConflictNodes())
+    getattr(ws,"import")(bwcbbin_norm)
+    
+    getattr(ws,"import")(RooDataHist_wg)
+    getattr(ws,"import")(RooDataHist_vvjets)
+    getattr(ws,"import")(RooDataHist_zgjets)
+    getattr(ws,"import")(RooDataHist_topjets)
+    getattr(ws,"import")(RooDataHist_fake_lepton)
+    getattr(ws,"import")(RooDataHist_fake_photon)
+    getattr(ws,"import")(RooDataHist_double_fake)
+    getattr(ws,"import")(RooDataHist_e_to_p_non_res)
+    
+    getattr(ws,"import")(RooDataHist_fake_photon_syst1_up)
+    getattr(ws,"import")(RooDataHist_fake_photon_syst1_down)
+    getattr(ws,"import")(RooDataHist_fake_photon_syst2_up)
+    getattr(ws,"import")(RooDataHist_fake_photon_syst2_down)
+    
+    getattr(ws,"import")(RooDataHist_wg_scale_up)
+    getattr(ws,"import")(RooDataHist_wg_scale_down)
+    getattr(ws,"import")(RooDataHist_zg_scale_up)
+    getattr(ws,"import")(RooDataHist_zg_scale_down)
+    
+    getattr(ws,"import")(RooDataHist_wg_pileup_up)
+    getattr(ws,"import")(RooDataHist_wg_pileup_down)
+    getattr(ws,"import")(RooDataHist_vvjets_pileup_up)
+    getattr(ws,"import")(RooDataHist_vvjets_pileup_down)
+    getattr(ws,"import")(RooDataHist_zgjets_pileup_up)
+    getattr(ws,"import")(RooDataHist_zgjets_pileup_down)
+    getattr(ws,"import")(RooDataHist_topjets_pileup_up)
+    getattr(ws,"import")(RooDataHist_topjets_pileup_down)
+    
+    getattr(ws,"import")(RooDataHist_wg_prefire_up)
+    getattr(ws,"import")(RooDataHist_wg_prefire_down)
+    getattr(ws,"import")(RooDataHist_vvjets_prefire_up)
+    getattr(ws,"import")(RooDataHist_vvjets_prefire_down)
+    getattr(ws,"import")(RooDataHist_zgjets_prefire_up)
+    getattr(ws,"import")(RooDataHist_zgjets_prefire_down)
+    getattr(ws,"import")(RooDataHist_topjets_prefire_up)
+    getattr(ws,"import")(RooDataHist_topjets_prefire_down)
+    
+    getattr(ws,"import")(RooDataHist_wg_jes_up)
+    getattr(ws,"import")(RooDataHist_wg_jes_down)
+    getattr(ws,"import")(RooDataHist_vvjets_jes_up)
+    getattr(ws,"import")(RooDataHist_vvjets_jes_down)
+    getattr(ws,"import")(RooDataHist_zgjets_jes_up)
+    getattr(ws,"import")(RooDataHist_zgjets_jes_down)
+    getattr(ws,"import")(RooDataHist_topjets_jes_up)
+    getattr(ws,"import")(RooDataHist_topjets_jes_down)
+    
+    getattr(ws,"import")(RooDataHist_wg_jer_up)
+    getattr(ws,"import")(RooDataHist_wg_jer_down)
+    getattr(ws,"import")(RooDataHist_vvjets_jer_up)
+    getattr(ws,"import")(RooDataHist_vvjets_jer_down)
+    getattr(ws,"import")(RooDataHist_zgjets_jer_up)
+    getattr(ws,"import")(RooDataHist_zgjets_jer_down)
+    getattr(ws,"import")(RooDataHist_topjets_jer_up)
+    getattr(ws,"import")(RooDataHist_topjets_jer_down)
+    
+    getattr(ws,"import")(RooDataHist_wg_electronrecosf_up)
+    getattr(ws,"import")(RooDataHist_wg_electronrecosf_down)
+    getattr(ws,"import")(RooDataHist_vvjets_electronrecosf_up)
+    getattr(ws,"import")(RooDataHist_vvjets_electronrecosf_down)
+    getattr(ws,"import")(RooDataHist_zgjets_electronrecosf_up)
+    getattr(ws,"import")(RooDataHist_zgjets_electronrecosf_down)
+    getattr(ws,"import")(RooDataHist_topjets_electronrecosf_up)
+    getattr(ws,"import")(RooDataHist_topjets_electronrecosf_down)
+    
+    getattr(ws,"import")(RooDataHist_wg_electronidsf_up)
+    getattr(ws,"import")(RooDataHist_wg_electronidsf_down)
+    getattr(ws,"import")(RooDataHist_vvjets_electronidsf_up)
+    getattr(ws,"import")(RooDataHist_vvjets_electronidsf_down)
+    getattr(ws,"import")(RooDataHist_zgjets_electronidsf_up)
+    getattr(ws,"import")(RooDataHist_zgjets_electronidsf_down)
+    getattr(ws,"import")(RooDataHist_topjets_electronidsf_up)
+    getattr(ws,"import")(RooDataHist_topjets_electronidsf_down)
+    
+    getattr(ws,"import")(RooDataHist_wg_electronhltsf_up)
+    getattr(ws,"import")(RooDataHist_wg_electronhltsf_down)
+    getattr(ws,"import")(RooDataHist_vvjets_electronhltsf_up)
+    getattr(ws,"import")(RooDataHist_vvjets_electronhltsf_down)
+    getattr(ws,"import")(RooDataHist_zgjets_electronhltsf_up)
+    getattr(ws,"import")(RooDataHist_zgjets_electronhltsf_down)
+    getattr(ws,"import")(RooDataHist_topjets_electronhltsf_up)
+    getattr(ws,"import")(RooDataHist_topjets_electronhltsf_down)
+    
+    getattr(ws,"import")(RooDataHist_wg_muonidsf_up)
+    getattr(ws,"import")(RooDataHist_wg_muonidsf_down)
+    getattr(ws,"import")(RooDataHist_vvjets_muonidsf_up)
+    getattr(ws,"import")(RooDataHist_vvjets_muonidsf_down)
+    getattr(ws,"import")(RooDataHist_zgjets_muonidsf_up)
+    getattr(ws,"import")(RooDataHist_zgjets_muonidsf_down)
+    getattr(ws,"import")(RooDataHist_topjets_muonidsf_up)
+    getattr(ws,"import")(RooDataHist_topjets_muonidsf_down)
+    
+    getattr(ws,"import")(RooDataHist_wg_muonhltsf_up)
+    getattr(ws,"import")(RooDataHist_wg_muonhltsf_down)
+    getattr(ws,"import")(RooDataHist_vvjets_muonhltsf_up)
+    getattr(ws,"import")(RooDataHist_vvjets_muonhltsf_down)
+    getattr(ws,"import")(RooDataHist_zgjets_muonhltsf_up)
+    getattr(ws,"import")(RooDataHist_zgjets_muonhltsf_down)
+    getattr(ws,"import")(RooDataHist_topjets_muonhltsf_up)
+    getattr(ws,"import")(RooDataHist_topjets_muonhltsf_down)
+    
+    getattr(ws,"import")(RooDataHist_wg_muonisosf_up)
+    getattr(ws,"import")(RooDataHist_wg_muonisosf_down)
+    getattr(ws,"import")(RooDataHist_vvjets_muonisosf_up)
+    getattr(ws,"import")(RooDataHist_vvjets_muonisosf_down)
+    getattr(ws,"import")(RooDataHist_zgjets_muonisosf_up)
+    getattr(ws,"import")(RooDataHist_zgjets_muonisosf_down)
+    getattr(ws,"import")(RooDataHist_topjets_muonisosf_up)
+    getattr(ws,"import")(RooDataHist_topjets_muonisosf_down)
+    
+
+    RooDataHist_data = ROOT.RooDataHist("","",ROOT.RooArgList(m),data["hists"][mlg_index])
+
+    getattr(ws,"import")(RooDataHist_data.Clone("data_obs"))
+
+    ws.Write("workspace")
+
+    ws.Delete() #if we do not delete the workspace explcitly, there is a crash at the end
+
+    electron_shapes.Close()
 
 if not options.ewdim6:
     sys.exit(0)
