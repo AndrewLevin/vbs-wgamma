@@ -3276,18 +3276,31 @@ elif options.lep == "electron":
     print >> dcard, "jmax * number of background"
     print >> dcard, "kmax * number of nuisance parameters"
 
-    print >> dcard, "shapes data_obs el_chan datacard_el_chan_shapes.root data_obs"
-    print >> dcard, "shapes Wg el_chan datacard_el_chan_shapes.root wg wg_$SYSTEMATIC" 
+#    print >> dcard, "shapes data_obs el_chan datacard_el_chan_shapes.root data_obs"
+#    print >> dcard, "shapes Wg el_chan datacard_el_chan_shapes.root wg wg_$SYSTEMATIC" 
+
+#    for label in labels.keys():
+#        if label == "no label" or label == "wg+jets" or label == "w+jets":
+#            continue
+#        print >> dcard, "shapes "+label.replace("+","")+" el_chan datacard_el_chan_shapes.root "+label.replace("+","")+ " " +label.replace("+","") + "_$SYSTEMATIC" 
+
+#    print >> dcard, "shapes fake_photon el_chan datacard_el_chan_shapes.root fakephoton fakephoton_$SYSTEMATIC" 
+#    print >> dcard, "shapes fake_lepton el_chan datacard_el_chan_shapes.root fakelepton fakelepton_$SYSTEMATIC"
+#    print >> dcard, "shapes double_fake el_chan datacard_el_chan_shapes.root doublefake doublefake_$SYSTEMATIC" 
+#    print >> dcard, "shapes e_to_p_non_res el_chan datacard_el_chan_shapes.root etopnonres etopnonres_$SYSTEMATIC" 
+
+    print >> dcard, "shapes data_obs el_chan datacard_el_chan_shapes.root workspace:data_obs"
+    print >> dcard, "shapes Wg el_chan datacard_el_chan_shapes.root workspace:wg workspace:wg_$SYSTEMATIC" 
 
     for label in labels.keys():
         if label == "no label" or label == "wg+jets" or label == "w+jets":
             continue
-        print >> dcard, "shapes "+label.replace("+","")+" el_chan datacard_el_chan_shapes.root "+label.replace("+","")+ " " +label.replace("+","") + "_$SYSTEMATIC" 
+        print >> dcard, "shapes "+label.replace("+","")+" el_chan datacard_el_chan_shapes.root workspace:"+label.replace("+","")+ " workspace:" +label.replace("+","") + "_$SYSTEMATIC" 
 
-    print >> dcard, "shapes fake_photon el_chan datacard_el_chan_shapes.root fakephoton fakephoton_$SYSTEMATIC" 
-    print >> dcard, "shapes fake_lepton el_chan datacard_el_chan_shapes.root fakelepton fakelepton_$SYSTEMATIC"
-    print >> dcard, "shapes double_fake el_chan datacard_el_chan_shapes.root doublefake doublefake_$SYSTEMATIC" 
-    print >> dcard, "shapes e_to_p_non_res el_chan datacard_el_chan_shapes.root etopnonres etopnonres_$SYSTEMATIC" 
+    print >> dcard, "shapes fake_photon el_chan datacard_el_chan_shapes.root workspace:fakephoton workspace:fakephoton_$SYSTEMATIC" 
+    print >> dcard, "shapes fake_lepton el_chan datacard_el_chan_shapes.root workspace:fakelepton workspace:fakelepton_$SYSTEMATIC"
+    print >> dcard, "shapes double_fake el_chan datacard_el_chan_shapes.root workspace:doublefake workspace:doublefake_$SYSTEMATIC" 
+    print >> dcard, "shapes e_to_p_non_res el_chan datacard_el_chan_shapes.root workspace:etopnonres workspace:etopnonres_$SYSTEMATIC" 
     
     print >> dcard, "Observation "+str(data["hists"][mlg_index].Integral())
     dcard.write("bin")
