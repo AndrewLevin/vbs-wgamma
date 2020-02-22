@@ -3252,7 +3252,7 @@ if options.lep == "muon":
 
     dcard.write('\n')    
 
-    dcard.write("fakelepton lnN")
+    dcard.write("fakemuon lnN")
     dcard.write(" -")
 
     for label in labels.keys():
@@ -3268,6 +3268,7 @@ if options.lep == "muon":
     dcard.write('\n')    
 
 elif options.lep == "electron":
+#if True:
 
     dcard = open("datacard_el_chan.txt",'w')
 
@@ -3281,7 +3282,7 @@ elif options.lep == "electron":
     for label in labels.keys():
         if label == "no label" or label == "wg+jets" or label == "w+jets":
             continue
-            print >> dcard, "shapes "+label.replace("+","")+" el_chan datacard_el_chan_shapes.root "+label.replace("+","")+ " " +label.replace("+","") + "_$SYSTEMATIC" 
+        print >> dcard, "shapes "+label.replace("+","")+" el_chan datacard_el_chan_shapes.root "+label.replace("+","")+ " " +label.replace("+","") + "_$SYSTEMATIC" 
 
     print >> dcard, "shapes fake_photon el_chan datacard_el_chan_shapes.root fakephoton fakephoton_$SYSTEMATIC" 
     print >> dcard, "shapes fake_lepton el_chan datacard_el_chan_shapes.root fakelepton fakelepton_$SYSTEMATIC"
@@ -3532,7 +3533,7 @@ elif options.lep == "electron":
 
     dcard.write('\n')    
 
-    dcard.write("fakelepton lnN")
+    dcard.write("fakeelectron lnN")
     dcard.write(" -")
 
     for label in labels.keys():
@@ -3542,7 +3543,7 @@ elif options.lep == "electron":
 
     dcard.write(" -")
     dcard.write(" 1.3")
-    dcard.write(" -")
+    dcard.write(" 1.3")
     dcard.write(" -")
     
     dcard.write('\n')    
@@ -3765,6 +3766,7 @@ elif options.lep == "electron":
     RooDataHist_zg_scale_down = ROOT.RooDataHist("zgjets_zgscaleDown","",ROOT.RooArgList(m),makeDownShape(zgjets_scale_syst,labels["zg+jets"]["hists"][mlg_index]))
 
 #fake photon syst 1
+
 
     RooDataHist_fake_photon_syst1_up = ROOT.RooDataHist("fakephoton_fakephotonsyst1Up","",ROOT.RooArgList(m),fake_photon_alt["hists"][mlg_index])
 #RooHistPdf_fake_photon_syst1_up = ROOT.RooHistPdf("fakephoton_fakephotonsyst1Up","",ROOT.RooArgSet(m),RooDataHist_fake_photon_syst1_up)
