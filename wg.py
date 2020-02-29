@@ -54,6 +54,8 @@ parser.add_option('--year',dest='year',default='all')
 parser.add_option('--zveto',dest='zveto',action='store_true',default=False)
 parser.add_option('--phoeta',dest='phoeta',default='both')
 parser.add_option('--overflow',dest='overflow',action='store_true',default=False)
+parser.add_option('--make_datacard',dest='make_datacard',action='store_true',default=False)
+parser.add_option('--make_cut_and_count_datacard',dest='make_cut_and_count_datacard',action='store_true',default=False)
 parser.add_option('--fit',dest='fit',action='store_true',default=False)
 parser.add_option('--closure_test',dest='closure_test',action='store_true',default=False)
 parser.add_option('--no_pdf_var_for_2017_and_2018',dest='no_pdf_var_for_2017_and_2018',action='store_true',default=False)
@@ -218,7 +220,9 @@ else:
 #    from wg_labels_wjets import labels
 #from wg_labels_recoil_tree import labels
 
-mlg_fit_upper_bound = 400
+mlg_fit_lower_bound = 0
+mlg_fit_upper_bound = 300
+mlg_bin_width=2
 
 #the first variable is for the ewdim6 analysis
 #variables = ["photon_pt","dphilg","met","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","lepton_phi","photon_phi","njets40","mt","npvs","drlg"]
@@ -260,7 +264,7 @@ ROOT.RDF.TH1DModel('lepton_eta', '', 50, -2.5, 2.5 ),
 ROOT.RDF.TH1DModel('', '', n_photon_pt_bins, binning_photon_pt ), 
 ROOT.RDF.TH1DModel('photon_eta', '', 50, -2.5, 2.5 ), 
 #ROOT.RDF.TH1DModel("mlg","",mlg_fit_upper_bound/2,0,mlg_fit_upper_bound), 
-ROOT.RDF.TH1DModel("mlg","",mlg_fit_upper_bound/2,0,mlg_fit_upper_bound), 
+ROOT.RDF.TH1DModel("mlg","",(mlg_fit_upper_bound-mlg_fit_lower_bound)/mlg_bin_width,mlg_fit_lower_bound,mlg_fit_upper_bound), 
 ROOT.RDF.TH1DModel("mlg","",100,0,200),
 ROOT.RDF.TH1DModel("lepton_phi","",56,-3.5,3.5), 
 ROOT.RDF.TH1DModel("photon_phi","",56,-3.5,3.5), 
@@ -1871,8 +1875,8 @@ def mlg_fit(inputs):
 
     print "inputs[\"label\"] = "+str(inputs["label"])
 
-    m= ROOT.RooRealVar("m","m",0,mlg_fit_upper_bound)
-    m0=ROOT.RooRealVar("m0",    "m0",2.48320,-4,4)
+    m= ROOT.RooRealVar("m","m",mlg_fit_lower_bound,mlg_fit_upper_bound)
+    m0=ROOT.RooRealVar("m0",    "m0",-2,-3,3)
     sigma=ROOT.RooRealVar("sigma",  "sigma",1.75029,0.1,3)
     alpha=ROOT.RooRealVar("alpha",  "alpha",2.48320,0,10)
 #    alpha=ROOT.RooRealVar("alpha",  "alpha",4.45779,4.45779-2,4.45779+2)
@@ -1882,8 +1886,10 @@ def mlg_fit(inputs):
     n=ROOT.RooRealVar("n",          "n",2.11960,2.11960,2.11960)
     cb = ROOT.RooCBShape("cb", "Crystal Ball", m, m0, sigma, alpha, n)
 
-    mass = ROOT.RooRealVar("mass","mass",91.9311,89.855-5,89.855+5)
-    width = ROOT.RooRealVar("width","width",3.3244,0.5*3.3244/4.0,10*3.3244/3.0);
+#    mass = ROOT.RooRealVar("mass","mass",91.9311,89.855-5,89.855+5)
+#    width = ROOT.RooRealVar("width","width",3.3244,0.5*3.3244/4.0,10*3.3244/3.0);
+    mass = ROOT.RooRealVar("mass","mass",91.1876,91.1876,91.1876)
+    width = ROOT.RooRealVar("width","width",2.4952,2.4952,2.4952);
     bw = ROOT.RooBreitWigner("bw","Breit Wigner",m,mass,width)
 
     RooFFTConvPdf_bwcb = ROOT.RooFFTConvPdf("bwcb","Breit Wigner convolved with a Crystal Ball",m,bw,cb)
@@ -2414,6 +2420,13 @@ for i in range(len(variables)):
 
     hstack = ROOT.THStack()
 
+    if data_driven:
+        if not options.use_wjets_for_fake_photon:
+            hstack.Add(fake_photon["hists"][i])
+        if not options.closure_test:
+            hstack.Add(fake_lepton["hists"][i])
+            hstack.Add(double_fake["hists"][i])
+
     for label in labels.keys():
         if labels[label]["color"] == None:
             continue
@@ -2442,14 +2455,6 @@ for i in range(len(variables)):
         if not options.closure_test:
             hsum.Add(fake_lepton["hists"][i])
             hsum.Add(double_fake["hists"][i])
-
-
-    if data_driven:
-        if not options.use_wjets_for_fake_photon:
-            hstack.Add(fake_photon["hists"][i])
-        if not options.closure_test:
-            hstack.Add(fake_lepton["hists"][i])
-            hstack.Add(double_fake["hists"][i])
 
 
     if data["hists"][i].GetMaximum() < hsum.GetMaximum():
@@ -3002,6 +3007,8 @@ elif lepton_name == "electron":
 
 zgjets_scale_syst=histogram_models[mlg_index].GetHistogram()
 
+
+
 for i in range(labels["zg+jets"]["hists-scale-variation0"][mlg_index].GetNbinsX()+2):
     zgjets_scale_syst.SetBinContent(i,labels["zg+jets"]["hists"][mlg_index].GetBinContent(i)+max(
         abs(labels["zg+jets"]["hists-scale-variation0"][mlg_index].GetBinContent(i) - labels["zg+jets"]["hists"][mlg_index].GetBinContent(i)),
@@ -3011,9 +3018,64 @@ for i in range(labels["zg+jets"]["hists-scale-variation0"][mlg_index].GetNbinsX(
         abs(labels["zg+jets"]["hists-scale-variation5"][mlg_index].GetBinContent(i) - labels["zg+jets"]["hists"][mlg_index].GetBinContent(i)),
         abs(labels["zg+jets"]["hists-scale-variation6"][mlg_index].GetBinContent(i) - labels["zg+jets"]["hists"][mlg_index].GetBinContent(i))))
 
-if options.lep == "muon":
+fake_electron_syst_up=histogram_models[mlg_index].GetHistogram()
 
-    dcard = open("datacard_mu_chan.txt",'w')
+fake_electron_syst_up.Add(fake_lepton["hists"][mlg_index])
+
+fake_electron_syst_up.Scale(1.3)
+
+fake_photon_stat_up=[]
+
+for i in range(1,fake_photon["hists"][mlg_index].GetNbinsX()+1):
+    fake_photon_stat_up.append(histogram_models[mlg_index].GetHistogram())
+    for j in range(1,fake_photon["hists"][mlg_index].GetNbinsX()+1):
+        if i == j:
+            fake_photon_stat_up[len(fake_photon_stat_up)-1].SetBinContent(j,fake_photon["hists"][mlg_index].GetBinContent(j)+fake_photon["hists"][mlg_index].GetBinError(j))
+        else:
+            fake_photon_stat_up[len(fake_photon_stat_up)-1].SetBinContent(j,fake_photon["hists"][mlg_index].GetBinContent(j))
+        fake_photon_stat_up[len(fake_photon_stat_up)-1].SetBinError(j,0)
+
+fake_lepton_stat_up=[]
+
+for i in range(1,fake_lepton["hists"][mlg_index].GetNbinsX()+1):
+    fake_lepton_stat_up.append(histogram_models[mlg_index].GetHistogram())
+    for j in range(1,fake_lepton["hists"][mlg_index].GetNbinsX()+1):
+        if i == j:
+            fake_lepton_stat_up[len(fake_lepton_stat_up)-1].SetBinContent(j,fake_lepton["hists"][mlg_index].GetBinContent(j)+fake_lepton["hists"][mlg_index].GetBinError(j))
+        else:
+            fake_lepton_stat_up[len(fake_lepton_stat_up)-1].SetBinContent(j,fake_lepton["hists"][mlg_index].GetBinContent(j))
+        fake_lepton_stat_up[len(fake_lepton_stat_up)-1].SetBinError(j,0)
+
+zgjets_stat_up=[]
+
+for i in range(1,labels["zg+jets"]["hists"][mlg_index].GetNbinsX()+1):
+    zgjets_stat_up.append(histogram_models[mlg_index].GetHistogram())
+    for j in range(1,labels["zg+jets"]["hists"][mlg_index].GetNbinsX()+1):
+        if i == j:
+            zgjets_stat_up[len(zgjets_stat_up)-1].SetBinContent(j,labels["zg+jets"]["hists"][mlg_index].GetBinContent(j)+labels["zg+jets"]["hists"][mlg_index].GetBinError(j))
+        else:
+            zgjets_stat_up[len(zgjets_stat_up)-1].SetBinContent(j,labels["zg+jets"]["hists"][mlg_index].GetBinContent(j))
+        zgjets_stat_up[len(zgjets_stat_up)-1].SetBinError(j,0)
+
+wg_stat_up=[]
+
+for i in range(1,labels["wg+jets"]["hists"][mlg_index].GetNbinsX()+1):
+    wg_stat_up.append(histogram_models[mlg_index].GetHistogram())
+    for j in range(1,labels["wg+jets"]["hists"][mlg_index].GetNbinsX()+1):
+        if i == j:
+            wg_stat_up[len(wg_stat_up)-1].SetBinContent(j,labels["wg+jets"]["hists"][mlg_index].GetBinContent(j)+labels["wg+jets"]["hists"][mlg_index].GetBinError(j))
+        else:    
+            wg_stat_up[len(wg_stat_up)-1].SetBinContent(j,labels["wg+jets"]["hists"][mlg_index].GetBinContent(j))
+        wg_stat_up[len(wg_stat_up)-1].SetBinError(j,0)
+
+if options.make_cut_and_count_datacard:
+
+    if options.lep == "muon":
+        dcard = open("wg_datacard_cut_and_count_mu_chan.txt",'w')
+    elif options.lep == "electron":
+        dcard = open("wg_datacard_cut_and_count_el_chan.txt",'w')
+    else:
+        assert(0)
 
     print >> dcard, "imax 1 number of channels"
     print >> dcard, "jmax * number of background"
@@ -3021,19 +3083,34 @@ if options.lep == "muon":
 
     print >> dcard, "Observation "+str(data["hists"][mlg_index].Integral())
     dcard.write("bin")
-    dcard.write(" mu_chan")
 
-    for label in labels.keys():
-        if label == "no label" or label == "wg+jets" or label == "w+jets":
-            continue
+    if options.lep == "muon":
         dcard.write(" mu_chan")
+        for label in labels.keys():
+            if label == "no label" or label == "wg+jets" or label == "w+jets":
+                continue
+            dcard.write(" mu_chan")
 
-    dcard.write(" mu_chan")
-    dcard.write(" mu_chan")
-    dcard.write(" mu_chan")
-    dcard.write(" mu_chan")
-    dcard.write('\n')    
-    
+        dcard.write(" mu_chan")
+        dcard.write(" mu_chan")
+        dcard.write(" mu_chan")
+        dcard.write(" mu_chan")
+        dcard.write('\n')    
+    elif options.lep == "electron":
+        dcard.write(" el_chan")
+        for label in labels.keys():
+            if label == "no label" or label == "wg+jets" or label == "w+jets":
+                continue
+            dcard.write(" el_chan")
+
+        dcard.write(" el_chan")
+        dcard.write(" el_chan")
+        dcard.write(" el_chan")
+        dcard.write(" el_chan")
+        dcard.write('\n')    
+    else:
+        assert(0)
+
     dcard.write("process")
     dcard.write(" Wg")
         
@@ -3252,7 +3329,7 @@ if options.lep == "muon":
 
     dcard.write('\n')    
 
-    dcard.write("fakemuon lnN")
+    dcard.write("fakemuonsyst lnN")
     dcard.write(" -")
 
     for label in labels.keys():
@@ -3267,56 +3344,94 @@ if options.lep == "muon":
     
     dcard.write('\n')    
 
-elif options.lep == "electron":
-#if True:
+if options.make_datacard:
 
-    dcard = open("datacard_el_chan.txt",'w')
-
+    if options.lep == "muon":
+        dcard = open("wg_datacard_mu_chan.txt",'w')
+    elif options.lep == "electron":
+        dcard = open("wg_datacard_el_chan.txt",'w')
+    else:
+        assert(0)
+        
     print >> dcard, "imax 1 number of channels"
     print >> dcard, "jmax * number of background"
     print >> dcard, "kmax * number of nuisance parameters"
 
-#    print >> dcard, "shapes data_obs el_chan datacard_el_chan_shapes.root data_obs"
-#    print >> dcard, "shapes Wg el_chan datacard_el_chan_shapes.root wg wg_$SYSTEMATIC" 
+    if options.lep == "muon":
+        print >> dcard, "shapes data_obs mu_chan datacard_mu_chan_shapes.root data_obs"
+        print >> dcard, "shapes Wg mu_chan datacard_mu_chan_shapes.root wg wg_$SYSTEMATIC" 
+    elif options.lep == "electron":
+        print >> dcard, "shapes data_obs el_chan datacard_el_chan_shapes.root data_obs"
+        print >> dcard, "shapes Wg el_chan datacard_el_chan_shapes.root wg wg_$SYSTEMATIC" 
+    else:
+        assert(0)    
+
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        if options.lep == "muon":
+            print >> dcard, "shapes "+label.replace("+","")+" mu_chan datacard_mu_chan_shapes.root "+label.replace("+","")+ " " +label.replace("+","") + "_$SYSTEMATIC" 
+        elif options.lep == "electron":
+            print >> dcard, "shapes "+label.replace("+","")+" el_chan datacard_el_chan_shapes.root "+label.replace("+","")+ " " +label.replace("+","") + "_$SYSTEMATIC" 
+        else:
+            assert(0)    
+
+    if options.lep == "muon":
+        print >> dcard, "shapes fake_photon mu_chan datacard_mu_chan_shapes.root fakephoton fakephoton_$SYSTEMATIC" 
+        print >> dcard, "shapes fake_muon mu_chan datacard_mu_chan_shapes.root fakemuon fakemuon_$SYSTEMATIC"
+        print >> dcard, "shapes double_fake mu_chan datacard_mu_chan_shapes.root doublefake doublefake_$SYSTEMATIC" 
+        print >> dcard, "shapes e_to_p_non_res mu_chan datacard_mu_chan_shapes.root etopnonres etopnonres_$SYSTEMATIC" 
+    elif options.lep == "electron":
+        print >> dcard, "shapes fake_photon el_chan datacard_el_chan_shapes.root fakephoton fakephoton_$SYSTEMATIC" 
+        print >> dcard, "shapes fake_electron el_chan datacard_el_chan_shapes.root fakeelectron fakeelectron_$SYSTEMATIC"
+        print >> dcard, "shapes double_fake el_chan datacard_el_chan_shapes.root doublefake doublefake_$SYSTEMATIC" 
+        print >> dcard, "shapes e_to_p_non_res el_chan datacard_el_chan_shapes.root etopnonres etopnonres_$SYSTEMATIC" 
+        print >> dcard, "shapes e_to_p el_chan datacard_el_chan_shapes.root etop etop_$SYSTEMATIC" 
+    else:
+        assert(0)    
+
+#    print >> dcard, "shapes data_obs el_chan datacard_el_chan_shapes.root workspace:data_obs"
+#    print >> dcard, "shapes Wg el_chan datacard_el_chan_shapes.root workspace:wg workspace:wg_$SYSTEMATIC" 
 
 #    for label in labels.keys():
 #        if label == "no label" or label == "wg+jets" or label == "w+jets":
 #            continue
-#        print >> dcard, "shapes "+label.replace("+","")+" el_chan datacard_el_chan_shapes.root "+label.replace("+","")+ " " +label.replace("+","") + "_$SYSTEMATIC" 
+#        print >> dcard, "shapes "+label.replace("+","")+" el_chan datacard_el_chan_shapes.root workspace:"+label.replace("+","")+ " workspace:" +label.replace("+","") + "_$SYSTEMATIC" 
 
-#    print >> dcard, "shapes fake_photon el_chan datacard_el_chan_shapes.root fakephoton fakephoton_$SYSTEMATIC" 
-#    print >> dcard, "shapes fake_lepton el_chan datacard_el_chan_shapes.root fakelepton fakelepton_$SYSTEMATIC"
-#    print >> dcard, "shapes double_fake el_chan datacard_el_chan_shapes.root doublefake doublefake_$SYSTEMATIC" 
-#    print >> dcard, "shapes e_to_p_non_res el_chan datacard_el_chan_shapes.root etopnonres etopnonres_$SYSTEMATIC" 
-
-    print >> dcard, "shapes data_obs el_chan datacard_el_chan_shapes.root workspace:data_obs"
-    print >> dcard, "shapes Wg el_chan datacard_el_chan_shapes.root workspace:wg workspace:wg_$SYSTEMATIC" 
-
-    for label in labels.keys():
-        if label == "no label" or label == "wg+jets" or label == "w+jets":
-            continue
-        print >> dcard, "shapes "+label.replace("+","")+" el_chan datacard_el_chan_shapes.root workspace:"+label.replace("+","")+ " workspace:" +label.replace("+","") + "_$SYSTEMATIC" 
-
-    print >> dcard, "shapes fake_photon el_chan datacard_el_chan_shapes.root workspace:fakephoton workspace:fakephoton_$SYSTEMATIC" 
-    print >> dcard, "shapes fake_lepton el_chan datacard_el_chan_shapes.root workspace:fakelepton workspace:fakelepton_$SYSTEMATIC"
-    print >> dcard, "shapes double_fake el_chan datacard_el_chan_shapes.root workspace:doublefake workspace:doublefake_$SYSTEMATIC" 
-    print >> dcard, "shapes e_to_p_non_res el_chan datacard_el_chan_shapes.root workspace:etopnonres workspace:etopnonres_$SYSTEMATIC" 
+#    print >> dcard, "shapes fake_photon el_chan datacard_el_chan_shapes.root workspace:fakephoton workspace:fakephoton_$SYSTEMATIC" 
+#    print >> dcard, "shapes fake_electron el_chan datacard_el_chan_shapes.root workspace:fakeelectron workspace:fakeelectron_$SYSTEMATIC"
+#    print >> dcard, "shapes double_fake el_chan datacard_el_chan_shapes.root workspace:doublefake workspace:doublefake_$SYSTEMATIC" 
+#    print >> dcard, "shapes e_to_p_non_res el_chan datacard_el_chan_shapes.root workspace:etopnonres workspace:etopnonres_$SYSTEMATIC" 
+#    print >> dcard, "shapes e_to_p el_chan datacard_el_chan_shapes.root workspace:etop workspace:etop_$SYSTEMATIC" 
     
     print >> dcard, "Observation "+str(data["hists"][mlg_index].Integral())
     dcard.write("bin")
-    dcard.write(" el_chan")
-
-    for label in labels.keys():
-        if label == "no label" or label == "wg+jets" or label == "w+jets":
-            continue
+    if options.lep == "muon":
+        dcard.write(" mu_chan")
+        for label in labels.keys():
+            if label == "no label" or label == "wg+jets" or label == "w+jets":
+                continue
+            dcard.write(" mu_chan")
+        dcard.write(" mu_chan")
+        dcard.write(" mu_chan")
+        dcard.write(" mu_chan")
+        dcard.write(" mu_chan")
+        dcard.write('\n')    
+    elif options.lep == "electron":
         dcard.write(" el_chan")
+        for label in labels.keys():
+            if label == "no label" or label == "wg+jets" or label == "w+jets":
+                continue
+            dcard.write(" el_chan")
+        dcard.write(" el_chan")
+        dcard.write(" el_chan")
+        dcard.write(" el_chan")
+        dcard.write(" el_chan")
+        dcard.write(" el_chan")
+        dcard.write('\n')    
+    else:
+        assert(0)    
 
-    dcard.write(" el_chan")
-    dcard.write(" el_chan")
-    dcard.write(" el_chan")
-    dcard.write(" el_chan")
-    dcard.write('\n')    
-    
     dcard.write("process")
     dcard.write(" Wg")
         
@@ -3326,15 +3441,31 @@ elif options.lep == "electron":
         dcard.write(" " + label.replace("+",""))
 
     dcard.write(" fake_photon")
-    dcard.write(" fake_lepton")
+    if options.lep == "muon":
+        dcard.write(" fake_muon")
+    elif options.lep == "electron":
+        dcard.write(" fake_electron")
+    else:
+        assert(0)    
     dcard.write(" double_fake")
     dcard.write(" e_to_p_non_res")
+    if options.lep == "muon":
+        pass
+    elif options.lep == "electron":
+        dcard.write(" e_to_p")
+    else:
+        assert(0)    
     dcard.write('\n')    
     dcard.write("process")
     dcard.write(" 0")
-
-    for j in range(1,len(labels.keys())+2):
-        dcard.write(" " + str(j))
+    if options.lep == "muon":
+        for j in range(1,len(labels.keys())+2):
+            dcard.write(" " + str(j))
+    elif options.lep == "electron":
+        for j in range(1,len(labels.keys())+3):
+            dcard.write(" " + str(j))
+    else:
+        assert(0)    
     dcard.write('\n')    
     dcard.write('rate')
     dcard.write(' '+str(labels["wg+jets"]["hists"][mlg_index].Integral()))
@@ -3348,7 +3479,12 @@ elif options.lep == "electron":
     dcard.write(" "+str(fake_lepton["hists"][mlg_index].Integral())) 
     dcard.write(" "+str(double_fake["hists"][mlg_index].Integral())) 
     dcard.write(" "+str(e_to_p_non_res["hists"][mlg_index].Integral())) 
-   
+    if options.lep == "muon":
+        pass
+    elif options.lep == "electron":
+        dcard.write(" "+str(e_to_p["hists"][mlg_index].Integral())) 
+    else:
+        assert(0)    
     dcard.write('\n')    
 
     dcard.write("lumi_13tev lnN")
@@ -3363,6 +3499,12 @@ elif options.lep == "electron":
     dcard.write(" -")
     dcard.write(" -")
     dcard.write(" 1.027")
+    if options.lep == "muon":
+        pass
+    elif options.lep == "electron":
+        dcard.write(" -")
+    else:
+        assert(0)    
     
     dcard.write('\n')    
 
@@ -3378,6 +3520,12 @@ elif options.lep == "electron":
     dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
+    if options.lep == "muon":
+        pass
+    elif options.lep == "electron":
+        dcard.write(" -")
+    else:
+        assert(0)    
 
     dcard.write('\n')    
 
@@ -3393,6 +3541,12 @@ elif options.lep == "electron":
     dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
+    if options.lep == "muon":
+        pass
+    elif options.lep == "electron":
+        dcard.write(" -")
+    else:
+        assert(0)    
 
     dcard.write('\n')    
     
@@ -3408,6 +3562,12 @@ elif options.lep == "electron":
     dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
+    if options.lep == "muon":
+        pass
+    elif options.lep == "electron":
+        dcard.write(" -")
+    else:
+        assert(0)    
     
     dcard.write('\n')    
     
@@ -3423,98 +3583,87 @@ elif options.lep == "electron":
     dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
-    
+    if options.lep == "muon":
+        pass
+    elif options.lep == "electron":
+        dcard.write(" -")
+    else:
+        assert(0)    
     dcard.write('\n')    
     
-#    dcard.write("muonidsf shape1")
-#    dcard.write(" 1.0")
-
-#    for label in labels.keys():
-#        if label == "no label" or label == "wg+jets" or label == "w+jets":
-#            continue
-#        dcard.write(" 1.0")
-
-#    dcard.write(" -")
-#    dcard.write(" -")
-#    dcard.write(" -")
-#    dcard.write(" -")
-    
-#    dcard.write('\n')    
-    
-#    dcard.write("muonhltsf shape1")
-#    dcard.write(" 1.0")
-
-#    for label in labels.keys():
-#        if label == "no label" or label == "wg+jets" or label == "w+jets":
-#            continue
-#        dcard.write(" 1.0")
-
-#    dcard.write(" -")
-#    dcard.write(" -")
-#    dcard.write(" -")
-#    dcard.write(" -")
-    
-#    dcard.write('\n')    
-
-#    dcard.write("muonisosf shape1")
-#    dcard.write(" 1.0")
-
-#    for label in labels.keys():
-#        if label == "no label" or label == "wg+jets" or label == "w+jets":
-#            continue
-#        dcard.write(" 1.0")
-
-#    dcard.write(" -")
-#    dcard.write(" -")
-#    dcard.write(" -")
-#    dcard.write(" -")
-
-#    dcard.write('\n')    
-    
-    dcard.write("electronrecosf shape1")
-    dcard.write(" 1.0")
-
-    for label in labels.keys():
-        if label == "no label" or label == "wg+jets" or label == "w+jets":
-            continue
+    if options.lep == "muon":
+        dcard.write("muonidsf shape1")
         dcard.write(" 1.0")
-
-    dcard.write(" -")
-    dcard.write(" -")
-    dcard.write(" -")
-    dcard.write(" -")
-    
-    dcard.write('\n')    
-    
-    dcard.write("electronidsf shape1")
-    dcard.write(" 1.0")
-
-    for label in labels.keys():
-        if label == "no label" or label == "wg+jets" or label == "w+jets":
-            continue
+        for label in labels.keys():
+            if label == "no label" or label == "wg+jets" or label == "w+jets":
+                continue
+            dcard.write(" 1.0")
+        dcard.write(" -")
+        dcard.write(" -")
+        dcard.write(" -")
+        dcard.write(" -")
+        dcard.write('\n')    
+        dcard.write("muonhltsf shape1")
         dcard.write(" 1.0")
-
-    dcard.write(" -")
-    dcard.write(" -")
-    dcard.write(" -")
-    dcard.write(" -")
-    
-    dcard.write('\n')    
-    
-    dcard.write("electronhltsf shape1")
-    dcard.write(" 1.0")
-
-    for label in labels.keys():
-        if label == "no label" or label == "wg+jets" or label == "w+jets":
-            continue
+        for label in labels.keys():
+            if label == "no label" or label == "wg+jets" or label == "w+jets":
+                continue
+            dcard.write(" 1.0")
+        dcard.write(" -")
+        dcard.write(" -")
+        dcard.write(" -")
+        dcard.write(" -")
+        dcard.write('\n')    
+        dcard.write("muonisosf shape1")
         dcard.write(" 1.0")
-
-    dcard.write(" -")
-    dcard.write(" -")
-    dcard.write(" -")
-    dcard.write(" -")
-    
-    dcard.write('\n')    
+        for label in labels.keys():
+            if label == "no label" or label == "wg+jets" or label == "w+jets":
+                continue
+            dcard.write(" 1.0")
+        dcard.write(" -")
+        dcard.write(" -")
+        dcard.write(" -")
+        dcard.write(" -")
+        dcard.write('\n')    
+    elif options.lep == "electron":
+        dcard.write("electronrecosf shape1")
+        dcard.write(" 1.0")
+        for label in labels.keys():
+            if label == "no label" or label == "wg+jets" or label == "w+jets":
+                continue
+            dcard.write(" 1.0")
+        dcard.write(" -")
+        dcard.write(" -")
+        dcard.write(" -")
+        dcard.write(" -")
+        dcard.write(" -")
+        dcard.write('\n')    
+        dcard.write("electronidsf shape1")
+        dcard.write(" 1.0")
+        for label in labels.keys():
+            if label == "no label" or label == "wg+jets" or label == "w+jets":
+                continue
+            dcard.write(" 1.0")
+        dcard.write(" -")
+        dcard.write(" -")
+        dcard.write(" -")
+        dcard.write(" -")
+        dcard.write(" -")
+        dcard.write('\n')    
+        dcard.write("electronhltsf shape1")
+        dcard.write(" 1.0")
+        for label in labels.keys():
+            if label == "no label" or label == "wg+jets" or label == "w+jets":
+                continue
+            dcard.write(" 1.0")
+        dcard.write(" -")
+        dcard.write(" -")
+        dcard.write(" -")
+        dcard.write(" -")
+        dcard.write(" -")
+        dcard.write('\n')    
+    else:
+        assert(0)    
     
     dcard.write("fakephotonsyst1 shape1")
     dcard.write(" -")
@@ -3528,7 +3677,12 @@ elif options.lep == "electron":
     dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
-
+    if options.lep == "muon":
+        pass
+    elif options.lep == "electron":
+        dcard.write(" -")
+    else:
+        assert(0)    
     dcard.write('\n')    
     
     dcard.write("fakephotonsyst2 shape1")
@@ -3543,10 +3697,15 @@ elif options.lep == "electron":
     dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
-
+    if options.lep == "muon":
+        pass
+    elif options.lep == "electron":
+        dcard.write(" -")
+    else:
+        assert(0)    
     dcard.write('\n')    
 
-    dcard.write("fakeelectron lnN")
+    dcard.write("fakeelectronsyst lnN")
     dcard.write(" -")
 
     for label in labels.keys():
@@ -3558,7 +3717,12 @@ elif options.lep == "electron":
     dcard.write(" 1.3")
     dcard.write(" 1.3")
     dcard.write(" -")
-    
+    if options.lep == "muon":
+        pass
+    elif options.lep == "electron":
+        dcard.write(" -")
+    else:
+        assert(0)    
     dcard.write('\n')    
     
     dcard.write("wgscale shape1")
@@ -3573,7 +3737,12 @@ elif options.lep == "electron":
     dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
-
+    if options.lep == "muon":
+        pass
+    elif options.lep == "electron":
+        dcard.write(" -")
+    else:
+        assert(0)    
     dcard.write('\n')    
 
     dcard.write("zgscale shape1")
@@ -3592,16 +3761,106 @@ elif options.lep == "electron":
     dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
-
+    if options.lep == "muon":
+        pass
+    elif options.lep == "electron":
+        dcard.write(" -")
+    else:
+        assert(0)    
     dcard.write('\n')    
 
-    dcard.write("* autoMCStats -1")
+    dcard.write("* autoMCStats -1\n")
+    if options.lep == "muon":
+        pass
+    elif options.lep == "electron":
+        dcard.write("etopnorm rateParam el_chan e_to_p 2 [0,10]\n")
+    else:
+        assert(0)    
+
+
+#    for i in range(1,labels["wg+jets"]["hists"][mlg_index].GetNbinsX()+1):
+#        dcard.write("wgstatbin"+str(i)+" shape1")
+#        dcard.write(" 1.0")
+
+#        for label in labels.keys():
+#            if label == "no label" or label == "wg+jets" or label == "w+jets":
+#                continue
+#            dcard.write(" -")
+        
+#        dcard.write(" -")
+#        dcard.write(" -")
+#        dcard.write(" -")
+#        dcard.write(" -")
+#        dcard.write(" -")
+
+#        dcard.write('\n')    
+
+#    for i in range(1,fake_photon["hists"][mlg_index].GetNbinsX()+1):
+#        dcard.write("fakephotonstatbin"+str(i)+" shape1")
+#        dcard.write(" -")
+
+#        for label in labels.keys():
+#            if label == "no label" or label == "wg+jets" or label == "w+jets":
+#                continue
+#            dcard.write(" -")
+        
+#        dcard.write(" 1.0")
+#        dcard.write(" -")
+#        dcard.write(" -")
+#        dcard.write(" -")
+#        dcard.write(" -")
+
+#        dcard.write('\n')    
+
+#    for i in range(1,fake_photon["hists"][mlg_index].GetNbinsX()+1):
+#        dcard.write("fakeelectronstatbin"+str(i)+" shape1")
+#        dcard.write(" -")
+
+#        for label in labels.keys():
+#            if label == "no label" or label == "wg+jets" or label == "w+jets":
+#                continue
+#            dcard.write(" -")
+        
+#        dcard.write(" -")
+#        dcard.write(" 1.0")
+#        dcard.write(" -")
+#        dcard.write(" -")
+#        dcard.write(" -")
+
+
+#        dcard.write('\n')    
+
+#    for i in range(1,labels["zg+jets"]["hists"][mlg_index].GetNbinsX()+1):
+#        dcard.write("zgjetsstatbin"+str(i)+" shape1")
+#        dcard.write(" -")
+
+#        for label in labels.keys():
+#            if label == "no label" or label == "wg+jets" or label == "w+jets":
+#                continue
+            
+#            if label == "zg+jets":
+#                dcard.write(" 1.0")
+#            else:    
+#                dcard.write(" -")
+        
+#        dcard.write(" -")
+#        dcard.write(" -")
+#        dcard.write(" -")
+#        dcard.write(" -")
+#        dcard.write(" -")
+
+#        dcard.write('\n')    
 
     dcard.close()
 
-    electron_shapes = ROOT.TFile.Open("datacard_el_chan_shapes.root","recreate")
+    if options.lep == "muon":
+        shapes = ROOT.TFile.Open("datacard_mu_chan_shapes.root","recreate")        
+    elif options.lep == "electron":
+        shapes = ROOT.TFile.Open("datacard_el_chan_shapes.root","recreate")
+    else:
+        assert(0)    
 
-    electron_shapes.cd()
+    shapes.cd()
 
     data["hists"][mlg_index].Write("data_obs")
     labels["wg+jets"]["hists"][mlg_index].Write("wg")
@@ -3611,7 +3870,13 @@ elif options.lep == "electron":
     e_to_p_non_res["hists"][mlg_index].Write("etopnonres")
     e_to_p["hists"][mlg_index].Write("etop")
     fake_photon["hists"][mlg_index].Write("fakephoton")
-    fake_lepton["hists"][mlg_index].Write("fakelepton")
+    if options.lep == "muon":
+        fake_lepton["hists"][mlg_index].Write("fakemuon")
+    elif options.lep == "electron":
+        fake_lepton["hists"][mlg_index].Write("fakeelectron")
+    else:
+        assert(0)    
+
     double_fake["hists"][mlg_index].Write("doublefake")
 
     zgjets_scale_syst.Write("zgjets_zgscaleUp")
@@ -3628,6 +3893,22 @@ elif options.lep == "electron":
             abs(labels["wg+jets"]["hists-scale-variation5"][mlg_index].GetBinContent(i)/labels["wg+jets"]["hists-scale-variation5"][mlg_index].Integral() - labels["wg+jets"]["hists"][mlg_index].GetBinContent(i)/labels["wg+jets"]["hists"][mlg_index].Integral()),
             abs(labels["wg+jets"]["hists-scale-variation6"][mlg_index].GetBinContent(i)/labels["wg+jets"]["hists-scale-variation6"][mlg_index].Integral() - labels["wg+jets"]["hists"][mlg_index].GetBinContent(i)/labels["wg+jets"]["hists"][mlg_index].Integral())))
     
+    for i in range(1,labels["wg+jets"]["hists"][mlg_index].GetNbinsX()+1):
+        wg_stat_up[i-1].Write("wg_wgstatbin"+str(i)+"Up")
+        makeDownShape(wg_stat_up[i-1],labels["wg+jets"]["hists"][mlg_index]).Write("wg_wgstatbin"+str(i)+"Down")
+
+    for i in range(1,fake_photon["hists"][mlg_index].GetNbinsX()+1):
+        fake_photon_stat_up[i-1].Write("fakephoton_fakephotonstatbin"+str(i)+"Up")
+        makeDownShape(fake_photon_stat_up[i-1],fake_photon["hists"][mlg_index]).Write("fakephoton_fakephotonstatbin"+str(i)+"Down")
+
+    for i in range(1,fake_lepton["hists"][mlg_index].GetNbinsX()+1):
+        fake_lepton_stat_up[i-1].Write("fakeelectron_fakeelectronstatbin"+str(i)+"Up")
+        makeDownShape(fake_lepton_stat_up[i-1],fake_lepton["hists"][mlg_index]).Write("fakeelectron_fakeelectronstatbin"+str(i)+"Down")
+
+    for i in range(1,labels["zg+jets"]["hists"][mlg_index].GetNbinsX()+1):
+        zgjets_stat_up[i-1].Write("zgjets_zgjetsstatbin"+str(i)+"Up")
+        makeDownShape(zgjets_stat_up[i-1],labels["zg+jets"]["hists"][mlg_index]).Write("zgjets_zgjetsstatbin"+str(i)+"Down")
+
     wgjets_scale_syst.Write("wg_wgscaleUp")
     makeDownShape(wgjets_scale_syst,labels["wg+jets"]["hists"][mlg_index]).Write("wg_wgscaleDown")
 
@@ -3728,16 +4009,16 @@ elif options.lep == "electron":
     makeDownShape(labels["wg+jets"]["hists-jer-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]).Write("wg_jerDown")
 
     bwcb_norm = ROOT.RooRealVar("bwcb_norm","",152671.0,0,1000000);    
-    bwcbbin_norm = ROOT.RooRealVar("bwcbbin_norm","",152671.0,152671.0/2,152671.0*2);    
+    bwcbbin_norm = ROOT.RooRealVar("bwcbbin_norm","",156180.0,152671.0/2,152671.0*2);    
 
-    m= ROOT.RooRealVar("m","",0,mlg_fit_upper_bound)
-    m0=ROOT.RooRealVar("m0", "",2.48320,-4,4)
-    sigma=ROOT.RooRealVar("sigma", "",1.75029,0.1,3)
-    alpha=ROOT.RooRealVar("alpha", "",2.48320,0,10)
+    m= ROOT.RooRealVar("m","",mlg_fit_lower_bound,mlg_fit_upper_bound)
+    m0=ROOT.RooRealVar("m0", "",-0.23326,-3,3)
+    sigma=ROOT.RooRealVar("sigma", "",2.1250,0.1,3)
+    alpha=ROOT.RooRealVar("alpha", "",2.0087,0,10)
     n=ROOT.RooRealVar("n", "",2.11960,2.11960,2.11960)
     cb = ROOT.RooCBShape("cb", "", m, m0, sigma, alpha, n)
-    mass = ROOT.RooRealVar("mass","",91.9311,89.855-5,89.855+5)
-    width = ROOT.RooRealVar("width","",3.3244,0.5*3.3244/4.0,10*3.3244/3.0);
+    mass = ROOT.RooRealVar("mass","",91.1876,91.1876,91.1876)
+    width = ROOT.RooRealVar("width","",2.4952,2.4952,2.4952);
     bw = ROOT.RooBreitWigner("bw","",m,mass,width)
 
     RooFFTConvPdf_bwcb = ROOT.RooFFTConvPdf("bwcb","Breit Wigner convolved with a Crystal Ball",m,bw,cb)
@@ -3756,7 +4037,13 @@ elif options.lep == "electron":
     RooDataHist_topjets = ROOT.RooDataHist("topjets","",ROOT.RooArgList(m),labels["top+jets"]["hists"][mlg_index])
 #RooHistPdf_topjets = ROOT.RooHistPdf("topjets","",ROOT.RooArgSet(m),RooDataHist_topjets)
 
-    RooDataHist_fake_lepton = ROOT.RooDataHist("fakelepton","",ROOT.RooArgList(m),fake_lepton["hists"][mlg_index])
+    if options.lep == "muon":
+        RooDataHist_fake_lepton = ROOT.RooDataHist("fakemuon","",ROOT.RooArgList(m),fake_lepton["hists"][mlg_index])
+    elif options.lep == "electron":
+        RooDataHist_fake_lepton = ROOT.RooDataHist("fakeelectron","",ROOT.RooArgList(m),fake_lepton["hists"][mlg_index])
+    else:
+        assert(0)    
+
 #RooHistPdf_fake_lepton = ROOT.RooHistPdf("fakelepton","",ROOT.RooArgSet(m),RooDataHist_fake_lepton)
 
     RooDataHist_fake_photon = ROOT.RooDataHist("fakephoton","",ROOT.RooArgList(m),fake_photon["hists"][mlg_index])
@@ -3773,13 +4060,40 @@ elif options.lep == "electron":
     RooDataHist_wg_scale_up = ROOT.RooDataHist("wg_wgscaleUp","",ROOT.RooArgList(m),wgjets_scale_syst)
     RooDataHist_wg_scale_down = ROOT.RooDataHist("wg_wgscaleDown","",ROOT.RooArgList(m),makeDownShape(wgjets_scale_syst,labels["wg+jets"]["hists"][mlg_index]))
 
+    list_RooDataHist_wg_stat_up = []
+    list_RooDataHist_wg_stat_down = []
+    
+    for i in range(1,labels["wg+jets"]["hists"][mlg_index].GetNbinsX()+1):
+        list_RooDataHist_wg_stat_up.append(ROOT.RooDataHist("wg_wgstatbin"+str(i)+"Up","",ROOT.RooArgList(m),wg_stat_up[i-1]))
+        list_RooDataHist_wg_stat_down.append(ROOT.RooDataHist("wg_wgstatbin"+str(i)+"Down","",ROOT.RooArgList(m),makeDownShape(wg_stat_up[i-1],labels["wg+jets"]["hists"][mlg_index])))
+
+    list_RooDataHist_fake_photon_stat_up = []
+    list_RooDataHist_fake_photon_stat_down = []
+    
+    for i in range(1,fake_photon["hists"][mlg_index].GetNbinsX()+1):
+        list_RooDataHist_fake_photon_stat_up.append(ROOT.RooDataHist("fakephoton_fakephotonstatbin"+str(i)+"Up","",ROOT.RooArgList(m),fake_photon_stat_up[i-1]))
+        list_RooDataHist_fake_photon_stat_down.append(ROOT.RooDataHist("fakephoton_fakephotonstatbin"+str(i)+"Down","",ROOT.RooArgList(m),makeDownShape(fake_photon_stat_up[i-1],fake_photon["hists"][mlg_index])))
+
+    list_RooDataHist_fake_lepton_stat_up = []
+    list_RooDataHist_fake_lepton_stat_down = []
+    
+    for i in range(1,fake_lepton["hists"][mlg_index].GetNbinsX()+1):
+        list_RooDataHist_fake_lepton_stat_up.append(ROOT.RooDataHist("fakeelectron_fakeelectronstatbin"+str(i)+"Up","",ROOT.RooArgList(m),fake_lepton_stat_up[i-1]))
+        list_RooDataHist_fake_lepton_stat_down.append(ROOT.RooDataHist("fakeelectron_fakeelectronstatbin"+str(i)+"Down","",ROOT.RooArgList(m),makeDownShape(fake_lepton_stat_up[i-1],fake_lepton["hists"][mlg_index])))
+
+    list_RooDataHist_zgjets_stat_up = []
+    list_RooDataHist_zgjets_stat_down = []
+
+    for i in range(1,labels["zg+jets"]["hists"][mlg_index].GetNbinsX()+1):
+        list_RooDataHist_zgjets_stat_up.append(ROOT.RooDataHist("zgjets_zgjetsstatbin"+str(i)+"Up","",ROOT.RooArgList(m),zgjets_stat_up[i-1]))
+        list_RooDataHist_zgjets_stat_down.append(ROOT.RooDataHist("zgjets_zgjetsstatbin"+str(i)+"Down","",ROOT.RooArgList(m),makeDownShape(zgjets_stat_up[i-1],labels["zg+jets"]["hists"][mlg_index])))
+
 #zg scale
 
     RooDataHist_zg_scale_up = ROOT.RooDataHist("zgjets_zgscaleUp","",ROOT.RooArgList(m),zgjets_scale_syst)
     RooDataHist_zg_scale_down = ROOT.RooDataHist("zgjets_zgscaleDown","",ROOT.RooArgList(m),makeDownShape(zgjets_scale_syst,labels["zg+jets"]["hists"][mlg_index]))
 
 #fake photon syst 1
-
 
     RooDataHist_fake_photon_syst1_up = ROOT.RooDataHist("fakephoton_fakephotonsyst1Up","",ROOT.RooArgList(m),fake_photon_alt["hists"][mlg_index])
 #RooHistPdf_fake_photon_syst1_up = ROOT.RooHistPdf("fakephoton_fakephotonsyst1Up","",ROOT.RooArgSet(m),RooDataHist_fake_photon_syst1_up)
@@ -4020,7 +4334,6 @@ elif options.lep == "electron":
 
 #print "RooParametricShapeBinPdf_bwcb.getNorm() = " + str(RooParametricShapeBinPdf_bwcb.getNorm()) 
 
-
     ws=ROOT.RooWorkspace()
 
 #ws.import(...) does not work because import is a keyword in python
@@ -4053,7 +4366,26 @@ elif options.lep == "electron":
     getattr(ws,"import")(RooDataHist_fake_photon_syst1_down)
     getattr(ws,"import")(RooDataHist_fake_photon_syst2_up)
     getattr(ws,"import")(RooDataHist_fake_photon_syst2_down)
-    
+
+    for i in range(1,labels["wg+jets"]["hists"][mlg_index].GetNbinsX()+1):
+        getattr(ws,"import")(list_RooDataHist_wg_stat_up[i-1])
+        getattr(ws,"import")(list_RooDataHist_wg_stat_down[i-1])
+
+    for i in range(1,fake_photon["hists"][mlg_index].GetNbinsX()+1):
+        getattr(ws,"import")(list_RooDataHist_fake_photon_stat_up[i-1])
+        getattr(ws,"import")(list_RooDataHist_fake_photon_stat_down[i-1])
+
+    for i in range(1,fake_lepton["hists"][mlg_index].GetNbinsX()+1):
+        getattr(ws,"import")(list_RooDataHist_fake_lepton_stat_up[i-1])
+        getattr(ws,"import")(list_RooDataHist_fake_lepton_stat_down[i-1])
+
+    for i in range(1,labels["zg+jets"]["hists"][mlg_index].GetNbinsX()+1):
+        getattr(ws,"import")(list_RooDataHist_zgjets_stat_up[i-1])
+        getattr(ws,"import")(list_RooDataHist_zgjets_stat_down[i-1])
+
+
+#    getattr(ws,"import")(RooDataHist_fake_electron_syst_up)
+#    getattr(ws,"import")(RooDataHist_fake_electron_syst_down)
     getattr(ws,"import")(RooDataHist_wg_scale_up)
     getattr(ws,"import")(RooDataHist_wg_scale_down)
     getattr(ws,"import")(RooDataHist_zg_scale_up)
@@ -4158,7 +4490,7 @@ elif options.lep == "electron":
 
     ws.Delete() #if we do not delete the workspace explcitly, there is a crash at the end
 
-    electron_shapes.Close()
+    shapes.Close()
 
 if not options.ewdim6:
     sys.exit(0)
