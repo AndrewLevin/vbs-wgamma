@@ -1,0 +1,31 @@
+imax 1 number of channels
+jmax * number of background
+kmax * number of nuisance parameters
+shapes data_obs mu_chan wg_datacard_mu_chan_shapes.root data_obs
+shapes Wg mu_chan wg_datacard_mu_chan_shapes.root wg wg_$SYSTEMATIC
+shapes topjets mu_chan wg_datacard_mu_chan_shapes.root topjets topjets_$SYSTEMATIC
+shapes zgjets mu_chan wg_datacard_mu_chan_shapes.root zgjets zgjets_$SYSTEMATIC
+shapes vvjets mu_chan wg_datacard_mu_chan_shapes.root vvjets vvjets_$SYSTEMATIC
+shapes fake_photon mu_chan wg_datacard_mu_chan_shapes.root fakephoton fakephoton_$SYSTEMATIC
+shapes fake_muon mu_chan wg_datacard_mu_chan_shapes.root fakemuon fakemuon_$SYSTEMATIC
+shapes double_fake mu_chan wg_datacard_mu_chan_shapes.root doublefake doublefake_$SYSTEMATIC
+shapes e_to_p_non_res mu_chan wg_datacard_mu_chan_shapes.root etopnonres etopnonres_$SYSTEMATIC
+Observation 400464.0
+bin mu_chan mu_chan mu_chan mu_chan mu_chan mu_chan mu_chan mu_chan
+process Wg topjets zgjets vvjets fake_photon fake_muon double_fake e_to_p_non_res
+process 0 1 2 3 4 5 6 7
+rate 173880.32026 23665.6719305 43671.3280426 2224.63282307 86165.3774159 18471.5967744 19178.4280583 8305.70268959
+lumi_13tev lnN 1.027 1.027 1.027 1.027 - - - 1.027
+pileup shape1 1.0 1.0 1.0 1.0 - - - -
+prefire shape1 1.0 1.0 1.0 1.0 - - - -
+jes shape1 1.0 1.0 1.0 1.0 - - - -
+jer shape1 1.0 1.0 1.0 1.0 - - - -
+muonidsf shape1 1.0 1.0 1.0 1.0 - - - -
+muonhltsf shape1 1.0 1.0 1.0 1.0 - - - -
+muonisosf shape1 1.0 1.0 1.0 1.0 - - - -
+fakephotonsyst1 shape1 - - - - 1.0 - - -
+fakephotonsyst2 lnN - - - - 1.4 - 1.4 -
+fakeelectronsyst lnN - - - - - 1.3 1.3 -
+wgscale shape1 1.0 - - - - - - -
+zgscale shape1 - - 1.0 - - - - -
+* autoMCStats -1

@@ -1,0 +1,33 @@
+imax 1 number of channels
+jmax * number of background
+kmax * number of nuisance parameters
+shapes data_obs el_chan wg_datacard_el_chan_shapes.root data_obs
+shapes Wg el_chan wg_datacard_el_chan_shapes.root wg wg_$SYSTEMATIC
+shapes topjets el_chan wg_datacard_el_chan_shapes.root topjets topjets_$SYSTEMATIC
+shapes zgjets el_chan wg_datacard_el_chan_shapes.root zgjets zgjets_$SYSTEMATIC
+shapes vvjets el_chan wg_datacard_el_chan_shapes.root vvjets vvjets_$SYSTEMATIC
+shapes fake_photon el_chan wg_datacard_el_chan_shapes.root fakephoton fakephoton_$SYSTEMATIC
+shapes fake_electron el_chan wg_datacard_el_chan_shapes.root fakeelectron fakeelectron_$SYSTEMATIC
+shapes double_fake el_chan wg_datacard_el_chan_shapes.root doublefake doublefake_$SYSTEMATIC
+shapes e_to_p_non_res el_chan wg_datacard_el_chan_shapes.root etopnonres etopnonres_$SYSTEMATIC
+shapes e_to_p el_chan wg_datacard_el_chan_shapes.root etop etop_$SYSTEMATIC
+Observation 407042.0
+bin el_chan el_chan el_chan el_chan el_chan el_chan el_chan el_chan el_chan
+process Wg topjets zgjets vvjets fake_photon fake_electron double_fake e_to_p_non_res e_to_p
+process 0 1 2 3 4 5 6 7 8
+rate 103827.020772 15762.1734308 21616.6561188 1419.74691878 45620.9409521 33142.2513563 19479.8574482 5975.43178946 95156.6138933
+lumi_13tev lnN 1.027 1.027 1.027 1.027 - - - 1.027 -
+pileup shape1 1.0 1.0 1.0 1.0 - - - - -
+prefire shape1 1.0 1.0 1.0 1.0 - - - - -
+jes shape1 1.0 1.0 1.0 1.0 - - - - -
+jer shape1 1.0 1.0 1.0 1.0 - - - - -
+electronrecosf shape1 1.0 1.0 1.0 1.0 - - - - -
+electronidsf shape1 1.0 1.0 1.0 1.0 - - - - -
+electronhltsf shape1 1.0 1.0 1.0 1.0 - - - - -
+fakephotonsyst1 shape1 - - - - 1.0 - - - -
+fakephotonsyst2 lnN - - - - 1.4 - 1.4 - -
+fakeelectronsyst lnN - - - - - 1.3 1.3 - -
+wgscale shape1 1.0 - - - - - - - -
+zgscale shape1 - - 1.0 - - - - - -
+* autoMCStats -1
+etopnorm rateParam el_chan e_to_p 2 [0,10]
