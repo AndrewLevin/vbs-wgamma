@@ -228,8 +228,8 @@ mlg_bin_width=2
 #variables = ["photon_pt","dphilg","met","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","lepton_phi","photon_phi","njets40","mt","npvs","drlg"]
 #variables_labels = ["ewdim6_photon_pt","dphilg","met","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","lepton_phi","photon_phi","njets40","mt","npvs","drlg"]
 
-variables = ["photon_pt_overflow","detalg","dphilpuppimet","dphilg","puppimet","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","mlg","lepton_phi","photon_phi","njets40","mt","puppimt","npvs","drlg","photon_pt","met","photon_recoil","dphigpuppimet","puppimetphi"]
-variables_labels = ["ewdim6_photon_pt","detalg","dphilpuppimet","dphilg","puppimet","lepton_pt","lepton_eta","photon_pt","photon_eta","fit_mlg","mlg","lepton_phi","photon_phi","njets40","mt","puppimt","npvs","drlg","photon_pt_20to180","met","photon_recoil","dphigpuppimet","puppimetphi"]
+variables = ["photon_pt_overflow","detalg","dphilpuppimet","dphilg","puppimet","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","mlg","lepton_phi","photon_phi","njets40","mt","puppimt","npvs","drlg","photon_pt","met","photon_recoil","dphigpuppimet","puppimetphi","mlg"]
+variables_labels = ["ewdim6_photon_pt","detalg","dphilpuppimet","dphilg","puppimet","lepton_pt","lepton_eta","photon_pt","photon_eta","fit_mlg","mlg","lepton_phi","photon_phi","njets40","mt","puppimt","npvs","drlg","photon_pt_20to180","met","photon_recoil","dphigpuppimet","puppimetphi","mlg_large_bins"]
 
 
 assert(len(variables) == len(variables_labels))
@@ -257,7 +257,7 @@ histogram_models = [
 ROOT.RDF.TH1DModel('', '', n_photon_pt_bins, binning_photon_pt ),
 ROOT.RDF.TH1DModel('','',50,0,5), #detalg
 ROOT.RDF.TH1DModel('','',48,0,pi), #dphilmet
-ROOT.RDF.TH1DModel('','',48,0,pi), #dphilg
+ROOT.RDF.TH1DModel('','',12,0,pi), #dphilg
 ROOT.RDF.TH1DModel("met", "", 40, 40., 200 ), 
 ROOT.RDF.TH1DModel('lepton_pt', '', 48, 20., 180 ), 
 ROOT.RDF.TH1DModel('lepton_eta', '', 50, -2.5, 2.5 ),
@@ -278,6 +278,7 @@ ROOT.RDF.TH1DModel("met", "", 15 , 0., 300 ),
 ROOT.RDF.TH1DModel('photon_recoil', '', 20, -70., 130 ),
 ROOT.RDF.TH1DModel('','',48,0,pi), #dphigmet
 ROOT.RDF.TH1DModel("","",56,-3.5,3.5), #puppimetphi
+    ROOT.RDF.TH1DModel("mlg","",30,0,300) #mlg
 ] 
 
 assert(len(variables) == len(histogram_models))
@@ -521,8 +522,10 @@ if "wg+jets" in labels:
 
 data = {}
 fake_signal_contamination = {}
+wjets_fake_photon_2016 = {}
 fake_photon = {}
 fake_photon_2016 = {}
+wjets_2016 = {}
 fake_photon_alt = {}
 fake_photon_stat_up = {}
 fake_lepton = {}
@@ -537,6 +540,8 @@ ewdim6 = {}
 
 data["hists"] = []
 fake_signal_contamination["hists"] = []
+wjets_fake_photon_2016["hists"] = []
+wjets_2016["hists"] = []
 fake_photon["hists"] = []
 fake_photon_2016["hists"] = []
 fake_photon_alt["hists"] = []
@@ -561,6 +566,8 @@ ewdim6["hists"] = []
 
 for i in range(len(variables)):
     data["hists"].append(histogram_models[i].GetHistogram())
+    wjets_fake_photon_2016["hists"].append(histogram_models[i].GetHistogram())
+    wjets_2016["hists"].append(histogram_models[i].GetHistogram())
     fake_photon["hists"].append(histogram_models[i].GetHistogram())
     fake_photon_2016["hists"].append(histogram_models[i].GetHistogram())
     fake_photon_alt["hists"].append(histogram_models[i].GetHistogram())
@@ -588,6 +595,8 @@ for i in range(len(variables)):
 for i in range(len(variables)):
     data["hists"][i].Sumw2()
     data["hists"][i].SetName("data "+variables[i])
+    wjets_fake_photon_2016["hists"][i].Sumw2()
+    wjets_2016["hists"][i].Sumw2()
     fake_photon["hists"][i].Sumw2()
     fake_photon_2016["hists"][i].Sumw2()
     fake_photon["hists"][i].SetName("fake photon "+variables[i])
@@ -612,8 +621,6 @@ for i in range(len(variables)):
     e_to_p["hists-jer-up"][i].Sumw2()
     ewdim6["hists"][i].Sumw2()
     fake_signal_contamination["hists"][i].Sumw2()
-
-c1 = ROOT.TCanvas("c1", "c1",5,50,500,500)
 
 ROOT.gROOT.cd()
 
@@ -914,6 +921,33 @@ float get_fake_lepton_weight(float eta, float pt, string year, int lepton_pdg_id
 
 fake_photon_weight_cpp = '''
 
+float get_wjets_fake_photon_weight(float eta, float pt, string year, int lepton_pdg_id) {
+
+    float fr = 0;
+    if (year == "2016") {
+       if (abs(eta) < 1.4442) {
+          if (pt < 25 and pt > 20) fr = 0.5913875598086125;
+          else if (pt < 30 and pt > 25) fr = 0.645278450363196;
+          else if (pt < 40 and pt > 30) fr = 0.7466063348416291;
+          else if (pt < 50 and pt > 40) fr = 0.6320754716981132;
+          else if (pt > 50) fr = 0.3076923076923077;
+          else assert(0); 
+    
+       }
+       else if (1.566 < abs(eta) && abs(eta) < 2.5) {
+          if (pt < 25 and pt > 20) fr = 0.926428975664969;
+          else if (pt < 30 and pt > 25) fr = 1.1929133858267715;
+          else if (pt < 40 and pt > 30) fr = 1.163522012578616;
+          else if (pt < 50 and pt > 40) fr = 1.3793103448275863;
+          else if (pt > 50) fr = 1.0000000000000002;
+          else assert(0); 
+       }
+    }
+
+    return fr;
+
+}
+
 float get_fake_photon_weight(float eta, float pt, string year, int lepton_pdg_id, bool use_alt = false, bool stat_err_up = false)
 {
 
@@ -976,8 +1010,6 @@ float get_fake_photon_weight(float eta, float pt, string year, int lepton_pdg_id
        }
     }
 
-
-
     if (use_alt) {
        if (year == "2016") {
           if (abs(eta) < 1.4442) {
@@ -1035,8 +1067,6 @@ float get_fake_photon_weight(float eta, float pt, string year, int lepton_pdg_id
           }
        }
     }
-
-
 
     if (stat_err_up) {
        if (year == "2016") {
@@ -1603,6 +1633,11 @@ for year in years:
                 prefire_weight_string = "1"
                 prefire_up_weight_string = "1"
 
+            if label == "w+jets":
+                print get_filter_string(year)
+
+
+
             rinterface = rinterface.Define("base_weight",get_postfilter_selection_string()+"*xs_weight*puWeight*"+prefire_weight_string+"*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\") : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\"))")      
             rinterface = rinterface.Define("prefire_up_base_weight",get_postfilter_selection_string()+"*xs_weight*puWeight*"+prefire_up_weight_string+"*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\") : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\"))")    
             rinterface = rinterface.Define("pileup_up_base_weight",get_postfilter_selection_string()+"*xs_weight*puWeightUp*"+prefire_weight_string+"*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\") : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\"))")    
@@ -1672,6 +1707,11 @@ for year in years:
             rinterface = rinterface.Define("double_fake_alt_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 0 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_fake_lepton_weight(lepton_eta,lepton_pt,\""+year+"\",lepton_pdg_id)*get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,true)*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0") 
             rinterface = rinterface.Define("double_fake_stat_up_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 0 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_fake_lepton_weight(lepton_eta,lepton_pt,\""+year+"\",lepton_pdg_id)*get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,false,true)*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0") 
 
+            if label == "w+jets" and year == "2016":
+#                rinterface = rinterface.Define("wjets_fake_photon_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_wjets_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id)*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0")
+                rinterface = rinterface.Define("wjets_fake_photon_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 1 && is_lepton_real == 1 && !(photon_gen_matching == 1|| photon_gen_matching == 4 || photon_gen_matching == 5 || photon_gen_matching == 6) ? get_wjets_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id)*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0")
+
+
             if sample["e_to_p"]:
                 rinterface = rinterface.Define("e_to_p_weight","photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1 ? base_weight : 0")
                 rinterface = rinterface.Define("e_to_p_pileup_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1)*pileup_up_base_weight")
@@ -1704,6 +1744,9 @@ for year in years:
                     rresultptrs_pdf.append([])    
 
             rresultptrs = []    
+            if label == "w+jets" and year == "2016":
+                rresultptrs_wjets_fake_photon = []    
+                rresultptrs_wjets = []    
             rresultptrs_fake_photon = []    
             rresultptrs_fake_photon_alt = []    
             rresultptrs_fake_photon_stat_up = []    
@@ -1759,6 +1802,10 @@ for year in years:
                     if label != "w+jets":
                         rresultptrs_jes_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"jes_up_weight"))
                         rresultptrs_jer_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"jer_up_weight"))
+
+                if label == "w+jets" and year == "2016":
+                    rresultptrs_wjets_fake_photon.append(rinterface.Histo1D(histogram_models[i],variables[i],"wjets_fake_photon_weight"))    
+                    rresultptrs_wjets.append(rinterface.Histo1D(histogram_models[i],variables[i],"weight"))    
 
                 rresultptrs_fake_photon.append(rinterface.Histo1D(histogram_models[i],variables[i],"fake_photon_weight"))
                 rresultptrs_fake_photon_alt.append(rinterface.Histo1D(histogram_models[i],variables[i],"fake_photon_alt_weight"))
@@ -1832,10 +1879,14 @@ for year in years:
                     fake_signal_contamination["hists"][i].Add(rresultptrs_fake_lepton[i].GetValue())
                     fake_signal_contamination["hists"][i].Add(rresultptrs_fake_photon[i].GetValue())
                     fake_signal_contamination["hists"][i].Add(rresultptrs_double_fake[i].GetValue())
-
                     
                 if year == "2016":    
                     fake_photon_2016["hists"][i].Add(rresultptrs_fake_photon[i].GetValue())
+
+                if label == "w+jets" and year == "2016":    
+                    wjets_fake_photon_2016["hists"][i].Add(rresultptrs_wjets_fake_photon[i].GetValue())
+                    wjets_2016["hists"][i].Add(rresultptrs_wjets[i].GetValue())
+
                 fake_photon["hists"][i].Add(rresultptrs_fake_photon[i].GetValue())
                 fake_photon_alt["hists"][i].Add(rresultptrs_fake_photon_alt[i].GetValue())
                 fake_photon_stat_up["hists"][i].Add(rresultptrs_fake_photon_stat_up[i].GetValue())
@@ -1870,6 +1921,92 @@ for year in years:
 
 for hist in hists:
     hists.Print("all")
+
+if options.no_wjets_for_2017_and_2018 and "w+jets" in labels:
+    for i in range(len(variables)):
+        labels["w+jets"]["hists"][i].Scale(fake_photon["hists"][i].Integral()/fake_photon_2016["hists"][i].Integral())
+#        wjets_2016["hists"][i].Scale(fake_photon["hists"][i].Integral()/fake_photon_2016["hists"][i].Integral())
+#        wjets_fake_photon_2016["hists"][i].Scale(fake_photon["hists"][i].Integral()/fake_photon_2016["hists"][i].Integral())
+
+#wjets_2016["hists"][3].Scale(fake_photon["hists"][mlg_index].Integral()/fake_photon_2016["hists"][mlg_index].Integral())
+#wjets_fake_photon["hists"][3].Scale(fake_photon["hists"][mlg_index].Integral()/fake_photon_2016["hists"][mlg_index].Integral())
+non_closure = []
+for i in range(len(variables)):
+
+    c = ROOT.TCanvas("c", "c",5,50,500,500)
+
+    s="35.9 fb^{-1} (13 TeV)"
+    lumilabel = ROOT.TLatex (0.95, 0.93, s)
+    lumilabel.SetNDC ()
+    lumilabel.SetTextAlign (30)
+    lumilabel.SetTextFont (42)
+    lumilabel.SetTextSize (0.040)
+
+    minus_one_hist = histogram_models[i].GetHistogram()
+    for j in range(1,minus_one_hist.GetNbinsX()+1):
+        minus_one_hist.SetBinContent(j,-1)
+        minus_one_hist.SetBinError(j,0)
+    non_closure.append(histogram_models[i].GetHistogram())
+    wjets_2016["hists"][i].SetLineColor(ROOT.kBlue)
+    wjets_fake_photon_2016["hists"][i].SetLineColor(ROOT.kRed)
+    wjets_fake_photon_2016["hists"][i].SetMinimum(0)
+    set_axis_fonts(wjets_fake_photon_2016["hists"][i],"x",getXaxisLabel(variables[i]))
+    wjets_fake_photon_2016["hists"][i].Draw()
+    wjets_2016["hists"][i].Draw("same")
+    lumilabel.Draw("same")
+    c.SaveAs(options.outputdir + "/" + "closure_test_"+variables_labels[i]+".png")
+    non_closure[len(non_closure)-1].Add(wjets_2016["hists"][i])
+#    wjets_fake_photon_2016["hists"][i].Scale(-1)
+#    non_closure[len(non_closure)-1].Add(wjets_fake_photon_2016["hists"][i])
+#    wjets_fake_photon["hists"][i].Scale(-1)
+    non_closure[len(non_closure)-1].Divide(wjets_fake_photon_2016["hists"][i])
+    non_closure[len(non_closure)-1].Add(minus_one_hist)
+    non_closure[len(non_closure)-1].SetMinimum(-1.5)
+    non_closure[len(non_closure)-1].SetMaximum(1.5)
+    non_closure[len(non_closure)-1].Draw()
+    set_axis_fonts(non_closure[len(non_closure)-1],"x",getXaxisLabel(variables[i]))
+    c.SaveAs(options.outputdir + "/" + "non_closure_"+variables_labels[i]+".png")
+
+for i in range(len(variables)):
+
+    c = ROOT.TCanvas("c", "c",5,50,500,500)
+
+    s=str(totallumi)+" fb^{-1} (13 TeV)"
+    lumilabel = ROOT.TLatex (0.95, 0.93, s)
+    lumilabel.SetNDC ()
+    lumilabel.SetTextAlign (30)
+    lumilabel.SetTextFont (42)
+    lumilabel.SetTextSize (0.040)
+
+    central = labels["wg+jets"]["hists"][i].Clone()
+    up = labels["wg+jets"]["hists-pileup-up"][i].Clone()
+    down = makeDownShape(labels["wg+jets"]["hists-pileup-up"][i],labels["wg+jets"]["hists"][i]).Clone()
+
+    central.SetLineColor(ROOT.kBlack)
+    central.SetLineWidth(2)
+
+    up.SetLineColor(ROOT.kRed)
+    up.SetLineWidth(2)
+
+    down.SetLineColor(ROOT.kBlue)
+    down.SetLineWidth(2)
+
+    central.Draw("hist")
+    up.Draw("hist same")
+    down.Draw("hist same")
+
+    lumilabel.Draw("same")
+
+    c.SaveAs(options.outputdir + "/" + "wgjets_pileup_unc_"+variables_labels[i]+".png")
+
+    c.Close()
+
+#wjets_fake_photon["hists"][mlg_index].Print("all")
+#wjets_2016["hists"][mlg_index].Print("all")
+#wjets_fake_photon["hists"][mlg_index].Scale(-1)
+#wjets_2016["hists"][mlg_index].Add(wjets_fake_photon["hists"][mlg_index])
+#wjets_2016["hists"][mlg_index].Print("all")
+#abs(labels["w+jets"]["hists"][mlg_index].Integral() - fake_photon_2016["hists"][mlg_index].Integral())*fake_photon["hists"][mlg_index].Integral()/fake_photon_2016["hists"][mlg_index].Integral()
 
 def mlg_fit(inputs):
 
@@ -2363,6 +2500,8 @@ if options.draw_ewdim6:
         #hardcoded to use bin 6 of the scaling histogram for now 
         ewdim6["hists"][0].SetBinContent(i,cb_scaling_hists[i].GetBinContent(5)*labels["wg+jets"]["hists"][0].GetBinContent(i))
 
+c1 = ROOT.TCanvas("c1", "c1",5,50,500,500)
+
 for i in range(len(variables)):
 
     if options.blind:
@@ -2414,11 +2553,21 @@ for i in range(len(variables)):
     lumilabel.SetTextFont (42)
     lumilabel.SetTextSize (0.040)
 
+    if "w+jets" in labels:
+        wjets_fake_photon_2016["hists"][i].SetFillColor(labels["w+jets"]["color"])
+        wjets_fake_photon_2016["hists"][i].SetFillStyle(1001)
+        wjets_fake_photon_2016["hists"][i].SetLineColor(labels["w+jets"]["color"])
 #
     hsum = data["hists"][i].Clone()
     hsum.Scale(0.0)
 
     hstack = ROOT.THStack()
+
+    if options.use_wjets_for_fake_photon and "w+jets" in labels:
+        hsum.Add(labels["w+jets"]["hists"][i])
+        hstack.Add(labels["w+jets"]["hists"][i])
+#        hsum.Add(wjets_fake_photon_2016["hists"][i])
+#        hstack.Add(wjets_fake_photon_2016["hists"][i])
 
     if data_driven:
         if not options.use_wjets_for_fake_photon:
@@ -2433,7 +2582,7 @@ for i in range(len(variables)):
         if options.closure_test and label == "wg+jets":
             continue
 
-        if not options.use_wjets_for_fake_photon and label == "w+jets":
+        if label == "w+jets":
             continue
 
         hsum.Add(labels[label]["hists"][i])
@@ -2500,6 +2649,11 @@ for i in range(len(variables)):
     else:    
         draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,data["hists"][i],"data","lp")
 
+    if  options.use_wjets_for_fake_photon and "w+jets" in labels:
+        j=j+1    
+        draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,labels["w+jets"]["hists"][i],"w+jets","f")
+
+
     if data_driven :
         if not options.use_wjets_for_fake_photon:
             j=j+1
@@ -2532,7 +2686,7 @@ for i in range(len(variables)):
         if options.closure_test and label == "wg+jets":
             continue
 
-        if not options.use_wjets_for_fake_photon and label == "w+jets":
+        if label == "w+jets":
             continue
 
         j=j+1    
@@ -3358,11 +3512,11 @@ if options.make_datacard:
     print >> dcard, "kmax * number of nuisance parameters"
 
     if options.lep == "muon":
-        print >> dcard, "shapes data_obs mu_chan datacard_mu_chan_shapes.root data_obs"
-        print >> dcard, "shapes Wg mu_chan datacard_mu_chan_shapes.root wg wg_$SYSTEMATIC" 
+        print >> dcard, "shapes data_obs mu_chan wg_datacard_mu_chan_shapes.root data_obs"
+        print >> dcard, "shapes Wg mu_chan wg_datacard_mu_chan_shapes.root wg wg_$SYSTEMATIC" 
     elif options.lep == "electron":
-        print >> dcard, "shapes data_obs el_chan datacard_el_chan_shapes.root data_obs"
-        print >> dcard, "shapes Wg el_chan datacard_el_chan_shapes.root wg wg_$SYSTEMATIC" 
+        print >> dcard, "shapes data_obs el_chan wg_datacard_el_chan_shapes.root data_obs"
+        print >> dcard, "shapes Wg el_chan wg_datacard_el_chan_shapes.root wg wg_$SYSTEMATIC" 
     else:
         assert(0)    
 
@@ -3370,39 +3524,39 @@ if options.make_datacard:
         if label == "no label" or label == "wg+jets" or label == "w+jets":
             continue
         if options.lep == "muon":
-            print >> dcard, "shapes "+label.replace("+","")+" mu_chan datacard_mu_chan_shapes.root "+label.replace("+","")+ " " +label.replace("+","") + "_$SYSTEMATIC" 
+            print >> dcard, "shapes "+label.replace("+","")+" mu_chan wg_datacard_mu_chan_shapes.root "+label.replace("+","")+ " " +label.replace("+","") + "_$SYSTEMATIC" 
         elif options.lep == "electron":
-            print >> dcard, "shapes "+label.replace("+","")+" el_chan datacard_el_chan_shapes.root "+label.replace("+","")+ " " +label.replace("+","") + "_$SYSTEMATIC" 
+            print >> dcard, "shapes "+label.replace("+","")+" el_chan wg_datacard_el_chan_shapes.root "+label.replace("+","")+ " " +label.replace("+","") + "_$SYSTEMATIC" 
         else:
             assert(0)    
 
     if options.lep == "muon":
-        print >> dcard, "shapes fake_photon mu_chan datacard_mu_chan_shapes.root fakephoton fakephoton_$SYSTEMATIC" 
-        print >> dcard, "shapes fake_muon mu_chan datacard_mu_chan_shapes.root fakemuon fakemuon_$SYSTEMATIC"
-        print >> dcard, "shapes double_fake mu_chan datacard_mu_chan_shapes.root doublefake doublefake_$SYSTEMATIC" 
-        print >> dcard, "shapes e_to_p_non_res mu_chan datacard_mu_chan_shapes.root etopnonres etopnonres_$SYSTEMATIC" 
+        print >> dcard, "shapes fake_photon mu_chan wg_datacard_mu_chan_shapes.root fakephoton fakephoton_$SYSTEMATIC" 
+        print >> dcard, "shapes fake_muon mu_chan wg_datacard_mu_chan_shapes.root fakemuon fakemuon_$SYSTEMATIC"
+        print >> dcard, "shapes double_fake mu_chan wg_datacard_mu_chan_shapes.root doublefake doublefake_$SYSTEMATIC" 
+        print >> dcard, "shapes e_to_p_non_res mu_chan wg_datacard_mu_chan_shapes.root etopnonres etopnonres_$SYSTEMATIC" 
     elif options.lep == "electron":
-        print >> dcard, "shapes fake_photon el_chan datacard_el_chan_shapes.root fakephoton fakephoton_$SYSTEMATIC" 
-        print >> dcard, "shapes fake_electron el_chan datacard_el_chan_shapes.root fakeelectron fakeelectron_$SYSTEMATIC"
-        print >> dcard, "shapes double_fake el_chan datacard_el_chan_shapes.root doublefake doublefake_$SYSTEMATIC" 
-        print >> dcard, "shapes e_to_p_non_res el_chan datacard_el_chan_shapes.root etopnonres etopnonres_$SYSTEMATIC" 
-        print >> dcard, "shapes e_to_p el_chan datacard_el_chan_shapes.root etop etop_$SYSTEMATIC" 
+        print >> dcard, "shapes fake_photon el_chan wg_datacard_el_chan_shapes.root fakephoton fakephoton_$SYSTEMATIC" 
+        print >> dcard, "shapes fake_electron el_chan wg_datacard_el_chan_shapes.root fakeelectron fakeelectron_$SYSTEMATIC"
+        print >> dcard, "shapes double_fake el_chan wg_datacard_el_chan_shapes.root doublefake doublefake_$SYSTEMATIC" 
+        print >> dcard, "shapes e_to_p_non_res el_chan wg_datacard_el_chan_shapes.root etopnonres etopnonres_$SYSTEMATIC" 
+        print >> dcard, "shapes e_to_p el_chan wg_datacard_el_chan_shapes.root etop etop_$SYSTEMATIC" 
     else:
         assert(0)    
 
-#    print >> dcard, "shapes data_obs el_chan datacard_el_chan_shapes.root workspace:data_obs"
-#    print >> dcard, "shapes Wg el_chan datacard_el_chan_shapes.root workspace:wg workspace:wg_$SYSTEMATIC" 
+#    print >> dcard, "shapes data_obs el_chan wg_datacard_el_chan_shapes.root workspace:data_obs"
+#    print >> dcard, "shapes Wg el_chan wg_datacard_el_chan_shapes.root workspace:wg workspace:wg_$SYSTEMATIC" 
 
 #    for label in labels.keys():
 #        if label == "no label" or label == "wg+jets" or label == "w+jets":
 #            continue
-#        print >> dcard, "shapes "+label.replace("+","")+" el_chan datacard_el_chan_shapes.root workspace:"+label.replace("+","")+ " workspace:" +label.replace("+","") + "_$SYSTEMATIC" 
+#        print >> dcard, "shapes "+label.replace("+","")+" el_chan wg_datacard_el_chan_shapes.root workspace:"+label.replace("+","")+ " workspace:" +label.replace("+","") + "_$SYSTEMATIC" 
 
-#    print >> dcard, "shapes fake_photon el_chan datacard_el_chan_shapes.root workspace:fakephoton workspace:fakephoton_$SYSTEMATIC" 
-#    print >> dcard, "shapes fake_electron el_chan datacard_el_chan_shapes.root workspace:fakeelectron workspace:fakeelectron_$SYSTEMATIC"
-#    print >> dcard, "shapes double_fake el_chan datacard_el_chan_shapes.root workspace:doublefake workspace:doublefake_$SYSTEMATIC" 
-#    print >> dcard, "shapes e_to_p_non_res el_chan datacard_el_chan_shapes.root workspace:etopnonres workspace:etopnonres_$SYSTEMATIC" 
-#    print >> dcard, "shapes e_to_p el_chan datacard_el_chan_shapes.root workspace:etop workspace:etop_$SYSTEMATIC" 
+#    print >> dcard, "shapes fake_photon el_chan wg_datacard_el_chan_shapes.root workspace:fakephoton workspace:fakephoton_$SYSTEMATIC" 
+#    print >> dcard, "shapes fake_electron el_chan wg_datacard_el_chan_shapes.root workspace:fakeelectron workspace:fakeelectron_$SYSTEMATIC"
+#    print >> dcard, "shapes double_fake el_chan wg_datacard_el_chan_shapes.root workspace:doublefake workspace:doublefake_$SYSTEMATIC" 
+#    print >> dcard, "shapes e_to_p_non_res el_chan wg_datacard_el_chan_shapes.root workspace:etopnonres workspace:etopnonres_$SYSTEMATIC" 
+#    print >> dcard, "shapes e_to_p el_chan wg_datacard_el_chan_shapes.root workspace:etop workspace:etop_$SYSTEMATIC" 
     
     print >> dcard, "Observation "+str(data["hists"][mlg_index].Integral())
     dcard.write("bin")
@@ -3685,7 +3839,7 @@ if options.make_datacard:
         assert(0)    
     dcard.write('\n')    
     
-    dcard.write("fakephotonsyst2 shape1")
+    dcard.write("fakephotonsyst2 lnN")
     dcard.write(" -")
 
     for label in labels.keys():
@@ -3693,9 +3847,9 @@ if options.make_datacard:
             continue
         dcard.write(" -")
 
-    dcard.write(" 1.0")
+    dcard.write(" 1.4")
     dcard.write(" -")
-    dcard.write(" -")
+    dcard.write(" 1.4")
     dcard.write(" -")
     if options.lep == "muon":
         pass
@@ -3854,9 +4008,9 @@ if options.make_datacard:
     dcard.close()
 
     if options.lep == "muon":
-        shapes = ROOT.TFile.Open("datacard_mu_chan_shapes.root","recreate")        
+        shapes = ROOT.TFile.Open("wg_datacard_mu_chan_shapes.root","recreate")        
     elif options.lep == "electron":
-        shapes = ROOT.TFile.Open("datacard_el_chan_shapes.root","recreate")
+        shapes = ROOT.TFile.Open("wg_datacard_el_chan_shapes.root","recreate")
     else:
         assert(0)    
 
@@ -3911,6 +4065,7 @@ if options.make_datacard:
 
     wgjets_scale_syst.Write("wg_wgscaleUp")
     makeDownShape(wgjets_scale_syst,labels["wg+jets"]["hists"][mlg_index]).Write("wg_wgscaleDown")
+
 
     fake_photon_alt["hists"][mlg_index].Write("fakephoton_fakephotonsyst1Up")
     makeDownShape(fake_photon_alt["hists"][mlg_index],fake_photon["hists"][mlg_index]).Write("fakephoton_fakephotonsyst1Down")
