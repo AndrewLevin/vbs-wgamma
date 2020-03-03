@@ -12,7 +12,7 @@ from pprint import pprint
 ROOT.gStyle.SetOptStat(0)
 
 #outdir="/eos/user/a/amlevin/www/wg/fake-photon-fits-mc/"
-outdir="/eos/user/a/amlevin/www/wg/fake-photon-fits/"
+outdir="/eos/user/a/amlevin/www/tmp/wg/fake-photon-fits/"
 
 year = "2017"
 
