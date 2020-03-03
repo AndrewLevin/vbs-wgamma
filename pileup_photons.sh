@@ -1,3 +1,4 @@
+#root [1] Events->Scan("lumi:event:photon_eta:photon_phi","(photon_genjet_matching == 0 && pass_selection && puppimet > 40 && !(photon_gen_matching == 1|| photon_gen_matching == 4 || photon_gen_matching == 5 || photon_gen_matching == 6) && is_lepton_real == 1 && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 26 && photon_selection == 0 && is_lepton_tight == 1)")
 date
 wjets_nlines=`cat wjets_events.txt | wc -l`
 
@@ -11,6 +12,8 @@ wjets_eta=`cat wjets_events.txt | head -n$i | tail -n1 | awk '{print $3}'`
 wjets_phi=`cat wjets_events.txt | head -n$i | tail -n1 | awk '{print $4}'`
 
 inlfn=`cat wjets_lfns_lumis.txt | grep ","${wjets_lumi}"," | awk '{print $1}'`
+
+echo "python wg_print_pileup_info.py --infile root://cms-xrd-global.cern.ch/${inlfn} --event ${wjets_event} --lumi ${wjets_lumi}"
 
 ret=`python wg_print_pileup_info.py --infile root://cms-xrd-global.cern.ch/${inlfn} --event ${wjets_event} --lumi ${wjets_lumi}`
 
@@ -46,6 +49,7 @@ i=$(($i+1))
 
 if  ! (( $singlelumi )); 
 then
+    echo "not a single lumi, continuing"
     continue;
 fi
 
@@ -56,6 +60,8 @@ echo \$wjets_lumi
 echo $wjets_lumi
 echo \$wjets_event
 echo $wjets_event
+
+echo "python wg_print_gen_particles.py  --infile root://cms-xrd-global.cern.ch/$minbiasfilename --lumi $lumi --evmin $firstevent --evmax $lastevent --eta $wjets_eta --phi $wjets_phi"
 
 python wg_print_gen_particles.py  --infile root://cms-xrd-global.cern.ch/$minbiasfilename --lumi $lumi --evmin $firstevent --evmax $lastevent --eta $wjets_eta --phi $wjets_phi
 
