@@ -271,12 +271,12 @@ for lepton_name in lepton_names:
 #                    photon1_gen_matching_cutstring = "photon1_gen_matching_old > 0"
 #                    photon2_gen_matching_cutstring = "photon2_gen_matching_old > 0"
                 else:
-#                    photon1_gen_matching_cutstring = "!(photon1_gen_matching == 6 || photon1_gen_matching == 5 || photon1_gen_matching == 4 || photon1_gen_matching == 1)"
-#                    photon2_gen_matching_cutstring = "!(photon2_gen_matching == 6 || photon2_gen_matching == 5 || photon2_gen_matching == 4 || photon2_gen_matching == 1)"    
+                    photon1_gen_matching_cutstring = "!(photon1_gen_matching == 6 || photon1_gen_matching == 5 || photon1_gen_matching == 4 || photon1_gen_matching == 1)"
+                    photon2_gen_matching_cutstring = "!(photon2_gen_matching == 6 || photon2_gen_matching == 5 || photon2_gen_matching == 4 || photon2_gen_matching == 1)"    
 #                    photon1_gen_matching_cutstring = "((photon1_genjet_matching == 1) && !(photon1_gen_matching == 6 || photon1_gen_matching == 5 || photon1_gen_matching == 4 || photon1_gen_matching == 1))"
 #                    photon2_gen_matching_cutstring = "((photon2_genjet_matching == 1) && !(photon2_gen_matching == 6 || photon2_gen_matching == 5 || photon2_gen_matching == 4 || photon2_gen_matching == 1))"
-                    photon1_gen_matching_cutstring = "((photon1_genjet_matching == 0) && (photon1_gen_matching == 0))"
-                    photon2_gen_matching_cutstring = "((photon2_genjet_matching == 0) && (photon2_gen_matching == 0))"
+#                    photon1_gen_matching_cutstring = "((photon1_genjet_matching == 0) && (photon1_gen_matching == 0))"
+#                    photon2_gen_matching_cutstring = "((photon2_genjet_matching == 0) && (photon2_gen_matching == 0))"
 #                    photon1_gen_matching_cutstring = "photon1_gen_matching_old == 0"
 #                    photon2_gen_matching_cutstring = "photon2_gen_matching_old == 0"
 
