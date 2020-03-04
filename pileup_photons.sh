@@ -54,7 +54,7 @@ then
 fi
 
 #minbiasfilename=`dasgoclient --query "file,run,lumi dataset=/MinBias_TuneCUETP8M1_13TeV-pythia8/RunIISummer15GS-MCRUN2_71_V1_ext1-v1/GEN-SIM"  | grep ","$firstlumi"," | awk '{print $1}'`
-minbiasfilename=`cat minbias_lfns_lumis.txt | grep ","$firstlumi"," | awk '{print $1}'`
+minbiasfilename=`cat minbias_lfns_lumis.txt | grep "[[,]"$firstlumi"[],]" | awk '{print $1}'`
 
 echo \$wjets_lumi
 echo $wjets_lumi
