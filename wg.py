@@ -925,60 +925,6 @@ float get_fake_lepton_weight(float eta, float pt, string year, int lepton_pdg_id
 
 fake_photon_weight_cpp = '''
 
-float get_wjets_fake_photon_chiso_weight(float eta, float pt, string year, int lepton_pdg_id) {
-
-    float fr = 0;
-    if (year == "2016") {
-       if (abs(eta) < 1.4442) {
-          if (pt < 25 and pt > 20) fr = 6.319018404907976;
-          else if (pt < 30 and pt > 25) fr = 6.270588235294117;
-          else if (pt < 40 and pt > 30) fr = 7.021276595744681;
-          else if (pt < 50 and pt > 40) fr = 6.090909090909092;
-          else if (pt > 50) fr = 6.0;
-          else assert(0); 
-    
-       }
-       else if (1.566 < abs(eta) && abs(eta) < 2.5) {
-          if (pt < 25 and pt > 20) fr = 8.481865284974093;
-          else if (pt < 30 and pt > 25) fr = 7.973684210526316;
-          else if (pt < 40 and pt > 30) fr = 7.708333333333332;
-          else if (pt < 50 and pt > 40) fr = 6.666666666666669;
-          else if (pt > 50) fr = 6.000000000000001;
-          else assert(0); 
-       }
-    }
-
-    return fr;
-
-}
-
-float get_wjets_fake_photon_weight(float eta, float pt, string year, int lepton_pdg_id) {
-
-    float fr = 0;
-    if (year == "2016") {
-       if (abs(eta) < 1.4442) {
-          if (pt < 25 and pt > 20) fr = 0.5913875598086125;
-          else if (pt < 30 and pt > 25) fr = 0.645278450363196;
-          else if (pt < 40 and pt > 30) fr = 0.7466063348416291;
-          else if (pt < 50 and pt > 40) fr = 0.6320754716981132;
-          else if (pt > 50) fr = 0.3076923076923077;
-          else assert(0); 
-    
-       }
-       else if (1.566 < abs(eta) && abs(eta) < 2.5) {
-          if (pt < 25 and pt > 20) fr = 0.926428975664969;
-          else if (pt < 30 and pt > 25) fr = 1.1929133858267715;
-          else if (pt < 40 and pt > 30) fr = 1.163522012578616;
-          else if (pt < 50 and pt > 40) fr = 1.3793103448275863;
-          else if (pt > 50) fr = 1.0000000000000002;
-          else assert(0); 
-       }
-    }
-
-    return fr;
-
-}
-
 float get_fake_photon_weight(float eta, float pt, string year, int lepton_pdg_id, string version = "nominal") {
 
 assert(version == "nominal" || version == "alt" || version == "stat_up" || version == "wjets" || version == "wjets_chiso"); 
