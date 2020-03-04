@@ -11,7 +11,7 @@ wjets_event=`cat wjets_events.txt | head -n$i | tail -n1 | awk '{print $2}'`
 wjets_eta=`cat wjets_events.txt | head -n$i | tail -n1 | awk '{print $3}'`
 wjets_phi=`cat wjets_events.txt | head -n$i | tail -n1 | awk '{print $4}'`
 
-inlfn=`cat wjets_lfns_lumis.txt | grep ","${wjets_lumi}"," | awk '{print $1}'`
+inlfn=`cat wjets_lfns_lumis.txt | grep "[[,]"${wjets_lumi}"[],]" | awk '{print $1}'`
 
 echo "python wg_print_pileup_info.py --infile root://cms-xrd-global.cern.ch/${inlfn} --event ${wjets_event} --lumi ${wjets_lumi}"
 
