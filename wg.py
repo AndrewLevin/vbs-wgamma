@@ -523,6 +523,7 @@ if "wg+jets" in labels:
 data = {}
 fake_signal_contamination = {}
 wjets_fake_photon_2016 = {}
+wjets_fake_photon_chiso_2016 = {}
 fake_photon = {}
 fake_photon_2016 = {}
 wjets_2016 = {}
@@ -541,6 +542,7 @@ ewdim6 = {}
 data["hists"] = []
 fake_signal_contamination["hists"] = []
 wjets_fake_photon_2016["hists"] = []
+wjets_fake_photon_chiso_2016["hists"] = []
 wjets_2016["hists"] = []
 fake_photon["hists"] = []
 fake_photon_2016["hists"] = []
@@ -567,6 +569,7 @@ ewdim6["hists"] = []
 for i in range(len(variables)):
     data["hists"].append(histogram_models[i].GetHistogram())
     wjets_fake_photon_2016["hists"].append(histogram_models[i].GetHistogram())
+    wjets_fake_photon_chiso_2016["hists"].append(histogram_models[i].GetHistogram())
     wjets_2016["hists"].append(histogram_models[i].GetHistogram())
     fake_photon["hists"].append(histogram_models[i].GetHistogram())
     fake_photon_2016["hists"].append(histogram_models[i].GetHistogram())
@@ -596,6 +599,7 @@ for i in range(len(variables)):
     data["hists"][i].Sumw2()
     data["hists"][i].SetName("data "+variables[i])
     wjets_fake_photon_2016["hists"][i].Sumw2()
+    wjets_fake_photon_chiso_2016["hists"][i].Sumw2()
     wjets_2016["hists"][i].Sumw2()
     fake_photon["hists"][i].Sumw2()
     fake_photon_2016["hists"][i].Sumw2()
@@ -921,6 +925,33 @@ float get_fake_lepton_weight(float eta, float pt, string year, int lepton_pdg_id
 
 fake_photon_weight_cpp = '''
 
+float get_wjets_fake_photon_chiso_weight(float eta, float pt, string year, int lepton_pdg_id) {
+
+    float fr = 0;
+    if (year == "2016") {
+       if (abs(eta) < 1.4442) {
+          if (pt < 25 and pt > 20) fr = 6.319018404907976;
+          else if (pt < 30 and pt > 25) fr = 6.270588235294117;
+          else if (pt < 40 and pt > 30) fr = 7.021276595744681;
+          else if (pt < 50 and pt > 40) fr = 6.090909090909092;
+          else if (pt > 50) fr = 6.0;
+          else assert(0); 
+    
+       }
+       else if (1.566 < abs(eta) && abs(eta) < 2.5) {
+          if (pt < 25 and pt > 20) fr = 8.481865284974093;
+          else if (pt < 30 and pt > 25) fr = 7.973684210526316;
+          else if (pt < 40 and pt > 30) fr = 7.708333333333332;
+          else if (pt < 50 and pt > 40) fr = 6.666666666666669;
+          else if (pt > 50) fr = 6.000000000000001;
+          else assert(0); 
+       }
+    }
+
+    return fr;
+
+}
+
 float get_wjets_fake_photon_weight(float eta, float pt, string year, int lepton_pdg_id) {
 
     float fr = 0;
@@ -948,179 +979,228 @@ float get_wjets_fake_photon_weight(float eta, float pt, string year, int lepton_
 
 }
 
-float get_fake_photon_weight(float eta, float pt, string year, int lepton_pdg_id, bool use_alt = false, bool stat_err_up = false)
-{
+float get_fake_photon_weight(float eta, float pt, string year, int lepton_pdg_id, string version = "nominal") {
 
+assert(version == "nominal" || version == "alt" || version == "stat_up" || version == "wjets" || version == "wjets_chiso"); 
+
+if (version == "wjets") { 
+    assert(year == "2016");
+    float fr = 0;
+    if (year == "2016") {
+        if (abs(eta) < 1.4442) {
+            if (pt < 25 and pt > 20) fr = 0.6469175340272219;
+            else if (pt < 30 and pt > 25) fr = 0.7593930635838149;
+            else if (pt < 40 and pt > 30) fr = 0.9052396878483837;
+            else if (pt < 50 and pt > 40) fr = 0.7128205128205127;
+            else if (pt > 50) fr = 0.5080459770114942;
+            else assert(0); 
+        }
+        else if (1.566 < abs(eta) && abs(eta) < 2.5) {
+           if (pt < 25 and pt > 20) fr = 0.9821810406272273;
+               else if (pt < 30 and pt > 25) fr = 1.160148975791434;
+               else if (pt < 40 and pt > 30) fr = 1.0594965675057209;
+               else if (pt < 50 and pt > 40) fr = 1.2920353982300883;
+               else if (pt > 50) fr = 1.2293577981651373;
+               else assert(0); 
+           }
+        }
+        return fr;
+    }
+else if (version == "wjets_chiso") {
+    assert(year == "2016");
+    float fr = 0;
+    if (year == "2016") {
+        if (abs(eta) < 1.4442) {
+            if (pt < 25 and pt > 20) fr = 2.139452780229479;
+            else if (pt < 30 and pt > 25) fr = 1.7089430894308941;
+            else if (pt < 40 and pt > 30) fr = 1.4072790294627382;
+            else if (pt < 50 and pt > 40) fr = 1.053030303030303;
+            else if (pt > 50) fr = 0.8095238095238096;
+            else assert(0); 
+    
+           }
+           else if (1.566 < abs(eta) && abs(eta) < 2.5) {
+               if (pt < 25 and pt > 20) fr = 3.8277777777777775;
+               else if (pt < 30 and pt > 25) fr = 2.708695652173913;
+               else if (pt < 40 and pt > 30) fr = 2.292079207920792;
+               else if (pt < 50 and pt > 40) fr = 2.1470588235294117;
+               else if (pt > 50) fr = 2.5769230769230766;
+               else assert(0); 
+           }
+        }
+        return fr;
+    }
+else if (version == "nominal" || version == "alt" || version == "stat_up") { //based on inverting chiso and making the maximum 1.75*chiso_cut
     float fr = 0;
     if (year == "2016") {
        if (abs(eta) < 1.4442) {
-          if (pt < 25 and pt > 20) fr = 0.7003077299250816;
-          else if (pt < 30 and pt > 25) fr = 0.7491921116866056;
-          else if (pt < 40 and pt > 30) fr = 0.6923424340462188;
-          else if (pt < 50 and pt > 40) fr = 0.5924400615098443;
-          else if (pt > 50) fr = 0.41487112738225757;
+          if (pt < 25 and pt > 20) fr = 0.6996237332067621;
+          else if (pt < 30 and pt > 25) fr = 0.7485724858910313;
+          else if (pt < 40 and pt > 30) fr = 0.6920954897858362;
+          else if (pt < 50 and pt > 40) fr = 0.5922363985857421;
+          else if (pt > 50) fr = 0.4151116840422024;
           else assert(0); 
     
        }
        else if (1.566 < abs(eta) && abs(eta) < 2.5) {
-          if (pt < 25 and pt > 20) fr = 0.9250582944492323;
-          else if (pt < 30 and pt > 25) fr = 0.9801218809625295;
-          else if (pt < 40 and pt > 30) fr = 0.9737000530879558;
-          else if (pt < 50 and pt > 40) fr = 0.931277245690856;
-          else if (pt > 50) fr = 0.9554568420958437;
+          if (pt < 25 and pt > 20) fr = 0.9248844370602675;
+          else if (pt < 30 and pt > 25) fr = 0.9799675969963608;
+          else if (pt < 40 and pt > 30) fr = 0.9750818843293853;
+          else if (pt < 50 and pt > 40) fr = 0.937879263758023;
+          else if (pt > 50) fr = 0.9580822239127585;
           else assert(0); 
        }
     }
     else if (year == "2017") {
        if (abs(eta) < 1.4442) {
-          if (pt < 25 and pt > 20) fr = 0.6919941128926052;
-          else if (pt < 30 and pt > 25) fr = 0.7642612688144812;
-          else if (pt < 40 and pt > 30) fr = 0.7319714597093456;
-          else if (pt < 50 and pt > 40) fr = 0.6565046379834663;
-          else if (pt > 50) fr = 0.5082509744944883;
+          if (pt < 25 and pt > 20) fr = 0.6912680790821342;
+          else if (pt < 30 and pt > 25) fr = 0.7636732062430018;
+          else if (pt < 40 and pt > 30) fr = 0.7309187507758684;
+          else if (pt < 50 and pt > 40) fr = 0.6559368305211164;
+          else if (pt > 50) fr = 0.5068425857427465;
           else assert(0); 
     
        }
        else if (1.566 < abs(eta) && abs(eta) < 2.5) {
-          if (pt < 25 and pt > 20) fr = 0.3156163737594128;
-          else if (pt < 30 and pt > 25) fr = 0.34359058295934536;
-          else if (pt < 40 and pt > 30) fr = 0.35025195124946745;
-          else if (pt < 50 and pt > 40) fr = 0.40439061453627173;
-          else if (pt > 50) fr = 0.5124493109053964;
+          if (pt < 25 and pt > 20) fr = 0.3147229931595173;
+          else if (pt < 30 and pt > 25) fr = 0.34277057433872954;
+          else if (pt < 40 and pt > 30) fr = 0.34959057399376964;
+          else if (pt < 50 and pt > 40) fr = 0.4001123746683101;
+          else if (pt > 50) fr = 0.5109029075333011;
           else assert(0); 
        }
     }
     else if (year == "2018") {
        if (abs(eta) < 1.4442) {
-          if (pt < 25 and pt > 20) fr =  0.6825421960990049;
-          else if (pt < 30 and pt > 25) fr = 0.7747729112544205;
-          else if (pt < 40 and pt > 30) fr = 0.7527219268802551;
-          else if (pt < 50 and pt > 40) fr = 0.6961865786204705;
-          else if (pt > 50) fr = 0.5052867803309009;
+          if (pt < 25 and pt > 20) fr =  0.6819628126916278;
+          else if (pt < 30 and pt > 25) fr = 0.7738571901458522;
+          else if (pt < 40 and pt > 30) fr = 0.7516333386056144;
+          else if (pt < 50 and pt > 40) fr = 0.6950256916933786;
+          else if (pt > 50) fr = 0.504158202340239;
           else assert(0); 
     
        }
        else if (1.566 < abs(eta) && abs(eta) < 2.5) {
-          if (pt < 25 and pt > 20) fr =  0.2759815128517819;
-          else if (pt < 30 and pt > 25) fr = 0.31879868070069095;
-          else if (pt < 40 and pt > 30) fr = 0.3314147255351294;
-          else if (pt < 50 and pt > 40) fr = 0.3590191199263839;
-          else if (pt > 50) fr = 0.4941625832443751;
+          if (pt < 25 and pt > 20) fr =  0.27489785614816215;
+          else if (pt < 30 and pt > 25) fr = 0.31779777996179676;
+          else if (pt < 40 and pt > 30) fr = 0.33081812493411455;
+          else if (pt < 50 and pt > 40) fr = 0.35671632932371405;
+          else if (pt > 50) fr = 0.49287015359051706;
           else assert(0); 
        }
     }
 
-    if (use_alt) {
+    if (version == "alt") {
        if (year == "2016") {
           if (abs(eta) < 1.4442) {
-             if (pt < 25 and pt > 20) fr += 0.6190870499337138-0.6814886579951697;
-             else if (pt < 30 and pt > 25) fr += 0.712091760366602-0.7606516857597383;
-             else if (pt < 40 and pt > 30) fr += 0.8430015704496387-0.7450406087708085;
-             else if (pt < 50 and pt > 40) fr += 0.6846064051376111-0.649268052437818;
-             else if (pt > 50) fr += 0.4952101391384845-0.4003105171422588;
+             if (pt < 25 and pt > 20) fr += 0.6469175340272219 -  0.6808966653040407;
+             else if (pt < 30 and pt > 25) fr += 0.7593930635838149 -  0.7624786257622868;
+             else if (pt < 40 and pt > 30) fr += 0.9052396878483837 - 0.7427103452313788;
+             else if (pt < 50 and pt > 40) fr += 0.7128205128205127 -  0.6443786091779561;
+             else if (pt > 50) fr += 0.5080459770114942 - 0.4012017084603665;
              else assert(0); 
     
           }
           else if (1.566 < abs(eta) && abs(eta) < 2.5) {
-             if (pt < 25 and pt > 20) fr += 0.9591923682905277-0.9592504449053858;
-             else if (pt < 30 and pt > 25) fr += 1.0971187360948766-0.9282955655701293;
-             else if (pt < 40 and pt > 30) fr += 1.0456798210055638-0.7828376615562467;
-             else if (pt < 50 and pt > 40) fr += 1.2819914667917254-1.2397186217161777;
-             else if (pt > 50) fr += 1.2637351371285357-0.9640670849112092;
+             if (pt < 25 and pt > 20) fr += 0.9821810406272273 -  0.9593621632637661;
+             else if (pt < 30 and pt > 25) fr += 1.160148975791434 -  0.9402109983117282;
+             else if (pt < 40 and pt > 30) fr += 1.0594965675057209 - 0.8076708282273575;
+             else if (pt < 50 and pt > 40) fr += 1.2920353982300883 - 1.2271914169232672;
+             else if (pt > 50) fr += 1.2293577981651373  - 0.9377974387415269;
              else assert(0); 
           }
        }
        else if (year == "2017") {
           if (abs(eta) < 1.4442) {
-             if (pt < 25 and pt > 20) fr += 0.5430681940767117-0.7186263506266279;
-             else if (pt < 30 and pt > 25) fr += 0.6053293250021909-0.8462067803611018;
-             else if (pt < 40 and pt > 30) fr += 0.7996362012953444-0.7835289599562423; 
-             else if (pt < 50 and pt > 40) fr += 0.816318680573053-0.6597575100160821;
-             else if (pt > 50) fr += 0.5854042526160212-0.3559537538193207;
+             if (pt < 25 and pt > 20) fr += 0.5920017017655818 -  0.675219301111022;
+             else if (pt < 30 and pt > 25) fr += 0.7620164126611957 -  0.7880502803690924;
+             else if (pt < 40 and pt > 30) fr += 0.8587786259541983 - 0.8149971396299441; 
+             else if (pt < 50 and pt > 40) fr += 0.7945945945945946 - 0.732169348128166;
+             else if (pt > 50) fr += 0.5646551724137931 - 0.5889482915913384;
              else assert(0); 
           }
           else if (1.566 < abs(eta) && abs(eta) < 2.5) {
-             if (pt < 25 and pt > 20) fr += 0.4870463540350601-0.304201721544001;
-             else if (pt < 30 and pt > 25) fr += 0.669910419310825-0.34921030538500225;
-             else if (pt < 40 and pt > 30) fr += 0.7648489297053381-0.369744857512926;
-             else if (pt < 50 and pt > 40) fr += 0.5562241273284817-0.458784939518758;
-             else if (pt > 50) fr += 0.6310856585443262-0.9692844596772306;
+             if (pt < 25 and pt > 20) fr += 0.5351190476190476 -  0.3336229060031224;
+             else if (pt < 30 and pt > 25) fr += 0.7174603174603175 -  0.4214485303045893;
+             else if (pt < 40 and pt > 30) fr += 0.6980198019801981 - 0.44808235568211063;
+             else if (pt < 50 and pt > 40) fr += 0.746031746031746 - 0.4882394061692232;
+             else if (pt > 50) fr += 0.6575342465753424 - 0.7417937101120567;
              else assert(0); 
           }
        }
        else if (year == "2018") {
           if (abs(eta) < 1.4442) {
-             if (pt < 25 and pt > 20) fr += 0.5953328151710774-0.7537195591739787;
-             else if (pt < 30 and pt > 25) fr += 0.6340529159096009-0.8283002385161902;
-             else if (pt < 40 and pt > 30) fr += 0.7928619828007212-0.8491210330539455;
-             else if (pt < 50 and pt > 40) fr += 0.8482110690222703-0.7430790194561276;
-             else if (pt > 50) fr += 0.5856752553538738-0.4673413804309628;
+             if (pt < 25 and pt > 20) fr += 0.6434456928838951 - 0.7508905741815809;
+             else if (pt < 30 and pt > 25) fr += 0.6980392156862745 - 0.8258283193385701;
+             else if (pt < 40 and pt > 30) fr += 0.8702064896755163 - 0.8435371457514238;
+             else if (pt < 50 and pt > 40) fr += 0.9174311926605504 -  0.7456986592354332;
+             else if (pt > 50) fr += 0.6343283582089553 - 0.4698553383698952;
              else assert(0); 
           }
           else if (1.566 < abs(eta) && abs(eta) < 2.5) {
-             if (pt < 25 and pt > 20) fr += 0.5184638060548978-0.3441605362569155;
-             else if (pt < 30 and pt > 25) fr += 0.7473648332250271-0.3466002004607558;
-             else if (pt < 40 and pt > 30) fr += 0.6989525748508031-0.40835850112040833;
-             else if (pt < 50 and pt > 40) fr += 0.5318051822376055-0.42837695820993127;
-             else if (pt > 50) fr += 0.7985385075798461-0.4685590510894559;
+             if (pt < 25 and pt > 20) fr += 0.5732368896925858 - 0.34631002339070077;
+             else if (pt < 30 and pt > 25) fr += 0.8591549295774648 - 0.3435483305230785;
+             else if (pt < 40 and pt > 30) fr += 0.8108108108108107 - 0.409059955258932;
+             else if (pt < 50 and pt > 40) fr += 0.5967741935483871 - 0.4055865165305403;
+             else if (pt > 50) fr += 0.9268292682926829 - 0.4696040830060756;
              else assert(0); 
           }
        }
     }
 
-    if (stat_err_up) {
+    if (version == "stat_up") {
        if (year == "2016") {
           if (abs(eta) < 1.4442) {
-             if (pt < 25 and pt > 20) fr += 0.003726696434316919;
-             else if (pt < 30 and pt > 25) fr += 0.008007838249636558;
-             else if (pt < 40 and pt > 30) fr += 0.008433979158612695;
-             else if (pt < 50 and pt > 40) fr += 0.010859005689809001;
-             else if (pt > 50) fr += 0.006921188984346714;
+             if (pt < 25 and pt > 20) fr += 0.002937265704094981;
+             else if (pt < 30 and pt > 25) fr += 0.0062805701638771845;
+             else if (pt < 40 and pt > 30) fr += 0.006477726168950861;
+             else if (pt < 50 and pt > 40) fr += 0.0087970999952064;
+             else if (pt > 50) fr += 0.005442704584429666;
              else assert(0); 
     
           }
           else if (1.566 < abs(eta) && abs(eta) < 2.5) {
-             if (pt < 25 and pt > 20) fr += 0.008385538724853942;
-             else if (pt < 30 and pt > 25) fr += 0.01644968136974182;
-             else if (pt < 40 and pt > 30) fr += 0.01802650090283417;
-             else if (pt < 50 and pt > 40) fr += 0.029514264317711723;
-             else if (pt > 50) fr += 0.03290098149767282;
+             if (pt < 25 and pt > 20) fr += 0.0064449696265627115;
+             else if (pt < 30 and pt > 25) fr += 0.01258402077183808;
+             else if (pt < 40 and pt > 30) fr += 0.014621685284402344;
+             else if (pt < 50 and pt > 40) fr += 0.023745888823496042;
+             else if (pt > 50) fr += 0.025855780798136833;
              else assert(0); 
           }
        }
        else if (year == "2017") {
           if (abs(eta) < 1.4442) {
-             if (pt < 25 and pt > 20) fr += 0.003385092552323846;
-             else if (pt < 30 and pt > 25) fr += 0.007066861293194911;
-             else if (pt < 40 and pt > 30) fr += 0.008210431530362772;
-             else if (pt < 50 and pt > 40) fr += 0.011112675359727656;
-             else if (pt > 50) fr += 0.008149800513402552;
+             if (pt < 25 and pt > 20) fr += 0.6912680790821342;
+             else if (pt < 30 and pt > 25) fr += 0.7636732062430018;
+             else if (pt < 40 and pt > 30) fr += 0.7309187507758684;
+             else if (pt < 50 and pt > 40) fr += 0.6559368305211164;
+             else if (pt > 50) fr += 0.5068425857427465;
              else assert(0); 
           }
           else if (1.566 < abs(eta) && abs(eta) < 2.5) {
-             if (pt < 25 and pt > 20) fr += 0.003526768130379223;
-             else if (pt < 30 and pt > 25) fr += 0.006543586882338852;
-             else if (pt < 40 and pt > 30) fr += 0.007742888937472314;
-             else if (pt < 50 and pt > 40) fr += 0.014797541119452121;
-             else if (pt > 50) fr += 0.01889769251249905;
+             if (pt < 25 and pt > 20) fr += 0.3147229931595173;
+             else if (pt < 30 and pt > 25) fr += 0.34277057433872954;
+             else if (pt < 40 and pt > 30) fr += 0.34959057399376964;
+             else if (pt < 50 and pt > 40) fr += 0.4001123746683101;
+             else if (pt > 50) fr += 0.5109029075333011;
              else assert(0); 
           }
        }
        else if (year == "2018") {
           if (abs(eta) < 1.4442) {
-             if (pt < 25 and pt > 20) fr += 0.003045437293190333;
-             else if (pt < 30 and pt > 25) fr += 0.006371299316978814;
-             else if (pt < 40 and pt > 30) fr += 0.0072871968596617325;
-             else if (pt < 50 and pt > 40) fr += 0.010243263327547105;
-             else if (pt > 50) fr += 0.007432642816465921;
+             if (pt < 25 and pt > 20) fr += 0.0024140690750868183;
+             else if (pt < 30 and pt > 25) fr += 0.005184544256765383;
+             else if (pt < 40 and pt > 30) fr += 0.005868144318298048;
+             else if (pt < 50 and pt > 40) fr += 0.008224769860031768;
+             else if (pt > 50) fr += 0.005667933573402517;
              else assert(0); 
           }
           else if (1.566 < abs(eta) && abs(eta) < 2.5) {
-             if (pt < 25 and pt > 20) fr += 0.0025408616349431017;
-             else if (pt < 30 and pt > 25) fr += 0.004803076104518955;
-             else if (pt < 40 and pt > 30) fr += 0.0058370202697056684;
-             else if (pt < 50 and pt > 40) fr += 0.010347864628364374;
-             else if (pt > 50) fr += 0.014355530744851597;
+             if (pt < 25 and pt > 20) fr += 0.0019240540418093948;
+             else if (pt < 30 and pt > 25) fr += 0.0038455484020956843;
+             else if (pt < 40 and pt > 30) fr += 0.004759983282437974;
+             else if (pt < 50 and pt > 40) fr += 0.00822110783712988;
+             else if (pt > 50) fr += 0.011315829843225643;
              else assert(0); 
           }
        }
@@ -1128,6 +1208,12 @@ float get_fake_photon_weight(float eta, float pt, string year, int lepton_pdg_id
 
 
     return fr;
+} else {
+
+assert(0);
+
+}
+  
 
 }
 '''
@@ -1467,11 +1553,11 @@ for year in years:
     rinterface = rinterface.Define("fake_lepton_stat_up_weight","photon_selection == 0 && is_lepton_tight == 0 ? get_fake_lepton_weight(lepton_eta,lepton_pt,\""+year+"\",lepton_pdg_id,\"up\") : 0")
     rinterface = rinterface.Define("fake_lepton_stat_down_weight","photon_selection == 0 && is_lepton_tight == 0 ? get_fake_lepton_weight(lepton_eta,lepton_pt,\""+year+"\",lepton_pdg_id,\"down\") : 0")
     rinterface = rinterface.Define("fake_photon_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 1 ? get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id) : 0")
-    rinterface = rinterface.Define("fake_photon_alt_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 1 ? get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,true) : 0")
-    rinterface = rinterface.Define("fake_photon_stat_up_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 1 ? get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,false,true) : 0")
+    rinterface = rinterface.Define("fake_photon_alt_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 1 ? get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,\"alt\") : 0")
+    rinterface = rinterface.Define("fake_photon_stat_up_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 1 ? get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,\"stat_up\") : 0")
     rinterface = rinterface.Define("double_fake_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 0 ? get_fake_lepton_weight(lepton_eta,lepton_pt,\""+year+"\",lepton_pdg_id)*get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id) : 0") 
-    rinterface = rinterface.Define("double_fake_alt_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 0 ? get_fake_lepton_weight(lepton_eta,lepton_pt,\""+year+"\",lepton_pdg_id)*get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,true) : 0") 
-    rinterface = rinterface.Define("double_fake_stat_up_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 0 ? get_fake_lepton_weight(lepton_eta,lepton_pt,\""+year+"\",lepton_pdg_id)*get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,false,true) : 0") 
+    rinterface = rinterface.Define("double_fake_alt_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 0 ? get_fake_lepton_weight(lepton_eta,lepton_pt,\""+year+"\",lepton_pdg_id)*get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,\"alt\") : 0") 
+    rinterface = rinterface.Define("double_fake_stat_up_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 0 ? get_fake_lepton_weight(lepton_eta,lepton_pt,\""+year+"\",lepton_pdg_id)*get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,\"stat_up\") : 0") 
 
     if options.closure_test:
         if year == "2016" or year == "2017":    
@@ -1544,6 +1630,9 @@ hists = []
 
 for year in years:
     for label in labels.keys():
+
+#        if label != "w+jets":
+#            continue
 
         if label == "w+jets" and (year == "2017" or year == "2018") and options.no_wjets_for_2017_and_2018:
             continue
@@ -1696,16 +1785,16 @@ for year in years:
             rinterface = rinterface.Define("fake_lepton_stat_up_weight","photon_selection == 0 && is_lepton_tight == 0 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_fake_lepton_weight(lepton_eta,lepton_pt,\""+year+"\",lepton_pdg_id,\"up\")*xs_weight*puWeight*"+prefire_weight_string + "*" + get_postfilter_selection_string()+" : 0")
             rinterface = rinterface.Define("fake_lepton_stat_down_weight","photon_selection == 0 && is_lepton_tight == 0 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_fake_lepton_weight(lepton_eta,lepton_pt,\""+year+"\",lepton_pdg_id,\"down\")*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0")
             rinterface = rinterface.Define("fake_photon_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id)*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0")
-            rinterface = rinterface.Define("fake_photon_alt_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,true)*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0")
-            rinterface = rinterface.Define("fake_photon_stat_up_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,false,true)*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0")
+            rinterface = rinterface.Define("fake_photon_alt_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,\"alt\")*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0")
+            rinterface = rinterface.Define("fake_photon_stat_up_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,\"stat_up\")*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0")
             rinterface = rinterface.Define("double_fake_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 0 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_fake_lepton_weight(lepton_eta,lepton_pt,\""+year+"\",lepton_pdg_id)*get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id)*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0") 
-            rinterface = rinterface.Define("double_fake_alt_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 0 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_fake_lepton_weight(lepton_eta,lepton_pt,\""+year+"\",lepton_pdg_id)*get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,true)*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0") 
-            rinterface = rinterface.Define("double_fake_stat_up_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 0 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_fake_lepton_weight(lepton_eta,lepton_pt,\""+year+"\",lepton_pdg_id)*get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,false,true)*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0") 
+            rinterface = rinterface.Define("double_fake_alt_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 0 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_fake_lepton_weight(lepton_eta,lepton_pt,\""+year+"\",lepton_pdg_id)*get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,\"alt\")*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0") 
+            rinterface = rinterface.Define("double_fake_stat_up_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 0 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_fake_lepton_weight(lepton_eta,lepton_pt,\""+year+"\",lepton_pdg_id)*get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,\"stat_up\")*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0") 
 
             if label == "w+jets" and year == "2016":
 #                rinterface = rinterface.Define("wjets_fake_photon_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_wjets_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id)*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0")
-                rinterface = rinterface.Define("wjets_fake_photon_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 1 && is_lepton_real == 1 && !(photon_gen_matching == 1|| photon_gen_matching == 4 || photon_gen_matching == 5 || photon_gen_matching == 6) ? get_wjets_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id)*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0")
-
+                rinterface = rinterface.Define("wjets_fake_photon_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 1 && is_lepton_real == 1 && !(photon_gen_matching == 1|| photon_gen_matching == 4 || photon_gen_matching == 5 || photon_gen_matching == 6) ? get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,\"wjets\")*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0")
+                rinterface = rinterface.Define("wjets_chiso_fake_photon_weight","photon_selection == 3 && ((abs(photon_eta) < 1.5 && photon_pfRelIso03_chg*photon_pt < chiso_cut_barrel*1000) || (abs(photon_eta) > 1.5 && photon_pfRelIso03_chg*photon_pt < chiso_cut_endcap*1000)) &&  && is_lepton_tight == 1 && is_lepton_real == 1 && !(photon_gen_matching == 1|| photon_gen_matching == 4 || photon_gen_matching == 5 || photon_gen_matching == 6) ? get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,\"wjets_chiso\")*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0")
 
             if sample["e_to_p"]:
                 rinterface = rinterface.Define("e_to_p_weight","photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1 ? base_weight : 0")
@@ -1740,6 +1829,7 @@ for year in years:
 
             rresultptrs = []    
             if label == "w+jets" and year == "2016":
+                rresultptrs_wjets_fake_photon_chiso = []    
                 rresultptrs_wjets_fake_photon = []    
                 rresultptrs_wjets = []    
             rresultptrs_fake_photon = []    
@@ -1799,6 +1889,7 @@ for year in years:
                         rresultptrs_jer_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"jer_up_weight"))
 
                 if label == "w+jets" and year == "2016":
+                    rresultptrs_wjets_fake_photon_chiso.append(rinterface.Histo1D(histogram_models[i],variables[i],"wjets_chiso_fake_photon_weight"))        
                     rresultptrs_wjets_fake_photon.append(rinterface.Histo1D(histogram_models[i],variables[i],"wjets_fake_photon_weight"))    
                     rresultptrs_wjets.append(rinterface.Histo1D(histogram_models[i],variables[i],"weight"))    
 
@@ -1878,7 +1969,8 @@ for year in years:
                 if year == "2016":    
                     fake_photon_2016["hists"][i].Add(rresultptrs_fake_photon[i].GetValue())
 
-                if label == "w+jets" and year == "2016":    
+                if label == "w+jets" and year == "2016": 
+                    wjets_fake_photon_chiso_2016["hists"][i].Add(rresultptrs_wjets_fake_photon_chiso[i].GetValue())
                     wjets_fake_photon_2016["hists"][i].Add(rresultptrs_wjets_fake_photon[i].GetValue())
                     wjets_2016["hists"][i].Add(rresultptrs_wjets[i].GetValue())
 
@@ -1942,14 +2034,45 @@ for i in range(len(variables)):
         minus_one_hist.SetBinContent(j,-1)
         minus_one_hist.SetBinError(j,0)
     non_closure.append(histogram_models[i].GetHistogram())
+
+
     wjets_2016["hists"][i].SetLineColor(ROOT.kBlue)
     wjets_fake_photon_2016["hists"][i].SetLineColor(ROOT.kRed)
     wjets_fake_photon_2016["hists"][i].SetMinimum(0)
+    if wjets_fake_photon_2016["hists"][i].Integral() > 0:
+        wjets_fake_photon_2016["hists"][i].Scale(wjets_2016["hists"][i].Integral()/wjets_fake_photon_2016["hists"][i].Integral())
+    wjets_fake_photon_2016["hists"][i].SetMaximum(1.55*max(wjets_fake_photon_2016["hists"][i].GetMaximum(),wjets_2016["hists"][i].GetMaximum()))
     set_axis_fonts(wjets_fake_photon_2016["hists"][i],"x",getXaxisLabel(variables[i]))
     wjets_fake_photon_2016["hists"][i].Draw()
     wjets_2016["hists"][i].Draw("same")
     lumilabel.Draw("same")
+
+
+    set_axis_fonts(wjets_fake_photon_2016["hists"][i],"x",getXaxisLabel(variables[i]))
+    j=0
+    draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,wjets_fake_photon_2016["hists"][i],"fake photon","l")
+    j=j+1
+    draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,wjets_2016["hists"][i],"w+jets","l")
+    j=j+1
     c.SaveAs(options.outputdir + "/" + "closure_test_"+variables_labels[i]+".png")
+
+    wjets_fake_photon_chiso_2016["hists"][i].SetLineColor(ROOT.kRed)
+    if wjets_fake_photon_chiso_2016["hists"][i].Integral() > 0:
+        wjets_fake_photon_chiso_2016["hists"][i].Scale(wjets_2016["hists"][i].Integral()/wjets_fake_photon_chiso_2016["hists"][i].Integral())
+    wjets_fake_photon_chiso_2016["hists"][i].SetMaximum(1.55*max(wjets_fake_photon_chiso_2016["hists"][i].GetMaximum(),wjets_2016["hists"][i].GetMaximum()))
+    wjets_fake_photon_chiso_2016["hists"][i].SetMinimum(0)
+    wjets_fake_photon_chiso_2016["hists"][i].Draw()
+    wjets_2016["hists"][i].Draw("same")
+    lumilabel.Draw("same")
+    set_axis_fonts(wjets_fake_photon_chiso_2016["hists"][i],"x",getXaxisLabel(variables[i]))
+    j=0
+    draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,wjets_fake_photon_chiso_2016["hists"][i],"fake photon","l")
+    j=j+1
+    draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,wjets_2016["hists"][i],"w+jets","l")
+    j=j+1
+    c.SaveAs(options.outputdir + "/" + "closure_test_chiso_"+variables_labels[i]+".png")
+
+
     non_closure[len(non_closure)-1].Add(wjets_2016["hists"][i])
 #    wjets_fake_photon_2016["hists"][i].Scale(-1)
 #    non_closure[len(non_closure)-1].Add(wjets_fake_photon_2016["hists"][i])
