@@ -14,7 +14,7 @@ Observation 400464.0
 bin mu_chan mu_chan mu_chan mu_chan mu_chan mu_chan mu_chan mu_chan
 process Wg topjets zgjets vvjets fake_photon fake_muon double_fake e_to_p_non_res
 process 0 1 2 3 4 5 6 7
-rate 173880.32026 23665.6719305 43671.3280426 2224.63282307 86165.3774159 18471.5967744 19178.4280583 8305.70268959
+rate 173880.32026 23665.6719305 43671.3280426 2224.63282307 86071.8275742 18494.0559605 19155.100175 8305.70268959
 lumi_13tev lnN 1.027 1.027 1.027 1.027 - - - 1.027
 pileup shape1 1.0 1.0 1.0 1.0 - - - -
 prefire shape1 1.0 1.0 1.0 1.0 - - - -

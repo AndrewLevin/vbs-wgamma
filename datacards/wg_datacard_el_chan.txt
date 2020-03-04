@@ -15,7 +15,7 @@ Observation 407042.0
 bin el_chan el_chan el_chan el_chan el_chan el_chan el_chan el_chan el_chan
 process Wg topjets zgjets vvjets fake_photon fake_electron double_fake e_to_p_non_res e_to_p
 process 0 1 2 3 4 5 6 7 8
-rate 103827.020772 15762.1734308 21616.6561188 1419.74691878 45620.9409521 33142.2513563 19479.8574482 5975.43178946 95156.6138933
+rate 103827.020772 15762.1734308 21616.6561188 1419.74691878 45569.3316346 33162.4987626 19458.43479 5975.43178946 95156.6138933
 lumi_13tev lnN 1.027 1.027 1.027 1.027 - - - 1.027 -
 pileup shape1 1.0 1.0 1.0 1.0 - - - - -
 prefire shape1 1.0 1.0 1.0 1.0 - - - - -
