@@ -133,10 +133,10 @@ else:
 
 photon_eta_cutstring = "((abs(photon_eta) < "+str(photon_eta_max)+") && (abs(photon_eta) > "+str(photon_eta_min)+"))"
 
-f_json=open("/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/ReReco/Final/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt")
+#f_json=open("/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13TeV/ReReco/Final/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt")
 #f_json=open("delete_this_JSON.txt")
 
-good_run_lumis=json.loads(f_json.read())
+#good_run_lumis=json.loads(f_json.read())
 
 def get_postfilter_selection_string(syst="nominal"):
 
@@ -207,8 +207,6 @@ def pass_json(run,lumi):
             return True
 
     return False    
-
-import eff_scale_factor
 
 import ROOT
 
@@ -3319,24 +3317,24 @@ for i in range(1,histogram_models[mlg_index].GetHistogram().GetNbinsX()+1):
     fake_photon_syst2_up.append(histogram_models[mlg_index].GetHistogram())
     fake_photon_syst2_up_relative.append(histogram_models[mlg_index].GetHistogram())    
 
-    sequence = []
-    old = 0
-    for j in range(150):
-        if j == 0:
-            old = trandom.Uniform(-1,1)
-            sequence.append(old)
-        else:
-            found = False
-            while (not found):
-                new = trandom.Uniform(-1,1)
-
-#                if abs(old - new) > 0.01:
-                if False:
-                    continue
-                else:
-                    old = new
-                    sequence.append(old)
-                    found = True
+#    sequence = []
+#    old = 0
+#    for j in range(150):
+#        if j == 0:
+#            old = trandom.Uniform(-1,1)
+#            sequence.append(old)
+#        else:
+#            found = False
+#            while (not found):
+#                new = trandom.Uniform(-1,1)
+#
+##                if abs(old - new) > 0.01:
+#                if False:
+#                    continue
+#                else:
+#                    old = new
+#                    sequence.append(old)
+#                    found = True
 
 
     for j in range(1,fake_photon["hists"][mlg_index].GetNbinsX()+1):
@@ -3368,56 +3366,54 @@ for i in range(1,histogram_models[mlg_index].GetHistogram().GetNbinsX()+1):
             fake_photon_syst2_up[len(fake_photon_syst2_up)-1].SetBinContent(j,fake_photon["hists"][mlg_index].GetBinContent(j))
         fake_photon_syst2_up[len(fake_photon_syst2_up)-1].SetBinError(j,0)
 
-print "andrew debug 2"
+#fake_photon["hists"][mlg_index].SetLineWidth(2)
 
-fake_photon["hists"][mlg_index].SetLineWidth(2)
+#fake_photon_syst2_up[0].SetLineColor(ROOT.kRed)
+#fake_photon_syst2_up[1].SetLineColor(ROOT.kBlue)
+#fake_photon_syst2_up[2].SetLineColor(ROOT.kGreen)
+#fake_photon_syst2_up[3].SetLineColor(ROOT.kMagenta)
+#fake_photon_syst2_up[4].SetLineColor(ROOT.kPink)
 
-fake_photon_syst2_up[0].SetLineColor(ROOT.kRed)
-fake_photon_syst2_up[1].SetLineColor(ROOT.kBlue)
-fake_photon_syst2_up[2].SetLineColor(ROOT.kGreen)
-fake_photon_syst2_up[3].SetLineColor(ROOT.kMagenta)
-fake_photon_syst2_up[4].SetLineColor(ROOT.kPink)
+#fake_photon_syst2_up[0].SetLineWidth(2)
+#fake_photon_syst2_up[1].SetLineWidth(2)
+#fake_photon_syst2_up[2].SetLineWidth(2)
+#fake_photon_syst2_up[3].SetLineWidth(2)
+#fake_photon_syst2_up[4].SetLineWidth(2)
 
-fake_photon_syst2_up[0].SetLineWidth(2)
-fake_photon_syst2_up[1].SetLineWidth(2)
-fake_photon_syst2_up[2].SetLineWidth(2)
-fake_photon_syst2_up[3].SetLineWidth(2)
-fake_photon_syst2_up[4].SetLineWidth(2)
+#non_closure[mlg_index].SetLineWidth(2)
 
-non_closure[mlg_index].SetLineWidth(2)
+#fake_photon_syst2_up_relative[0].SetLineColor(ROOT.kRed)
+#fake_photon_syst2_up_relative[1].SetLineColor(ROOT.kBlue)
+#fake_photon_syst2_up_relative[2].SetLineColor(ROOT.kGreen)
+#fake_photon_syst2_up_relative[3].SetLineColor(ROOT.kMagenta)
+#fake_photon_syst2_up_relative[4].SetLineColor(ROOT.kPink)
 
-fake_photon_syst2_up_relative[0].SetLineColor(ROOT.kRed)
-fake_photon_syst2_up_relative[1].SetLineColor(ROOT.kBlue)
-fake_photon_syst2_up_relative[2].SetLineColor(ROOT.kGreen)
-fake_photon_syst2_up_relative[3].SetLineColor(ROOT.kMagenta)
-fake_photon_syst2_up_relative[4].SetLineColor(ROOT.kPink)
+#fake_photon_syst2_up_relative[0].SetLineWidth(2)
+#fake_photon_syst2_up_relative[1].SetLineWidth(2)
+#fake_photon_syst2_up_relative[2].SetLineWidth(2)
+#fake_photon_syst2_up_relative[3].SetLineWidth(2)
+#fake_photon_syst2_up_relative[4].SetLineWidth(2)
 
-fake_photon_syst2_up_relative[0].SetLineWidth(2)
-fake_photon_syst2_up_relative[1].SetLineWidth(2)
-fake_photon_syst2_up_relative[2].SetLineWidth(2)
-fake_photon_syst2_up_relative[3].SetLineWidth(2)
-fake_photon_syst2_up_relative[4].SetLineWidth(2)
+#c = ROOT.TCanvas("","")
 
-c = ROOT.TCanvas("","")
+#fake_photon["hists"][mlg_index].Draw()
+#fake_photon_syst2_up[0].Draw("same")
+#fake_photon_syst2_up[1].Draw("same")
+#fake_photon_syst2_up[2].Draw("same")
+#fake_photon_syst2_up[3].Draw("same")
+#fake_photon_syst2_up[4].Draw("same")
 
-fake_photon["hists"][mlg_index].Draw()
-fake_photon_syst2_up[0].Draw("same")
-fake_photon_syst2_up[1].Draw("same")
-fake_photon_syst2_up[2].Draw("same")
-fake_photon_syst2_up[3].Draw("same")
-fake_photon_syst2_up[4].Draw("same")
+#c.SaveAs(options.outputdir + "/"+ "fake_photon_syst2.png")
 
-c.SaveAs(options.outputdir + "/"+ "fake_photon_syst2.png")
+#non_closure[28].Draw()
+#fake_photon_syst2_up_relative[0].Draw("same")
+#fake_photon_syst2_up_relative[1].Draw("same")
+#fake_photon_syst2_up_relative[2].Draw("same")
+#fake_photon_syst2_up_relative[3].Draw("same")
+#fake_photon_syst2_up_relative[4].Draw("same")
 
-non_closure[28].Draw()
-fake_photon_syst2_up_relative[0].Draw("same")
-fake_photon_syst2_up_relative[1].Draw("same")
-fake_photon_syst2_up_relative[2].Draw("same")
-fake_photon_syst2_up_relative[3].Draw("same")
-fake_photon_syst2_up_relative[4].Draw("same")
-
-c.SaveAs(options.outputdir + "/"+ "fake_photon_syst2_relative.png")
-c.Close()
+#c.SaveAs(options.outputdir + "/"+ "fake_photon_syst2_relative.png")
+#c.Close()
 
 fake_lepton_stat_up=[]
 
