@@ -139,6 +139,7 @@ f_json=open("/afs/cern.ch/cms/CAF/CMSCOMM/COMM_DQM/certification/Collisions16/13
 good_run_lumis=json.loads(f_json.read())
 
 def get_postfilter_selection_string(syst="nominal"):
+
     assert(syst == "nominal" or syst == "JESUp" or syst == "JERUp")
 
     if syst == "nominal":
@@ -150,7 +151,11 @@ def get_postfilter_selection_string(syst="nominal"):
     else:
         assert(0)
 
-def get_filter_string(year,isdata=True):
+def get_filter_string(year,isdata=True,lep=None):
+
+    if lep == None:
+        lep = options.lep
+
     if not isdata:
         puppimet_cutstring = "(puppimet > 40 || puppimetJESUp > 40 || puppimetJERUp > 40)"
     else:    
@@ -161,7 +166,7 @@ def get_filter_string(year,isdata=True):
     else:
         zveto_cutstring = "1"
 
-    if options.lep == "muon":
+    if lep == "muon":
         if year == "2016":
             return "(pass_selection && " + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 26)"
         elif year == "2017":
@@ -170,7 +175,7 @@ def get_filter_string(year,isdata=True):
             return "(pass_selection && " + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 26)"
         else:
             assert(0)
-    elif options.lep == "electron":                
+    elif lep == "electron":                
         if year == "2016":
             return "(pass_selection && " + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 30)"
         elif year == "2017":
@@ -179,9 +184,10 @@ def get_filter_string(year,isdata=True):
             return "(pass_selection && " + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35)"
         else:
             assert(0)
-    elif options.lep == "both":    
+    elif lep == "both":    
         if year == "2016":
             return "(pass_selection && " + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && ((abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 26) || (abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 30)))"
+#            return "(pass_selection && " + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && ((abs(lepton_pdg_id) == 13 && photon_pt > 20 && lepton_pt > 26) || (abs(lepton_pdg_id) == 11 && photon_pt > 20 && lepton_pt > 30)))"
         elif year == "2017":
             return "(pass_selection && " + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && ((abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 30) || (abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35)))"
         elif year == "2018":
@@ -221,15 +227,17 @@ else:
 #from wg_labels_recoil_tree import labels
 
 mlg_fit_lower_bound = 0
-mlg_fit_upper_bound = 300
+#mlg_fit_upper_bound = 200
+mlg_fit_upper_bound = 200
+#mlg_fit_upper_bound = 300
 mlg_bin_width=2
 
 #the first variable is for the ewdim6 analysis
 #variables = ["photon_pt","dphilg","met","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","lepton_phi","photon_phi","njets40","mt","npvs","drlg"]
 #variables_labels = ["ewdim6_photon_pt","dphilg","met","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","lepton_phi","photon_phi","njets40","mt","npvs","drlg"]
 
-variables = ["photon_pt_overflow","detalg","dphilpuppimet","dphilg","puppimet","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","mlg","lepton_phi","photon_phi","njets40","mt","puppimt","npvs","drlg","photon_pt","met","photon_recoil","dphigpuppimet","puppimetphi","mlg"]
-variables_labels = ["ewdim6_photon_pt","detalg","dphilpuppimet","dphilg","puppimet","lepton_pt","lepton_eta","photon_pt","photon_eta","fit_mlg","mlg","lepton_phi","photon_phi","njets40","mt","puppimt","npvs","drlg","photon_pt_20to180","met","photon_recoil","dphigpuppimet","puppimetphi","mlg_large_bins"]
+variables = ["photon_pt_overflow","detalg","dphilpuppimet","dphilg","puppimet","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","mlg","lepton_phi","photon_phi","njets40","mt","puppimt","npvs","drlg","photon_pt","met","photon_recoil","dphigpuppimet","puppimetphi","mlg","mlg","mlg","mlg","mlg","mlg","mlg"]
+variables_labels = ["ewdim6_photon_pt","detalg","dphilpuppimet","dphilg","puppimet","lepton_pt","lepton_eta","photon_pt","photon_eta","fit_mlg","mlg","lepton_phi","photon_phi","njets40","mt","puppimt","npvs","drlg","photon_pt_20to180","met","photon_recoil","dphigpuppimet","puppimetphi","mlg_large_bins","mlg_3bin","mlg_1bin","mlg_10bins","mlg_15bins","mlg_6bins","mlg_variable_binning"]
 
 
 assert(len(variables) == len(variables_labels))
@@ -239,6 +247,12 @@ from array import array
 binning_photon_pt = array('f',[400,500,600,900,1500])
 #binning_photon_pt = array('f',[300,500,750,1000,1500])
 #binning_photon_pt = array('f',[100,200,300,400,500,600])
+
+#binning_mlg = array('f',[10,60,62,64,66,68,70,72,74,76,78,80,82,84,86,88,90,92,94,96,98,100,102,104,106,108,110,112,114,116,118,120,200])
+#binning_mlg = array('f',[10,60,62,64,66,68,70,72,74,76,78,80,82,84,86,88,90,92,94,96,98,100,102,104,106,108,110,112,114,116,118,120,200]
+binning_mlg = array('f',[60,62,64,66,68,70,72,74,76,78,80,82,84,86,88,90,92,94,96,98,100,102,104,106,108,110,112,114,116,118,120])
+#binning_mlg = array('f',[10,30,40,50,60,70,80,90,100,125,150,200,300])
+#binning_mlg = array('f',[10,50,90,100,125,150,200,300])
 
 n_photon_pt_bins = len(binning_photon_pt)-1
 
@@ -278,14 +292,19 @@ ROOT.RDF.TH1DModel("met", "", 15 , 0., 300 ),
 ROOT.RDF.TH1DModel('photon_recoil', '', 20, -70., 130 ),
 ROOT.RDF.TH1DModel('','',48,0,pi), #dphigmet
 ROOT.RDF.TH1DModel("","",56,-3.5,3.5), #puppimetphi
-    ROOT.RDF.TH1DModel("mlg","",30,0,300) #mlg
+ROOT.RDF.TH1DModel("mlg","",30,0,300), #mlg
+ROOT.RDF.TH1DModel("mlg","",3,0,300), #mlg
+ROOT.RDF.TH1DModel("mlg","",1,0,300), #mlg
+ROOT.RDF.TH1DModel("mlg","",10,0,300), #mlg
+ROOT.RDF.TH1DModel("mlg","",15,0,300), #mlg
+ROOT.RDF.TH1DModel("mlg","",6,0,300), #mlg
+    ROOT.RDF.TH1DModel('', '', len(binning_mlg) - 1, binning_mlg ), #variable mlg binning
 ] 
 
 assert(len(variables) == len(histogram_models))
 
-
-
 mlg_index = 9
+#mlg_index = 29
 
 ewdim6_samples = {
 "2016" : [{"xs" : 4.318, "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2017/1June2019/wgjetsewdim6.root"}],
@@ -522,6 +541,9 @@ if "wg+jets" in labels:
 
 data = {}
 fake_signal_contamination = {}
+
+wjets = {}
+wjets_fake_photon = {}
 wjets_fake_photon_2016 = {}
 wjets_fake_photon_chiso_2016 = {}
 fake_photon = {}
@@ -1658,7 +1680,7 @@ for year in years:
             if  label != "w+jets":
                 rinterface = rdf.Filter(get_filter_string(year,isdata=False))
             else:    
-                rinterface = rdf.Filter(get_filter_string(year,isdata=True))
+                rinterface = rdf.Filter(get_filter_string(year,isdata=True,lep="both"))
 
             rinterface = rinterface.Define("xs_weight",str(sample["xs"]*1000*lumi/sample["nweightedevents"]) + "*gen_weight/abs(gen_weight)") 
 
@@ -2018,19 +2040,66 @@ for i in range(len(variables)):
     draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,wjets_2016["hists"][i],"w+jets","l")
     j=j+1
     c.SaveAs(options.outputdir + "/" + "closure_test_chiso_"+variables_labels[i]+".png")
+    
+    window_size=5
 
+    if i == mlg_index:
+        for j in range(1,wjets_2016["hists"][i].GetNbinsX()+1):
+            rebinnum=ROOT.TH1F("","",2*window_size+1,0,2*window_size+1)
+            rebinden=ROOT.TH1F("","",2*window_size+1,0,2*window_size+1)
 
-    non_closure[len(non_closure)-1].Add(wjets_2016["hists"][i])
+            rebinnum.Sumw2()
+            rebinden.Sumw2()
+
+            if j < window_size+1:
+                for k in range(1,2*window_size+2):
+                    rebinnum.SetBinContent(k,wjets_2016["hists"][i].GetBinContent(k))
+                    rebinnum.SetBinError(k,wjets_2016["hists"][i].GetBinError(k))
+                    rebinden.SetBinContent(k,wjets_fake_photon_2016["hists"][i].GetBinContent(k))
+                    rebinden.SetBinError(k,wjets_fake_photon_2016["hists"][i].GetBinError(k))
+            elif j > wjets_2016["hists"][i].GetNbinsX() - window_size-1:        
+                for k in range(wjets_2016["hists"][i].GetNbinsX()+1-2*window_size-1,wjets_2016["hists"][i].GetNbinsX()+1):
+                    rebinnum.SetBinContent(k-wjets_2016["hists"][i].GetNbinsX()-1+2*window_size+1+1,wjets_2016["hists"][i].GetBinContent(k))
+                    rebinnum.SetBinError(k-wjets_2016["hists"][i].GetNbinsX()-1+2*window_size+1+1,wjets_2016["hists"][i].GetBinError(k))
+                    rebinden.SetBinContent(k-wjets_2016["hists"][i].GetNbinsX()-1+2*window_size+1+1,wjets_fake_photon_2016["hists"][i].GetBinContent(k))
+                    rebinden.SetBinError(k-wjets_2016["hists"][i].GetNbinsX()-1+2*window_size+1+1,wjets_fake_photon_2016["hists"][i].GetBinError(k))
+            else:
+                for k in range(j-window_size,j+window_size+1):
+                    rebinnum.SetBinContent(k-j+window_size+1,wjets_2016["hists"][i].GetBinContent(k))
+                    rebinnum.SetBinError(k-j+window_size+1,wjets_2016["hists"][i].GetBinError(k))
+                    rebinden.SetBinContent(k-j+window_size+1,wjets_fake_photon_2016["hists"][i].GetBinContent(k))
+                    rebinden.SetBinError(k-j+window_size+1,wjets_fake_photon_2016["hists"][i].GetBinError(k))
+                 
+#            rebinnum.Print("all")        
+#            rebinden.Print("all")        
+
+            rebinnum.Rebin(2*window_size+1)        
+            rebinden.Rebin(2*window_size+1)        
+
+            rebinnum.Divide(rebinden)
+
+#            rebinnum.Print("all")        
+#            rebinden.Print("all")        
+            non_closure[len(non_closure)-1].SetBinContent(j,rebinnum.GetBinContent(1))   
+            non_closure[len(non_closure)-1].SetBinError(j,rebinnum.GetBinError(1))   
+
+    else:
+        non_closure[len(non_closure)-1].Add(wjets_2016["hists"][i])
 #    wjets_fake_photon_2016["hists"][i].Scale(-1)
 #    non_closure[len(non_closure)-1].Add(wjets_fake_photon_2016["hists"][i])
 #    wjets_fake_photon["hists"][i].Scale(-1)
-    non_closure[len(non_closure)-1].Divide(wjets_fake_photon_2016["hists"][i])
+        non_closure[len(non_closure)-1].Divide(wjets_fake_photon_2016["hists"][i])
+
     non_closure[len(non_closure)-1].Add(minus_one_hist)
     non_closure[len(non_closure)-1].SetMinimum(-1.5)
     non_closure[len(non_closure)-1].SetMaximum(1.5)
     non_closure[len(non_closure)-1].Draw()
     set_axis_fonts(non_closure[len(non_closure)-1],"x",getXaxisLabel(variables[i]))
     c.SaveAs(options.outputdir + "/" + "non_closure_"+variables_labels[i]+".png")
+
+#print "andrew debug -2"
+#non_closure[mlg_index]
+#print "andrew debug -1"
 
 for i in range(len(variables)):
 
@@ -2799,7 +2868,6 @@ c1.Close()
 if options.closure_test:
     sys.exit(0)
 
-
 wg_jets_integral_error = ROOT.Double()
 wg_jets_integral = labels["wg+jets"]["hists"][mlg_index].IntegralAndError(1,labels["wg+jets"]["hists"][mlg_index].GetXaxis().GetNbins(),wg_jets_integral_error)
 
@@ -2862,8 +2930,6 @@ fake_lepton["hists"][mlg_index].Print("all")
 fake_photon["hists"][mlg_index].Print("all")
 fake_photon_alt["hists"][mlg_index].Print("all")
 fake_photon_stat_up["hists"][mlg_index].Print("all")
-
-
 
 if lepton_name == "muon":
 
@@ -3209,7 +3275,6 @@ elif lepton_name == "electron":
 
     json.dump(xs_inputs_electron,f_electron)
 
-
 #for i in range(fake_lepton["hists"][mlg_index].GetNbinsX()+2):
 #    if fake_lepton["hists"][mlg_index].GetBinContent(i) < 0:
 #        fake_lepton["hists"][mlg_index].SetBinContent(i,0.001)
@@ -3226,8 +3291,6 @@ elif lepton_name == "electron":
 
 zgjets_scale_syst=histogram_models[mlg_index].GetHistogram()
 
-
-
 for i in range(labels["zg+jets"]["hists-scale-variation0"][mlg_index].GetNbinsX()+2):
     zgjets_scale_syst.SetBinContent(i,labels["zg+jets"]["hists"][mlg_index].GetBinContent(i)+max(
         abs(labels["zg+jets"]["hists-scale-variation0"][mlg_index].GetBinContent(i) - labels["zg+jets"]["hists"][mlg_index].GetBinContent(i)),
@@ -3243,16 +3306,118 @@ fake_electron_syst_up.Add(fake_lepton["hists"][mlg_index])
 
 fake_electron_syst_up.Scale(1.3)
 
-fake_photon_stat_up=[]
+trandom=ROOT.TRandom3()
+trandom.SetSeed(0)
 
-for i in range(1,fake_photon["hists"][mlg_index].GetNbinsX()+1):
-    fake_photon_stat_up.append(histogram_models[mlg_index].GetHistogram())
+fake_photon_syst2_up=[]
+fake_photon_syst2_up_relative=[]
+
+print "andrew debug 1"
+
+#for i in range(1,fake_photon["hists"][mlg_index].GetNbinsX()+1):
+for i in range(1,histogram_models[mlg_index].GetHistogram().GetNbinsX()+1):
+    fake_photon_syst2_up.append(histogram_models[mlg_index].GetHistogram())
+    fake_photon_syst2_up_relative.append(histogram_models[mlg_index].GetHistogram())    
+
+    sequence = []
+    old = 0
+    for j in range(150):
+        if j == 0:
+            old = trandom.Uniform(-1,1)
+            sequence.append(old)
+        else:
+            found = False
+            while (not found):
+                new = trandom.Uniform(-1,1)
+
+#                if abs(old - new) > 0.01:
+                if False:
+                    continue
+                else:
+                    old = new
+                    sequence.append(old)
+                    found = True
+
+
     for j in range(1,fake_photon["hists"][mlg_index].GetNbinsX()+1):
         if i == j:
-            fake_photon_stat_up[len(fake_photon_stat_up)-1].SetBinContent(j,fake_photon["hists"][mlg_index].GetBinContent(j)+fake_photon["hists"][mlg_index].GetBinError(j))
+#            if fake_photon_syst2_up[len(fake_photon_syst2_up)-1].GetXaxis().GetBinCenter(j) < 60:
+#                fake_photon_syst2_up[len(fake_photon_syst2_up)-1].SetBinContent(j,fake_photon["hists"][mlg_index].GetBinContent(j)*1.2)
+#            elif fake_photon_syst2_up[len(fake_photon_syst2_up)-1].GetXaxis().GetBinCenter(j) > 60 and fake_photon_syst2_up[len(fake_photon_syst2_up)-1].GetXaxis().GetBinCenter(j) < 120:
+#                fake_photon_syst2_up[len(fake_photon_syst2_up)-1].SetBinContent(j,fake_photon["hists"][mlg_index].GetBinContent(j)*1.1)
+#            elif fake_photon_syst2_up[len(fake_photon_syst2_up)-1].GetXaxis().GetBinCenter(j) > 120:
+#                fake_photon_syst2_up[len(fake_photon_syst2_up)-1].SetBinContent(j,fake_photon["hists"][mlg_index].GetBinContent(j)*1.4)
+#            else:
+#                assert(0)
+
+#        if True:
+#            fake_photon_syst2_up[len(fake_photon_syst2_up)-1].SetBinContent(j,fake_photon["hists"][mlg_index].GetBinContent(j)+fake_photon["hists"][mlg_index].GetBinError(j))
+#            fake_photon_syst2_up[len(fake_photon_syst2_up)-1].SetBinContent(j,fake_photon["hists"][mlg_index].GetBinContent(j)*1.2)
+#            fake_photon_syst2_up[len(fake_photon_syst2_up)-1].SetBinContent(j,fake_photon["hists"][mlg_index].GetBinContent(j)*(1+sequence[j-1]))
+
+#            non_closure.GetBinContent(non_closure[mlg_index].GetXaxis().FindFixBin(fake_photon["hists"][mlg_index].GetXaxis().GetBinCenter(j))
+
+#            fake_photon_syst2_up[len(fake_photon_syst2_up)-1].SetBinContent(j,fake_photon["hists"][mlg_index].GetBinContent(j)*(1+sequence[j-1]*non_closure[28].GetBinContent(non_closure[28].GetXaxis().FindFixBin(fake_photon["hists"][mlg_index].GetXaxis().GetBinCenter(j)))))
+#            fake_photon_syst2_up_relative[len(fake_photon_syst2_up_relative)-1].SetBinContent(j,sequence[j-1]*non_closure[28].GetBinContent(non_closure[28].GetXaxis().FindFixBin(fake_photon["hists"][mlg_index].GetXaxis().GetBinCenter(j))))
+
+            
+
+            bin =  non_closure[27].GetXaxis().FindFixBin(fake_photon["hists"][mlg_index].GetXaxis().GetBinCenter(j))
+            fake_photon_syst2_up[len(fake_photon_syst2_up)-1].SetBinContent(j,fake_photon["hists"][mlg_index].GetBinContent(j)*(1+non_closure[27].GetBinContent(bin) + non_closure[27].GetBinError(bin)))
         else:
-            fake_photon_stat_up[len(fake_photon_stat_up)-1].SetBinContent(j,fake_photon["hists"][mlg_index].GetBinContent(j))
-        fake_photon_stat_up[len(fake_photon_stat_up)-1].SetBinError(j,0)
+            fake_photon_syst2_up[len(fake_photon_syst2_up)-1].SetBinContent(j,fake_photon["hists"][mlg_index].GetBinContent(j))
+        fake_photon_syst2_up[len(fake_photon_syst2_up)-1].SetBinError(j,0)
+
+print "andrew debug 2"
+
+fake_photon["hists"][mlg_index].SetLineWidth(2)
+
+fake_photon_syst2_up[0].SetLineColor(ROOT.kRed)
+fake_photon_syst2_up[1].SetLineColor(ROOT.kBlue)
+fake_photon_syst2_up[2].SetLineColor(ROOT.kGreen)
+fake_photon_syst2_up[3].SetLineColor(ROOT.kMagenta)
+fake_photon_syst2_up[4].SetLineColor(ROOT.kPink)
+
+fake_photon_syst2_up[0].SetLineWidth(2)
+fake_photon_syst2_up[1].SetLineWidth(2)
+fake_photon_syst2_up[2].SetLineWidth(2)
+fake_photon_syst2_up[3].SetLineWidth(2)
+fake_photon_syst2_up[4].SetLineWidth(2)
+
+non_closure[mlg_index].SetLineWidth(2)
+
+fake_photon_syst2_up_relative[0].SetLineColor(ROOT.kRed)
+fake_photon_syst2_up_relative[1].SetLineColor(ROOT.kBlue)
+fake_photon_syst2_up_relative[2].SetLineColor(ROOT.kGreen)
+fake_photon_syst2_up_relative[3].SetLineColor(ROOT.kMagenta)
+fake_photon_syst2_up_relative[4].SetLineColor(ROOT.kPink)
+
+fake_photon_syst2_up_relative[0].SetLineWidth(2)
+fake_photon_syst2_up_relative[1].SetLineWidth(2)
+fake_photon_syst2_up_relative[2].SetLineWidth(2)
+fake_photon_syst2_up_relative[3].SetLineWidth(2)
+fake_photon_syst2_up_relative[4].SetLineWidth(2)
+
+c = ROOT.TCanvas("","")
+
+fake_photon["hists"][mlg_index].Draw()
+fake_photon_syst2_up[0].Draw("same")
+fake_photon_syst2_up[1].Draw("same")
+fake_photon_syst2_up[2].Draw("same")
+fake_photon_syst2_up[3].Draw("same")
+fake_photon_syst2_up[4].Draw("same")
+
+c.SaveAs(options.outputdir + "/"+ "fake_photon_syst2.png")
+
+non_closure[28].Draw()
+fake_photon_syst2_up_relative[0].Draw("same")
+fake_photon_syst2_up_relative[1].Draw("same")
+fake_photon_syst2_up_relative[2].Draw("same")
+fake_photon_syst2_up_relative[3].Draw("same")
+fake_photon_syst2_up_relative[4].Draw("same")
+
+c.SaveAs(options.outputdir + "/"+ "fake_photon_syst2_relative.png")
+c.Close()
 
 fake_lepton_stat_up=[]
 
@@ -4015,21 +4180,27 @@ if options.make_datacard:
 #        dcard.write('\n')    
 
 #    for i in range(1,fake_photon["hists"][mlg_index].GetNbinsX()+1):
-#        dcard.write("fakephotonstatbin"+str(i)+" shape1")
-#        dcard.write(" -")
+    for i in range(1,len(fake_photon_syst2_up)+1):
+        dcard.write("fakephotonsyst2var"+str(i)+" shape1")
+        dcard.write(" -")
 
-#        for label in labels.keys():
-#            if label == "no label" or label == "wg+jets" or label == "w+jets":
-#                continue
-#            dcard.write(" -")
+        for label in labels.keys():
+            if label == "no label" or label == "wg+jets" or label == "w+jets":
+                continue
+            dcard.write(" -")
         
-#        dcard.write(" 1.0")
-#        dcard.write(" -")
-#        dcard.write(" -")
-#        dcard.write(" -")
-#        dcard.write(" -")
+        dcard.write(" 1.0")
+        dcard.write(" -")
+        dcard.write(" -")
+        dcard.write(" -")
+        if options.lep == "muon":
+            pass
+        elif options.lep == "electron":
+            dcard.write(" -")
+        else:
+            assert(0)    
 
-#        dcard.write('\n')    
+        dcard.write('\n')    
 
 #    for i in range(1,fake_photon["hists"][mlg_index].GetNbinsX()+1):
 #        dcard.write("fakeelectronstatbin"+str(i)+" shape1")
@@ -4116,9 +4287,9 @@ if options.make_datacard:
         wg_stat_up[i-1].Write("wg_wgstatbin"+str(i)+"Up")
         makeDownShape(wg_stat_up[i-1],labels["wg+jets"]["hists"][mlg_index]).Write("wg_wgstatbin"+str(i)+"Down")
 
-    for i in range(1,fake_photon["hists"][mlg_index].GetNbinsX()+1):
-        fake_photon_stat_up[i-1].Write("fakephoton_fakephotonstatbin"+str(i)+"Up")
-        makeDownShape(fake_photon_stat_up[i-1],fake_photon["hists"][mlg_index]).Write("fakephoton_fakephotonstatbin"+str(i)+"Down")
+    for i in range(1,len(fake_photon_syst2_up)+1):
+        fake_photon_syst2_up[i-1].Write("fakephoton_fakephotonsyst2var"+str(i)+"Up")
+        makeDownShape(fake_photon_syst2_up[i-1],fake_photon["hists"][mlg_index]).Write("fakephoton_fakephotonsyst2var"+str(i)+"Down")
 
     for i in range(1,fake_lepton["hists"][mlg_index].GetNbinsX()+1):
         fake_lepton_stat_up[i-1].Write("fakeelectron_fakeelectronstatbin"+str(i)+"Up")
@@ -4287,12 +4458,12 @@ if options.make_datacard:
         list_RooDataHist_wg_stat_up.append(ROOT.RooDataHist("wg_wgstatbin"+str(i)+"Up","",ROOT.RooArgList(m),wg_stat_up[i-1]))
         list_RooDataHist_wg_stat_down.append(ROOT.RooDataHist("wg_wgstatbin"+str(i)+"Down","",ROOT.RooArgList(m),makeDownShape(wg_stat_up[i-1],labels["wg+jets"]["hists"][mlg_index])))
 
-    list_RooDataHist_fake_photon_stat_up = []
-    list_RooDataHist_fake_photon_stat_down = []
-    
-    for i in range(1,fake_photon["hists"][mlg_index].GetNbinsX()+1):
-        list_RooDataHist_fake_photon_stat_up.append(ROOT.RooDataHist("fakephoton_fakephotonstatbin"+str(i)+"Up","",ROOT.RooArgList(m),fake_photon_stat_up[i-1]))
-        list_RooDataHist_fake_photon_stat_down.append(ROOT.RooDataHist("fakephoton_fakephotonstatbin"+str(i)+"Down","",ROOT.RooArgList(m),makeDownShape(fake_photon_stat_up[i-1],fake_photon["hists"][mlg_index])))
+    list_RooDataHist_fake_photon_syst2_up = []
+    list_RooDataHist_fake_photon_syst2_down = []
+
+    for i in range(1,len(fake_photon_syst2_up)+1):
+        list_RooDataHist_fake_photon_syst2_up.append(ROOT.RooDataHist("fakephoton_fakephotonsyst2var"+str(i)+"Up","",ROOT.RooArgList(m),fake_photon_syst2_up[i-1]))
+        list_RooDataHist_fake_photon_syst2_down.append(ROOT.RooDataHist("fakephoton_fakephotonsyst2var"+str(i)+"Down","",ROOT.RooArgList(m),makeDownShape(fake_photon_syst2_up[i-1],fake_photon["hists"][mlg_index])))
 
     list_RooDataHist_fake_lepton_stat_up = []
     list_RooDataHist_fake_lepton_stat_down = []
@@ -4592,8 +4763,8 @@ if options.make_datacard:
         getattr(ws,"import")(list_RooDataHist_wg_stat_down[i-1])
 
     for i in range(1,fake_photon["hists"][mlg_index].GetNbinsX()+1):
-        getattr(ws,"import")(list_RooDataHist_fake_photon_stat_up[i-1])
-        getattr(ws,"import")(list_RooDataHist_fake_photon_stat_down[i-1])
+        getattr(ws,"import")(list_RooDataHist_fake_photon_syst2_up[i-1])
+        getattr(ws,"import")(list_RooDataHist_fake_photon_syst2_down[i-1])
 
     for i in range(1,fake_lepton["hists"][mlg_index].GetNbinsX()+1):
         getattr(ws,"import")(list_RooDataHist_fake_lepton_stat_up[i-1])
