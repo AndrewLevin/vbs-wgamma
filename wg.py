@@ -4065,25 +4065,25 @@ if options.make_datacard:
         assert(0)    
     dcard.write('\n')    
     
-    dcard.write("fakephotonsyst2 lnN")
-    dcard.write(" -")
+#    dcard.write("fakephotonsyst2 lnN")
+#    dcard.write(" -")
 
-    for label in labels.keys():
-        if label == "no label" or label == "wg+jets" or label == "w+jets":
-            continue
-        dcard.write(" -")
+#    for label in labels.keys():
+#        if label == "no label" or label == "wg+jets" or label == "w+jets":
+#            continue
+#        dcard.write(" -")
 
-    dcard.write(" 1.4")
-    dcard.write(" -")
-    dcard.write(" 1.4")
-    dcard.write(" -")
-    if options.lep == "muon":
-        pass
-    elif options.lep == "electron":
-        dcard.write(" -")
-    else:
-        assert(0)    
-    dcard.write('\n')    
+#    dcard.write(" 1.4")
+#    dcard.write(" -")
+#    dcard.write(" 1.4")
+#    dcard.write(" -")
+#    if options.lep == "muon":
+#        pass
+#    elif options.lep == "electron":
+#        dcard.write(" -")
+#    else:
+#        assert(0)    
+#    dcard.write('\n')    
 
     dcard.write("fakeelectronsyst lnN")
     dcard.write(" -")
