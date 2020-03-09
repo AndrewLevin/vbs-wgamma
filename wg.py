@@ -3310,7 +3310,7 @@ fake_electron_syst_up.Scale(1.3)
 fake_photon_syst2_up=[]
 #fake_photon_syst2_up_relative=[]
 
-print "andrew debug 1"
+#print "andrew debug 1"
 
 #for i in range(1,fake_photon["hists"][mlg_index].GetNbinsX()+1):
 for i in range(1,histogram_models[mlg_index].GetHistogram().GetNbinsX()+1):
