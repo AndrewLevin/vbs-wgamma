@@ -48,7 +48,8 @@ dict_lumi = {"2016" : 35.9, "2017" : 41.5, "2018" : 59.6}
 
 parser = optparse.OptionParser()
 
-
+parser.add_option('--userdir',dest='userdir',default='/afs/cern.ch/user/a/amlevin/') #not used now
+parser.add_option('--workdir',dest='workdir',default='/afs/cern.ch/work/a/amlevin/')
 parser.add_option('--lep',dest='lep',default='both')
 parser.add_option('--year',dest='year',default='all')
 parser.add_option('--zveto',dest='zveto',action='store_true',default=False)
@@ -308,9 +309,9 @@ mlg_index = 9
 #mlg_index = 29
 
 ewdim6_samples = {
-"2016" : [{"xs" : 4.318, "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2017/1June2019/wgjetsewdim6.root"}],
-"2017" : [{"xs" : 4.318, "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2017/1June2019/wgjetsewdim6.root"}],
-"2018" : [{"xs" : 4.318, "filename" : "/afs/cern.ch/work/a/amlevin/data/wg/2017/1June2019/wgjetsewdim6.root"}]
+"2016" : [{"xs" : 4.318, "filename" : options.workdir+"/data/wg/2017/1June2019/wgjetsewdim6.root"}],
+"2017" : [{"xs" : 4.318, "filename" : options.workdir+"/data/wg/2017/1June2019/wgjetsewdim6.root"}],
+"2018" : [{"xs" : 4.318, "filename" : options.workdir+"/data/wg/2017/1June2019/wgjetsewdim6.root"}]
 }
 
 for year in years:
@@ -512,7 +513,7 @@ if "wg+jets" in labels:
             for i in range(0,8):
                 labels["wg+jets"]["samples"][year][0]["nweightedevents_qcdscaleweight"+str(i)]=labels["wg+jets"]["samples"][year][0]["file"].Get("nEventsGenWeighted_PassFidSelection_QCDScaleWeight"+str(i)).GetBinContent(1)
 
-                if labels["wg+jets"]["samples"][year][0]["filename"] == "/afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019/wgjets.root":
+                if labels["wg+jets"]["samples"][year][0]["filename"] == options.workdir+"/data/wg/2016/1June2019/wgjets.root":
                     labels["wg+jets"]["samples"][year][0]["nweightedevents_qcdscaleweight"+str(i)] *= 2
                     
         if labels["wg+jets"]["syst-pdf"]:
@@ -521,7 +522,7 @@ if "wg+jets" in labels:
                     continue
                 labels["wg+jets"]["samples"][year][0]["nweightedevents_pdfweight"+str(i)]=labels["wg+jets"]["samples"][year][0]["file"].Get("nEventsGenWeighted_PassFidSelection_PDFWeight"+str(i)).GetBinContent(1)
 
-                if labels["wg+jets"]["samples"][year][0]["filename"] == "/afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019/wgjets.root":
+                if labels["wg+jets"]["samples"][year][0]["filename"] == options.workdir+"/data/wg/2016/1June2019/wgjets.root":
                     labels["wg+jets"]["samples"][year][0]["nweightedevents_pdfweight"+str(i)] *= 2
 
 
@@ -902,14 +903,14 @@ float muon_efficiency_scale_factor(float pt,float eta,string year,bool iso_err_u
 
 fake_lepton_weight_cpp = '''
 
-TFile muon_2016_file("/afs/cern.ch/user/a/amlevin/wg/fake_lepton_weights/muon_2016_frs.root");
-TFile electron_2016_file("/afs/cern.ch/user/a/amlevin/wg/fake_lepton_weights/electron_2016_frs.root");
+TFile muon_2016_file("fake_lepton_weights/muon_2016_frs.root");
+TFile electron_2016_file("fake_lepton_weights/electron_2016_frs.root");
 
-TFile muon_2017_file("/afs/cern.ch/user/a/amlevin/wg/fake_lepton_weights/muon_2017_frs.root");
-TFile electron_2017_file("/afs/cern.ch/user/a/amlevin/wg/fake_lepton_weights/electron_2017_frs.root");
+TFile muon_2017_file("fake_lepton_weights/muon_2017_frs.root");
+TFile electron_2017_file("fake_lepton_weights/electron_2017_frs.root");
 
-TFile muon_2018_file("/afs/cern.ch/user/a/amlevin/wg/fake_lepton_weights/muon_2018_frs.root");
-TFile electron_2018_file("/afs/cern.ch/user/a/amlevin/wg/fake_lepton_weights/electron_2018_frs.root");
+TFile muon_2018_file("fake_lepton_weights/muon_2018_frs.root");
+TFile electron_2018_file("fake_lepton_weights/electron_2018_frs.root");
 
 TH2D * muon_2016_fr_hist = (TH2D*)muon_2016_file.Get("muon_frs");
 TH2D * electron_2016_fr_hist = (TH2D*)electron_2016_file.Get("electron_frs");
@@ -1461,27 +1462,27 @@ for year in years:
 
     if lepton_name == "muon":
         if not options.closure_test:
-            data_filename = "/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/single_muon.root"
+            data_filename = options.workdir+"/data/wg/"+year+"/1June2019/single_muon.root"
         else:
-            data_filename = "/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/wjets.root"
+            data_filename = options.workdir+"/data/wg/"+year+"/1June2019/wjets.root"
 
     elif lepton_name == "electron":
         if not options.closure_test:
             if year != "2018":
-                data_filename = "/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/single_electron.root"
+                data_filename = options.workdir+"/data/wg/"+year+"/1June2019/single_electron.root"
             else:    
-                data_filename = "/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/egamma.root"
+                data_filename = options.workdir+"/data/wg/"+year+"/1June2019/egamma.root"
         else:
-            data_filename = "/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/wjets.root"
+            data_filename = options.workdir+"/data/wg/"+year+"/1June2019/wjets.root"
 
     elif lepton_name == "both":
         if not options.closure_test:
             if year != "2018":
-                data_filename = "/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/data.root"
+                data_filename = options.workdir+"/data/wg/"+year+"/1June2019/data.root"
             else:
-                data_filename = "/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/data.root"
+                data_filename = options.workdir+"/data/wg/"+year+"/1June2019/data.root"
         else:
-            data_filename = "/afs/cern.ch/work/a/amlevin/data/wg/"+year+"/1June2019/wjets.root"
+            data_filename = options.workdir+"/data/wg/"+year+"/1June2019/wjets.root"
     else:
         assert(0)
 
@@ -1728,7 +1729,7 @@ for year in years:
             if labels[label]["syst-scale"]:
                 for i in range(0,8):
                      #this sample has a bug that causes the scale weight to be 1/2 the correct value
-                    if sample["filename"] == "/afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019/wgjets.root":
+                    if sample["filename"] == options.workdir+"/data/wg/2016/1June2019/wgjets.root":
                         rinterface = rinterface.Define("scale"+str(i)+"_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + ")*base_weight*LHEScaleWeight["+str(i)+"]*2")
                     else:    
                         rinterface = rinterface.Define("scale"+str(i)+"_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + ")*base_weight*LHEScaleWeight["+str(i)+"]")
@@ -1738,7 +1739,7 @@ for year in years:
                     if (year == "2017" or year == "2018") and options.no_pdf_var_for_2017_and_2018:
                         continue
                     #this sample has a bug that causes the scale weight to be 1/2 the correct value
-                    if sample["filename"] == "/afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019/wgjets.root":
+                    if sample["filename"] == options.workdir+"/data/wg/2016/1June2019/wgjets.root":
                         rinterface = rinterface.Define("pdf"+str(i)+"_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + ")*base_weight*LHEPdfWeight["+str(i+1)+"]*2")
                     else:    
                         rinterface = rinterface.Define("pdf"+str(i)+"_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + ")*base_weight*LHEPdfWeight["+str(i+1)+"]")
