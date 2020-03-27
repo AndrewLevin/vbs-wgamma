@@ -10,12 +10,12 @@ shapes fake_photon mu_chan wg_datacard_mu_chan_shapes.root fakephoton fakephoton
 shapes fake_muon mu_chan wg_datacard_mu_chan_shapes.root fakemuon fakemuon_$SYSTEMATIC
 shapes double_fake mu_chan wg_datacard_mu_chan_shapes.root doublefake doublefake_$SYSTEMATIC
 shapes e_to_p_non_res mu_chan wg_datacard_mu_chan_shapes.root etopnonres etopnonres_$SYSTEMATIC
-Observation 400464.0
+Observation 368202.270276
 bin mu_chan mu_chan mu_chan mu_chan mu_chan mu_chan mu_chan mu_chan
 process Wg topjets zgjets vvjets fake_photon fake_muon double_fake e_to_p_non_res
 process 0 1 2 3 4 5 6 7
-rate 173880.32026 23665.6719305 43671.3280426 2224.63282307 86071.8275742 18494.0559605 19155.100175 8305.70268959
-lumi_13tev lnN 1.027 1.027 1.027 1.027 - - - 1.027
+rate 170015.241535 22931.8744246 43403.9460773 2147.21563395 84841.8327614 17946.7757245 18861.7444649 8053.63965479
+lumi_13tev lnN 1.018 1.018 1.018 1.018 - - - 1.018
 pileup shape1 1.0 1.0 1.0 1.0 - - - -
 prefire shape1 1.0 1.0 1.0 1.0 - - - -
 jes shape1 1.0 1.0 1.0 1.0 - - - -
@@ -24,8 +24,246 @@ muonidsf shape1 1.0 1.0 1.0 1.0 - - - -
 muonhltsf shape1 1.0 1.0 1.0 1.0 - - - -
 muonisosf shape1 1.0 1.0 1.0 1.0 - - - -
 fakephotonsyst1 shape1 - - - - 1.0 - - -
-fakephotonsyst2 lnN - - - - 1.4 - 1.4 -
-fakeelectronsyst lnN - - - - - 1.3 1.3 -
 wgscale shape1 1.0 - - - - - - -
 zgscale shape1 - - 1.0 - - - - -
-* autoMCStats -1
+* autoMCStats 0
+fakephotonsyst2var1 shape1 - - - - 1.0 - - -
+fakephotonsyst2var2 shape1 - - - - 1.0 - - -
+fakephotonsyst2var3 shape1 - - - - 1.0 - - -
+fakephotonsyst2var4 shape1 - - - - 1.0 - - -
+fakephotonsyst2var5 shape1 - - - - 1.0 - - -
+fakephotonsyst2var6 shape1 - - - - 1.0 - - -
+fakephotonsyst2var7 shape1 - - - - 1.0 - - -
+fakephotonsyst2var8 shape1 - - - - 1.0 - - -
+fakephotonsyst2var9 shape1 - - - - 1.0 - - -
+fakephotonsyst2var10 shape1 - - - - 1.0 - - -
+fakephotonsyst2var11 shape1 - - - - 1.0 - - -
+fakephotonsyst2var12 shape1 - - - - 1.0 - - -
+fakephotonsyst2var13 shape1 - - - - 1.0 - - -
+fakephotonsyst2var14 shape1 - - - - 1.0 - - -
+fakephotonsyst2var15 shape1 - - - - 1.0 - - -
+fakephotonsyst2var16 shape1 - - - - 1.0 - - -
+fakephotonsyst2var17 shape1 - - - - 1.0 - - -
+fakephotonsyst2var18 shape1 - - - - 1.0 - - -
+fakephotonsyst2var19 shape1 - - - - 1.0 - - -
+fakephotonsyst2var20 shape1 - - - - 1.0 - - -
+fakephotonsyst2var21 shape1 - - - - 1.0 - - -
+fakephotonsyst2var22 shape1 - - - - 1.0 - - -
+fakephotonsyst2var23 shape1 - - - - 1.0 - - -
+fakephotonsyst2var24 shape1 - - - - 1.0 - - -
+fakephotonsyst2var25 shape1 - - - - 1.0 - - -
+fakephotonsyst2var26 shape1 - - - - 1.0 - - -
+fakephotonsyst2var27 shape1 - - - - 1.0 - - -
+fakephotonsyst2var28 shape1 - - - - 1.0 - - -
+fakephotonsyst2var29 shape1 - - - - 1.0 - - -
+fakephotonsyst2var30 shape1 - - - - 1.0 - - -
+fakephotonsyst2var31 shape1 - - - - 1.0 - - -
+fakephotonsyst2var32 shape1 - - - - 1.0 - - -
+fakephotonsyst2var33 shape1 - - - - 1.0 - - -
+fakephotonsyst2var34 shape1 - - - - 1.0 - - -
+fakephotonsyst2var35 shape1 - - - - 1.0 - - -
+fakephotonsyst2var36 shape1 - - - - 1.0 - - -
+fakephotonsyst2var37 shape1 - - - - 1.0 - - -
+fakephotonsyst2var38 shape1 - - - - 1.0 - - -
+fakephotonsyst2var39 shape1 - - - - 1.0 - - -
+fakephotonsyst2var40 shape1 - - - - 1.0 - - -
+fakephotonsyst2var41 shape1 - - - - 1.0 - - -
+fakephotonsyst2var42 shape1 - - - - 1.0 - - -
+fakephotonsyst2var43 shape1 - - - - 1.0 - - -
+fakephotonsyst2var44 shape1 - - - - 1.0 - - -
+fakephotonsyst2var45 shape1 - - - - 1.0 - - -
+fakephotonsyst2var46 shape1 - - - - 1.0 - - -
+fakephotonsyst2var47 shape1 - - - - 1.0 - - -
+fakephotonsyst2var48 shape1 - - - - 1.0 - - -
+fakephotonsyst2var49 shape1 - - - - 1.0 - - -
+fakephotonsyst2var50 shape1 - - - - 1.0 - - -
+fakephotonsyst2var51 shape1 - - - - 1.0 - - -
+fakephotonsyst2var52 shape1 - - - - 1.0 - - -
+fakephotonsyst2var53 shape1 - - - - 1.0 - - -
+fakephotonsyst2var54 shape1 - - - - 1.0 - - -
+fakephotonsyst2var55 shape1 - - - - 1.0 - - -
+fakephotonsyst2var56 shape1 - - - - 1.0 - - -
+fakephotonsyst2var57 shape1 - - - - 1.0 - - -
+fakephotonsyst2var58 shape1 - - - - 1.0 - - -
+fakephotonsyst2var59 shape1 - - - - 1.0 - - -
+fakephotonsyst2var60 shape1 - - - - 1.0 - - -
+fakephotonsyst2var61 shape1 - - - - 1.0 - - -
+fakephotonsyst2var62 shape1 - - - - 1.0 - - -
+fakephotonsyst2var63 shape1 - - - - 1.0 - - -
+fakephotonsyst2var64 shape1 - - - - 1.0 - - -
+fakephotonsyst2var65 shape1 - - - - 1.0 - - -
+fakephotonsyst2var66 shape1 - - - - 1.0 - - -
+fakephotonsyst2var67 shape1 - - - - 1.0 - - -
+fakephotonsyst2var68 shape1 - - - - 1.0 - - -
+fakephotonsyst2var69 shape1 - - - - 1.0 - - -
+fakephotonsyst2var70 shape1 - - - - 1.0 - - -
+fakephotonsyst2var71 shape1 - - - - 1.0 - - -
+fakephotonsyst2var72 shape1 - - - - 1.0 - - -
+fakephotonsyst2var73 shape1 - - - - 1.0 - - -
+fakephotonsyst2var74 shape1 - - - - 1.0 - - -
+fakephotonsyst2var75 shape1 - - - - 1.0 - - -
+fakephotonsyst2var76 shape1 - - - - 1.0 - - -
+fakephotonsyst2var77 shape1 - - - - 1.0 - - -
+fakephotonsyst2var78 shape1 - - - - 1.0 - - -
+fakephotonsyst2var79 shape1 - - - - 1.0 - - -
+fakephotonsyst2var80 shape1 - - - - 1.0 - - -
+fakephotonsyst2var81 shape1 - - - - 1.0 - - -
+fakephotonsyst2var82 shape1 - - - - 1.0 - - -
+fakephotonsyst2var83 shape1 - - - - 1.0 - - -
+fakephotonsyst2var84 shape1 - - - - 1.0 - - -
+fakephotonsyst2var85 shape1 - - - - 1.0 - - -
+fakephotonsyst2var86 shape1 - - - - 1.0 - - -
+fakephotonsyst2var87 shape1 - - - - 1.0 - - -
+fakephotonsyst2var88 shape1 - - - - 1.0 - - -
+fakephotonsyst2var89 shape1 - - - - 1.0 - - -
+fakephotonsyst2var90 shape1 - - - - 1.0 - - -
+fakephotonsyst2var91 shape1 - - - - 1.0 - - -
+fakephotonsyst2var92 shape1 - - - - 1.0 - - -
+fakephotonsyst2var93 shape1 - - - - 1.0 - - -
+fakephotonsyst2var94 shape1 - - - - 1.0 - - -
+fakephotonsyst2var95 shape1 - - - - 1.0 - - -
+fakephotonsyst2var96 shape1 - - - - 1.0 - - -
+fakephotonsyst2var97 shape1 - - - - 1.0 - - -
+fakephotonsyst2var98 shape1 - - - - 1.0 - - -
+fakephotonsyst2var99 shape1 - - - - 1.0 - - -
+fakephotonsyst2var100 shape1 - - - - 1.0 - - -
+fakephotonsyst2var101 shape1 - - - - 1.0 - - -
+fakephotonsyst2var102 shape1 - - - - 1.0 - - -
+fakephotonsyst2var103 shape1 - - - - 1.0 - - -
+fakephotonsyst2var104 shape1 - - - - 1.0 - - -
+fakephotonsyst2var105 shape1 - - - - 1.0 - - -
+fakephotonsyst2var106 shape1 - - - - 1.0 - - -
+fakephotonsyst2var107 shape1 - - - - 1.0 - - -
+fakephotonsyst2var108 shape1 - - - - 1.0 - - -
+fakephotonsyst2var109 shape1 - - - - 1.0 - - -
+fakephotonsyst2var110 shape1 - - - - 1.0 - - -
+fakephotonsyst2var111 shape1 - - - - 1.0 - - -
+fakephotonsyst2var112 shape1 - - - - 1.0 - - -
+fakephotonsyst2var113 shape1 - - - - 1.0 - - -
+fakephotonsyst2var114 shape1 - - - - 1.0 - - -
+fakephotonsyst2var115 shape1 - - - - 1.0 - - -
+fakephotonsyst2var116 shape1 - - - - 1.0 - - -
+fakephotonsyst2var117 shape1 - - - - 1.0 - - -
+fakephotonsyst2var118 shape1 - - - - 1.0 - - -
+fakephotonsyst2var119 shape1 - - - - 1.0 - - -
+fakephotonsyst2var120 shape1 - - - - 1.0 - - -
+fakemuonsystbin1 shape1 - - - - - 1.0 - - -
+fakemuonsystbin2 shape1 - - - - - 1.0 - - -
+fakemuonsystbin3 shape1 - - - - - 1.0 - - -
+fakemuonsystbin4 shape1 - - - - - 1.0 - - -
+fakemuonsystbin5 shape1 - - - - - 1.0 - - -
+fakemuonsystbin6 shape1 - - - - - 1.0 - - -
+fakemuonsystbin7 shape1 - - - - - 1.0 - - -
+fakemuonsystbin8 shape1 - - - - - 1.0 - - -
+fakemuonsystbin9 shape1 - - - - - 1.0 - - -
+fakemuonsystbin10 shape1 - - - - - 1.0 - - -
+fakemuonsystbin11 shape1 - - - - - 1.0 - - -
+fakemuonsystbin12 shape1 - - - - - 1.0 - - -
+fakemuonsystbin13 shape1 - - - - - 1.0 - - -
+fakemuonsystbin14 shape1 - - - - - 1.0 - - -
+fakemuonsystbin15 shape1 - - - - - 1.0 - - -
+fakemuonsystbin16 shape1 - - - - - 1.0 - - -
+fakemuonsystbin17 shape1 - - - - - 1.0 - - -
+fakemuonsystbin18 shape1 - - - - - 1.0 - - -
+fakemuonsystbin19 shape1 - - - - - 1.0 - - -
+fakemuonsystbin20 shape1 - - - - - 1.0 - - -
+fakemuonsystbin21 shape1 - - - - - 1.0 - - -
+fakemuonsystbin22 shape1 - - - - - 1.0 - - -
+fakemuonsystbin23 shape1 - - - - - 1.0 - - -
+fakemuonsystbin24 shape1 - - - - - 1.0 - - -
+fakemuonsystbin25 shape1 - - - - - 1.0 - - -
+fakemuonsystbin26 shape1 - - - - - 1.0 - - -
+fakemuonsystbin27 shape1 - - - - - 1.0 - - -
+fakemuonsystbin28 shape1 - - - - - 1.0 - - -
+fakemuonsystbin29 shape1 - - - - - 1.0 - - -
+fakemuonsystbin30 shape1 - - - - - 1.0 - - -
+fakemuonsystbin31 shape1 - - - - - 1.0 - - -
+fakemuonsystbin32 shape1 - - - - - 1.0 - - -
+fakemuonsystbin33 shape1 - - - - - 1.0 - - -
+fakemuonsystbin34 shape1 - - - - - 1.0 - - -
+fakemuonsystbin35 shape1 - - - - - 1.0 - - -
+fakemuonsystbin36 shape1 - - - - - 1.0 - - -
+fakemuonsystbin37 shape1 - - - - - 1.0 - - -
+fakemuonsystbin38 shape1 - - - - - 1.0 - - -
+fakemuonsystbin39 shape1 - - - - - 1.0 - - -
+fakemuonsystbin40 shape1 - - - - - 1.0 - - -
+fakemuonsystbin41 shape1 - - - - - 1.0 - - -
+fakemuonsystbin42 shape1 - - - - - 1.0 - - -
+fakemuonsystbin43 shape1 - - - - - 1.0 - - -
+fakemuonsystbin44 shape1 - - - - - 1.0 - - -
+fakemuonsystbin45 shape1 - - - - - 1.0 - - -
+fakemuonsystbin46 shape1 - - - - - 1.0 - - -
+fakemuonsystbin47 shape1 - - - - - 1.0 - - -
+fakemuonsystbin48 shape1 - - - - - 1.0 - - -
+fakemuonsystbin49 shape1 - - - - - 1.0 - - -
+fakemuonsystbin50 shape1 - - - - - 1.0 - - -
+fakemuonsystbin51 shape1 - - - - - 1.0 - - -
+fakemuonsystbin52 shape1 - - - - - 1.0 - - -
+fakemuonsystbin53 shape1 - - - - - 1.0 - - -
+fakemuonsystbin54 shape1 - - - - - 1.0 - - -
+fakemuonsystbin55 shape1 - - - - - 1.0 - - -
+fakemuonsystbin56 shape1 - - - - - 1.0 - - -
+fakemuonsystbin57 shape1 - - - - - 1.0 - - -
+fakemuonsystbin58 shape1 - - - - - 1.0 - - -
+fakemuonsystbin59 shape1 - - - - - 1.0 - - -
+fakemuonsystbin60 shape1 - - - - - 1.0 - - -
+fakemuonsystbin61 shape1 - - - - - 1.0 - - -
+fakemuonsystbin62 shape1 - - - - - 1.0 - - -
+fakemuonsystbin63 shape1 - - - - - 1.0 - - -
+fakemuonsystbin64 shape1 - - - - - 1.0 - - -
+fakemuonsystbin65 shape1 - - - - - 1.0 - - -
+fakemuonsystbin66 shape1 - - - - - 1.0 - - -
+fakemuonsystbin67 shape1 - - - - - 1.0 - - -
+fakemuonsystbin68 shape1 - - - - - 1.0 - - -
+fakemuonsystbin69 shape1 - - - - - 1.0 - - -
+fakemuonsystbin70 shape1 - - - - - 1.0 - - -
+fakemuonsystbin71 shape1 - - - - - 1.0 - - -
+fakemuonsystbin72 shape1 - - - - - 1.0 - - -
+fakemuonsystbin73 shape1 - - - - - 1.0 - - -
+fakemuonsystbin74 shape1 - - - - - 1.0 - - -
+fakemuonsystbin75 shape1 - - - - - 1.0 - - -
+fakemuonsystbin76 shape1 - - - - - 1.0 - - -
+fakemuonsystbin77 shape1 - - - - - 1.0 - - -
+fakemuonsystbin78 shape1 - - - - - 1.0 - - -
+fakemuonsystbin79 shape1 - - - - - 1.0 - - -
+fakemuonsystbin80 shape1 - - - - - 1.0 - - -
+fakemuonsystbin81 shape1 - - - - - 1.0 - - -
+fakemuonsystbin82 shape1 - - - - - 1.0 - - -
+fakemuonsystbin83 shape1 - - - - - 1.0 - - -
+fakemuonsystbin84 shape1 - - - - - 1.0 - - -
+fakemuonsystbin85 shape1 - - - - - 1.0 - - -
+fakemuonsystbin86 shape1 - - - - - 1.0 - - -
+fakemuonsystbin87 shape1 - - - - - 1.0 - - -
+fakemuonsystbin88 shape1 - - - - - 1.0 - - -
+fakemuonsystbin89 shape1 - - - - - 1.0 - - -
+fakemuonsystbin90 shape1 - - - - - 1.0 - - -
+fakemuonsystbin91 shape1 - - - - - 1.0 - - -
+fakemuonsystbin92 shape1 - - - - - 1.0 - - -
+fakemuonsystbin93 shape1 - - - - - 1.0 - - -
+fakemuonsystbin94 shape1 - - - - - 1.0 - - -
+fakemuonsystbin95 shape1 - - - - - 1.0 - - -
+fakemuonsystbin96 shape1 - - - - - 1.0 - - -
+fakemuonsystbin97 shape1 - - - - - 1.0 - - -
+fakemuonsystbin98 shape1 - - - - - 1.0 - - -
+fakemuonsystbin99 shape1 - - - - - 1.0 - - -
+fakemuonsystbin100 shape1 - - - - - 1.0 - - -
+fakemuonsystbin101 shape1 - - - - - 1.0 - - -
+fakemuonsystbin102 shape1 - - - - - 1.0 - - -
+fakemuonsystbin103 shape1 - - - - - 1.0 - - -
+fakemuonsystbin104 shape1 - - - - - 1.0 - - -
+fakemuonsystbin105 shape1 - - - - - 1.0 - - -
+fakemuonsystbin106 shape1 - - - - - 1.0 - - -
+fakemuonsystbin107 shape1 - - - - - 1.0 - - -
+fakemuonsystbin108 shape1 - - - - - 1.0 - - -
+fakemuonsystbin109 shape1 - - - - - 1.0 - - -
+fakemuonsystbin110 shape1 - - - - - 1.0 - - -
+fakemuonsystbin111 shape1 - - - - - 1.0 - - -
+fakemuonsystbin112 shape1 - - - - - 1.0 - - -
+fakemuonsystbin113 shape1 - - - - - 1.0 - - -
+fakemuonsystbin114 shape1 - - - - - 1.0 - - -
+fakemuonsystbin115 shape1 - - - - - 1.0 - - -
+fakemuonsystbin116 shape1 - - - - - 1.0 - - -
+fakemuonsystbin117 shape1 - - - - - 1.0 - - -
+fakemuonsystbin118 shape1 - - - - - 1.0 - - -
+fakemuonsystbin119 shape1 - - - - - 1.0 - - -
+fakemuonsystbin120 shape1 - - - - - 1.0 - - -
