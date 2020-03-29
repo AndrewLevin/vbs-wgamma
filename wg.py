@@ -2,7 +2,6 @@ data_driven = True
 data_driven_correction = True
 
 import json
-
 import sys
 import style
 
@@ -238,8 +237,8 @@ mlg_bin_width=2
 #variables = ["photon_pt","dphilg","met","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","lepton_phi","photon_phi","njets40","mt","npvs","drlg"]
 #variables_labels = ["ewdim6_photon_pt","dphilg","met","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","lepton_phi","photon_phi","njets40","mt","npvs","drlg"]
 
-variables = ["photon_pt_overflow","detalg","dphilpuppimet","dphilg","puppimet","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","mlg","lepton_phi","photon_phi","njets40","mt","puppimt","npvs","drlg","photon_pt","met","photon_recoil","dphigpuppimet","puppimetphi","mlg","mlg","mlg","mlg","mlg","mlg","mlg"]
-variables_labels = ["ewdim6_photon_pt","detalg","dphilpuppimet","dphilg","puppimet","lepton_pt","lepton_eta","photon_pt","photon_eta","fit_mlg","mlg","lepton_phi","photon_phi","njets40","mt","puppimt","npvs","drlg","photon_pt_20to180","met","photon_recoil","dphigpuppimet","puppimetphi","mlg_large_bins","mlg_3bin","mlg_1bin","mlg_10bins","mlg_15bins","mlg_6bins","mlg_variable_binning"]
+variables = ["photon_pt_overflow","detalg","dphilpuppimet","dphilg","puppimet","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","mlg","lepton_phi","photon_phi","njets40","mt","puppimt","npvs","drlg","photon_pt","met","photon_recoil","dphigpuppimet","puppimetphi","mlg","mlg","mlg","mlg","mlg","mlg","mlg","photon_pt","photon_pt"]
+variables_labels = ["ewdim6_photon_pt","detalg","dphilpuppimet","dphilg","puppimet","lepton_pt","lepton_eta","photon_pt","photon_eta","fit_mlg","mlg","lepton_phi","photon_phi","njets40","mt","puppimt","npvs","drlg","photon_pt_20to180","met","photon_recoil","dphigpuppimet","puppimetphi","mlg_large_bins","mlg_3bin","mlg_1bin","mlg_10bins","mlg_15bins","mlg_6bins","mlg_variable_binning","photon_pt","photon_pt"]
 
 
 assert(len(variables) == len(variables_labels))
@@ -300,7 +299,9 @@ ROOT.RDF.TH1DModel("mlg","",1,0,300), #mlg
 ROOT.RDF.TH1DModel("mlg","",10,0,300), #mlg
 ROOT.RDF.TH1DModel("mlg","",15,0,300), #mlg
 ROOT.RDF.TH1DModel("mlg","",6,0,300), #mlg
-    ROOT.RDF.TH1DModel('', '', len(binning_mlg) - 1, binning_mlg ), #variable mlg binning
+ROOT.RDF.TH1DModel('', '', len(binning_mlg) - 1, binning_mlg ), #variable mlg binning,
+ROOT.RDF.TH1DModel('photon_pt', '', 40, 100., 400 ),
+ROOT.RDF.TH1DModel('photon_pt', '', 10, 300., 400 ),
 ] 
 
 assert(len(variables) == len(histogram_models))
@@ -309,9 +310,9 @@ mlg_index = 9
 #mlg_index = 29
 
 ewdim6_samples = {
-"2016" : [{"xs" : 4.318, "filename" : options.workdir+"/data/wg/2017/1June2019/wgjetsewdim6.root"}],
-"2017" : [{"xs" : 4.318, "filename" : options.workdir+"/data/wg/2017/1June2019/wgjetsewdim6.root"}],
-"2018" : [{"xs" : 4.318, "filename" : options.workdir+"/data/wg/2017/1June2019/wgjetsewdim6.root"}]
+"2016" : [{"xs" : 5.248, "filename" : options.workdir+"/data/wg/2016/1June2019/wgjetsewdim6.root"}],
+"2017" : [{"xs" : 5.248, "filename" : options.workdir+"/data/wg/2016/1June2019/wgjetsewdim6.root"}],
+"2018" : [{"xs" : 5.248, "filename" : options.workdir+"/data/wg/2016/1June2019/wgjetsewdim6.root"}]
 }
 
 for year in years:
@@ -1193,15 +1194,23 @@ ROOT.gInterpreter.Declare(fake_lepton_weight_cpp)
 ROOT.gInterpreter.Declare(fake_photon_weight_cpp)
 ROOT.gInterpreter.Declare(eff_scale_factor_cpp)
 
+#ewdim6_index = 31
+#ewdim6_index = 30
+ewdim6_index = 0
+
 if options.ewdim6:
 
-    sm_lhe_weight = 372
+    sm_lhe_weight = 0
 
-    sm_lhe_weight_hist = ROOT.TH1D('', '', n_photon_pt_bins, binning_photon_pt )
+#    sm_lhe_weight_hist = ROOT.TH1D('', '', n_photon_pt_bins, binning_photon_pt )
 
-    sm_hist = ROOT.TH1D('', '', n_photon_pt_bins, binning_photon_pt )
+#    sm_hist = ROOT.TH1D('', '', n_photon_pt_bins, binning_photon_pt )
 
-    cwww_reweights = [372,0,1,2,3,4,5]
+    sm_lhe_weight_hist = histogram_models[ewdim6_index].GetHistogram()
+
+    sm_hist = histogram_models[ewdim6_index].GetHistogram()
+
+    cwww_reweights = [0,0+1,0+2,0+3,0+4,0+5,0+6]
 
     #cwww_coefficients = [0.0, 10.0,-10.0,20.0,-20.0,-30.0,30.0]
 
@@ -1209,35 +1218,41 @@ if options.ewdim6:
 
     cwww_hists = []
 
-    cw_reweights = [372,6,7,8,9,10,11]
+    cw_reweights = [0,0+7,0+8,0+9,0+10,0+11,0+12]
 
     #cw_coefficients = [0.0, 80.0,-80.0,160.0,-160.0,240.0,-240.0]
 
-    cw_coefficients = [0.0, 17.0,-17.0,34.0,-34.0,51.0,-51.0]
+#    cw_coefficients = [0.0, 17.0,-17.0,34.0,-34.0,51.0,-51.0]
+
+    cw_coefficients = [0.0, 51.0,-51.0,34.0,-34.0,17.0,-17.0]
 
     cw_hists = []
 
-    cb_reweights = [372,12,13,14,15,16,17]
+    cb_reweights = [0,0+13,0+14,0+15,0+16,0+17,0+18]
 
     #cb_coefficients = [0.0, 80.0,-80.0,160.0,-160.0,240.0,-240.0]
 
-    cb_coefficients = [0.0, 17.0,-17.0,34.0,-34.0,51.0,-51.0]
+#    cb_coefficients = [0.0, 17.0,-17.0,34.0,-34.0,51.0,-51.0]
+
+    cb_coefficients = [0.0, 51.0,-51.0,34.0,-34.0,17.0,-17.0]
 
     cb_hists = []
 
-    cpwww_reweights = [372,18,19,20,21,22,23]
+    cpwww_reweights = [0,0+19,0+20,0+21,0+22,0+23,0+24]
 
     #cpwww_coefficients = [0.0, 4.0,-4.0,8.0,-8.0,12.0,-12.0]
 
-    cpwww_coefficients = [0.0, 0.5,-0.5,1.0,-1.0,1.5,-1.5]
+#    cpwww_coefficients = [0.0, 0.5,-0.5,1.0,-1.0,1.5,-1.5]
+
+    cpwww_coefficients = [0.0, 1.5,-1.5,1.0,-1.0,0.5,-0.5]
 
     cpwww_hists = []
 
-    cpw_reweights = [372,24,25,26,27,28,29]
+    cpw_reweights = [0,0+25,0+26,0+27,0+28,0+29,0+30]
 
     #cpw_coefficients = [0.0, 40.0,-40.0,80.0,-80.0,120.0,-120.0]
 
-    cpw_coefficients = [0.0, 8.0,-8.0,16.0,-16.0,24.0,-24.0]
+    cpw_coefficients = [0.0, 24.0,-24.0,16.0,-16.0,8.0,-8.0]
 
     cpw_hists = []
 
@@ -1273,7 +1288,7 @@ if options.ewdim6:
         for variable_definition in variable_definitions:
             rinterface = rinterface.Define(variable_definition[0],variable_definition[1])
 
-        rresultptr = rinterface.Histo1D(histogram_models[0],variables[0],"weight")
+        rresultptr = rinterface.Histo1D(histogram_models[ewdim6_index],variables[ewdim6_index],"weight")
 
         sm_hist.Add(rresultptr.GetValue())
 
@@ -1321,7 +1336,7 @@ if options.ewdim6:
             rresultptrs_cpw.append(rinterface.Histo1D(histogram_models[0],variables[0],"cpw_weight_"+str(i)))
 
         rinterface = rinterface.Define("sm_weight","weight*LHEReweightingWeight["+str(sm_lhe_weight)+"]")
-        rresultptr_sm = rinterface.Histo1D(histogram_models[0],variables[0],"sm_weight")
+        rresultptr_sm = rinterface.Histo1D(histogram_models[ewdim6_index],variables[ewdim6_index],"sm_weight")
 
 
 
@@ -1364,6 +1379,28 @@ if options.ewdim6:
     cpw_hist_min = min(cpw_coefficients) - (max(cpw_coefficients) - min(cpw_coefficients))/(len(cpw_coefficients)-1)/2
 
     sm_lhe_weight_hist.Print("all")
+
+    c = ROOT.TCanvas("c", "c",5,50,500,500)
+    sm_hist.SetLineColor(ROOT.kRed)
+    sm_lhe_weight_hist.SetLineColor(ROOT.kBlue)
+    sm_hist.SetLineWidth(2)
+    sm_lhe_weight_hist.SetLineWidth(2)
+    sm_hist.SetMaximum(1.55*max(sm_hist.GetMaximum(),sm_lhe_weight_hist.GetMaximum()))
+    sm_hist.Draw()
+    sm_lhe_weight_hist.Draw("same")
+    s=str(totallumi)+" fb^{-1} (13 TeV)"
+    lumilabel = ROOT.TLatex (0.95, 0.93, s)
+    lumilabel.SetNDC ()
+    lumilabel.SetTextAlign (30)
+    lumilabel.SetTextFont (42)
+    lumilabel.SetTextSize (0.040)
+    lumilabel.Draw("same")
+    set_axis_fonts(sm_hist,"x",getXaxisLabel(variables[ewdim6_index]))
+    j=0
+    draw_legend(xpositions[j]-0.05,0.84 - ypositions[j]*yoffset,sm_hist,"SM unweighted","l")
+    j=j+1
+    draw_legend(xpositions[j]-0.05,0.84 - ypositions[j]*yoffset,sm_lhe_weight_hist,"SM reweighted","l")
+    c.SaveAs(options.outputdir + "/" + "sm_reweighting.png")
 
     cwww_scaling_hists = {}
     cw_scaling_hists = {}
@@ -2642,7 +2679,7 @@ if "wg+jets" in labels:
 if options.draw_ewdim6:
     for i in range(1,n_photon_pt_bins+1):
         #hardcoded to use bin 6 of the scaling histogram for now 
-        ewdim6["hists"][0].SetBinContent(i,cb_scaling_hists[i].GetBinContent(5)*labels["wg+jets"]["hists"][0].GetBinContent(i))
+        ewdim6["hists"][0].SetBinContent(i,cb_scaling_hists[i].GetBinContent(7)*labels["wg+jets"]["hists"][0].GetBinContent(i))
 
 c1 = ROOT.TCanvas("c1", "c1",5,50,500,500)
 
@@ -2707,6 +2744,18 @@ for i in range(len(variables)):
 
     hstack = ROOT.THStack()
 
+    for label in labels.keys():
+        if labels[label]["color"] == None:
+            continue
+        if options.closure_test and label == "wg+jets":
+            continue
+
+        if label == "w+jets":
+            continue
+
+        hsum.Add(labels[label]["hists"][i])
+        hstack.Add(labels[label]["hists"][i])
+
     if options.use_wjets_for_fake_photon and "w+jets" in labels:
         hsum.Add(labels["w+jets"]["hists"][i])
         hstack.Add(labels["w+jets"]["hists"][i])
@@ -2719,18 +2768,6 @@ for i in range(len(variables)):
         if not options.closure_test:
             hstack.Add(fake_lepton["hists"][i])
             hstack.Add(double_fake["hists"][i])
-
-    for label in labels.keys():
-        if labels[label]["color"] == None:
-            continue
-        if options.closure_test and label == "wg+jets":
-            continue
-
-        if label == "w+jets":
-            continue
-
-        hsum.Add(labels[label]["hists"][i])
-        hstack.Add(labels[label]["hists"][i])
 
     if not options.closure_test and (lepton_name == "electron" or lepton_name == "both"): 
         if options.closure_test and label == "wg+jets":
@@ -3299,6 +3336,25 @@ elif lepton_name == "electron":
 #    if labels["w+jets"]["hists"][mlg_index].GetBinContent(i) < 0:
 #        labels["w+jets"]["hists"][mlg_index].SetBinContent(i,0.001)
 
+zgjets_pdf_syst=histogram_models[mlg_index].GetHistogram()
+
+for i in range(labels["zg+jets"]["hists-pdf-variation0"][mlg_index].GetNbinsX()+1):
+    mean_pdf=0
+
+    for j in range(1,32):
+        mean_pdf += labels["zg+jets"]["hists-pdf-variation"+str(j)][mlg_index].GetBinContent(i)
+
+    mean_pdf = mean_pdf/31
+
+    stddev_pdf = 0
+
+    for j in range(1,32):
+        stddev_pdf += pow(labels["zg+jets"]["hists-pdf-variation"+str(j)][mlg_index].GetBinContent(i) - mean_pdf,2)
+
+    stddev_pdf = sqrt(stddev_pdf/(31-1))
+
+    zgjets_pdf_syst.SetBinContent(i,labels["zg+jets"]["hists"][mlg_index].GetBinContent(i)+stddev_pdf)
+
 zgjets_scale_syst=histogram_models[mlg_index].GetHistogram()
 
 for i in range(labels["zg+jets"]["hists-scale-variation0"][mlg_index].GetNbinsX()+2):
@@ -3510,9 +3566,9 @@ for i in range(1,labels["wg+jets"]["hists"][mlg_index].GetNbinsX()+1):
 if options.make_cut_and_count_datacard:
 
     if options.lep == "muon":
-        dcard = open("wg_datacard_cut_and_count_mu_chan.txt",'w')
+        dcard = open("wg_dcard_cut_and_count_mu_chan.txt",'w')
     elif options.lep == "electron":
-        dcard = open("wg_datacard_cut_and_count_el_chan.txt",'w')
+        dcard = open("wg_dcard_cut_and_count_el_chan.txt",'w')
     else:
         assert(0)
 
@@ -3768,6 +3824,25 @@ if options.make_cut_and_count_datacard:
 
     dcard.write('\n')    
 
+    dcard.write("zgpdf lnN")
+    dcard.write(" -")
+
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        
+        if label == "zg+jets":
+            dcard.write(" "+str(zgjets_pdf_syst.Integral()/(labels["zg+jets"]["hists"][mlg_index].Integral())))
+        else:    
+            dcard.write(" -")
+
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+
+    dcard.write('\n')    
+
     dcard.write("fakemuonsyst lnN")
     dcard.write(" -")
 
@@ -3812,9 +3887,9 @@ if options.make_datacard:
 
 
     if options.lep == "muon":
-        dcard = open("wg_datacard_mu_chan.txt",'w')
+        dcard = open("wg_dcard_mu_chan.txt",'w')
     elif options.lep == "electron":
-        dcard = open("wg_datacard_el_chan.txt",'w')
+        dcard = open("wg_dcard_el_chan.txt",'w')
     else:
         assert(0)
         
@@ -3823,11 +3898,11 @@ if options.make_datacard:
     print >> dcard, "kmax * number of nuisance parameters"
 
     if options.lep == "muon":
-        print >> dcard, "shapes data_obs mu_chan wg_datacard_mu_chan_shapes.root data_obs"
-        print >> dcard, "shapes Wg mu_chan wg_datacard_mu_chan_shapes.root wg wg_$SYSTEMATIC" 
+        print >> dcard, "shapes data_obs mu_chan wg_dcard_mu_chan_shapes.root data_obs"
+        print >> dcard, "shapes Wg mu_chan wg_dcard_mu_chan_shapes.root wg wg_$SYSTEMATIC" 
     elif options.lep == "electron":
-        print >> dcard, "shapes data_obs el_chan wg_datacard_el_chan_shapes.root data_obs"
-        print >> dcard, "shapes Wg el_chan wg_datacard_el_chan_shapes.root wg wg_$SYSTEMATIC" 
+        print >> dcard, "shapes data_obs el_chan wg_dcard_el_chan_shapes.root data_obs"
+        print >> dcard, "shapes Wg el_chan wg_dcard_el_chan_shapes.root wg wg_$SYSTEMATIC" 
     else:
         assert(0)    
 
@@ -3835,39 +3910,39 @@ if options.make_datacard:
         if label == "no label" or label == "wg+jets" or label == "w+jets":
             continue
         if options.lep == "muon":
-            print >> dcard, "shapes "+label.replace("+","")+" mu_chan wg_datacard_mu_chan_shapes.root "+label.replace("+","")+ " " +label.replace("+","") + "_$SYSTEMATIC" 
+            print >> dcard, "shapes "+label.replace("+","")+" mu_chan wg_dcard_mu_chan_shapes.root "+label.replace("+","")+ " " +label.replace("+","") + "_$SYSTEMATIC" 
         elif options.lep == "electron":
-            print >> dcard, "shapes "+label.replace("+","")+" el_chan wg_datacard_el_chan_shapes.root "+label.replace("+","")+ " " +label.replace("+","") + "_$SYSTEMATIC" 
+            print >> dcard, "shapes "+label.replace("+","")+" el_chan wg_dcard_el_chan_shapes.root "+label.replace("+","")+ " " +label.replace("+","") + "_$SYSTEMATIC" 
         else:
             assert(0)    
 
     if options.lep == "muon":
-        print >> dcard, "shapes fake_photon mu_chan wg_datacard_mu_chan_shapes.root fakephoton fakephoton_$SYSTEMATIC" 
-        print >> dcard, "shapes fake_muon mu_chan wg_datacard_mu_chan_shapes.root fakemuon fakemuon_$SYSTEMATIC"
-        print >> dcard, "shapes double_fake mu_chan wg_datacard_mu_chan_shapes.root doublefake doublefake_$SYSTEMATIC" 
-        print >> dcard, "shapes e_to_p_non_res mu_chan wg_datacard_mu_chan_shapes.root etopnonres etopnonres_$SYSTEMATIC" 
+        print >> dcard, "shapes fake_photon mu_chan wg_dcard_mu_chan_shapes.root fakephoton fakephoton_$SYSTEMATIC" 
+        print >> dcard, "shapes fake_muon mu_chan wg_dcard_mu_chan_shapes.root fakemuon fakemuon_$SYSTEMATIC"
+        print >> dcard, "shapes double_fake mu_chan wg_dcard_mu_chan_shapes.root doublefake doublefake_$SYSTEMATIC" 
+        print >> dcard, "shapes e_to_p_non_res mu_chan wg_dcard_mu_chan_shapes.root etopnonres etopnonres_$SYSTEMATIC" 
     elif options.lep == "electron":
-        print >> dcard, "shapes fake_photon el_chan wg_datacard_el_chan_shapes.root fakephoton fakephoton_$SYSTEMATIC" 
-        print >> dcard, "shapes fake_electron el_chan wg_datacard_el_chan_shapes.root fakeelectron fakeelectron_$SYSTEMATIC"
-        print >> dcard, "shapes double_fake el_chan wg_datacard_el_chan_shapes.root doublefake doublefake_$SYSTEMATIC" 
-        print >> dcard, "shapes e_to_p_non_res el_chan wg_datacard_el_chan_shapes.root etopnonres etopnonres_$SYSTEMATIC" 
-        print >> dcard, "shapes e_to_p el_chan wg_datacard_el_chan_shapes.root etop etop_$SYSTEMATIC" 
+        print >> dcard, "shapes fake_photon el_chan wg_dcard_el_chan_shapes.root fakephoton fakephoton_$SYSTEMATIC" 
+        print >> dcard, "shapes fake_electron el_chan wg_dcard_el_chan_shapes.root fakeelectron fakeelectron_$SYSTEMATIC"
+        print >> dcard, "shapes double_fake el_chan wg_dcard_el_chan_shapes.root doublefake doublefake_$SYSTEMATIC" 
+        print >> dcard, "shapes e_to_p_non_res el_chan wg_dcard_el_chan_shapes.root etopnonres etopnonres_$SYSTEMATIC" 
+        print >> dcard, "shapes e_to_p el_chan wg_dcard_el_chan_shapes.root etop etop_$SYSTEMATIC" 
     else:
         assert(0)    
 
-#    print >> dcard, "shapes data_obs el_chan wg_datacard_el_chan_shapes.root workspace:data_obs"
-#    print >> dcard, "shapes Wg el_chan wg_datacard_el_chan_shapes.root workspace:wg workspace:wg_$SYSTEMATIC" 
+#    print >> dcard, "shapes data_obs el_chan wg_dcard_el_chan_shapes.root workspace:data_obs"
+#    print >> dcard, "shapes Wg el_chan wg_dcard_el_chan_shapes.root workspace:wg workspace:wg_$SYSTEMATIC" 
 
 #    for label in labels.keys():
 #        if label == "no label" or label == "wg+jets" or label == "w+jets":
 #            continue
-#        print >> dcard, "shapes "+label.replace("+","")+" el_chan wg_datacard_el_chan_shapes.root workspace:"+label.replace("+","")+ " workspace:" +label.replace("+","") + "_$SYSTEMATIC" 
+#        print >> dcard, "shapes "+label.replace("+","")+" el_chan wg_dcard_el_chan_shapes.root workspace:"+label.replace("+","")+ " workspace:" +label.replace("+","") + "_$SYSTEMATIC" 
 
-#    print >> dcard, "shapes fake_photon el_chan wg_datacard_el_chan_shapes.root workspace:fakephoton workspace:fakephoton_$SYSTEMATIC" 
-#    print >> dcard, "shapes fake_electron el_chan wg_datacard_el_chan_shapes.root workspace:fakeelectron workspace:fakeelectron_$SYSTEMATIC"
-#    print >> dcard, "shapes double_fake el_chan wg_datacard_el_chan_shapes.root workspace:doublefake workspace:doublefake_$SYSTEMATIC" 
-#    print >> dcard, "shapes e_to_p_non_res el_chan wg_datacard_el_chan_shapes.root workspace:etopnonres workspace:etopnonres_$SYSTEMATIC" 
-#    print >> dcard, "shapes e_to_p el_chan wg_datacard_el_chan_shapes.root workspace:etop workspace:etop_$SYSTEMATIC" 
+#    print >> dcard, "shapes fake_photon el_chan wg_dcard_el_chan_shapes.root workspace:fakephoton workspace:fakephoton_$SYSTEMATIC" 
+#    print >> dcard, "shapes fake_electron el_chan wg_dcard_el_chan_shapes.root workspace:fakeelectron workspace:fakeelectron_$SYSTEMATIC"
+#    print >> dcard, "shapes double_fake el_chan wg_dcard_el_chan_shapes.root workspace:doublefake workspace:doublefake_$SYSTEMATIC" 
+#    print >> dcard, "shapes e_to_p_non_res el_chan wg_dcard_el_chan_shapes.root workspace:etopnonres workspace:etopnonres_$SYSTEMATIC" 
+#    print >> dcard, "shapes e_to_p el_chan wg_dcard_el_chan_shapes.root workspace:etop workspace:etop_$SYSTEMATIC" 
     
     print >> dcard, "Observation "+str(data["hists"][mlg_index].Integral())
     dcard.write("bin")
@@ -4210,7 +4285,51 @@ if options.make_datacard:
         assert(0)    
     dcard.write('\n')    
 
+    dcard.write("wgpdf shape1")
+    dcard.write(" 1.0")
+
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        dcard.write(" -")
+
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+    if options.lep == "muon":
+        pass
+    elif options.lep == "electron":
+        dcard.write(" -")
+    else:
+        assert(0)    
+    dcard.write('\n')    
+
     dcard.write("zgscale shape1")
+    dcard.write(" -")
+
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        
+        if label == "zg+jets":
+            dcard.write(" 1.0")
+        else:    
+            dcard.write(" -")
+
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+    if options.lep == "muon":
+        pass
+    elif options.lep == "electron":
+        dcard.write(" -")
+    else:
+        assert(0)    
+    dcard.write('\n')    
+
+    dcard.write("zgpdf shape1")
     dcard.write(" -")
 
     for label in labels.keys():
@@ -4336,9 +4455,9 @@ if options.make_datacard:
     dcard.close()
 
     if options.lep == "muon":
-        shapes = ROOT.TFile.Open("wg_datacard_mu_chan_shapes.root","recreate")        
+        shapes = ROOT.TFile.Open("wg_dcard_mu_chan_shapes.root","recreate")        
     elif options.lep == "electron":
-        shapes = ROOT.TFile.Open("wg_datacard_el_chan_shapes.root","recreate")
+        shapes = ROOT.TFile.Open("wg_dcard_el_chan_shapes.root","recreate")
     else:
         assert(0)    
 
@@ -4374,6 +4493,28 @@ if options.make_datacard:
 
     zgjets_scale_syst.Write("zgjets_zgscaleUp")
     makeDownShape(zgjets_scale_syst,labels["zg+jets"]["hists"][mlg_index]).Write("zgjets_zgscaleDown")
+
+    zgjets_pdf_syst.Write("zgjets_zgpdfUp")
+    makeDownShape(zgjets_pdf_syst,labels["zg+jets"]["hists"][mlg_index]).Write("zgjets_zgpdfDown")
+
+    wgjets_pdf_syst=histogram_models[mlg_index].GetHistogram()
+
+    for i in range(labels["wg+jets"]["hists-pdf-variation0"][mlg_index].GetNbinsX()+1):
+        mean_pdf=0
+
+        for j in range(1,32):
+            mean_pdf += labels["wg+jets"]["hists-pdf-variation"+str(j)][mlg_index].GetBinContent(i)*labels["wg+jets"]["hists"][mlg_index].Integral()/labels["wg+jets"]["hists-pdf-variation"+str(j)][mlg_index].Integral()
+
+        mean_pdf = mean_pdf/31
+
+        stddev_pdf = 0
+
+        for j in range(1,32):
+            stddev_pdf += pow(labels["wg+jets"]["hists-pdf-variation"+str(j)][mlg_index].GetBinContent(i)*labels["wg+jets"]["hists"][mlg_index].Integral()/labels["wg+jets"]["hists-pdf-variation"+str(j)][mlg_index].Integral() - mean_pdf,2)
+
+        stddev_pdf = sqrt(stddev_pdf/(31-1))
+
+        wgjets_pdf_syst.SetBinContent(i,labels["wg+jets"]["hists"][mlg_index].GetBinContent(i)+stddev_pdf)
 
     wgjets_scale_syst=histogram_models[mlg_index].GetHistogram()
 
@@ -4413,6 +4554,8 @@ if options.make_datacard:
     wgjets_scale_syst.Write("wg_wgscaleUp")
     makeDownShape(wgjets_scale_syst,labels["wg+jets"]["hists"][mlg_index]).Write("wg_wgscaleDown")
 
+    wgjets_pdf_syst.Write("wg_wgpdfUp")
+    makeDownShape(wgjets_pdf_syst,labels["wg+jets"]["hists"][mlg_index]).Write("wg_wgpdfDown")
 
     fake_photon_alt["hists"][mlg_index].Write("fakephoton_fakephotonsyst1Up")
     makeDownShape(fake_photon_alt["hists"][mlg_index],fake_photon["hists"][mlg_index]).Write("fakephoton_fakephotonsyst1Down")
@@ -4997,14 +5140,74 @@ if options.make_datacard:
 if not options.ewdim6:
     sys.exit(0)
 
+wgjets_ewdim6_scale_syst=histogram_models[ewdim6_index].GetHistogram()
+
+for i in range(labels["wg+jets"]["hists-scale-variation0"][ewdim6_index].GetNbinsX()+1):
+    wgjets_ewdim6_scale_syst.SetBinContent(i,labels["wg+jets"]["hists"][ewdim6_index].GetBinContent(i)+max(
+        abs(labels["wg+jets"]["hists-scale-variation0"][ewdim6_index].GetBinContent(i)-labels["wg+jets"]["hists"][ewdim6_index].GetBinContent(i)),
+        abs(labels["wg+jets"]["hists-scale-variation1"][ewdim6_index].GetBinContent(i)-labels["wg+jets"]["hists"][ewdim6_index].GetBinContent(i)),
+        abs(labels["wg+jets"]["hists-scale-variation3"][ewdim6_index].GetBinContent(i)-labels["wg+jets"]["hists"][ewdim6_index].GetBinContent(i)),
+        abs(labels["wg+jets"]["hists-scale-variation4"][ewdim6_index].GetBinContent(i)-labels["wg+jets"]["hists"][ewdim6_index].GetBinContent(i)),
+        abs(labels["wg+jets"]["hists-scale-variation5"][ewdim6_index].GetBinContent(i)-labels["wg+jets"]["hists"][ewdim6_index].GetBinContent(i)),
+        abs(labels["wg+jets"]["hists-scale-variation6"][ewdim6_index].GetBinContent(i)-labels["wg+jets"]["hists"][ewdim6_index].GetBinContent(i))))
+
+wgjets_ewdim6_pdf_syst=histogram_models[ewdim6_index].GetHistogram()
+
+for i in range(labels["wg+jets"]["hists-pdf-variation0"][ewdim6_index].GetNbinsX()+1):
+    mean_pdf=0
+
+    for j in range(1,32):
+        mean_pdf += labels["wg+jets"]["hists-pdf-variation"+str(j)][ewdim6_index].GetBinContent(i)
+
+    mean_pdf = mean_pdf/31
+
+    stddev_pdf = 0
+
+    for j in range(1,32):
+        stddev_pdf += pow(labels["wg+jets"]["hists-pdf-variation"+str(j)][ewdim6_index].GetBinContent(i) - mean_pdf,2)
+
+    stddev_pdf = sqrt(stddev_pdf/(31-1))
+
+    wgjets_ewdim6_pdf_syst.SetBinContent(i,labels["wg+jets"]["hists"][ewdim6_index].GetBinContent(i)+stddev_pdf)
+
+zgjets_ewdim6_scale_syst=histogram_models[ewdim6_index].GetHistogram()
+
+for i in range(labels["zg+jets"]["hists-scale-variation0"][ewdim6_index].GetNbinsX()+1):
+    zgjets_ewdim6_scale_syst.SetBinContent(i,labels["zg+jets"]["hists"][ewdim6_index].GetBinContent(i)+max(
+        abs(labels["zg+jets"]["hists-scale-variation0"][ewdim6_index].GetBinContent(i)-labels["zg+jets"]["hists"][ewdim6_index].GetBinContent(i)),
+        abs(labels["zg+jets"]["hists-scale-variation1"][ewdim6_index].GetBinContent(i)-labels["zg+jets"]["hists"][ewdim6_index].GetBinContent(i)),
+        abs(labels["zg+jets"]["hists-scale-variation3"][ewdim6_index].GetBinContent(i)-labels["zg+jets"]["hists"][ewdim6_index].GetBinContent(i)),
+        abs(labels["zg+jets"]["hists-scale-variation4"][ewdim6_index].GetBinContent(i)-labels["zg+jets"]["hists"][ewdim6_index].GetBinContent(i)),
+        abs(labels["zg+jets"]["hists-scale-variation5"][ewdim6_index].GetBinContent(i)-labels["zg+jets"]["hists"][ewdim6_index].GetBinContent(i)),
+        abs(labels["zg+jets"]["hists-scale-variation6"][ewdim6_index].GetBinContent(i)-labels["zg+jets"]["hists"][ewdim6_index].GetBinContent(i))))
+
+zgjets_ewdim6_pdf_syst=histogram_models[ewdim6_index].GetHistogram()
+
+for i in range(labels["zg+jets"]["hists-pdf-variation0"][ewdim6_index].GetNbinsX()+1):
+    mean_pdf=0
+
+    for j in range(1,32):
+        mean_pdf += labels["zg+jets"]["hists-pdf-variation"+str(j)][ewdim6_index].GetBinContent(i)
+
+    mean_pdf = mean_pdf/31
+
+    stddev_pdf = 0
+
+    for j in range(1,32):
+        stddev_pdf += pow(labels["zg+jets"]["hists-pdf-variation"+str(j)][ewdim6_index].GetBinContent(i) - mean_pdf,2)
+
+    stddev_pdf = sqrt(stddev_pdf/(31-1))
+
+    zgjets_ewdim6_pdf_syst.SetBinContent(i,labels["zg+jets"]["hists"][ewdim6_index].GetBinContent(i)+stddev_pdf)
+
 for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
 
-    dcard = open("photon_pt_bin"+str(i)+".txt",'w')
+    dcard = open("wg_dcard_ewdim6_bin"+str(i)+".txt",'w')
 
     print >> dcard, "imax 1 number of channels"
     print >> dcard, "jmax * number of background"
     print >> dcard, "kmax * number of nuisance parameters"
-    print >> dcard, "Observation "+str(data["hists"][0].GetBinContent(i))
+    print >> dcard, "Observation "+str(data["hists"][ewdim6_index].GetBinContent(i))
     dcard.write("bin")
     dcard.write(" bin1")
     
@@ -5040,64 +5243,64 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
     dcard.write('\n')    
     dcard.write('rate')
     dcard.write(' '+str(sm_lhe_weight_hist.GetBinContent(i)))
-#    dcard.write(' '+str(labels["wg+jets"]["hists"][0].GetBinContent(i)))
+#    dcard.write(' '+str(labels["wg+jets"]["hists"][ewdim6_index].GetBinContent(i)))
     for label in labels.keys():
         if label == "no label" or label == "wg+jets" or label == "w+jets":
             continue
-        if labels[label]["hists"][0].GetBinContent(i) > 0:
-            dcard.write(" "+ str(labels[label]["hists"][0].GetBinContent(i)))
+        if labels[label]["hists"][ewdim6_index].GetBinContent(i) > 0:
+            dcard.write(" "+ str(labels[label]["hists"][ewdim6_index].GetBinContent(i)))
         else:
             dcard.write(" 0.0001") 
 
 
 
-    if fake_photon["hists"][0].GetBinContent(i) > 0:        
-        dcard.write(" "+str(fake_photon["hists"][0].GetBinContent(i))) 
+    if fake_photon["hists"][ewdim6_index].GetBinContent(i) > 0:        
+        dcard.write(" "+str(fake_photon["hists"][ewdim6_index].GetBinContent(i))) 
     else:
-        if fake_photon["hists"][0].GetBinContent(i) < 0:
-            print "Warning: fake photon estimate is "+str(fake_photon["hists"][0].GetBinContent(i))+ " for bin " + str(i) + ". It will be replaced with 0.0001"
+        if fake_photon["hists"][ewdim6_index].GetBinContent(i) < 0:
+            print "Warning: fake photon estimate is "+str(fake_photon["hists"][ewdim6_index].GetBinContent(i))+ " for bin " + str(i) + ". It will be replaced with 0.0001"
         dcard.write(" 0.0001") 
 
-    if fake_lepton["hists"][0].GetBinContent(i) > 0:        
-        dcard.write(" "+str(fake_lepton["hists"][0].GetBinContent(i))) 
+    if fake_lepton["hists"][ewdim6_index].GetBinContent(i) > 0:        
+        dcard.write(" "+str(fake_lepton["hists"][ewdim6_index].GetBinContent(i))) 
     else:
-        if fake_lepton["hists"][0].GetBinContent(i) < 0:
-            print "Warning: fake lepton estimate is "+str(fake_lepton["hists"][0].GetBinContent(i))+ " for bin " + str(i) + ". It will be replaced with 0.0001"
+        if fake_lepton["hists"][ewdim6_index].GetBinContent(i) < 0:
+            print "Warning: fake lepton estimate is "+str(fake_lepton["hists"][ewdim6_index].GetBinContent(i))+ " for bin " + str(i) + ". It will be replaced with 0.0001"
         dcard.write(" 0.0001") 
 
-    if double_fake["hists"][0].GetBinContent(i) > 0:        
-        dcard.write(" "+str(double_fake["hists"][0].GetBinContent(i))) 
+    if double_fake["hists"][ewdim6_index].GetBinContent(i) > 0:        
+        dcard.write(" "+str(double_fake["hists"][ewdim6_index].GetBinContent(i))) 
     else:
-        if double_fake["hists"][0].GetBinContent(i) < 0:
-            print "Warning: double fake estimate is "+str(double_fake["hists"][0].GetBinContent(i))+ " for bin " + str(i) + ". It will be replaced with 0.0001"
+        if double_fake["hists"][ewdim6_index].GetBinContent(i) < 0:
+            print "Warning: double fake estimate is "+str(double_fake["hists"][ewdim6_index].GetBinContent(i))+ " for bin " + str(i) + ". It will be replaced with 0.0001"
         dcard.write(" 0.0001") 
 
-    if e_to_p["hists"][0].GetBinContent(i) > 0:        
-        dcard.write(" "+str(e_to_p["hists"][0].GetBinContent(i))) 
+    if e_to_p["hists"][ewdim6_index].GetBinContent(i) > 0:        
+        dcard.write(" "+str(e_to_p["hists"][ewdim6_index].GetBinContent(i))) 
     else:
         dcard.write(" 0.0001") 
    
     dcard.write('\n')    
 
     dcard.write("lumi_13tev lnN")
-    dcard.write(" 1.027")
+    dcard.write(" 1.018")
 
     for label in labels.keys():
         if label == "no label" or label == "wg+jets" or label == "w+jets":
             continue
-        dcard.write(" 1.027")
+        dcard.write(" 1.018")
 
     dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
-    dcard.write(" 1.027")
+    dcard.write(" 1.018")
 
     dcard.write('\n')    
 
     if sm_lhe_weight_hist.GetBinContent(i) > 0:
         dcard.write("mcstat_ewdim6_bin"+str(i)+" lnN "+str(1+sm_lhe_weight_hist.GetBinError(i)/sm_lhe_weight_hist.GetBinContent(i)))
         
-#        dcard.write("mcstat_ewdim6_bin"+str(i)+" lnN "+str(1+labels["wg+jets"]["hists"][0].GetBinError(i)/labels["wg+jets"]["hists"][0].GetBinContent(i)))
+#        dcard.write("mcstat_ewdim6_bin"+str(i)+" lnN "+str(1+labels["wg+jets"]["hists"][ewdim6_index].GetBinError(i)/labels["wg+jets"]["hists"][ewdim6_index].GetBinContent(i)))
         for label in labels.keys():
             if label == "no label" or label == "wg+jets" or label == "w+jets":
                 continue
@@ -5113,7 +5316,7 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
         if label == "no label" or label == "wg+jets" or label == "w+jets":
             continue
 
-        if labels[label]["hists"][0].GetBinContent(i) > 0:
+        if labels[label]["hists"][ewdim6_index].GetBinContent(i) > 0:
             dcard.write("mcstat_"+str(label)+"_bin"+str(i)+" lnN ")
             dcard.write(" -")
 
@@ -5121,7 +5324,7 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
                 if l == "no label" or l == "wg+jets" or label == "w+jets":
                     continue
                 if l == label:
-                    dcard.write(" "+str(1+labels[label]["hists"][0].GetBinError(i)/labels[label]["hists"][0].GetBinContent(i)))
+                    dcard.write(" "+str(1+labels[label]["hists"][ewdim6_index].GetBinError(i)/labels[label]["hists"][ewdim6_index].GetBinContent(i)))
                 else:    
                     dcard.write(" -")
 
@@ -5131,7 +5334,7 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
             dcard.write(" -")                
             dcard.write("\n")  
 
-    if fake_lepton["hists"][0].GetBinContent(i) > 0:        
+    if fake_lepton["hists"][ewdim6_index].GetBinContent(i) > 0:        
         dcard.write("fake_lepton_syst lnN -")
         for label in labels.keys():
             if label == "no label" or label == "wg+jets" or label == "w+jets":
@@ -5144,7 +5347,7 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
         dcard.write(" -")                
         dcard.write("\n")  
 
-    if fake_lepton["hists"][0].GetBinContent(i) > 0:        
+    if fake_lepton["hists"][ewdim6_index].GetBinContent(i) > 0:        
         dcard.write("fake_lepton_stat lnN -")
         for label in labels.keys():
             if label == "no label" or label == "wg+jets" or label == "w+jets":
@@ -5152,30 +5355,30 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
             dcard.write(" -")
 
         dcard.write(" -")                
-        dcard.write(" "+str(1+fake_lepton["hists"][0].GetBinError(i)/fake_lepton["hists"][0].GetBinContent(i)))
+        dcard.write(" "+str(1+fake_lepton["hists"][ewdim6_index].GetBinError(i)/fake_lepton["hists"][ewdim6_index].GetBinContent(i)))
         dcard.write(" -")                
         dcard.write(" -")                
         dcard.write("\n")  
 
-    if fake_photon["hists"][0].GetBinContent(i) > 0:        
+    if fake_photon["hists"][ewdim6_index].GetBinContent(i) > 0:        
         dcard.write("fake_photon_stat lnN -")
         for label in labels.keys():
             if label == "no label" or label == "wg+jets" or label == "w+jets" :
                 continue
             dcard.write(" -")
 
-        dcard.write(" "+str(1+fake_photon["hists"][0].GetBinError(i)/fake_photon["hists"][0].GetBinContent(i)))
+        dcard.write(" "+str(1+fake_photon["hists"][ewdim6_index].GetBinError(i)/fake_photon["hists"][ewdim6_index].GetBinContent(i)))
         dcard.write(" -")                
         dcard.write(" -")                
         dcard.write(" -")                
         dcard.write("\n")  
 
-    dcard.write("muon_id_sf lnN "+str(labels["wg+jets"]["hists-muon-id-sf-up"][0].GetBinContent(i)/labels["wg+jets"]["hists"][0].GetBinContent(i)))
+    dcard.write("muon_id_sf lnN "+str(labels["wg+jets"]["hists-muon-id-sf-up"][ewdim6_index].GetBinContent(i)/labels["wg+jets"]["hists"][ewdim6_index].GetBinContent(i)))
     for label in labels.keys():
         if label == "no label" or label == "wg+jets" or label == "w+jets":
             continue
-        if labels[label]["hists"][0].GetBinContent(i) > 0:
-            dcard.write(" "+str(labels[label]["hists-muon-id-sf-up"][0].GetBinContent(i)/labels[label]["hists"][0].GetBinContent(i)))
+        if labels[label]["hists"][ewdim6_index].GetBinContent(i) > 0:
+            dcard.write(" "+str(labels[label]["hists-muon-id-sf-up"][ewdim6_index].GetBinContent(i)/labels[label]["hists"][ewdim6_index].GetBinContent(i)))
         else:    
             dcard.write(" -")
 
@@ -5185,12 +5388,12 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
     dcard.write(" -")            
     dcard.write("\n")  
 
-    dcard.write("muon_hlt_sf lnN "+str(labels["wg+jets"]["hists-muon-hlt-sf-up"][0].GetBinContent(i)/labels["wg+jets"]["hists"][0].GetBinContent(i)))
+    dcard.write("muon_hlt_sf lnN "+str(labels["wg+jets"]["hists-muon-hlt-sf-up"][ewdim6_index].GetBinContent(i)/labels["wg+jets"]["hists"][ewdim6_index].GetBinContent(i)))
     for label in labels.keys():
         if label == "no label" or label == "wg+jets" or label == "w+jets":
             continue
-        if labels[label]["hists"][0].GetBinContent(i) > 0:
-            dcard.write(" "+str(labels[label]["hists-muon-hlt-sf-up"][0].GetBinContent(i)/labels[label]["hists"][0].GetBinContent(i)))
+        if labels[label]["hists"][ewdim6_index].GetBinContent(i) > 0:
+            dcard.write(" "+str(labels[label]["hists-muon-hlt-sf-up"][ewdim6_index].GetBinContent(i)/labels[label]["hists"][ewdim6_index].GetBinContent(i)))
         else:    
             dcard.write(" -")
 
@@ -5200,12 +5403,12 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
     dcard.write(" -")            
     dcard.write("\n")  
 
-    dcard.write("muon_iso_sf lnN "+str(labels["wg+jets"]["hists-muon-iso-sf-up"][0].GetBinContent(i)/labels["wg+jets"]["hists"][0].GetBinContent(i)))
+    dcard.write("muon_iso_sf lnN "+str(labels["wg+jets"]["hists-muon-iso-sf-up"][ewdim6_index].GetBinContent(i)/labels["wg+jets"]["hists"][ewdim6_index].GetBinContent(i)))
     for label in labels.keys():
         if label == "no label" or label == "wg+jets" or label == "w+jets":
             continue
-        if labels[label]["hists"][0].GetBinContent(i) > 0:
-            dcard.write(" "+str(labels[label]["hists-muon-iso-sf-up"][0].GetBinContent(i)/labels[label]["hists"][0].GetBinContent(i)))
+        if labels[label]["hists"][ewdim6_index].GetBinContent(i) > 0:
+            dcard.write(" "+str(labels[label]["hists-muon-iso-sf-up"][ewdim6_index].GetBinContent(i)/labels[label]["hists"][ewdim6_index].GetBinContent(i)))
         else:    
             dcard.write(" -")
 
@@ -5215,146 +5418,202 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
     dcard.write(" -")            
     dcard.write("\n")  
 
-    dcard.write("electron_hlt_sf lnN "+str(labels["wg+jets"]["hists-electron-hlt-sf-up"][0].GetBinContent(i)/labels["wg+jets"]["hists"][0].GetBinContent(i)))
+    dcard.write("electron_hlt_sf lnN "+str(labels["wg+jets"]["hists-electron-hlt-sf-up"][ewdim6_index].GetBinContent(i)/labels["wg+jets"]["hists"][ewdim6_index].GetBinContent(i)))
     for label in labels.keys():
         if label == "no label" or label == "wg+jets" or label == "w+jets":
             continue
-        if labels[label]["hists"][0].GetBinContent(i) > 0:
-            dcard.write(" "+str(labels[label]["hists-electron-hlt-sf-up"][0].GetBinContent(i)/labels[label]["hists"][0].GetBinContent(i)))
+        if labels[label]["hists"][ewdim6_index].GetBinContent(i) > 0:
+            dcard.write(" "+str(labels[label]["hists-electron-hlt-sf-up"][ewdim6_index].GetBinContent(i)/labels[label]["hists"][ewdim6_index].GetBinContent(i)))
         else:    
             dcard.write(" -")
 
     dcard.write(" -")
     dcard.write(" -")                
     dcard.write(" -")                
-    if e_to_p["hists"][0].GetBinContent(i) > 0:
-        dcard.write(" "+str(e_to_p["hists-electron-hlt-sf-up"][0].GetBinContent(i)/e_to_p["hists"][0].GetBinContent(i)))
+    if e_to_p["hists"][ewdim6_index].GetBinContent(i) > 0:
+        dcard.write(" "+str(e_to_p["hists-electron-hlt-sf-up"][ewdim6_index].GetBinContent(i)/e_to_p["hists"][ewdim6_index].GetBinContent(i)))
     else:    
         dcard.write(" -")            
     dcard.write("\n")  
 
-    dcard.write("electron_id_sf lnN "+str(labels["wg+jets"]["hists-electron-id-sf-up"][0].GetBinContent(i)/labels["wg+jets"]["hists"][0].GetBinContent(i)))
+    dcard.write("electron_id_sf lnN "+str(labels["wg+jets"]["hists-electron-id-sf-up"][ewdim6_index].GetBinContent(i)/labels["wg+jets"]["hists"][ewdim6_index].GetBinContent(i)))
     for label in labels.keys():
         if label == "no label" or label == "wg+jets" or label == "w+jets":
             continue
-        if labels[label]["hists"][0].GetBinContent(i) > 0:
-            dcard.write(" "+str(labels[label]["hists-electron-id-sf-up"][0].GetBinContent(i)/labels[label]["hists"][0].GetBinContent(i)))
+        if labels[label]["hists"][ewdim6_index].GetBinContent(i) > 0:
+            dcard.write(" "+str(labels[label]["hists-electron-id-sf-up"][ewdim6_index].GetBinContent(i)/labels[label]["hists"][ewdim6_index].GetBinContent(i)))
         else:    
             dcard.write(" -")
 
     dcard.write(" -")
     dcard.write(" -")                
     dcard.write(" -")                
-    if e_to_p["hists"][0].GetBinContent(i) > 0:
-        dcard.write(" "+str(e_to_p["hists-electron-id-sf-up"][0].GetBinContent(i)/e_to_p["hists"][0].GetBinContent(i)))
+    if e_to_p["hists"][ewdim6_index].GetBinContent(i) > 0:
+        dcard.write(" "+str(e_to_p["hists-electron-id-sf-up"][ewdim6_index].GetBinContent(i)/e_to_p["hists"][ewdim6_index].GetBinContent(i)))
     else:    
         dcard.write(" -")            
     dcard.write("\n")  
 
-    dcard.write("electron_reco_sf lnN "+str(labels["wg+jets"]["hists-electron-reco-sf-up"][0].GetBinContent(i)/labels["wg+jets"]["hists"][0].GetBinContent(i)))
+    dcard.write("electron_reco_sf lnN "+str(labels["wg+jets"]["hists-electron-reco-sf-up"][ewdim6_index].GetBinContent(i)/labels["wg+jets"]["hists"][ewdim6_index].GetBinContent(i)))
     for label in labels.keys():
         if label == "no label" or label == "wg+jets" or label == "w+jets":
             continue
-        if labels[label]["hists"][0].GetBinContent(i) > 0:
-            dcard.write(" "+str(labels[label]["hists-electron-reco-sf-up"][0].GetBinContent(i)/labels[label]["hists"][0].GetBinContent(i)))
+        if labels[label]["hists"][ewdim6_index].GetBinContent(i) > 0:
+            dcard.write(" "+str(labels[label]["hists-electron-reco-sf-up"][ewdim6_index].GetBinContent(i)/labels[label]["hists"][ewdim6_index].GetBinContent(i)))
         else:    
             dcard.write(" -")
 
     dcard.write(" -")
     dcard.write(" -")                
     dcard.write(" -")                
-    if e_to_p["hists"][0].GetBinContent(i) > 0:
-        dcard.write(" "+str(e_to_p["hists-electron-reco-sf-up"][0].GetBinContent(i)/e_to_p["hists"][0].GetBinContent(i)))
+    if e_to_p["hists"][ewdim6_index].GetBinContent(i) > 0:
+        dcard.write(" "+str(e_to_p["hists-electron-reco-sf-up"][ewdim6_index].GetBinContent(i)/e_to_p["hists"][ewdim6_index].GetBinContent(i)))
     else:    
         dcard.write(" -")            
     dcard.write("\n")  
 
-    dcard.write("photon_id_sf lnN "+str(labels["wg+jets"]["hists-photon-id-sf-up"][0].GetBinContent(i)/labels["wg+jets"]["hists"][0].GetBinContent(i)))
+    dcard.write("photon_id_sf lnN "+str(labels["wg+jets"]["hists-photon-id-sf-up"][ewdim6_index].GetBinContent(i)/labels["wg+jets"]["hists"][ewdim6_index].GetBinContent(i)))
     for label in labels.keys():
         if label == "no label" or label == "wg+jets" or label == "w+jets":
             continue
-        if labels[label]["hists"][0].GetBinContent(i) > 0:
-            dcard.write(" "+str(labels[label]["hists-photon-id-sf-up"][0].GetBinContent(i)/labels[label]["hists"][0].GetBinContent(i)))
+        if labels[label]["hists"][ewdim6_index].GetBinContent(i) > 0:
+            dcard.write(" "+str(labels[label]["hists-photon-id-sf-up"][ewdim6_index].GetBinContent(i)/labels[label]["hists"][ewdim6_index].GetBinContent(i)))
         else:    
             dcard.write(" -")
 
     dcard.write(" -")
     dcard.write(" -")                
     dcard.write(" -")                
-    if e_to_p["hists"][0].GetBinContent(i) > 0:
-        dcard.write(" "+str(e_to_p["hists-photon-id-sf-up"][0].GetBinContent(i)/e_to_p["hists"][0].GetBinContent(i)))
+    if e_to_p["hists"][ewdim6_index].GetBinContent(i) > 0:
+        dcard.write(" "+str(e_to_p["hists-photon-id-sf-up"][ewdim6_index].GetBinContent(i)/e_to_p["hists"][ewdim6_index].GetBinContent(i)))
     else:    
         dcard.write(" -")            
     dcard.write("\n")  
 
-    dcard.write("jes lnN "+str(labels["wg+jets"]["hists-jes-up"][0].GetBinContent(i)/labels["wg+jets"]["hists"][0].GetBinContent(i)))
+    dcard.write("jes lnN "+str(labels["wg+jets"]["hists-jes-up"][ewdim6_index].GetBinContent(i)/labels["wg+jets"]["hists"][ewdim6_index].GetBinContent(i)))
     for label in labels.keys():
         if label == "no label" or label == "wg+jets" or label == "w+jets":
             continue
-        if labels[label]["hists"][0].GetBinContent(i) > 0:
-            dcard.write(" "+str(labels[label]["hists-jes-up"][0].GetBinContent(i)/labels[label]["hists"][0].GetBinContent(i)))
+        if labels[label]["hists"][ewdim6_index].GetBinContent(i) > 0:
+            dcard.write(" "+str(labels[label]["hists-jes-up"][ewdim6_index].GetBinContent(i)/labels[label]["hists"][ewdim6_index].GetBinContent(i)))
         else:    
             dcard.write(" -")
 
     dcard.write(" -")
     dcard.write(" -")                
     dcard.write(" -")                
-    if e_to_p["hists"][0].GetBinContent(i) > 0:
-        dcard.write(" "+str(e_to_p["hists-jes-up"][0].GetBinContent(i)/e_to_p["hists"][0].GetBinContent(i)))
+    if e_to_p["hists"][ewdim6_index].GetBinContent(i) > 0:
+        dcard.write(" "+str(e_to_p["hists-jes-up"][ewdim6_index].GetBinContent(i)/e_to_p["hists"][ewdim6_index].GetBinContent(i)))
     else:    
         dcard.write(" -")            
     dcard.write("\n")  
 
-    dcard.write("jer lnN "+str(labels["wg+jets"]["hists-jer-up"][0].GetBinContent(i)/labels["wg+jets"]["hists"][0].GetBinContent(i)))
+    dcard.write("jer lnN "+str(labels["wg+jets"]["hists-jer-up"][ewdim6_index].GetBinContent(i)/labels["wg+jets"]["hists"][ewdim6_index].GetBinContent(i)))
     for label in labels.keys():
         if label == "no label" or label == "wg+jets" or label == "w+jets":
             continue
-        if labels[label]["hists"][0].GetBinContent(i) > 0:
-            dcard.write(" "+str(labels[label]["hists-jer-up"][0].GetBinContent(i)/labels[label]["hists"][0].GetBinContent(i)))
+        if labels[label]["hists"][ewdim6_index].GetBinContent(i) > 0:
+            dcard.write(" "+str(labels[label]["hists-jer-up"][ewdim6_index].GetBinContent(i)/labels[label]["hists"][ewdim6_index].GetBinContent(i)))
         else:    
             dcard.write(" -")
 
     dcard.write(" -")
     dcard.write(" -")                
     dcard.write(" -")                
-    if e_to_p["hists"][0].GetBinContent(i) > 0:
-        dcard.write(" "+str(e_to_p["hists-jer-up"][0].GetBinContent(i)/e_to_p["hists"][0].GetBinContent(i)))
+    if e_to_p["hists"][ewdim6_index].GetBinContent(i) > 0:
+        dcard.write(" "+str(e_to_p["hists-jer-up"][ewdim6_index].GetBinContent(i)/e_to_p["hists"][ewdim6_index].GetBinContent(i)))
     else:    
         dcard.write(" -")            
     dcard.write("\n")  
 
-    dcard.write("prefire lnN "+str(labels["wg+jets"]["hists-prefire-up"][0].GetBinContent(i)/labels["wg+jets"]["hists"][0].GetBinContent(i)))
+    dcard.write("prefire lnN "+str(labels["wg+jets"]["hists-prefire-up"][ewdim6_index].GetBinContent(i)/labels["wg+jets"]["hists"][ewdim6_index].GetBinContent(i)))
     for label in labels.keys():
         if label == "no label" or label == "wg+jets" or label == "w+jets":
             continue
-        if labels[label]["hists"][0].GetBinContent(i) > 0:
-            dcard.write(" "+str(labels[label]["hists-prefire-up"][0].GetBinContent(i)/labels[label]["hists"][0].GetBinContent(i)))
+        if labels[label]["hists"][ewdim6_index].GetBinContent(i) > 0:
+            dcard.write(" "+str(labels[label]["hists-prefire-up"][ewdim6_index].GetBinContent(i)/labels[label]["hists"][ewdim6_index].GetBinContent(i)))
         else:    
             dcard.write(" -")
 
     dcard.write(" -")
     dcard.write(" -")                
     dcard.write(" -")            
-    if e_to_p["hists"][0].GetBinContent(i) > 0:
-        dcard.write(" "+str(e_to_p["hists-prefire-up"][0].GetBinContent(i)/e_to_p["hists"][0].GetBinContent(i)))
+    if e_to_p["hists"][ewdim6_index].GetBinContent(i) > 0:
+        dcard.write(" "+str(e_to_p["hists-prefire-up"][ewdim6_index].GetBinContent(i)/e_to_p["hists"][ewdim6_index].GetBinContent(i)))
     else:    
         dcard.write(" -")            
     dcard.write("\n")  
 
-    dcard.write("pileup lnN "+str(labels["wg+jets"]["hists-pileup-up"][0].GetBinContent(i)/labels["wg+jets"]["hists"][0].GetBinContent(i)))
+    dcard.write("pileup lnN "+str(labels["wg+jets"]["hists-pileup-up"][ewdim6_index].GetBinContent(i)/labels["wg+jets"]["hists"][ewdim6_index].GetBinContent(i)))
     for label in labels.keys():
         if label == "no label" or label == "wg+jets" or label == "w+jets":
             continue
-        if labels[label]["hists"][0].GetBinContent(i) > 0:
-            dcard.write(" "+str(labels[label]["hists-pileup-up"][0].GetBinContent(i)/labels[label]["hists"][0].GetBinContent(i)))
+        if labels[label]["hists"][ewdim6_index].GetBinContent(i) > 0:
+            dcard.write(" "+str(labels[label]["hists-pileup-up"][ewdim6_index].GetBinContent(i)/labels[label]["hists"][ewdim6_index].GetBinContent(i)))
         else:    
             dcard.write(" -")
 
     dcard.write(" -")
     dcard.write(" -")                
     dcard.write(" -")        
-    if e_to_p["hists"][0].GetBinContent(i) > 0:
-        dcard.write(" "+str(e_to_p["hists-pileup-up"][0].GetBinContent(i)/e_to_p["hists"][0].GetBinContent(i)))
+    if e_to_p["hists"][ewdim6_index].GetBinContent(i) > 0:
+        dcard.write(" "+str(e_to_p["hists-pileup-up"][ewdim6_index].GetBinContent(i)/e_to_p["hists"][ewdim6_index].GetBinContent(i)))
     else:    
         dcard.write(" -")        
+    dcard.write("\n")  
+
+    dcard.write("wgscale lnN "+str(wgjets_ewdim6_scale_syst.GetBinContent(i)/labels["wg+jets"]["hists"][ewdim6_index].GetBinContent(i)))
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        dcard.write(" -")
+
+    dcard.write(" -")
+    dcard.write(" -")                
+    dcard.write(" -")        
+    dcard.write(" -")        
+    dcard.write("\n")  
+
+    dcard.write("wgpdf lnN "+str(wgjets_ewdim6_pdf_syst.GetBinContent(i)/labels["wg+jets"]["hists"][ewdim6_index].GetBinContent(i)))
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        dcard.write(" -")
+
+    dcard.write(" -")
+    dcard.write(" -")                
+    dcard.write(" -")        
+    dcard.write(" -")        
+    dcard.write("\n")  
+
+    dcard.write("zgscale lnN -")
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+
+        if label == "zg+jets" and labels["zg+jets"]["hists"][ewdim6_index].GetBinContent(i) > 0:
+            dcard.write(" "+str(zgjets_ewdim6_scale_syst.GetBinContent(i)/labels["zg+jets"]["hists"][ewdim6_index].GetBinContent(i)))
+        else:    
+            dcard.write(" -")
+
+    dcard.write(" -")
+    dcard.write(" -")                
+    dcard.write(" -")        
+    dcard.write(" -")        
+    dcard.write("\n")  
+
+    dcard.write("zgpdf lnN -")
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+
+        if label == "zg+jets" and labels["zg+jets"]["hists"][ewdim6_index].GetBinContent(i) > 0:
+            dcard.write(" "+str(zgjets_ewdim6_pdf_syst.GetBinContent(i)/labels["zg+jets"]["hists"][ewdim6_index].GetBinContent(i)))
+        else:        
+            dcard.write(" -")
+
+    dcard.write(" -")
+    dcard.write(" -")                
+    dcard.write(" -")        
+    dcard.write(" -")        
     dcard.write("\n")  
