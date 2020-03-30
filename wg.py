@@ -497,15 +497,16 @@ for label in labels.keys():
             sample["tree"] = sample["file"].Get("Events")
             sample["nweightedevents"] = sample["file"].Get("nEventsGenWeighted").GetBinContent(1)
 
-
-
 if "wg+jets" in labels:
 
     labels["wg+jets"]["hists-pass-fiducial"] = {}
+    labels["wg+jets"]["hists-fail-fiducial"] = {}
 
     for i in range(len(variables)):    
         labels["wg+jets"]["hists-pass-fiducial"][i] = histogram_models[i].GetHistogram()
         labels["wg+jets"]["hists-pass-fiducial"][i].Sumw2()
+        labels["wg+jets"]["hists-fail-fiducial"][i] = histogram_models[i].GetHistogram()
+        labels["wg+jets"]["hists-fail-fiducial"][i].Sumw2()
 
     for year in years:            
         for sample in labels["wg+jets"]["samples"][year]:
@@ -1749,6 +1750,7 @@ for year in years:
 
             if label == "wg+jets":
                 rinterface = rinterface.Define("weight_pass_fiducial","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && pass_fid_selection)*base_weight")
+                rinterface = rinterface.Define("weight_fail_fiducial","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && !pass_fid_selection)*base_weight")
 
             rinterface = rinterface.Define("pileup_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + ")*pileup_up_base_weight")
             rinterface = rinterface.Define("prefire_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + ")*prefire_up_base_weight")
@@ -1877,6 +1879,7 @@ for year in years:
                 rresultptrs_e_to_p_non_res = []    
             if label == "wg+jets":
                 rresultptrs_pass_fiducial = []    
+                rresultptrs_fail_fiducial = []    
 
 
             for i in range(len(variables)):
@@ -1893,6 +1896,7 @@ for year in years:
                     rresultptrs_photon_id_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"photon_id_sf_up_weight"))
                     if label == "wg+jets":
                         rresultptrs_pass_fiducial.append(rinterface.Histo1D(histogram_models[i],variables[i],"weight_pass_fiducial"))
+                        rresultptrs_fail_fiducial.append(rinterface.Histo1D(histogram_models[i],variables[i],"weight_fail_fiducial"))
                     if label != "w+jets":
                         rresultptrs_jes_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"jes_up_weight"))
                         rresultptrs_jer_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"jer_up_weight"))
@@ -1953,6 +1957,7 @@ for year in years:
                     labels[label]["hists-photon-id-sf-up"][i].Add(rresultptrs_photon_id_sf_up[i].GetValue())
                     if label == "wg+jets":
                         labels[label]["hists-pass-fiducial"][i].Add(rresultptrs_pass_fiducial[i].GetValue())
+                        labels[label]["hists-fail-fiducial"][i].Add(rresultptrs_fail_fiducial[i].GetValue())
                     if label != "w+jets":
                         labels[label]["hists-jes-up"][i].Add(rresultptrs_jes_up[i].GetValue())
                         labels[label]["hists-jer-up"][i].Add(rresultptrs_jer_up[i].GetValue())
