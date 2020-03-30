@@ -47,6 +47,7 @@ dict_lumi = {"2016" : 35.9, "2017" : 41.5, "2018" : 59.6}
 
 parser = optparse.OptionParser()
 
+parser.add_option('--nthreads',dest='nthreads',default=0) #the argument to EnableImplicitMT
 parser.add_option('--userdir',dest='userdir',default='/afs/cern.ch/user/a/amlevin/') #not used now
 parser.add_option('--workdir',dest='workdir',default='/afs/cern.ch/work/a/amlevin/')
 parser.add_option('--lep',dest='lep',default='both')
@@ -212,7 +213,7 @@ import ROOT
 
 ROOT.gROOT.cd()
 
-ROOT.ROOT.EnableImplicitMT()
+ROOT.ROOT.EnableImplicitMT(int(options.nthreads))
 
 #when the TMinuit object is reused, the random seed is not reset after each fit, so the fit result can change when it is run on the same input 
 ROOT.TMinuitMinimizer.UseStaticMinuit(False)
@@ -5136,6 +5137,184 @@ if options.make_datacard:
     ws.Delete() #if we do not delete the workspace explcitly, there is a crash at the end
 
     shapes.Close()
+
+goodbins = lambda hist : filter(lambda i : i > 0, [i*int(hist.GetBinContent(i) != 0) for i in range(1,hist.GetNbinsX()+1)])
+
+uncmin = lambda up,nom : 100*(min([up.GetBinContent(i)/nom.GetBinContent(i) for i in goodbins(nom)])-1)
+
+uncmax = lambda up,nom : 100*(max([up.GetBinContent(i)/nom.GetBinContent(i) for i in goodbins(nom)])-1)
+
+statuncmin = lambda nom : 100*min([nom.GetBinError(i)/nom.GetBinContent(i) for i in goodbins(nom)])
+
+statuncmax = lambda nom : 100*max([nom.GetBinError(i)/nom.GetBinContent(i) for i in goodbins(nom)])
+
+fakephotonsyst2uncmin = lambda uplist,nom : 100*(min([abs(uplist[i-1].GetBinContent(i)/nom.GetBinContent(i)) for i in goodbins(nom)])-1)
+
+fakephotonsyst2uncmax = lambda uplist,nom : 100*(max([abs(uplist[i-1].GetBinContent(i)/nom.GetBinContent(i)) for i in goodbins(nom)])-1)
+
+print """\\begin{table}[htbp]
+\\begin{center}
+\\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+\\hline
+   & WG & ZG & top & VV & fake lepton & fake photon & double fake & e to p   \\\\
+\\hline
+\\hline
+lumi & 1.8 & 1.8 & 1.8 & 1.8 & - & - & - & - \\\\
+\\hline
+fake lepton &  - & - & - & - & 30 & - & 30 & - \\\\
+\\hline
+fake photon comp 1 &  - & - & - & - & - & %0.2f-%0.2f & - & - \\\\
+\\hline
+fake photon comp 2 &  - & - & - & - & - & %0.2f-%0.2f & - & - \\\\
+\\hline
+pileup & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & -  \\\\
+\\hline
+prefire & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & -  \\\\
+\\hline
+JES & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & -  \\\\
+\\hline
+JER & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & -  \\\\
+\\hline
+stat & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f  \\\\
+\\hline"""%(
+uncmin(fake_photon_alt["hists"][mlg_index],fake_photon["hists"][mlg_index]),
+uncmax(fake_photon_alt["hists"][mlg_index],fake_photon["hists"][mlg_index]),
+
+fakephotonsyst2uncmin(fake_photon_syst2_up,fake_photon["hists"][mlg_index]),
+fakephotonsyst2uncmax(fake_photon_syst2_up,fake_photon["hists"][mlg_index]),
+
+uncmin(labels["wg+jets"]["hists-pileup-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]),
+uncmax(labels["wg+jets"]["hists-pileup-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]),
+uncmin(labels["zg+jets"]["hists-pileup-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]),
+uncmax(labels["zg+jets"]["hists-pileup-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]),
+uncmin(labels["top+jets"]["hists-pileup-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]),
+uncmax(labels["top+jets"]["hists-pileup-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]),
+uncmin(labels["vv+jets"]["hists-pileup-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
+uncmax(labels["vv+jets"]["hists-pileup-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
+
+uncmin(labels["wg+jets"]["hists-prefire-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]),
+uncmax(labels["wg+jets"]["hists-prefire-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]),
+uncmin(labels["zg+jets"]["hists-prefire-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]),
+uncmax(labels["zg+jets"]["hists-prefire-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]),
+uncmin(labels["top+jets"]["hists-prefire-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]),
+uncmax(labels["top+jets"]["hists-prefire-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]),
+uncmin(labels["vv+jets"]["hists-prefire-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
+uncmax(labels["vv+jets"]["hists-prefire-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
+
+uncmin(labels["wg+jets"]["hists-jes-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]),
+uncmax(labels["wg+jets"]["hists-jes-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]),
+uncmin(labels["zg+jets"]["hists-jes-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]),
+uncmax(labels["zg+jets"]["hists-jes-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]),
+uncmin(labels["top+jets"]["hists-jes-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]),
+uncmax(labels["top+jets"]["hists-jes-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]),
+uncmin(labels["vv+jets"]["hists-jes-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
+uncmax(labels["vv+jets"]["hists-jes-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
+
+uncmin(labels["wg+jets"]["hists-jer-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]),
+uncmax(labels["wg+jets"]["hists-jer-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]),
+uncmin(labels["zg+jets"]["hists-jer-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]),
+uncmax(labels["zg+jets"]["hists-jer-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]),
+uncmin(labels["top+jets"]["hists-jer-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]),
+uncmax(labels["top+jets"]["hists-jer-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]),
+uncmin(labels["vv+jets"]["hists-jer-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
+uncmax(labels["vv+jets"]["hists-jer-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
+
+statuncmin(labels["wg+jets"]["hists"][mlg_index]),
+statuncmax(labels["wg+jets"]["hists"][mlg_index]),
+statuncmin(labels["zg+jets"]["hists"][mlg_index]),
+statuncmax(labels["zg+jets"]["hists"][mlg_index]),
+statuncmin(labels["top+jets"]["hists"][mlg_index]),
+statuncmax(labels["top+jets"]["hists"][mlg_index]),
+statuncmin(labels["vv+jets"]["hists"][mlg_index]),
+statuncmax(labels["vv+jets"]["hists"][mlg_index]),
+statuncmin(fake_lepton["hists"][mlg_index]),
+statuncmax(fake_lepton["hists"][mlg_index]),
+statuncmin(fake_photon["hists"][mlg_index]),
+statuncmax(fake_photon["hists"][mlg_index]),
+statuncmin(double_fake["hists"][mlg_index]),
+statuncmax(double_fake["hists"][mlg_index]),
+statuncmin(e_to_p_non_res["hists"][mlg_index]),
+statuncmax(e_to_p_non_res["hists"][mlg_index])
+)
+
+if options.lep == "muon" or options.lep == "both":
+    print """muon ID & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & -  \\\\
+\\hline
+muon iso & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & -  \\\\
+\\hline
+muon HLT & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & -  \\\\
+\\hline"""%(
+        uncmin(labels["wg+jets"]["hists-muon-id-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]),
+        uncmax(labels["wg+jets"]["hists-muon-id-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]),
+        uncmin(labels["zg+jets"]["hists-muon-id-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]),
+        uncmax(labels["zg+jets"]["hists-muon-id-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]),
+        uncmin(labels["top+jets"]["hists-muon-id-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]),
+        uncmax(labels["top+jets"]["hists-muon-id-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]),
+        uncmin(labels["vv+jets"]["hists-muon-id-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
+        uncmax(labels["vv+jets"]["hists-muon-id-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
+
+        uncmin(labels["wg+jets"]["hists-muon-iso-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]),
+        uncmax(labels["wg+jets"]["hists-muon-iso-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]),
+        uncmin(labels["zg+jets"]["hists-muon-iso-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]),
+        uncmax(labels["zg+jets"]["hists-muon-iso-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]),
+        uncmin(labels["top+jets"]["hists-muon-iso-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]),
+        uncmax(labels["top+jets"]["hists-muon-iso-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]),
+        uncmin(labels["vv+jets"]["hists-muon-iso-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
+        uncmax(labels["vv+jets"]["hists-muon-iso-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
+
+        uncmin(labels["wg+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]),
+        uncmax(labels["wg+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]),
+        uncmin(labels["zg+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]),
+        uncmax(labels["zg+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]),
+        uncmin(labels["top+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]),
+        uncmax(labels["top+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]),
+        uncmin(labels["vv+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
+        uncmax(labels["vv+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index])
+    )
+elif options.lep == "electron" or options.lep == "both":
+    print """electron reco & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & -  \\\\
+\\hline
+electron ID and iso & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & -  \\\\
+\\hline
+electron HLT & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & -  \\\\
+\\hline"""%(
+        uncmin(labels["wg+jets"]["hists-muon-reco-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]),
+        uncmax(labels["wg+jets"]["hists-muon-reco-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]),
+        uncmin(labels["zg+jets"]["hists-muon-reco-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]),
+        uncmax(labels["zg+jets"]["hists-muon-reco-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]),
+        uncmin(labels["top+jets"]["hists-muon-reco-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]),
+        uncmax(labels["top+jets"]["hists-muon-reco-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]),
+        uncmin(labels["vv+jets"]["hists-muon-reco-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
+        uncmax(labels["vv+jets"]["hists-muon-reco-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
+
+        uncmin(labels["wg+jets"]["hists-muon-id-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]),
+        uncmax(labels["wg+jets"]["hists-muon-id-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]),
+        uncmin(labels["zg+jets"]["hists-muon-id-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]),
+        uncmax(labels["zg+jets"]["hists-muon-id-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]),
+        uncmin(labels["top+jets"]["hists-muon-id-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]),
+        uncmax(labels["top+jets"]["hists-muon-id-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]),
+        uncmin(labels["vv+jets"]["hists-muon-id-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
+        uncmax(labels["vv+jets"]["hists-muon-id-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
+
+        uncmin(labels["wg+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]),
+        uncmax(labels["wg+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]),
+        uncmin(labels["zg+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]),
+        uncmax(labels["zg+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]),
+        uncmin(labels["top+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]),
+        uncmax(labels["top+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]),
+        uncmin(labels["vv+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
+        uncmax(labels["vv+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index])
+    )
+else:
+    assert(0)
+
+print """
+\\end{tabular}
+\\end{center}
+\\caption{}
+\\label{tab:wg_n_sig_unc}
+\\end{table}
+"""
 
 if not options.ewdim6:
     sys.exit(0)
