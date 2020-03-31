@@ -7,6 +7,7 @@
 #include <map>
 #include <vector>
 #include <cstring>
+#include "Compression.h"
 
 void add_puppimet_uncertainties (TString infile, TString outfile, TString puppimetfiles) {
 
@@ -17,6 +18,8 @@ void add_puppimet_uncertainties (TString infile, TString outfile, TString puppim
     TFile fout(outfile,"recreate");
 
     fout.cd();
+
+    fout.SetCompressionAlgorithm(ROOT::kLZMA);
 
     TH1D * nEvents;
     TH1D * nEventsGenWeighted;
