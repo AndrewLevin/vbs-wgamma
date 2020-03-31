@@ -89,23 +89,37 @@ class wgFiducialProducer(Module):
 
         if n_gen_leptons >= 1 and n_gen_photons >= 1:
 #            if deltaR(genparts[gen_lepton_index].eta,genparts[gen_lepton_index].phi,genparts[gen_photon_index].eta,genparts[gen_photon_index].phi) > 0.5 and genparts[gen_lepton_index].pt > 25 and genparts[gen_photon_index].pt > 25 and abs(genparts[gen_lepton_index].eta) < 2.5 and abs(genparts[gen_photon_index].eta) < 2.5 and event.GenMET_pt > 40:
-            if deltaR(genparts[gen_lepton_index].eta,genparts[gen_lepton_index].phi,genparts[gen_photon_index].eta,genparts[gen_photon_index].phi) > 0.5 and genparts[gen_lepton_index].pt > 25 and genparts[gen_photon_index].pt > 25 and abs(genparts[gen_lepton_index].eta) < 2.5 and abs(genparts[gen_photon_index].eta) < 2.5 and event.GenMET_pt > 40 and (genparts[gen_photon_index].statusFlags & (1 << 0) == (1 << 0) and ((genparts[gen_lepton_index].statusFlags & (1 << 0) == (1 << 0)) or (genparts[gen_lepton_index].statusFlags & (1 << 5) == (1 << 5)))):
+#            if deltaR(genparts[gen_lepton_index].eta,genparts[gen_lepton_index].phi,genparts[gen_photon_index].eta,genparts[gen_photon_index].phi) > 0.5 and genparts[gen_lepton_index].pt > 25 and genparts[gen_photon_index].pt > 25 and abs(genparts[gen_lepton_index].eta) < 2.5 and abs(genparts[gen_photon_index].eta) < 2.5 and event.GenMET_pt > 40 and (genparts[gen_photon_index].statusFlags & (1 << 0) == (1 << 0) and ((genparts[gen_lepton_index].statusFlags & (1 << 0) == (1 << 0)) or (genparts[gen_lepton_index].statusFlags & (1 << 5) == (1 << 5)))):
+            if deltaR(genparts[gen_lepton_index].eta,genparts[gen_lepton_index].phi,genparts[gen_photon_index].eta,genparts[gen_photon_index].phi) > 0.5 and genparts[gen_lepton_index].pt > 25 and genparts[gen_photon_index].pt > 25 and abs(genparts[gen_lepton_index].eta) < 2.5 and abs(genparts[gen_photon_index].eta) < 2.5 and (genparts[gen_photon_index].statusFlags & (1 << 0) == (1 << 0) and ((genparts[gen_lepton_index].statusFlags & (1 << 0) == (1 << 0)) or (genparts[gen_lepton_index].statusFlags & (1 << 5) == (1 << 5)))):
                 pass_fid_selection = True
 
         if pass_fid_selection:    
             self.out.fillBranch("pass_fid_selection",1)
-            self.out.fillBranch("fid_met_pt",event.GenMET_pt)
-            self.out.fillBranch("fid_met_phi",event.GenMET_phi)
+        else:    
+            self.out.fillBranch("pass_fid_selection",0)
+
+        self.out.fillBranch("fid_met_pt",event.GenMET_pt)
+        self.out.fillBranch("fid_met_phi",event.GenMET_phi)
+        if n_gen_leptons >= 1:
             self.out.fillBranch("fid_lepton_pt",genparts[gen_lepton_index].pt)
             self.out.fillBranch("fid_lepton_eta",genparts[gen_lepton_index].eta)
             self.out.fillBranch("fid_lepton_phi",genparts[gen_lepton_index].phi)
             self.out.fillBranch("fid_lepton_mass",genparts[gen_lepton_index].mass)
+        else:    
+            self.out.fillBranch("fid_lepton_pt",0)
+            self.out.fillBranch("fid_lepton_eta",0)
+            self.out.fillBranch("fid_lepton_phi",0)
+            self.out.fillBranch("fid_lepton_mass",0)
+        if n_gen_photons >= 1:
             self.out.fillBranch("fid_photon_pt",genparts[gen_photon_index].pt)
             self.out.fillBranch("fid_photon_eta",genparts[gen_photon_index].eta)
             self.out.fillBranch("fid_photon_phi",genparts[gen_photon_index].phi)
             self.out.fillBranch("fid_photon_mass",genparts[gen_photon_index].mass)
         else:    
-            self.out.fillBranch("pass_fid_selection",0)
+            self.out.fillBranch("fid_photon_pt",0)
+            self.out.fillBranch("fid_photon_eta",0)
+            self.out.fillBranch("fid_photon_phi",0)
+            self.out.fillBranch("fid_photon_mass",0)
 
         return True
 
