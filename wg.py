@@ -3200,6 +3200,49 @@ print "data = "+str(data_integral)+" +/- "+str(data_integral_error)
 print "e_to_p = "+str(e_to_p_integral)+" +/- "+str(e_to_p_integral_error)
 print "e_to_p_non_res = "+str(e_to_p_non_res_integral)+" +/- "+str(e_to_p_non_res_integral_error)
 
+
+print """
+\begin{table}[htbp]
+\begin{center}
+\begin{tabular}{|c|c|}
+\hline
+process & expected number of events  \\
+\hline \hline
+$W\gamma$ & $%0.2f \pm %0.2f$ \\
+\hline
+$W\gamma$ out & $%0.2f \pm %0.2f$ \\
+\hline
+$Z\gamma$ & $%0.2f \pm %0.2f$ \\
+\hline
+top & $%0.2f \pm %0.2f$ \\
+\hline
+$VV$ & $%0.2f \pm %0.2f$ \\
+\hline
+fake photon & $%0.2f \pm %0.2f$ \\
+\hline
+fake lepton & $%0.2f \pm %0.2f$ \\
+\hline
+double fake & $%0.2f \pm %0.2f$ \\
+\hline
+electron to photon & $%0.2f \pm %0.2f$ \\
+\hline
+\end{tabular}
+\end{center}
+\caption{Number of background expected events per category in the %s channel. The uncertainty is statistical. $W\gamma$ and $W\gamma$ out are the contributions to the signal region from the $W\gamma$ process originating from inside and outside the fiducial region, respectively.}
+\label{tab:%s_n_background_events}
+\end{table}
+"""%(
+wg_jets_fid_integral,float(wg_jets_fid_integral_error),
+wg_jets_nonfid_integral,float(wg_jets_nonfid_integral_error),
+zg_jets_integral,float(zg_jets_integral_error),
+top_jets_integral,float(top_jets_integral_error),
+vv_jets_integral,float(vv_jets_integral_error),
+fake_photon_integral,float(fake_photon_integral_error),
+fake_lepton_integral,float(fake_lepton_integral_error),
+double_fake_integral,float(double_fake_integral_error),
+e_to_p_integral,float(e_to_p_integral_error),options.lep,options.lep
+)
+
 if options.fit:
     print "fit_results[\"bwcb_norm\"] = "+str(fit_results["bwcb_norm"])
 
@@ -5604,11 +5647,11 @@ JER & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & -  \\\
 \\hline
 stat & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f  \\\\
 \\hline"""%(
-uncmin(wgjets_scale_syst,labels["wg+jets"]["hists"][mlg_index]),
-uncmax(wgjets_scale_syst,labels["wg+jets"]["hists"][mlg_index]),
+uncmin(wgjets_pass_fiducial_scale_syst,labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
+uncmax(wgjets_pass_fiducial_scale_syst,labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
 
-uncmin(wgjets_pdf_syst,labels["wg+jets"]["hists"][mlg_index]),
-uncmax(wgjets_pdf_syst,labels["wg+jets"]["hists"][mlg_index]),
+uncmin(wgjets_pass_fiducial_pdf_syst,labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
+uncmax(wgjets_pass_fiducial_pdf_syst,labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
 
 uncmin(zgjets_scale_syst,labels["zg+jets"]["hists"][mlg_index]),
 uncmax(zgjets_scale_syst,labels["zg+jets"]["hists"][mlg_index]),
@@ -5622,8 +5665,8 @@ uncmax(fake_photon_alt["hists"][mlg_index],fake_photon["hists"][mlg_index]),
 fakephotonsyst2uncmin(fake_photon_syst2_up,fake_photon["hists"][mlg_index]),
 fakephotonsyst2uncmax(fake_photon_syst2_up,fake_photon["hists"][mlg_index]),
 
-uncmin(labels["wg+jets"]["hists-pileup-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]),
-uncmax(labels["wg+jets"]["hists-pileup-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]),
+uncmin(labels["wg+jets"]["hists-pass-fiducial-pileup-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
+uncmax(labels["wg+jets"]["hists-pass-fiducial-pileup-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
 uncmin(labels["zg+jets"]["hists-pileup-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]),
 uncmax(labels["zg+jets"]["hists-pileup-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]),
 uncmin(labels["top+jets"]["hists-pileup-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]),
@@ -5631,8 +5674,8 @@ uncmax(labels["top+jets"]["hists-pileup-up"][mlg_index],labels["top+jets"]["hist
 uncmin(labels["vv+jets"]["hists-pileup-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
 uncmax(labels["vv+jets"]["hists-pileup-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
 
-uncmin(labels["wg+jets"]["hists-prefire-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]),
-uncmax(labels["wg+jets"]["hists-prefire-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]),
+uncmin(labels["wg+jets"]["hists-pass-fiducial-prefire-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
+uncmax(labels["wg+jets"]["hists-pass-fiducial-prefire-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
 uncmin(labels["zg+jets"]["hists-prefire-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]),
 uncmax(labels["zg+jets"]["hists-prefire-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]),
 uncmin(labels["top+jets"]["hists-prefire-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]),
@@ -5640,8 +5683,8 @@ uncmax(labels["top+jets"]["hists-prefire-up"][mlg_index],labels["top+jets"]["his
 uncmin(labels["vv+jets"]["hists-prefire-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
 uncmax(labels["vv+jets"]["hists-prefire-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
 
-uncmin(labels["wg+jets"]["hists-jes-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]),
-uncmax(labels["wg+jets"]["hists-jes-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]),
+uncmin(labels["wg+jets"]["hists-pass-fiducial-jes-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
+uncmax(labels["wg+jets"]["hists-pass-fiducial-jes-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
 uncmin(labels["zg+jets"]["hists-jes-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]),
 uncmax(labels["zg+jets"]["hists-jes-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]),
 uncmin(labels["top+jets"]["hists-jes-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]),
@@ -5649,8 +5692,8 @@ uncmax(labels["top+jets"]["hists-jes-up"][mlg_index],labels["top+jets"]["hists"]
 uncmin(labels["vv+jets"]["hists-jes-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
 uncmax(labels["vv+jets"]["hists-jes-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
 
-uncmin(labels["wg+jets"]["hists-jer-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]),
-uncmax(labels["wg+jets"]["hists-jer-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]),
+uncmin(labels["wg+jets"]["hists-pass-fiducial-jer-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
+uncmax(labels["wg+jets"]["hists-pass-fiducial-jer-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
 uncmin(labels["zg+jets"]["hists-jer-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]),
 uncmax(labels["zg+jets"]["hists-jer-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]),
 uncmin(labels["top+jets"]["hists-jer-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]),
@@ -5658,8 +5701,8 @@ uncmax(labels["top+jets"]["hists-jer-up"][mlg_index],labels["top+jets"]["hists"]
 uncmin(labels["vv+jets"]["hists-jer-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
 uncmax(labels["vv+jets"]["hists-jer-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
 
-statuncmin(labels["wg+jets"]["hists"][mlg_index]),
-statuncmax(labels["wg+jets"]["hists"][mlg_index]),
+statuncmin(labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
+statuncmax(labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
 statuncmin(labels["zg+jets"]["hists"][mlg_index]),
 statuncmax(labels["zg+jets"]["hists"][mlg_index]),
 statuncmin(labels["top+jets"]["hists"][mlg_index]),
@@ -5683,8 +5726,8 @@ muon iso & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & -
 \\hline
 muon HLT & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & -  \\\\
 \\hline"""%(
-        uncmin(labels["wg+jets"]["hists-muon-id-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]),
-        uncmax(labels["wg+jets"]["hists-muon-id-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]),
+        uncmin(labels["wg+jets"]["hists-pass-fiducial-muon-id-sf-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
+        uncmax(labels["wg+jets"]["hists-pass-fiducial-muon-id-sf-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
         uncmin(labels["zg+jets"]["hists-muon-id-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]),
         uncmax(labels["zg+jets"]["hists-muon-id-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]),
         uncmin(labels["top+jets"]["hists-muon-id-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]),
@@ -5692,8 +5735,8 @@ muon HLT & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & -
         uncmin(labels["vv+jets"]["hists-muon-id-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
         uncmax(labels["vv+jets"]["hists-muon-id-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
 
-        uncmin(labels["wg+jets"]["hists-muon-iso-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]),
-        uncmax(labels["wg+jets"]["hists-muon-iso-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]),
+        uncmin(labels["wg+jets"]["hists-pass-fiducial-muon-iso-sf-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
+        uncmax(labels["wg+jets"]["hists-pass-fiducial-muon-iso-sf-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
         uncmin(labels["zg+jets"]["hists-muon-iso-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]),
         uncmax(labels["zg+jets"]["hists-muon-iso-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]),
         uncmin(labels["top+jets"]["hists-muon-iso-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]),
@@ -5701,8 +5744,8 @@ muon HLT & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & -
         uncmin(labels["vv+jets"]["hists-muon-iso-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
         uncmax(labels["vv+jets"]["hists-muon-iso-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
 
-        uncmin(labels["wg+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]),
-        uncmax(labels["wg+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]),
+        uncmin(labels["wg+jets"]["hists-pass-fiducial-muon-hlt-sf-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
+        uncmax(labels["wg+jets"]["hists-pass-fiducial-muon-hlt-sf-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
         uncmin(labels["zg+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]),
         uncmax(labels["zg+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]),
         uncmin(labels["top+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]),
@@ -5717,8 +5760,8 @@ electron ID and iso & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - 
 \\hline
 electron HLT & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & -  \\\\
 \\hline"""%(
-        uncmin(labels["wg+jets"]["hists-electron-reco-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]),
-        uncmax(labels["wg+jets"]["hists-electron-reco-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]),
+        uncmin(labels["wg+jets"]["hists-pass-fiducial-electron-reco-sf-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
+        uncmax(labels["wg+jets"]["hists-pass-fiducial-electron-reco-sf-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
         uncmin(labels["zg+jets"]["hists-electron-reco-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]),
         uncmax(labels["zg+jets"]["hists-electron-reco-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]),
         uncmin(labels["top+jets"]["hists-electron-reco-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]),
@@ -5726,8 +5769,8 @@ electron HLT & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & -
         uncmin(labels["vv+jets"]["hists-electron-reco-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
         uncmax(labels["vv+jets"]["hists-electron-reco-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
 
-        uncmin(labels["wg+jets"]["hists-electron-id-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]),
-        uncmax(labels["wg+jets"]["hists-electron-id-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]),
+        uncmin(labels["wg+jets"]["hists-pass-fiducial-electron-id-sf-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
+        uncmax(labels["wg+jets"]["hists-pass-fiducial-electron-id-sf-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
         uncmin(labels["zg+jets"]["hists-electron-id-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]),
         uncmax(labels["zg+jets"]["hists-electron-id-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]),
         uncmin(labels["top+jets"]["hists-electron-id-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]),
@@ -5735,8 +5778,8 @@ electron HLT & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & -
         uncmin(labels["vv+jets"]["hists-electron-id-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
         uncmax(labels["vv+jets"]["hists-electron-id-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
 
-        uncmin(labels["wg+jets"]["hists-electron-hlt-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]),
-        uncmax(labels["wg+jets"]["hists-electron-hlt-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]),
+        uncmin(labels["wg+jets"]["hists-pass-fiducial-electron-hlt-sf-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
+        uncmax(labels["wg+jets"]["hists-pass-fiducial-electron-hlt-sf-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
         uncmin(labels["zg+jets"]["hists-electron-hlt-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]),
         uncmax(labels["zg+jets"]["hists-electron-hlt-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]),
         uncmin(labels["top+jets"]["hists-electron-hlt-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]),
