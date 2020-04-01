@@ -5551,17 +5551,17 @@ if options.make_datacard:
 
 goodbins = lambda hist : filter(lambda i : i > 0, [i*int(hist.GetBinContent(i) != 0) for i in range(1,hist.GetNbinsX()+1)])
 
-uncmin = lambda up,nom : 100*(min([up.GetBinContent(i)/nom.GetBinContent(i) for i in goodbins(nom)])-1)
+uncmin = lambda up,nom : 100*(min([abs(up.GetBinContent(i)/nom.GetBinContent(i)-1) for i in goodbins(nom)]))
 
-uncmax = lambda up,nom : 100*(max([up.GetBinContent(i)/nom.GetBinContent(i) for i in goodbins(nom)])-1)
+uncmax = lambda up,nom : 100*(max([abs(up.GetBinContent(i)/nom.GetBinContent(i)-1) for i in goodbins(nom)]))
 
 statuncmin = lambda nom : 100*min([nom.GetBinError(i)/nom.GetBinContent(i) for i in goodbins(nom)])
 
 statuncmax = lambda nom : 100*max([nom.GetBinError(i)/nom.GetBinContent(i) for i in goodbins(nom)])
 
-fakephotonsyst2uncmin = lambda uplist,nom : 100*(min([abs(uplist[i-1].GetBinContent(i)/nom.GetBinContent(i)) for i in goodbins(nom)])-1)
+fakephotonsyst2uncmin = lambda uplist,nom : 100*(min([abs(uplist[i-1].GetBinContent(i)/nom.GetBinContent(i)-1) for i in goodbins(nom)]))
 
-fakephotonsyst2uncmax = lambda uplist,nom : 100*(max([abs(uplist[i-1].GetBinContent(i)/nom.GetBinContent(i)) for i in goodbins(nom)])-1)
+fakephotonsyst2uncmax = lambda uplist,nom : 100*(max([abs(uplist[i-1].GetBinContent(i)/nom.GetBinContent(i)-1) for i in goodbins(nom)]))
 
 print """\\begin{table}[htbp]
 \\begin{center}
