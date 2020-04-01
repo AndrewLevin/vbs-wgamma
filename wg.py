@@ -3149,6 +3149,12 @@ if options.closure_test:
 wg_jets_integral_error = ROOT.Double()
 wg_jets_integral = labels["wg+jets"]["hists"][mlg_index].IntegralAndError(1,labels["wg+jets"]["hists"][mlg_index].GetXaxis().GetNbins(),wg_jets_integral_error)
 
+wg_jets_fid_integral_error = ROOT.Double()
+wg_jets_fid_integral = labels["wg+jets"]["hists-pass-fiducial"][mlg_index].IntegralAndError(1,labels["wg+jets"]["hists-pass-fiducial"][mlg_index].GetXaxis().GetNbins(),wg_jets_fid_integral_error)
+
+wg_jets_nonfid_integral_error = ROOT.Double()
+wg_jets_nonfid_integral = labels["wg+jets"]["hists-fail-fiducial"][mlg_index].IntegralAndError(1,labels["wg+jets"]["hists-fail-fiducial"][mlg_index].GetXaxis().GetNbins(),wg_jets_nonfid_integral_error)
+
 zg_jets_integral_error = ROOT.Double()
 zg_jets_integral = labels["zg+jets"]["hists"][mlg_index].IntegralAndError(1,labels["zg+jets"]["hists"][mlg_index].GetXaxis().GetNbins(),zg_jets_integral_error)
 
@@ -3182,6 +3188,8 @@ fake_signal_contamination_integral = fake_signal_contamination["hists"][mlg_inde
 print "fake signal contamination = "+str(fake_signal_contamination_integral) + " +/- " +str(fake_signal_contamination_integral_error)
 
 print "wg+jets = "+str(wg_jets_integral)+" +/- "+str(wg_jets_integral_error)
+print "wg+jets fid = "+str(wg_jets_fid_integral)+" +/- "+str(wg_jets_fid_integral_error)
+print "wg+jets non-fid = "+str(wg_jets_nonfid_integral)+" +/- "+str(wg_jets_nonfid_integral_error)
 print "zg+jets = "+str(zg_jets_integral)+" +/- "+str(zg_jets_integral_error)
 print "vv+jets = "+str(vv_jets_integral)+" +/- "+str(vv_jets_integral_error)
 print "top+jets = "+str(top_jets_integral)+" +/- "+str(top_jets_integral_error)
