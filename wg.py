@@ -3111,7 +3111,7 @@ for i in range(len(variables)):
 
     if options.draw_ewdim6:
         j=j+1
-        draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,ewdim6["hists"][i],"C_{WWW} = 2.0","l")
+        draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,ewdim6["hists"][i],"C_{B} = 51","l")
 
 #set_axis_fonts(hstack,"x","m_{ll} (GeV)")
 #set_axis_fonts(hstack,"x","|\Delta \eta_{jj}|")
