@@ -5572,6 +5572,14 @@ print """\\begin{table}[htbp]
 \\hline
 lumi & 1.8 & 1.8 & 1.8 & 1.8 & - & - & - & - \\\\
 \\hline
+wgscale & %0.2f-%0.2f & - & - & - & 30 & - & 30 & - \\\\
+\\hline
+wgpdf & %0.2f-%0.2f & - & - & - & 30 & - & 30 & - \\\\
+\\hline
+zgscale & - & %0.2f-%0.2f & - & - & 30 & - & 30 & - \\\\
+\\hline
+zgpdf & - & %0.2f-%0.2f & - & - & 30 & - & 30 & - \\\\
+\\hline
 fake lepton &  - & - & - & - & 30 & - & 30 & - \\\\
 \\hline
 fake photon comp 1 &  - & - & - & - & - & %0.2f-%0.2f & - & - \\\\
@@ -5588,6 +5596,18 @@ JER & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & -  \\\
 \\hline
 stat & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f  \\\\
 \\hline"""%(
+uncmin(wgjets_scale_syst,labels["wg+jets"]["hists"][mlg_index]),
+uncmax(wgjets_scale_syst,labels["wg+jets"]["hists"][mlg_index]),
+
+uncmin(wgjets_pdf_syst,labels["wg+jets"]["hists"][mlg_index]),
+uncmax(wgjets_pdf_syst,labels["wg+jets"]["hists"][mlg_index]),
+
+uncmin(zgjets_scale_syst,labels["zg+jets"]["hists"][mlg_index]),
+uncmax(zgjets_scale_syst,labels["zg+jets"]["hists"][mlg_index]),
+
+uncmin(zgjets_pdf_syst,labels["zg+jets"]["hists"][mlg_index]),
+uncmax(zgjets_pdf_syst,labels["zg+jets"]["hists"][mlg_index]),
+
 uncmin(fake_photon_alt["hists"][mlg_index],fake_photon["hists"][mlg_index]),
 uncmax(fake_photon_alt["hists"][mlg_index],fake_photon["hists"][mlg_index]),
 
