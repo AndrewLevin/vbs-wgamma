@@ -293,7 +293,10 @@ else:
 
 assert(len(variables) == len(histogram_models))
 
-mlg_index = 0
+if args.make_all_plots:
+    mlg_index = 9
+else:
+    mlg_index = 0
 #mlg_index = 29
 
 ewdim6_samples = {
