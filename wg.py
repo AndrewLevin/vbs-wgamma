@@ -1,3 +1,6 @@
+import ROOT
+ROOT.PyConfig.IgnoreCommandLineOptions = True
+
 data_driven = True
 data_driven_correction = True
 
@@ -5,7 +8,7 @@ import json
 import sys
 import style
 
-import optparse
+import argparse
 
 from math import hypot, pi, sqrt, acos, cos, sin, atan2
 
@@ -45,51 +48,49 @@ def makeDownShape(histUp,hist):
 
 dict_lumi = {"2016" : 35.9, "2017" : 41.5, "2018" : 59.6}
 
-parser = optparse.OptionParser()
+parser = argparse.ArgumentParser()
 
-parser.add_option('--nthreads',dest='nthreads',default=0) #the argument to EnableImplicitMT
-parser.add_option('--userdir',dest='userdir',default='/afs/cern.ch/user/a/amlevin/') #not used now
-parser.add_option('--workdir',dest='workdir',default='/afs/cern.ch/work/a/amlevin/')
-parser.add_option('--lep',dest='lep',default='both')
-parser.add_option('--year',dest='year',default='all')
-parser.add_option('--zveto',dest='zveto',action='store_true',default=False)
-parser.add_option('--phoeta',dest='phoeta',default='both')
-parser.add_option('--overflow',dest='overflow',action='store_true',default=False)
-parser.add_option('--make_datacard',dest='make_datacard',action='store_true',default=False)
-parser.add_option('--make_cut_and_count_datacard',dest='make_cut_and_count_datacard',action='store_true',default=False)
-parser.add_option('--fit',dest='fit',action='store_true',default=False)
-parser.add_option('--closure_test',dest='closure_test',action='store_true',default=False)
-parser.add_option('--no_pdf_var_for_2017_and_2018',dest='no_pdf_var_for_2017_and_2018',action='store_true',default=False)
-parser.add_option('--no_wjets_for_2017_and_2018',dest='no_wjets_for_2017_and_2018',action='store_true',default=False)
-parser.add_option('--ewdim6',dest='ewdim6',action='store_true',default=False)
-parser.add_option('--use_wjets_for_fake_photon',dest='use_wjets_for_fake_photon',action='store_true',default=False)
-parser.add_option('--float_fake_sig_cont',dest='float_fake_sig_cont',action='store_true',default=False)
-parser.add_option('--draw_ewdim6',dest='draw_ewdim6',action='store_true',default=False)
-parser.add_option('--ewdim6_scaling_only',dest='ewdim6_scaling_only',action='store_true',default=False)
-parser.add_option('--make_plots',dest='make_plots',action='store_true',default=False)
-parser.add_option('--blind',dest='blind',action='store_true',default=False)
+parser.add_argument('--nthreads',dest='nthreads',default=0) #the argument to EnableImplicitMT
+parser.add_argument('--userdir',dest='userdir',default='/afs/cern.ch/user/a/amlevin/') #not used now
+parser.add_argument('--workdir',dest='workdir',default='/afs/cern.ch/work/a/amlevin/')
+parser.add_argument('--lep',dest='lep',default='both')
+parser.add_argument('--year',dest='year',default='all')
+parser.add_argument('--zveto',dest='zveto',action='store_true',default=False)
+parser.add_argument('--phoeta',dest='phoeta',default='both')
+parser.add_argument('--overflow',dest='overflow',action='store_true',default=False)
+parser.add_argument('--make_datacard',dest='make_datacard',action='store_true',default=False)
+parser.add_argument('--make_cut_and_count_datacard',dest='make_cut_and_count_datacard',action='store_true',default=False)
+parser.add_argument('--fit',dest='fit',action='store_true',default=False)
+parser.add_argument('--closure_test',dest='closure_test',action='store_true',default=False)
+parser.add_argument('--no_pdf_var_for_2017_and_2018',dest='no_pdf_var_for_2017_and_2018',action='store_true',default=False)
+parser.add_argument('--no_wjets_for_2017_and_2018',dest='no_wjets_for_2017_and_2018',action='store_true',default=False)
+parser.add_argument('--ewdim6',dest='ewdim6',action='store_true',default=False)
+parser.add_argument('--use_wjets_for_fake_photon',dest='use_wjets_for_fake_photon',action='store_true',default=False)
+parser.add_argument('--float_fake_sig_cont',dest='float_fake_sig_cont',action='store_true',default=False)
+parser.add_argument('--draw_ewdim6',dest='draw_ewdim6',action='store_true',default=False)
+parser.add_argument('--ewdim6_scaling_only',dest='ewdim6_scaling_only',action='store_true',default=False)
+parser.add_argument('--make_plots',dest='make_plots',action='store_true',default=False)
+parser.add_argument('--blind',dest='blind',action='store_true',default=False)
+parser.add_argument('-o',dest='outputdir',default="/eos/user/a/amlevin/www/tmp/")
 
-parser.add_option('-i',dest='inputfile')
-parser.add_option('-o',dest='outputdir',default="/eos/user/a/amlevin/www/tmp/")
+args = parser.parse_args()
 
-(options,args) = parser.parse_args()
-
-if options.ewdim6_scaling_only and not options.ewdim6:
+if args.ewdim6_scaling_only and not args.ewdim6:
     assert(0)
 
-if options.fit and not options.lep == "electron":
+if args.fit and not args.lep == "electron":
     assert(0)
 
-if options.year == "2016":
+if args.year == "2016":
     years = ["2016"]
     totallumi=dict_lumi["2016"]
-elif options.year == "2017":
+elif args.year == "2017":
     years=["2017"]
     totallumi=dict_lumi["2017"]
-elif options.year == "2018":
+elif args.year == "2018":
     years=["2018"]
     totallumi=dict_lumi["2018"]
-elif options.year == "run2":
+elif args.year == "run2":
     years=["2016","2017","2018"]
     totallumi=dict_lumi["2016"]+dict_lumi["2017"]+dict_lumi["2018"]
 else:
@@ -111,22 +112,22 @@ chiso_cut_2017_endcap = 1.051
 chiso_cut_2018_barrel = 1.141
 chiso_cut_2018_endcap = 1.051
 
-if options.lep == "muon":
+if args.lep == "muon":
     lepton_name = "muon"
-elif options.lep == "electron":
+elif args.lep == "electron":
     lepton_name = "electron"
-elif options.lep == "both":
+elif args.lep == "both":
     lepton_name = "both"
 else:
     assert(0)
 
-if options.phoeta == "barrel":
+if args.phoeta == "barrel":
     photon_eta_min = 0
     photon_eta_max = 1.5
-elif options.phoeta == "endcap":
+elif args.phoeta == "endcap":
     photon_eta_min = 1.5
     photon_eta_max = 2.5
-elif options.phoeta == "both":
+elif args.phoeta == "both":
     photon_eta_min = 0
     photon_eta_max = 2.5
 else:
@@ -155,14 +156,14 @@ def get_postfilter_selection_string(syst="nominal"):
 def get_filter_string(year,isdata=True,lep=None):
 
     if lep == None:
-        lep = options.lep
+        lep = args.lep
 
     if not isdata:
         puppimet_cutstring = "(puppimet > 40 || puppimetJESUp > 40 || puppimetJERUp > 40)"
     else:    
         puppimet_cutstring = "(puppimet > 40)"
 
-    if options.zveto:
+    if args.zveto:
         zveto_cutstring = "(mlg < 60 || mlg > 120)"
     else:
         zveto_cutstring = "1"
@@ -209,16 +210,14 @@ def pass_json(run,lumi):
 
     return False    
 
-import ROOT
-
 ROOT.gROOT.cd()
 
-ROOT.ROOT.EnableImplicitMT(int(options.nthreads))
+ROOT.ROOT.EnableImplicitMT(int(args.nthreads))
 
 #when the TMinuit object is reused, the random seed is not reset after each fit, so the fit result can change when it is run on the same input 
 ROOT.TMinuitMinimizer.UseStaticMinuit(False)
 
-if options.closure_test:
+if args.closure_test:
     from wg_labels_closuretest import labels
 else:
     from wg_labels import labels
@@ -311,9 +310,9 @@ mlg_index = 9
 #mlg_index = 29
 
 ewdim6_samples = {
-"2016" : [{"xs" : 5.248, "filename" : options.workdir+"/data/wg/2016/1June2019/wgjetsewdim6.root"}],
-"2017" : [{"xs" : 5.248, "filename" : options.workdir+"/data/wg/2016/1June2019/wgjetsewdim6.root"}],
-"2018" : [{"xs" : 5.248, "filename" : options.workdir+"/data/wg/2016/1June2019/wgjetsewdim6.root"}]
+"2016" : [{"xs" : 5.248, "filename" : args.workdir+"/data/wg/2016/1June2019/wgjetsewdim6.root"}],
+"2017" : [{"xs" : 5.248, "filename" : args.workdir+"/data/wg/2016/1June2019/wgjetsewdim6.root"}],
+"2018" : [{"xs" : 5.248, "filename" : args.workdir+"/data/wg/2016/1June2019/wgjetsewdim6.root"}]
 }
 
 for year in years:
@@ -599,16 +598,16 @@ if "wg+jets" in labels:
             for i in range(0,8):
                 labels["wg+jets"]["samples"][year][0]["nweightedevents_qcdscaleweight"+str(i)]=labels["wg+jets"]["samples"][year][0]["file"].Get("nEventsGenWeighted_PassFidSelection_QCDScaleWeight"+str(i)).GetBinContent(1)
 
-                if labels["wg+jets"]["samples"][year][0]["filename"] == options.workdir+"/data/wg/2016/1June2019/wgjets.root" or labels["wg+jets"]["samples"][year][0]["filename"] == options.workdir+"/data/wg/2016/1June2019jetunc/wgjets.root":
+                if labels["wg+jets"]["samples"][year][0]["filename"] == args.workdir+"/data/wg/2016/1June2019/wgjets.root" or labels["wg+jets"]["samples"][year][0]["filename"] == args.workdir+"/data/wg/2016/1June2019jetunc/wgjets.root":
                     labels["wg+jets"]["samples"][year][0]["nweightedevents_qcdscaleweight"+str(i)] *= 2
                     
         if labels["wg+jets"]["syst-pdf"]:
             for i in range(1,32):
-                if (year == "2017" or year == "2018") and options.no_pdf_var_for_2017_and_2018:
+                if (year == "2017" or year == "2018") and args.no_pdf_var_for_2017_and_2018:
                     continue
                 labels["wg+jets"]["samples"][year][0]["nweightedevents_pdfweight"+str(i)]=labels["wg+jets"]["samples"][year][0]["file"].Get("nEventsGenWeighted_PassFidSelection_PDFWeight"+str(i)).GetBinContent(1)
 
-                if labels["wg+jets"]["samples"][year][0]["filename"] == options.workdir+"/data/wg/2016/1June2019/wgjets.root" or labels["wg+jets"]["samples"][year][0]["filename"] == options.workdir+"/data/wg/2016/1June2019jet/wgjets.root":
+                if labels["wg+jets"]["samples"][year][0]["filename"] == args.workdir+"/data/wg/2016/1June2019/wgjets.root" or labels["wg+jets"]["samples"][year][0]["filename"] == args.workdir+"/data/wg/2016/1June2019jet/wgjets.root":
                     labels["wg+jets"]["samples"][year][0]["nweightedevents_pdfweight"+str(i)] *= 2
 
 
@@ -1283,7 +1282,7 @@ ROOT.gInterpreter.Declare(eff_scale_factor_cpp)
 #ewdim6_index = 30
 ewdim6_index = 0
 
-if options.ewdim6:
+if args.ewdim6:
 
     sm_lhe_weight = 0
 
@@ -1485,7 +1484,7 @@ if options.ewdim6:
     draw_legend(xpositions[j]-0.05,0.84 - ypositions[j]*yoffset,sm_hist,"SM unweighted","l")
     j=j+1
     draw_legend(xpositions[j]-0.05,0.84 - ypositions[j]*yoffset,sm_lhe_weight_hist,"SM reweighted","l")
-    c.SaveAs(options.outputdir + "/" + "sm_reweighting.png")
+    c.SaveAs(args.outputdir + "/" + "sm_reweighting.png")
 
     cwww_scaling_hists = {}
     cw_scaling_hists = {}
@@ -1560,7 +1559,7 @@ if options.ewdim6:
 
     cpw_scaling_outfile.Close()
 
-if options.ewdim6_scaling_only:
+if args.ewdim6_scaling_only:
     sys.exit(1)
 
 data_mlg_tree = ROOT.TTree()
@@ -1583,28 +1582,28 @@ for year in years:
         assert(0)
 
     if lepton_name == "muon":
-        if not options.closure_test:
-            data_filename = options.workdir+"/data/wg/"+year+"/1June2019/single_muon.root"
+        if not args.closure_test:
+            data_filename = args.workdir+"/data/wg/"+year+"/1June2019/single_muon.root"
         else:
-            data_filename = options.workdir+"/data/wg/"+year+"/1June2019/wjets.root"
+            data_filename = args.workdir+"/data/wg/"+year+"/1June2019/wjets.root"
 
     elif lepton_name == "electron":
-        if not options.closure_test:
+        if not args.closure_test:
             if year != "2018":
-                data_filename = options.workdir+"/data/wg/"+year+"/1June2019/single_electron.root"
+                data_filename = args.workdir+"/data/wg/"+year+"/1June2019/single_electron.root"
             else:    
-                data_filename = options.workdir+"/data/wg/"+year+"/1June2019/egamma.root"
+                data_filename = args.workdir+"/data/wg/"+year+"/1June2019/egamma.root"
         else:
-            data_filename = options.workdir+"/data/wg/"+year+"/1June2019/wjets.root"
+            data_filename = args.workdir+"/data/wg/"+year+"/1June2019/wjets.root"
 
     elif lepton_name == "both":
-        if not options.closure_test:
+        if not args.closure_test:
             if year != "2018":
-                data_filename = options.workdir+"/data/wg/"+year+"/1June2019/data.root"
+                data_filename = args.workdir+"/data/wg/"+year+"/1June2019/data.root"
             else:
-                data_filename = options.workdir+"/data/wg/"+year+"/1June2019/data.root"
+                data_filename = args.workdir+"/data/wg/"+year+"/1June2019/data.root"
         else:
-            data_filename = options.workdir+"/data/wg/"+year+"/1June2019/wjets.root"
+            data_filename = args.workdir+"/data/wg/"+year+"/1June2019/wjets.root"
     else:
         assert(0)
 
@@ -1652,7 +1651,7 @@ for year in years:
     rinterface = rinterface.Define("double_fake_alt_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 0 ? get_fake_lepton_weight(lepton_eta,lepton_pt,\""+year+"\",lepton_pdg_id)*get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,\"alt\") : 0") 
     rinterface = rinterface.Define("double_fake_stat_up_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 0 ? get_fake_lepton_weight(lepton_eta,lepton_pt,\""+year+"\",lepton_pdg_id)*get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,\"stat_up\") : 0") 
 
-    if options.closure_test:
+    if args.closure_test:
         if year == "2016" or year == "2017":    
             prefire_weight_string = "PrefireWeight"
         else:    
@@ -1678,7 +1677,7 @@ for year in years:
     rresultptrs_double_fake_stat_up = []    
 
     for i in range(len(variables)):
-        if options.closure_test:
+        if args.closure_test:
             rresultptrs.append(rinterface.Histo1D(histogram_models[i],variables[i],"closure_test_weight"))
             rresultptrs_fake_photon.append(rinterface.Histo1D(histogram_models[i],variables[i],"closure_test_fake_photon_weight"))
         else:    
@@ -1699,7 +1698,7 @@ for year in years:
             fake_photon_2016["hists"][i].Add(rresultptrs_fake_photon[i].GetValue())
         fake_photon["hists"][i].Add(rresultptrs_fake_photon[i].GetValue())
 
-        if options.closure_test:
+        if args.closure_test:
             continue
 
         fake_photon_alt["hists"][i].Add(rresultptrs_fake_photon_alt[i].GetValue())
@@ -1727,7 +1726,7 @@ for year in years:
 #        if label != "w+jets":
 #            continue
 
-        if label == "w+jets" and (year == "2017" or year == "2018") and options.no_wjets_for_2017_and_2018:
+        if label == "w+jets" and (year == "2017" or year == "2018") and args.no_wjets_for_2017_and_2018:
             continue
 
         if year == "2016":
@@ -1857,7 +1856,7 @@ for year in years:
                 if labels["wg+jets"]["syst-scale"]:
                     for i in range(0,8):
                         #this sample has a bug that causes the scale weight to be 1/2 the correct value
-                        if sample["filename"] == options.workdir+"/data/wg/2016/1June2019/wgjets.root" or sample["filename"] == options.workdir+"/data/wg/2016/1June2019jetunc/wgjets.root":
+                        if sample["filename"] == args.workdir+"/data/wg/2016/1June2019/wgjets.root" or sample["filename"] == args.workdir+"/data/wg/2016/1June2019jetunc/wgjets.root":
                             rinterface = rinterface.Define("pass_fiducial_scale"+str(i)+"_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && (pass_fid_selection && fid_met_pt > 0))*base_weight*LHEScaleWeight["+str(i)+"]*2")
                             rinterface = rinterface.Define("fail_fiducial_scale"+str(i)+"_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && !(pass_fid_selection && fid_met_pt > 0))*base_weight*LHEScaleWeight["+str(i)+"]*2")
                         else:    
@@ -1866,10 +1865,10 @@ for year in years:
 
                 if labels["wg+jets"]["syst-pdf"]:
                     for i in range(0,32):
-                        if (year == "2017" or year == "2018") and options.no_pdf_var_for_2017_and_2018:
+                        if (year == "2017" or year == "2018") and args.no_pdf_var_for_2017_and_2018:
                             continue
                         #this sample has a bug that causes the scale weight to be 1/2 the correct value
-                        if sample["filename"] == options.workdir+"/data/wg/2016/1June2019/wgjets.root" or sample["filename"] == options.workdir+"/data/wg/2016/1June2019jetunc/wgjets.root":
+                        if sample["filename"] == args.workdir+"/data/wg/2016/1June2019/wgjets.root" or sample["filename"] == args.workdir+"/data/wg/2016/1June2019jetunc/wgjets.root":
                             rinterface = rinterface.Define("pass_fiducial_pdf"+str(i)+"_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && (pass_fid_selection && fid_met_pt > 0))*base_weight*LHEPdfWeight["+str(i+1)+"]*2")
                             rinterface = rinterface.Define("fail_fiducial_pdf"+str(i)+"_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && !(pass_fid_selection && fid_met_pt > 0))*base_weight*LHEPdfWeight["+str(i+1)+"]*2")
                         else:    
@@ -1893,17 +1892,17 @@ for year in years:
             if labels[label]["syst-scale"]:
                 for i in range(0,8):
                      #this sample has a bug that causes the scale weight to be 1/2 the correct value
-                    if sample["filename"] == options.workdir+"/data/wg/2016/1June2019/wgjets.root" or sample["filename"] == options.workdir+"/data/wg/2016/1June2019jetunc/wgjets.root":
+                    if sample["filename"] == args.workdir+"/data/wg/2016/1June2019/wgjets.root" or sample["filename"] == args.workdir+"/data/wg/2016/1June2019jetunc/wgjets.root":
                         rinterface = rinterface.Define("scale"+str(i)+"_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + ")*base_weight*LHEScaleWeight["+str(i)+"]*2")
                     else:    
                         rinterface = rinterface.Define("scale"+str(i)+"_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + ")*base_weight*LHEScaleWeight["+str(i)+"]")
 
             if labels[label]["syst-pdf"]:
                 for i in range(0,32):
-                    if (year == "2017" or year == "2018") and options.no_pdf_var_for_2017_and_2018:
+                    if (year == "2017" or year == "2018") and args.no_pdf_var_for_2017_and_2018:
                         continue
                     #this sample has a bug that causes the scale weight to be 1/2 the correct value
-                    if sample["filename"] == options.workdir+"/data/wg/2016/1June2019/wgjets.root" or sample["filename"] == options.workdir+"/data/wg/2016/1June2019jetunc/wgjets.root":
+                    if sample["filename"] == args.workdir+"/data/wg/2016/1June2019/wgjets.root" or sample["filename"] == args.workdir+"/data/wg/2016/1June2019jetunc/wgjets.root":
                         rinterface = rinterface.Define("pdf"+str(i)+"_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + ")*base_weight*LHEPdfWeight["+str(i+1)+"]*2")
                     else:    
                         rinterface = rinterface.Define("pdf"+str(i)+"_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + ")*base_weight*LHEPdfWeight["+str(i+1)+"]")
@@ -1958,7 +1957,7 @@ for year in years:
             if labels[label]["syst-pdf"]:
                 rresultptrs_pdf = []    
                 for i in range(0,32):
-                    if (year == "2017" or year == "2018") and options.no_pdf_var_for_2017_and_2018:
+                    if (year == "2017" or year == "2018") and args.no_pdf_var_for_2017_and_2018:
                         continue
                     rresultptrs_pdf.append([])    
 
@@ -2035,7 +2034,7 @@ for year in years:
                     rresultptrs_pass_fiducial_pdf = []    
                     rresultptrs_fail_fiducial_pdf = []    
                     for i in range(0,32):
-                        if (year == "2017" or year == "2018") and options.no_pdf_var_for_2017_and_2018:
+                        if (year == "2017" or year == "2018") and args.no_pdf_var_for_2017_and_2018:
                             continue
                         rresultptrs_pass_fiducial_pdf.append([])  
                         rresultptrs_fail_fiducial_pdf.append([])  
@@ -2083,7 +2082,7 @@ for year in years:
                                 rresultptrs_fail_fiducial_scale[j].append(rinterface.Histo1D(histogram_models[i],variables[i],"fail_fiducial_scale"+str(j)+"_weight"))
                         if labels["wg+jets"]["syst-pdf"]:
                             for j in range(0,32):
-                                if (year == "2017" or year == "2018") and options.no_pdf_var_for_2017_and_2018:
+                                if (year == "2017" or year == "2018") and args.no_pdf_var_for_2017_and_2018:
                                     continue
                                 rresultptrs_pass_fiducial_pdf[j].append(rinterface.Histo1D(histogram_models[i],variables[i],"pass_fiducial_pdf"+str(j)+"_weight"))
                                 rresultptrs_fail_fiducial_pdf[j].append(rinterface.Histo1D(histogram_models[i],variables[i],"fail_fiducial_pdf"+str(j)+"_weight"))
@@ -2113,7 +2112,7 @@ for year in years:
                         rresultptrs_scale[j].append(rinterface.Histo1D(histogram_models[i],variables[i],"scale"+str(j)+"_weight"))
                 if labels[label]["syst-pdf"]:
                     for j in range(0,32):
-                        if (year == "2017" or year == "2018") and options.no_pdf_var_for_2017_and_2018:
+                        if (year == "2017" or year == "2018") and args.no_pdf_var_for_2017_and_2018:
                             continue
                         rresultptrs_pdf[j].append(rinterface.Histo1D(histogram_models[i],variables[i],"pdf"+str(j)+"_weight"))
 
@@ -2178,7 +2177,7 @@ for year in years:
 
                         if labels["wg+jets"]["syst-pdf"]:
                             for j in range(0,32):
-                                if (year == "2017" or year == "2018") and options.no_pdf_var_for_2017_and_2018:
+                                if (year == "2017" or year == "2018") and args.no_pdf_var_for_2017_and_2018:
                                     continue
                                 labels["wg+jets"]["hists-pass-fiducial-pdf-variation"+str(j)][i].Add(rresultptrs_pass_fiducial_pdf[j][i].GetValue())
                                 labels["wg+jets"]["hists-fail-fiducial-pdf-variation"+str(j)][i].Add(rresultptrs_fail_fiducial_pdf[j][i].GetValue())
@@ -2200,7 +2199,7 @@ for year in years:
 
                 if labels[label]["syst-pdf"]:
                     for j in range(0,32):
-                        if (year == "2017" or year == "2018") and options.no_pdf_var_for_2017_and_2018:
+                        if (year == "2017" or year == "2018") and args.no_pdf_var_for_2017_and_2018:
                             continue
                         labels[label]["hists-pdf-variation"+str(j)][i].Add(rresultptrs_pdf[j][i].GetValue())
 
@@ -2252,7 +2251,7 @@ for year in years:
 for hist in hists:
     hists.Print("all")
 
-if options.no_wjets_for_2017_and_2018 and "w+jets" in labels:
+if args.no_wjets_for_2017_and_2018 and "w+jets" in labels:
     for i in range(len(variables)):
         labels["w+jets"]["hists"][i].Scale(fake_photon["hists"][i].Integral()/fake_photon_2016["hists"][i].Integral())
 #        wjets_2016["hists"][i].Scale(fake_photon["hists"][i].Integral()/fake_photon_2016["hists"][i].Integral())
@@ -2297,7 +2296,7 @@ for i in range(len(variables)):
     j=j+1
     draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,wjets_2016["hists"][i],"w+jets","l")
     j=j+1
-    c.SaveAs(options.outputdir + "/" + "closure_test_"+variables_labels[i]+".png")
+    c.SaveAs(args.outputdir + "/" + "closure_test_"+variables_labels[i]+".png")
 
     wjets_fake_photon_chiso_2016["hists"][i].SetLineColor(ROOT.kRed)
 #    if wjets_fake_photon_chiso_2016["hists"][i].Integral() > 0:
@@ -2313,7 +2312,7 @@ for i in range(len(variables)):
     j=j+1
     draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,wjets_2016["hists"][i],"w+jets","l")
     j=j+1
-    c.SaveAs(options.outputdir + "/" + "closure_test_chiso_"+variables_labels[i]+".png")
+    c.SaveAs(args.outputdir + "/" + "closure_test_chiso_"+variables_labels[i]+".png")
     
     window_size=5
 
@@ -2373,7 +2372,7 @@ for i in range(len(variables)):
     non_closure[len(non_closure)-1].SetMaximum(1.5)
     non_closure[len(non_closure)-1].Draw()
     set_axis_fonts(non_closure[len(non_closure)-1],"x",getXaxisLabel(variables[i]))
-    c.SaveAs(options.outputdir + "/" + "non_closure_"+variables_labels[i]+".png")
+    c.SaveAs(args.outputdir + "/" + "non_closure_"+variables_labels[i]+".png")
 
 #print "andrew debug -2"
 #non_closure[mlg_index]
@@ -2409,7 +2408,7 @@ for i in range(len(variables)):
 
     lumilabel.Draw("same")
 
-    c.SaveAs(options.outputdir + "/" + "wgjets_pileup_unc_"+variables_labels[i]+".png")
+    c.SaveAs(args.outputdir + "/" + "wgjets_pileup_unc_"+variables_labels[i]+".png")
 
     c.Close()
 
@@ -2496,12 +2495,12 @@ def mlg_fit(inputs):
     f= ROOT.RooRealVar("f","f",0.5,0.,1.) ;
 
     if inputs["lepton"] == "electron" or inputs["lepton"] == "both":
-        if options.float_fake_sig_cont:
+        if args.float_fake_sig_cont:
             sum=ROOT.RooAddPdf("sum","sum",ROOT.RooArgList(RooHistPdf_wg_plus_fake_wg_contamination,RooHistPdf_zg,RooHistPdf_vv,RooFFTConvPdf_bwcb,RooHistPdf_fake_lepton,RooHistPdf_fake_photon,RooHistPdf_double_fake,RooHistPdf_top,RooHistPdf_etog),ROOT.RooArgList(wg_plus_fake_wg_contamination_norm,zg_norm,vv_norm,bwcb_norm,fake_lepton_norm,fake_photon_norm,double_fake_norm,top_norm,etog_norm))
         else:    
             sum=ROOT.RooAddPdf("sum","sum",ROOT.RooArgList(RooHistPdf_wg,RooHistPdf_zg,RooHistPdf_vv,RooFFTConvPdf_bwcb,RooHistPdf_fake_lepton,RooHistPdf_fake_photon,RooHistPdf_double_fake,RooHistPdf_top,RooHistPdf_etog),ROOT.RooArgList(wg_norm,zg_norm,vv_norm,bwcb_norm,fake_lepton_norm,fake_photon_norm,double_fake_norm,top_norm,etog_norm))        
     elif inputs["lepton"] == "muon":
-        if options.float_fake_sig_cont:
+        if args.float_fake_sig_cont:
             sum=ROOT.RooAddPdf("sum","sum",ROOT.RooArgList(RooHistPdf_wg_plus_fake_wg_contamination,RooHistPdf_zg,RooHistPdf_vv,RooHistPdf_fake_lepton,RooHistPdf_fake_photon,RooHistPdf_double_fake,RooHistPdf_top),ROOT.RooArgList(wg_plus_fake_wg_contamination_norm,zg_norm,vv_norm,fake_lepton_norm,fake_photon_norm,double_fake_norm,top_norm))
         else:    
             sum=ROOT.RooAddPdf("sum","sum",ROOT.RooArgList(RooHistPdf_wg,RooHistPdf_zg,RooHistPdf_vv,RooHistPdf_fake_lepton,RooHistPdf_fake_photon,RooHistPdf_double_fake,RooHistPdf_top),ROOT.RooArgList(wg_norm,zg_norm,vv_norm,fake_lepton_norm,fake_photon_norm,double_fake_norm,top_norm))
@@ -2610,7 +2609,7 @@ def mlg_fit(inputs):
     else:
         prefix = inputs["label"] + "_"
 
-    c2.SaveAs(options.outputdir + "/" +prefix+"frame1.png")
+    c2.SaveAs(args.outputdir + "/" +prefix+"frame1.png")
 
     c2.Close()
 
@@ -2624,7 +2623,7 @@ def mlg_fit(inputs):
     c3.ForceUpdate()
     c3.Modified()
 
-    c3.SaveAs(options.outputdir + "/" +prefix + "frame2.png")
+    c3.SaveAs(args.outputdir + "/" +prefix + "frame2.png")
 
     c3.Close()
 
@@ -2675,7 +2674,7 @@ def mlg_fit(inputs):
     c4.ForceUpdate()
     c4.Modified()
     
-    c4.SaveAs(options.outputdir + "/" +prefix + "frame3.png")
+    c4.SaveAs(args.outputdir + "/" +prefix + "frame3.png")
     
     c4.Close()
     
@@ -2690,7 +2689,7 @@ def mlg_fit(inputs):
     c5.ForceUpdate()
     c5.Modified()
     
-    c5.SaveAs(options.outputdir + "/" +prefix + "frame4.png")
+    c5.SaveAs(args.outputdir + "/" +prefix + "frame4.png")
     
     c5.Close()
 
@@ -2700,7 +2699,7 @@ def mlg_fit(inputs):
     print "wg_plus_fake_wg_contamination_norm.getVal()*inputs[\"wg\"].Integral()/(inputs[\"wg\"].Integral() + inputs[\"fake-wg-contamination\"]) = "+str(wg_plus_fake_wg_contamination_norm.getVal()*inputs["wg"].Integral()/(inputs["wg"].Integral() + inputs["fake-wg-contamination"].Integral()))
 
     mlg_fit_results["bwcb_norm"] = bwcb_norm.getVal()
-    if options.float_fake_sig_cont:
+    if args.float_fake_sig_cont:
         mlg_fit_results["wg_norm"] = wg_plus_fake_wg_contamination_norm.getVal()*inputs["wg"].Integral()/(inputs["wg"].Integral() + inputs["fake-wg-contamination"].Integral())
         mlg_fit_results["wg_norm_err"] = wg_plus_fake_wg_contamination_norm.getError()*inputs["wg"].Integral()/(inputs["wg"].Integral() + inputs["fake-wg-contamination"].Integral())
     else:
@@ -2709,7 +2708,7 @@ def mlg_fit(inputs):
 
     return mlg_fit_results
 
-if lepton_name == "electron" and options.fit:
+if lepton_name == "electron" and args.fit:
 #if False:
 
     fit_inputs = {
@@ -2785,7 +2784,7 @@ if lepton_name == "electron" and options.fit:
 
     fit_inputs_fake_photon_wjets = dict(fit_inputs)
     fit_inputs_fake_photon_wjets["fake_photon"] = labels["w+jets"]["hists"][mlg_index].Clone("fake photon wjets")
-    if options.no_wjets_for_2017_and_2018:
+    if args.no_wjets_for_2017_and_2018:
         fit_inputs_fake_photon_wjets["fake_photon"].Scale(fake_photon["hists"][mlg_index].Integral()/fake_photon_2016["hists"][mlg_index].Integral())
     fit_inputs_fake_photon_wjets["label"] = "fake_photon_wjets"
     fit_results_fake_photon_wjets = mlg_fit(fit_inputs_fake_photon_wjets)
@@ -2907,7 +2906,7 @@ if "wg+jets" in labels:
 
     print "fiducial_region_cuts_efficiency = "+str(fiducial_region_cuts_efficiency)
 
-if options.draw_ewdim6:
+if args.draw_ewdim6:
     for i in range(1,n_photon_pt_bins+1):
         #hardcoded to use bin 6 of the scaling histogram for now 
         ewdim6["hists"][0].SetBinContent(i,cb_scaling_hists[i].GetBinContent(7)*labels["wg+jets"]["hists"][0].GetBinContent(i))
@@ -2916,7 +2915,7 @@ c1 = ROOT.TCanvas("c1", "c1",5,50,500,500)
 
 for i in range(len(variables)):
 
-    if options.blind:
+    if args.blind:
         data["hists"][i].Scale(0)
 
 #    fake_lepton["hists"][i].Scale(2)
@@ -2978,7 +2977,7 @@ for i in range(len(variables)):
     for label in labels.keys():
         if labels[label]["color"] == None:
             continue
-        if options.closure_test and label == "wg+jets":
+        if args.closure_test and label == "wg+jets":
             continue
 
         if label == "w+jets":
@@ -2987,33 +2986,33 @@ for i in range(len(variables)):
         hsum.Add(labels[label]["hists"][i])
         hstack.Add(labels[label]["hists"][i])
 
-    if options.use_wjets_for_fake_photon and "w+jets" in labels:
+    if args.use_wjets_for_fake_photon and "w+jets" in labels:
         hsum.Add(labels["w+jets"]["hists"][i])
         hstack.Add(labels["w+jets"]["hists"][i])
 #        hsum.Add(wjets_fake_photon_2016["hists"][i])
 #        hstack.Add(wjets_fake_photon_2016["hists"][i])
 
     if data_driven:
-        if not options.use_wjets_for_fake_photon:
+        if not args.use_wjets_for_fake_photon:
             hstack.Add(fake_photon["hists"][i])
-        if not options.closure_test:
+        if not args.closure_test:
             hstack.Add(fake_lepton["hists"][i])
             hstack.Add(double_fake["hists"][i])
 
-    if not options.closure_test and (lepton_name == "electron" or lepton_name == "both"): 
-        if options.closure_test and label == "wg+jets":
+    if not args.closure_test and (lepton_name == "electron" or lepton_name == "both"): 
+        if args.closure_test and label == "wg+jets":
             continue
         hsum.Add(e_to_p["hists"][i])
         hstack.Add(e_to_p["hists"][i])
 
-    if not options.closure_test:    
+    if not args.closure_test:    
         hsum.Add(e_to_p_non_res["hists"][i])
         hstack.Add(e_to_p_non_res["hists"][i])
 
     if data_driven:
-        if not options.use_wjets_for_fake_photon:
+        if not args.use_wjets_for_fake_photon:
             hsum.Add(fake_photon["hists"][i])
-        if not options.closure_test:
+        if not args.closure_test:
             hsum.Add(fake_lepton["hists"][i])
             hsum.Add(double_fake["hists"][i])
 
@@ -3034,7 +3033,7 @@ for i in range(len(variables)):
 
     hstack.Draw("hist same")
 
-    if options.draw_ewdim6:
+    if args.draw_ewdim6:
         ewdim6["hists"][i].Print("all")
         ewdim6["hists"][i].Draw("same")
 #wg_qcd.Draw("hist same")
@@ -3056,21 +3055,21 @@ for i in range(len(variables)):
 #wpwpjjewk.Draw("same")
 
     j=0
-    if options.closure_test:
+    if args.closure_test:
         draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,data["hists"][i],"w+jets","lp")
     else:    
         draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,data["hists"][i],"data","lp")
 
-    if  options.use_wjets_for_fake_photon and "w+jets" in labels:
+    if  args.use_wjets_for_fake_photon and "w+jets" in labels:
         j=j+1    
         draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,labels["w+jets"]["hists"][i],"w+jets","f")
 
 
     if data_driven :
-        if not options.use_wjets_for_fake_photon:
+        if not args.use_wjets_for_fake_photon:
             j=j+1
             draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,fake_photon["hists"][i],"fake photon","f")
-        if not options.closure_test:
+        if not args.closure_test:
             j=j+1
             if lepton_name == "muon":
                 draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,fake_lepton["hists"][i],"fake muon","f")
@@ -3083,11 +3082,11 @@ for i in range(len(variables)):
             j=j+1
             draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,double_fake["hists"][i],"double fake","f")
 
-    if (lepton_name == "electron" or lepton_name == "both") and not options.closure_test: 
+    if (lepton_name == "electron" or lepton_name == "both") and not args.closure_test: 
         j=j+1
         draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,e_to_p["hists"][i],"e->#gamma","f")
 
-    if not options.closure_test:
+    if not args.closure_test:
         j=j+1
         draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,e_to_p_non_res["hists"][i],"e->#gamma non-res","f")
 
@@ -3095,7 +3094,7 @@ for i in range(len(variables)):
         if labels[label]["color"] == None:
             continue
 
-        if options.closure_test and label == "wg+jets":
+        if args.closure_test and label == "wg+jets":
             continue
 
         if label == "w+jets":
@@ -3109,7 +3108,7 @@ for i in range(len(variables)):
         else:    
             draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,labels[label]["hists"][i],label,"f")
 
-    if options.draw_ewdim6:
+    if args.draw_ewdim6:
         j=j+1
         draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,ewdim6["hists"][i],"C_{B} = 51","l")
 
@@ -3139,11 +3138,11 @@ for i in range(len(variables)):
     c1.ForceUpdate()
     c1.Modified()
 
-    c1.SaveAs(options.outputdir + "/" + variables_labels[i] + ".png")
+    c1.SaveAs(args.outputdir + "/" + variables_labels[i] + ".png")
 
 c1.Close()
 
-if options.closure_test:
+if args.closure_test:
     sys.exit(0)
 
 wg_jets_integral_error = ROOT.Double()
@@ -3240,10 +3239,10 @@ vv_jets_integral,float(vv_jets_integral_error),
 fake_photon_integral,float(fake_photon_integral_error),
 fake_lepton_integral,float(fake_lepton_integral_error),
 double_fake_integral,float(double_fake_integral_error),
-e_to_p_integral,float(e_to_p_integral_error),options.lep,options.lep
+e_to_p_integral,float(e_to_p_integral_error),args.lep,args.lep
 )
 
-if options.fit:
+if args.fit:
     print "fit_results[\"bwcb_norm\"] = "+str(fit_results["bwcb_norm"])
 
 n_signal = data_integral - double_fake_integral - fake_photon_integral - fake_lepton_integral - top_jets_integral - vv_jets_integral - zg_jets_integral - e_to_p_non_res_integral
@@ -3301,7 +3300,7 @@ if lepton_name == "muon":
         "signal_mc_xs_data_mc_syst_unc_due_to_photon_id_sf_muon" : photon_id_sf_unc
         }
 
-    if options.no_wjets_for_2017_and_2018:
+    if args.no_wjets_for_2017_and_2018:
         xs_inputs_muon["signal_syst_unc_due_to_fake_photon_wjets_muon"] = abs(labels["w+jets"]["hists"][mlg_index].Integral() - fake_photon_2016["hists"][mlg_index].Integral())*fake_photon["hists"][mlg_index].Integral()/fake_photon_2016["hists"][mlg_index].Integral()
     else:    
         xs_inputs_muon["signal_syst_unc_due_to_fake_photon_wjets_muon"] = abs(labels["w+jets"]["hists"][mlg_index].Integral() - fake_photon["hists"][mlg_index].Integral())
@@ -3319,7 +3318,7 @@ if lepton_name == "muon":
             else:
                 assert(0)
 
-            if (year == "2017" or year == "2018") and options.no_pdf_var_for_2017_and_2018:
+            if (year == "2017" or year == "2018") and args.no_pdf_var_for_2017_and_2018:
                 continue
 
             xs_times_lumi_pdf_variation += labels["wg+jets"]["samples"][year][0]["xs"]*1000*lumi*labels["wg+jets"]["samples"][year][0]["nweightedevents_pdfweight"+str(i)]/labels["wg+jets"]["samples"][year][0]["nweightedevents"]
@@ -3382,7 +3381,7 @@ if lepton_name == "muon":
 
 elif lepton_name == "electron":
 
-    if options.fit:
+    if args.fit:
 
         xs_times_lumi = 0
         for year in years:
@@ -3434,7 +3433,7 @@ elif lepton_name == "electron":
                 else:
                     assert(0)
 
-                if (year == "2017" or year == "2018") and options.no_pdf_var_for_2017_and_2018:
+                if (year == "2017" or year == "2018") and args.no_pdf_var_for_2017_and_2018:
                     continue
 
                 xs_times_lumi_pdf_variation += labels["wg+jets"]["samples"][year][0]["xs"]*1000*lumi*labels["wg+jets"]["samples"][year][0]["nweightedevents_pdfweight"+str(i)]/labels["wg+jets"]["samples"][year][0]["nweightedevents"]
@@ -3526,7 +3525,7 @@ elif lepton_name == "electron":
             "signal_mc_xs_data_mc_syst_unc_due_to_photon_id_sf_electron" : photon_id_sf_unc
             }
 
-        if options.no_wjets_for_2017_and_2018:
+        if args.no_wjets_for_2017_and_2018:
             xs_inputs_electron["signal_syst_unc_due_to_fake_photon_wjets_electron"] = abs(labels["w+jets"]["hists"][mlg_index].Integral() - fake_photon_2016["hists"][mlg_index].Integral())*fake_photon["hists"][mlg_index].Integral()/fake_photon_2016["hists"][mlg_index].Integral()
         else:    
             xs_inputs_electron["signal_syst_unc_due_to_fake_photon_wjets_electron"] = abs(labels["w+jets"]["hists"][mlg_index].Integral() - fake_photon["hists"][mlg_index].Integral())
@@ -3544,7 +3543,7 @@ elif lepton_name == "electron":
                 else:
                     assert(0)
 
-                if (year == "2017" or year == "2018") and options.no_pdf_var_for_2017_and_2018:
+                if (year == "2017" or year == "2018") and args.no_pdf_var_for_2017_and_2018:
                     continue
 
                 xs_times_lumi_pdf_variation += labels["wg+jets"]["samples"][year][0]["xs"]*1000*lumi*labels["wg+jets"]["samples"][year][0]["nweightedevents_pdfweight"+str(i)]/labels["wg+jets"]["samples"][year][0]["nweightedevents"]
@@ -3797,7 +3796,7 @@ if len(fake_photon_syst2_up) > 4:
     fake_photon_syst2_up[3].Draw("same")
     fake_photon_syst2_up[4].Draw("same")
 
-c.SaveAs(options.outputdir + "/"+ "fake_photon_syst2.png")
+c.SaveAs(args.outputdir + "/"+ "fake_photon_syst2.png")
 
 if len(fake_photon_syst2_up_relative) > 4:
 
@@ -3808,7 +3807,7 @@ if len(fake_photon_syst2_up_relative) > 4:
     #fake_photon_syst2_up_relative[3].Draw("same")
     #fake_photon_syst2_up_relative[4].Draw("same")
 
-c.SaveAs(options.outputdir + "/"+ "fake_photon_syst2_relative.png")
+c.SaveAs(args.outputdir + "/"+ "fake_photon_syst2_relative.png")
 c.Close()
 
 fake_lepton_syst_up=[]
@@ -3845,11 +3844,11 @@ for i in range(1,labels["wg+jets"]["hists"][mlg_index].GetNbinsX()+1):
             wg_stat_up[len(wg_stat_up)-1].SetBinContent(j,labels["wg+jets"]["hists"][mlg_index].GetBinContent(j))
         wg_stat_up[len(wg_stat_up)-1].SetBinError(j,0)
 
-if options.make_cut_and_count_datacard:
+if args.make_cut_and_count_datacard:
 
-    if options.lep == "muon":
+    if args.lep == "muon":
         dcard = open("wg_dcard_cut_and_count_mu_chan.txt",'w')
-    elif options.lep == "electron":
+    elif args.lep == "electron":
         dcard = open("wg_dcard_cut_and_count_el_chan.txt",'w')
     else:
         assert(0)
@@ -3861,7 +3860,7 @@ if options.make_cut_and_count_datacard:
     print >> dcard, "Observation "+str(data["hists"][mlg_index].Integral())
     dcard.write("bin")
 
-    if options.lep == "muon":
+    if args.lep == "muon":
         dcard.write(" mu_chan")
         for label in labels.keys():
             if label == "no label" or label == "wg+jets" or label == "w+jets":
@@ -3873,7 +3872,7 @@ if options.make_cut_and_count_datacard:
         dcard.write(" mu_chan")
         dcard.write(" mu_chan")
         dcard.write('\n')    
-    elif options.lep == "electron":
+    elif args.lep == "electron":
         dcard.write(" el_chan")
         for label in labels.keys():
             if label == "no label" or label == "wg+jets" or label == "w+jets":
@@ -4140,7 +4139,7 @@ if options.make_cut_and_count_datacard:
     
     dcard.write('\n')    
 
-if options.make_datacard:
+if args.make_datacard:
 
     data["hists"][mlg_index].Scale(0)
     data["hists"][mlg_index].Add(labels["wg+jets"]["hists"][mlg_index])
@@ -4148,7 +4147,7 @@ if options.make_datacard:
     data["hists"][mlg_index].Add(labels["zg+jets"]["hists"][mlg_index])
     data["hists"][mlg_index].Add(labels["vv+jets"]["hists"][mlg_index])
     data["hists"][mlg_index].Add(e_to_p_non_res["hists"][mlg_index])
-    if options.lep == "electron":
+    if args.lep == "electron":
         data["hists"][mlg_index].Add(e_to_p["hists"][mlg_index])
     data["hists"][mlg_index].Add(fake_photon["hists"][mlg_index])
     data["hists"][mlg_index].Add(fake_lepton["hists"][mlg_index])
@@ -4168,9 +4167,9 @@ if options.make_datacard:
 #            fake_photon["hists"][mlg_index].SetBinContent(i,fake_photon["hists"][mlg_index].GetBinContent(i)*(1+non_closure[mlg_index].GetBinContent(i)))
 
 
-    if options.lep == "muon":
+    if args.lep == "muon":
         dcard = open("wg_dcard_mu_chan.txt",'w')
-    elif options.lep == "electron":
+    elif args.lep == "electron":
         dcard = open("wg_dcard_el_chan.txt",'w')
     else:
         assert(0)
@@ -4179,10 +4178,10 @@ if options.make_datacard:
     print >> dcard, "jmax * number of background"
     print >> dcard, "kmax * number of nuisance parameters"
 
-    if options.lep == "muon":
+    if args.lep == "muon":
         print >> dcard, "shapes data_obs mu_chan wg_dcard_mu_chan_shapes.root data_obs"
         print >> dcard, "shapes Wg mu_chan wg_dcard_mu_chan_shapes.root wg wg_$SYSTEMATIC" 
-    elif options.lep == "electron":
+    elif args.lep == "electron":
         print >> dcard, "shapes data_obs el_chan wg_dcard_el_chan_shapes.root data_obs"
         print >> dcard, "shapes Wg el_chan wg_dcard_el_chan_shapes.root wg wg_$SYSTEMATIC" 
     else:
@@ -4191,20 +4190,20 @@ if options.make_datacard:
     for label in labels.keys():
         if label == "no label" or label == "wg+jets" or label == "w+jets":
             continue
-        if options.lep == "muon":
+        if args.lep == "muon":
             print >> dcard, "shapes "+label.replace("+","")+" mu_chan wg_dcard_mu_chan_shapes.root "+label.replace("+","")+ " " +label.replace("+","") + "_$SYSTEMATIC" 
-        elif options.lep == "electron":
+        elif args.lep == "electron":
             print >> dcard, "shapes "+label.replace("+","")+" el_chan wg_dcard_el_chan_shapes.root "+label.replace("+","")+ " " +label.replace("+","") + "_$SYSTEMATIC" 
         else:
             assert(0)    
 
-    if options.lep == "muon":
+    if args.lep == "muon":
         print >> dcard, "shapes Wg_out mu_chan wg_dcard_mu_chan_shapes.root wgout wgout_$SYSTEMATIC" 
         print >> dcard, "shapes fake_photon mu_chan wg_dcard_mu_chan_shapes.root fakephoton fakephoton_$SYSTEMATIC" 
         print >> dcard, "shapes fake_muon mu_chan wg_dcard_mu_chan_shapes.root fakemuon fakemuon_$SYSTEMATIC"
         print >> dcard, "shapes double_fake mu_chan wg_dcard_mu_chan_shapes.root doublefake doublefake_$SYSTEMATIC" 
         print >> dcard, "shapes e_to_p_non_res mu_chan wg_dcard_mu_chan_shapes.root etopnonres etopnonres_$SYSTEMATIC" 
-    elif options.lep == "electron":
+    elif args.lep == "electron":
         print >> dcard, "shapes Wg_out el_chan wg_dcard_el_chan_shapes.root wgout wgout_$SYSTEMATIC" 
         print >> dcard, "shapes fake_photon el_chan wg_dcard_el_chan_shapes.root fakephoton fakephoton_$SYSTEMATIC" 
         print >> dcard, "shapes fake_electron el_chan wg_dcard_el_chan_shapes.root fakeelectron fakeelectron_$SYSTEMATIC"
@@ -4230,7 +4229,7 @@ if options.make_datacard:
     
     print >> dcard, "Observation "+str(data["hists"][mlg_index].Integral())
     dcard.write("bin")
-    if options.lep == "muon":
+    if args.lep == "muon":
         dcard.write(" mu_chan")
         for label in labels.keys():
             if label == "no label" or label == "wg+jets" or label == "w+jets":
@@ -4242,7 +4241,7 @@ if options.make_datacard:
         dcard.write(" mu_chan")
         dcard.write(" mu_chan")
         dcard.write('\n')    
-    elif options.lep == "electron":
+    elif args.lep == "electron":
         dcard.write(" el_chan")
         for label in labels.keys():
             if label == "no label" or label == "wg+jets" or label == "w+jets":
@@ -4268,27 +4267,27 @@ if options.make_datacard:
         dcard.write(" " + label.replace("+",""))
 
     dcard.write(" fake_photon")
-    if options.lep == "muon":
+    if args.lep == "muon":
         dcard.write(" fake_muon")
-    elif options.lep == "electron":
+    elif args.lep == "electron":
         dcard.write(" fake_electron")
     else:
         assert(0)    
     dcard.write(" double_fake")
     dcard.write(" e_to_p_non_res")
-    if options.lep == "muon":
+    if args.lep == "muon":
         pass
-    elif options.lep == "electron":
+    elif args.lep == "electron":
         dcard.write(" e_to_p")
     else:
         assert(0)    
     dcard.write('\n')    
     dcard.write("process")
     dcard.write(" 0")
-    if options.lep == "muon":
+    if args.lep == "muon":
         for j in range(1,len(labels.keys())+3):
             dcard.write(" " + str(j))
-    elif options.lep == "electron":
+    elif args.lep == "electron":
         for j in range(1,len(labels.keys())+4):
             dcard.write(" " + str(j))
     else:
@@ -4308,9 +4307,9 @@ if options.make_datacard:
     dcard.write(" "+str(fake_lepton["hists"][mlg_index].Integral())) 
     dcard.write(" "+str(double_fake["hists"][mlg_index].Integral())) 
     dcard.write(" "+str(e_to_p_non_res["hists"][mlg_index].Integral())) 
-    if options.lep == "muon":
+    if args.lep == "muon":
         pass
-    elif options.lep == "electron":
+    elif args.lep == "electron":
         dcard.write(" "+str(e_to_p["hists"][mlg_index].Integral())) 
     else:
         assert(0)    
@@ -4329,9 +4328,9 @@ if options.make_datacard:
     dcard.write(" -")
     dcard.write(" -")
     dcard.write(" 1.018")
-    if options.lep == "muon":
+    if args.lep == "muon":
         pass
-    elif options.lep == "electron":
+    elif args.lep == "electron":
         dcard.write(" -")
     else:
         assert(0)    
@@ -4351,9 +4350,9 @@ if options.make_datacard:
     dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
-    if options.lep == "muon":
+    if args.lep == "muon":
         pass
-    elif options.lep == "electron":
+    elif args.lep == "electron":
         dcard.write(" -")
     else:
         assert(0)    
@@ -4373,9 +4372,9 @@ if options.make_datacard:
     dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
-    if options.lep == "muon":
+    if args.lep == "muon":
         pass
-    elif options.lep == "electron":
+    elif args.lep == "electron":
         dcard.write(" -")
     else:
         assert(0)    
@@ -4395,9 +4394,9 @@ if options.make_datacard:
     dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
-    if options.lep == "muon":
+    if args.lep == "muon":
         pass
-    elif options.lep == "electron":
+    elif args.lep == "electron":
         dcard.write(" -")
     else:
         assert(0)    
@@ -4417,15 +4416,15 @@ if options.make_datacard:
     dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
-    if options.lep == "muon":
+    if args.lep == "muon":
         pass
-    elif options.lep == "electron":
+    elif args.lep == "electron":
         dcard.write(" -")
     else:
         assert(0)    
     dcard.write('\n')    
     
-    if options.lep == "muon":
+    if args.lep == "muon":
         dcard.write("muonidsf shape1")
         dcard.write(" 1.0")
         dcard.write(" 1.0")
@@ -4462,7 +4461,7 @@ if options.make_datacard:
         dcard.write(" -")
         dcard.write(" -")
         dcard.write('\n')    
-    elif options.lep == "electron":
+    elif args.lep == "electron":
         dcard.write("electronrecosf shape1")
         dcard.write(" 1.0")
         dcard.write(" 1.0")
@@ -4518,9 +4517,9 @@ if options.make_datacard:
     dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
-    if options.lep == "muon":
+    if args.lep == "muon":
         pass
-    elif options.lep == "electron":
+    elif args.lep == "electron":
         dcard.write(" -")
     else:
         assert(0)    
@@ -4538,9 +4537,9 @@ if options.make_datacard:
 #    dcard.write(" -")
 #    dcard.write(" 1.4")
 #    dcard.write(" -")
-#    if options.lep == "muon":
+#    if args.lep == "muon":
 #        pass
-#    elif options.lep == "electron":
+#    elif args.lep == "electron":
 #        dcard.write(" -")
 #    else:
 #        assert(0)    
@@ -4558,9 +4557,9 @@ if options.make_datacard:
 #    dcard.write(" 1.3")
 #    dcard.write(" 1.3")
 #    dcard.write(" -")
-#    if options.lep == "muon":
+#    if args.lep == "muon":
 #        pass
-#    elif options.lep == "electron":
+#    elif args.lep == "electron":
 #        dcard.write(" -")
 #    else:
 #        assert(0)    
@@ -4579,9 +4578,9 @@ if options.make_datacard:
     dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
-    if options.lep == "muon":
+    if args.lep == "muon":
         pass
-    elif options.lep == "electron":
+    elif args.lep == "electron":
         dcard.write(" -")
     else:
         assert(0)    
@@ -4600,9 +4599,9 @@ if options.make_datacard:
     dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
-    if options.lep == "muon":
+    if args.lep == "muon":
         pass
-    elif options.lep == "electron":
+    elif args.lep == "electron":
         dcard.write(" -")
     else:
         assert(0)    
@@ -4621,9 +4620,9 @@ if options.make_datacard:
     dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
-    if options.lep == "muon":
+    if args.lep == "muon":
         pass
-    elif options.lep == "electron":
+    elif args.lep == "electron":
         dcard.write(" -")
     else:
         assert(0)    
@@ -4642,9 +4641,9 @@ if options.make_datacard:
     dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
-    if options.lep == "muon":
+    if args.lep == "muon":
         pass
-    elif options.lep == "electron":
+    elif args.lep == "electron":
         dcard.write(" -")
     else:
         assert(0)    
@@ -4667,9 +4666,9 @@ if options.make_datacard:
     dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
-    if options.lep == "muon":
+    if args.lep == "muon":
         pass
-    elif options.lep == "electron":
+    elif args.lep == "electron":
         dcard.write(" -")
     else:
         assert(0)    
@@ -4692,18 +4691,18 @@ if options.make_datacard:
     dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
-    if options.lep == "muon":
+    if args.lep == "muon":
         pass
-    elif options.lep == "electron":
+    elif args.lep == "electron":
         dcard.write(" -")
     else:
         assert(0)    
     dcard.write('\n')    
 
     dcard.write("* autoMCStats 0\n")
-    if options.lep == "muon":
+    if args.lep == "muon":
         pass
-    elif options.lep == "electron":
+    elif args.lep == "electron":
         dcard.write("etopnorm rateParam el_chan e_to_p 2 [0,10]\n")
     else:
         assert(0)    
@@ -4741,9 +4740,9 @@ if options.make_datacard:
         dcard.write(" -")
         dcard.write(" -")
         dcard.write(" -")
-        if options.lep == "muon":
+        if args.lep == "muon":
             pass
-        elif options.lep == "electron":
+        elif args.lep == "electron":
             dcard.write(" -")
         else:
             assert(0)    
@@ -4751,9 +4750,9 @@ if options.make_datacard:
         dcard.write('\n')    
 
     for i in range(1,fake_photon["hists"][mlg_index].GetNbinsX()+1):
-        if options.lep == "muon":
+        if args.lep == "muon":
             dcard.write("fakemuonsystbin"+str(i)+" shape1")
-        elif options.lep == "electron":
+        elif args.lep == "electron":
             dcard.write("fakeelectronsystbin"+str(i)+" shape1")
         else:
             assert(0)
@@ -4771,9 +4770,9 @@ if options.make_datacard:
         dcard.write(" -")
         dcard.write(" -")
         dcard.write(" -")
-        if options.lep == "muon":
+        if args.lep == "muon":
             pass
-        elif options.lep == "electron":
+        elif args.lep == "electron":
             dcard.write(" -")
         else:
             assert(0)    
@@ -4803,9 +4802,9 @@ if options.make_datacard:
 
     dcard.close()
 
-    if options.lep == "muon":
+    if args.lep == "muon":
         shapes = ROOT.TFile.Open("wg_dcard_mu_chan_shapes.root","recreate")        
-    elif options.lep == "electron":
+    elif args.lep == "electron":
         shapes = ROOT.TFile.Open("wg_dcard_el_chan_shapes.root","recreate")
     else:
         assert(0)    
@@ -4833,9 +4832,9 @@ if options.make_datacard:
 #    tmphist.Scale(fake_photon["hists"][mlg_index].Integral()/tmphist.Integral())
 #    tmphist.Write("fakephoton")
     fake_photon["hists"][mlg_index].Write("fakephoton")
-    if options.lep == "muon":
+    if args.lep == "muon":
         fake_lepton["hists"][mlg_index].Write("fakemuon")
-    elif options.lep == "electron":
+    elif args.lep == "electron":
         fake_lepton["hists"][mlg_index].Write("fakeelectron")
     else:
         assert(0)    
@@ -4949,10 +4948,10 @@ if options.make_datacard:
 #        makeDownShape(fake_photon_syst2_up[i-1],fake_photon["hists"][mlg_index]).Write("fakephoton_fakephotonsyst2var"+str(i)+"Down")
 
     for i in range(1,fake_lepton["hists"][mlg_index].GetNbinsX()+1):
-        if options.lep == "electron":
+        if args.lep == "electron":
             fake_lepton_syst_up[i-1].Write("fakeelectron_fakeelectronsystbin"+str(i)+"Up")
             makeDownShape(fake_lepton_syst_up[i-1],fake_lepton["hists"][mlg_index]).Write("fakeelectron_fakeelectronsystbin"+str(i)+"Down")
-        elif options.lep == "muon":
+        elif args.lep == "muon":
             fake_lepton_syst_up[i-1].Write("fakemuon_fakemuonsystbin"+str(i)+"Up")
             makeDownShape(fake_lepton_syst_up[i-1],fake_lepton["hists"][mlg_index]).Write("fakemuon_fakemuonsystbin"+str(i)+"Down")
         else:
@@ -5145,9 +5144,9 @@ if options.make_datacard:
     RooDataHist_topjets = ROOT.RooDataHist("topjets","",ROOT.RooArgList(m),labels["top+jets"]["hists"][mlg_index])
 #RooHistPdf_topjets = ROOT.RooHistPdf("topjets","",ROOT.RooArgSet(m),RooDataHist_topjets)
 
-    if options.lep == "muon":
+    if args.lep == "muon":
         RooDataHist_fake_lepton = ROOT.RooDataHist("fakemuon","",ROOT.RooArgList(m),fake_lepton["hists"][mlg_index])
-    elif options.lep == "electron":
+    elif args.lep == "electron":
         RooDataHist_fake_lepton = ROOT.RooDataHist("fakeelectron","",ROOT.RooArgList(m),fake_lepton["hists"][mlg_index])
     else:
         assert(0)    
@@ -5719,7 +5718,7 @@ statuncmin(e_to_p_non_res["hists"][mlg_index]),
 statuncmax(e_to_p_non_res["hists"][mlg_index])
 )
 
-if options.lep == "muon" or options.lep == "both":
+if args.lep == "muon" or args.lep == "both":
     print """muon ID & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & -  \\\\
 \\hline
 muon iso & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & -  \\\\
@@ -5753,7 +5752,7 @@ muon HLT & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & -
         uncmin(labels["vv+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
         uncmax(labels["vv+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index])
     )
-elif options.lep == "electron" or options.lep == "both":
+elif args.lep == "electron" or args.lep == "both":
     print """electron reco & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & -  \\\\
 \\hline
 electron ID and iso & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & -  \\\\
@@ -5796,7 +5795,7 @@ print """\\end{tabular}
 \\label{tab:wg_n_sig_unc}
 \\end{table}"""
 
-if not options.ewdim6:
+if not args.ewdim6:
     sys.exit(0)
 
 wgjets_ewdim6_scale_syst=histogram_models[ewdim6_index].GetHistogram()
