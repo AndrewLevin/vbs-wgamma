@@ -2032,9 +2032,6 @@ for year in years:
 
             for i in range(len(variables)):
 
-#                if i != mlg_index:
-#                    continue
-
                 if labels[label]["color"] != None:
                     rresultptrs.append(rinterface.Histo1D(histogram_models[i],variables[i],"weight"))
                     rresultptrs_pileup_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"pileup_up_weight"))
@@ -2125,9 +2122,6 @@ for year in years:
                     rresultptrs_e_to_p_non_res.append(rinterface.Histo1D(histogram_models[i],variables[i],"e_to_p_non_res_weight"))
 
             for i in range(len(variables)):
-
-                if i != mlg_index:
-                    continue
 
                 if labels[label]["color"] != None:
                     labels[label]["hists"][i].Add(rresultptrs[i].GetValue())
