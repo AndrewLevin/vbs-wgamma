@@ -1,4 +1,6 @@
 import ROOT
+ROOT.PyConfig.IgnoreCommandLineOptions = True
+import math
 
 mg5amc_nlo_xs = 178.6
 
@@ -12,20 +14,57 @@ n_weighted_mg5amc = mg5amc_wgjets_file.Get("nEventsGenWeighted").GetBinContent(1
 
 mg5amc_nlo_fiducial_xs = mg5amc_nlo_xs*n_weighted_mg5amc_pass_fid_selection/n_weighted_mg5amc
 
+#text2hdf5.py ~/wg/wg_dcard_theory_exp.txt
+#combinetf.py ~/wg/wg_dcard_theory_exp.hdf5 --useSciPyMinimizer -t -1 --expectSignal=1
+#text2hdf5.py ~/wg/wg_dcard_theory.txt
+#combinetf.py ~/wg/wg_dcard_theory.hdf5 --useSciPyMinimizer -t -1 --expectSignal=1
+#text2hdf5.py ~/wg/wg_dcard_exp.txt
+#combinetf.py ~/wg/wg_dcard_exp.hdf5 --useSciPyMinimizer -t -1 --expectSignal=1
+#text2hdf5.py ~/wg/wg_dcard_theory_exp.txt -S 0 
+#combinetf.py ~/wg/wg_dcard_theory_exp.hdf5 --useSciPyMinimizer -t -1 --expectSignal=1
 rexp = 1  
-rexpdown = 0.044618
-rexpup = 0.0444708
+rexpunc = 0.036172
+rexptheoryunc = 0.012379
+rexpexpunc = 0.029921
+rexpnosystunc = 0.002968 
 
+#text2hdf5.py ~/wg/wg_dcard_theory_exp_mu_chan.txt
+#combinetf.py ~/wg/wg_dcard_theory_exp_mu_chan.hdf5 --useSciPyMinimizer -t -1 --expectSignal=1
+#text2hdf5.py ~/wg/wg_dcard_theory_mu_chan.txt
+#combinetf.py ~/wg/wg_dcard_theory_mu_chan.hdf5 --useSciPyMinimizer -t -1 --expectSignal=1
+#text2hdf5.py ~/wg/wg_dcard_exp_mu_chan.txt
+#combinetf.py ~/wg/wg_dcard_exp_mu_chan.hdf5 --useSciPyMinimizer -t -1 --expectSignal=1
+#text2hdf5.py ~/wg/wg_dcard_theory_exp_mu_chan.txt -S 0 
+#combinetf.py ~/wg/wg_dcard_theory_exp_mu_chan.hdf5 --useSciPyMinimizer -t -1 --expectSignal=1
 rexpmuon = 1  
-rexpmuondown = 0.0478512
-rexpmuonup = 0.0476602 
+rexpmuonunc = 0.038646 
+rexpmuontheoryunc = 0.016953
+rexpmuonexpunc = 0.031345
+rexpmuonnosystunc = 0.003582 
 
+#text2hdf5.py ~/wg/wg_dcard_theory_exp_el_chan.txt
+#combinetf.py ~/wg/wg_dcard_theory_exp_el_chan.hdf5 --useSciPyMinimizer -t -1 --expectSignal=1
+#text2hdf5.py ~/wg/wg_dcard_theory_el_chan.txt
+#combinetf.py ~/wg/wg_dcard_theory_el_chan.hdf5 --useSciPyMinimizer -t -1 --expectSignal=1
+#text2hdf5.py ~/wg/wg_dcard_exp_el_chan.txt
+#combinetf.py ~/wg/wg_dcard_exp_el_chan.hdf5 --useSciPyMinimizer -t -1 --expectSignal=1
+#text2hdf5.py ~/wg/wg_dcard_theory_exp_el_chan.txt -S 0 
+#combinetf.py ~/wg/wg_dcard_theory_exp_el_chan.hdf5 --useSciPyMinimizer -t -1 --expectSignal=1
 rexpelectron = 1  
-rexpelectrondown = 0.0661628
-rexpelectronup = 0.0724796
+rexpelectronunc = 0.058382
+rexpelectrontheoryunc = 0.021975
+rexpelectronexpunc = 0.048396
+rexpelectronnosystunc = 0.005302
 
-print "xs = " + str(mg5amc_nlo_fiducial_xs * rexp) + " + " + str(mg5amc_nlo_fiducial_xs * rexpup) + " - " + str(mg5amc_nlo_fiducial_xs * rexpdown)
+print "xs based on muon channel = %0.2f +/- %0.2f"%(mg5amc_nlo_fiducial_xs * rexpmuon,mg5amc_nlo_fiducial_xs * rexpmuonunc)
 
-print "xs based on muon channel = " + str(mg5amc_nlo_fiducial_xs * rexpmuon) + " + " + str(mg5amc_nlo_fiducial_xs * rexpmuonup) + " - " + str(mg5amc_nlo_fiducial_xs * rexpmuondown)
+print "xs based on muon channel = %0.2f +/- %0.2f (stat) +/- %0.2f (exp) +/- %0.2f (theory)"%(mg5amc_nlo_fiducial_xs * rexpmuon,mg5amc_nlo_fiducial_xs * rexpmuonnosystunc,mg5amc_nlo_fiducial_xs * math.sqrt(pow(rexpmuonexpunc,2)-pow(rexpmuonnosystunc,2)),mg5amc_nlo_fiducial_xs * math.sqrt(pow(rexpmuonunc,2)-pow(rexpmuonexpunc,2)))
 
-print "xs based on electron channel = " + str(mg5amc_nlo_fiducial_xs * rexpelectron) + " + " + str(mg5amc_nlo_fiducial_xs * rexpelectronup) + " - " + str(mg5amc_nlo_fiducial_xs * rexpelectrondown)
+print "xs based on electron channel = %0.2f +/- %0.2f"%(mg5amc_nlo_fiducial_xs * rexpelectron,mg5amc_nlo_fiducial_xs * rexpelectronunc)
+
+print "xs based on electron channel = %0.2f +/- %0.2f (stat) +/- %0.2f (exp) +/- %0.2f (theory)"%(mg5amc_nlo_fiducial_xs * rexpelectron,mg5amc_nlo_fiducial_xs * rexpelectronnosystunc,mg5amc_nlo_fiducial_xs * math.sqrt(pow(rexpelectronexpunc,2)-pow(rexpelectronnosystunc,2)),mg5amc_nlo_fiducial_xs * math.sqrt(pow(rexpelectronunc,2)-pow(rexpelectronexpunc,2)))
+
+print "xs = %0.2f +/- %0.2f"%(mg5amc_nlo_fiducial_xs * rexp,mg5amc_nlo_fiducial_xs * rexpunc)
+
+print "xs = %0.2f +/- %0.2f (stat) +/- %0.2f (exp) +/- %0.2f (theory)"%(mg5amc_nlo_fiducial_xs * rexp,mg5amc_nlo_fiducial_xs * rexpnosystunc,mg5amc_nlo_fiducial_xs * math.sqrt(pow(rexpexpunc,2)-pow(rexpnosystunc,2)),mg5amc_nlo_fiducial_xs * math.sqrt(pow(rexpunc,2)-pow(rexpexpunc,2)))
+
