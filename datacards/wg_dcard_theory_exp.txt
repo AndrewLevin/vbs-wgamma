@@ -1,4 +1,4 @@
-Combination of wg_dcard_el_chan.txt  wg_dcard_mu_chan.txt
+Combination of wg_dcard_theory_exp_el_chan.txt  wg_dcard_theory_exp_mu_chan.txt
 imax 2 number of bins
 jmax 10 number of processes minus 1
 kmax 378 number of nuisance parameters
