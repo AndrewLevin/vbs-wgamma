@@ -23,7 +23,7 @@ mg5amc_nlo_fiducial_xs = mg5amc_nlo_xs*n_weighted_mg5amc_pass_fid_selection/n_we
 #text2hdf5.py ~/wg/wg_dcard_theory_exp.txt -S 0 
 #combinetf.py ~/wg/wg_dcard_theory_exp.hdf5 --useSciPyMinimizer -t -1 --expectSignal=1 
 rexp = 1  
-rexpunc = 
+rexpunc = 0.042145
 rexptheoryunc = 0.012379
 rexpexpunc = 0.034434
 rexpnosystunc = 0.002968 
