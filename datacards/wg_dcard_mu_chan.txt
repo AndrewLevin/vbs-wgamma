@@ -11,12 +11,12 @@ shapes fake_photon mu_chan wg_dcard_mu_chan_shapes.root fakephoton fakephoton_$S
 shapes fake_muon mu_chan wg_dcard_mu_chan_shapes.root fakemuon fakemuon_$SYSTEMATIC
 shapes double_fake mu_chan wg_dcard_mu_chan_shapes.root doublefake doublefake_$SYSTEMATIC
 shapes e_to_p_non_res mu_chan wg_dcard_mu_chan_shapes.root etopnonres etopnonres_$SYSTEMATIC
-Observation 368202.463271
+Observation 368172.745157
 bin mu_chan mu_chan mu_chan mu_chan mu_chan mu_chan mu_chan mu_chan mu_chan
 process Wg Wg_out topjets zgjets vvjets fake_photon fake_muon double_fake e_to_p_non_res
 process 0 1 2 3 4 5 6 7 8
-rate 167320.934182 2694.35246519 22931.8744246 43403.9460773 2147.21563395 84842.0115095 17946.7483955 18861.7409274 8053.63965479
-lumi_13tev lnN 1.018 1.018 1.018 1.018 1.018 - - - 1.018
+rate 167320.934182 2694.35246519 22931.8744246 43403.9460773 2147.21563395 84838.555486 17920.4863051 18861.7409274 8053.63965479
+lumi lnN 1.018 1.018 1.018 1.018 1.018 - - - 1.018
 pileup shape1 1.0 1.0 1.0 1.0 1.0 - - - -
 prefire shape1 1.0 1.0 1.0 1.0 1.0 - - - -
 jes shape1 1.0 1.0 1.0 1.0 1.0 - - - -
