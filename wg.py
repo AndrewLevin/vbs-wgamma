@@ -193,10 +193,7 @@ ROOT.ROOT.EnableImplicitMT(int(args.nthreads))
 #when the TMinuit object is reused, the random seed is not reset after each fit, so the fit result can change when it is run on the same input 
 ROOT.TMinuitMinimizer.UseStaticMinuit(False)
 
-if args.closure_test:
-    from wg_labels_closuretest import labels
-else:
-    from wg_labels import labels
+from wg_labels import labels
 #    from wg_labels_wjets import labels
 #from wg_labels_recoil_tree import labels
 
@@ -1571,28 +1568,19 @@ for year in years:
         assert(0)
 
     if lepton_name == "muon":
-        if not args.closure_test:
-            data_filename = args.workdir+"/data/wg/"+year+"/1June2019/single_muon.root"
-        else:
-            data_filename = args.workdir+"/data/wg/"+year+"/1June2019/wjets.root"
+        data_filename = args.workdir+"/data/wg/"+year+"/1June2019/single_muon.root"
 
     elif lepton_name == "electron":
-        if not args.closure_test:
-            if year != "2018":
-                data_filename = args.workdir+"/data/wg/"+year+"/1June2019/single_electron.root"
-            else:    
-                data_filename = args.workdir+"/data/wg/"+year+"/1June2019/egamma.root"
-        else:
-            data_filename = args.workdir+"/data/wg/"+year+"/1June2019/wjets.root"
+        if year != "2018":
+            data_filename = args.workdir+"/data/wg/"+year+"/1June2019/single_electron.root"
+        else:    
+            data_filename = args.workdir+"/data/wg/"+year+"/1June2019/egamma.root"
 
     elif lepton_name == "both":
-        if not args.closure_test:
-            if year != "2018":
-                data_filename = args.workdir+"/data/wg/"+year+"/1June2019/data.root"
-            else:
-                data_filename = args.workdir+"/data/wg/"+year+"/1June2019/data.root"
+        if year != "2018":
+            data_filename = args.workdir+"/data/wg/"+year+"/1June2019/data.root"
         else:
-            data_filename = args.workdir+"/data/wg/"+year+"/1June2019/wjets.root"
+            data_filename = args.workdir+"/data/wg/"+year+"/1June2019/data.root"
     else:
         assert(0)
 
@@ -1640,17 +1628,6 @@ for year in years:
     rinterface = rinterface.Define("double_fake_alt_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 0 ? get_fake_lepton_weight(lepton_eta,lepton_pt,\""+year+"\",lepton_pdg_id)*get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,\"alt\") : 0") 
     rinterface = rinterface.Define("double_fake_stat_up_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 0 ? get_fake_lepton_weight(lepton_eta,lepton_pt,\""+year+"\",lepton_pdg_id)*get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,\"stat_up\") : 0") 
 
-    if args.closure_test:
-        if year == "2016" or year == "2017":    
-            prefire_weight_string = "PrefireWeight"
-        else:    
-            prefire_weight_string = "1"
-
-        data_file = ROOT.TFile.Open(data_filename)
-        data_nweightedevents = data_file.Get("nEventsGenWeighted").GetBinContent(1)
-        rinterface = rinterface.Define("closure_test_fake_photon_weight","fake_photon_weight*"+prefire_weight_string+"*puWeight*(!(photon_gen_matching == 1|| photon_gen_matching == 4 || photon_gen_matching == 5 || photon_gen_matching == 6) && is_lepton_real == 1)*gen_weight/abs(gen_weight)*60430.0*1000*"+str(lumi)+"/"+str(data_nweightedevents)+"*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\") : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\"))")
-        rinterface = rinterface.Define("closure_test_weight","weight*"+prefire_weight_string+"*puWeight*(!(photon_gen_matching == 1 || photon_gen_matching == 4 || photon_gen_matching == 5 || photon_gen_matching == 6) && is_lepton_real == 1)*gen_weight/abs(gen_weight)*60430.0*1000*"+str(lumi)+"/"+str(data_nweightedevents)+"*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\") : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\"))")
-
     for variable_definition in variable_definitions:
             rinterface = rinterface.Define(variable_definition[0],variable_definition[1])
 
@@ -1666,12 +1643,8 @@ for year in years:
     rresultptrs_double_fake_stat_up = []    
 
     for i in range(len(variables)):
-        if args.closure_test:
-            rresultptrs.append(rinterface.Histo1D(histogram_models[i],variables[i],"closure_test_weight"))
-            rresultptrs_fake_photon.append(rinterface.Histo1D(histogram_models[i],variables[i],"closure_test_fake_photon_weight"))
-        else:    
-            rresultptrs_fake_photon.append(rinterface.Histo1D(histogram_models[i],variables[i],"fake_photon_weight"))
-            rresultptrs.append(rinterface.Histo1D(histogram_models[i],variables[i],"weight"))
+        rresultptrs_fake_photon.append(rinterface.Histo1D(histogram_models[i],variables[i],"fake_photon_weight"))
+        rresultptrs.append(rinterface.Histo1D(histogram_models[i],variables[i],"weight"))
         rresultptrs_fake_photon_alt.append(rinterface.Histo1D(histogram_models[i],variables[i],"fake_photon_alt_weight"))
         rresultptrs_fake_photon_stat_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"fake_photon_stat_up_weight"))
         rresultptrs_fake_lepton.append(rinterface.Histo1D(histogram_models[i],variables[i],"fake_lepton_weight"))
@@ -1686,9 +1659,6 @@ for year in years:
         if year == "2016":    
             fake_photon_2016["hists"][i].Add(rresultptrs_fake_photon[i].GetValue())
         fake_photon["hists"][i].Add(rresultptrs_fake_photon[i].GetValue())
-
-        if args.closure_test:
-            continue
 
         fake_photon_alt["hists"][i].Add(rresultptrs_fake_photon_alt[i].GetValue())
         fake_photon_stat_up["hists"][i].Add(rresultptrs_fake_photon_stat_up[i].GetValue())
@@ -1820,37 +1790,37 @@ for year in years:
             rinterface = rinterface.Define("weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + ")*base_weight")
 
             if label == "wg+jets":
-                rinterface = rinterface.Define("pass_fiducial_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && (pass_fid_selection && fid_met_pt > 40))*base_weight")
-                rinterface = rinterface.Define("fail_fiducial_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && !(pass_fid_selection && fid_met_pt > 40))*base_weight")
-                rinterface = rinterface.Define("pass_fiducial_pileup_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && (pass_fid_selection && fid_met_pt > 40))*pileup_up_base_weight")
-                rinterface = rinterface.Define("fail_fiducial_pileup_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && !(pass_fid_selection && fid_met_pt > 40))*pileup_up_base_weight")
-                rinterface = rinterface.Define("pass_fiducial_prefire_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && (pass_fid_selection && fid_met_pt > 40))*prefire_up_base_weight")
-                rinterface = rinterface.Define("fail_fiducial_prefire_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && !(pass_fid_selection && fid_met_pt > 40))*prefire_up_base_weight")
-                rinterface = rinterface.Define("pass_fiducial_jes_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && (pass_fid_selection && fid_met_pt > 40))*jes_up_base_weight")
-                rinterface = rinterface.Define("fail_fiducial_jes_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && !(pass_fid_selection && fid_met_pt > 40))*jes_up_base_weight")
-                rinterface = rinterface.Define("pass_fiducial_jer_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && (pass_fid_selection && fid_met_pt > 40))*jer_up_base_weight")
-                rinterface = rinterface.Define("fail_fiducial_jer_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && !(pass_fid_selection && fid_met_pt > 40))*jer_up_base_weight")
-                rinterface = rinterface.Define("pass_fiducial_electron_reco_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && (pass_fid_selection && fid_met_pt > 40))*electron_reco_sf_up_base_weight")
-                rinterface = rinterface.Define("fail_fiducial_electron_reco_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && !(pass_fid_selection && fid_met_pt > 40))*electron_reco_sf_up_base_weight")
-                rinterface = rinterface.Define("pass_fiducial_electron_id_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && (pass_fid_selection && fid_met_pt > 40))*electron_id_sf_up_base_weight")
-                rinterface = rinterface.Define("fail_fiducial_electron_id_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && !(pass_fid_selection && fid_met_pt > 40))*electron_id_sf_up_base_weight")
-                rinterface = rinterface.Define("pass_fiducial_electron_hlt_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && (pass_fid_selection && fid_met_pt > 40))*electron_hlt_sf_up_base_weight")
-                rinterface = rinterface.Define("fail_fiducial_electron_hlt_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && !(pass_fid_selection && fid_met_pt > 40))*electron_hlt_sf_up_base_weight")
-                rinterface = rinterface.Define("pass_fiducial_muon_id_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && (pass_fid_selection && fid_met_pt > 40))*muon_id_sf_up_base_weight")
-                rinterface = rinterface.Define("fail_fiducial_muon_id_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && !(pass_fid_selection && fid_met_pt > 40))*muon_id_sf_up_base_weight")
-                rinterface = rinterface.Define("pass_fiducial_muon_iso_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && (pass_fid_selection && fid_met_pt > 40))*muon_iso_sf_up_base_weight")
-                rinterface = rinterface.Define("fail_fiducial_muon_iso_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && !(pass_fid_selection && fid_met_pt > 40))*muon_iso_sf_up_base_weight")
-                rinterface = rinterface.Define("pass_fiducial_muon_hlt_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && (pass_fid_selection && fid_met_pt > 40))*muon_hlt_sf_up_base_weight")
-                rinterface = rinterface.Define("fail_fiducial_muon_hlt_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && !(pass_fid_selection && fid_met_pt > 40))*muon_hlt_sf_up_base_weight")
+                rinterface = rinterface.Define("pass_fiducial_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && (pass_fid_selection && fid_met_pt > 0))*base_weight")
+                rinterface = rinterface.Define("fail_fiducial_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && !(pass_fid_selection && fid_met_pt > 0))*base_weight")
+                rinterface = rinterface.Define("pass_fiducial_pileup_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && (pass_fid_selection && fid_met_pt > 0))*pileup_up_base_weight")
+                rinterface = rinterface.Define("fail_fiducial_pileup_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && !(pass_fid_selection && fid_met_pt > 0))*pileup_up_base_weight")
+                rinterface = rinterface.Define("pass_fiducial_prefire_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && (pass_fid_selection && fid_met_pt > 0))*prefire_up_base_weight")
+                rinterface = rinterface.Define("fail_fiducial_prefire_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && !(pass_fid_selection && fid_met_pt > 0))*prefire_up_base_weight")
+                rinterface = rinterface.Define("pass_fiducial_jes_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && (pass_fid_selection && fid_met_pt > 0))*jes_up_base_weight")
+                rinterface = rinterface.Define("fail_fiducial_jes_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && !(pass_fid_selection && fid_met_pt > 0))*jes_up_base_weight")
+                rinterface = rinterface.Define("pass_fiducial_jer_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && (pass_fid_selection && fid_met_pt > 0))*jer_up_base_weight")
+                rinterface = rinterface.Define("fail_fiducial_jer_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && !(pass_fid_selection && fid_met_pt > 0))*jer_up_base_weight")
+                rinterface = rinterface.Define("pass_fiducial_electron_reco_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && (pass_fid_selection && fid_met_pt > 0))*electron_reco_sf_up_base_weight")
+                rinterface = rinterface.Define("fail_fiducial_electron_reco_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && !(pass_fid_selection && fid_met_pt > 0))*electron_reco_sf_up_base_weight")
+                rinterface = rinterface.Define("pass_fiducial_electron_id_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && (pass_fid_selection && fid_met_pt > 0))*electron_id_sf_up_base_weight")
+                rinterface = rinterface.Define("fail_fiducial_electron_id_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && !(pass_fid_selection && fid_met_pt > 0))*electron_id_sf_up_base_weight")
+                rinterface = rinterface.Define("pass_fiducial_electron_hlt_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && (pass_fid_selection && fid_met_pt > 0))*electron_hlt_sf_up_base_weight")
+                rinterface = rinterface.Define("fail_fiducial_electron_hlt_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && !(pass_fid_selection && fid_met_pt > 0))*electron_hlt_sf_up_base_weight")
+                rinterface = rinterface.Define("pass_fiducial_muon_id_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && (pass_fid_selection && fid_met_pt > 0))*muon_id_sf_up_base_weight")
+                rinterface = rinterface.Define("fail_fiducial_muon_id_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && !(pass_fid_selection && fid_met_pt > 0))*muon_id_sf_up_base_weight")
+                rinterface = rinterface.Define("pass_fiducial_muon_iso_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && (pass_fid_selection && fid_met_pt > 0))*muon_iso_sf_up_base_weight")
+                rinterface = rinterface.Define("fail_fiducial_muon_iso_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && !(pass_fid_selection && fid_met_pt > 0))*muon_iso_sf_up_base_weight")
+                rinterface = rinterface.Define("pass_fiducial_muon_hlt_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && (pass_fid_selection && fid_met_pt > 0))*muon_hlt_sf_up_base_weight")
+                rinterface = rinterface.Define("fail_fiducial_muon_hlt_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && !(pass_fid_selection && fid_met_pt > 0))*muon_hlt_sf_up_base_weight")
                 if labels["wg+jets"]["syst-scale"]:
                     for i in range(0,8):
                         #this sample has a bug that causes the scale weight to be 1/2 the correct value
                         if sample["filename"] == args.workdir+"/data/wg/2016/1June2019/wgjets.root" or sample["filename"] == args.workdir+"/data/wg/2016/1June2019jetunc/wgjets.root":
-                            rinterface = rinterface.Define("pass_fiducial_scale"+str(i)+"_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && (pass_fid_selection && fid_met_pt > 40))*base_weight*LHEScaleWeight["+str(i)+"]*2")
-                            rinterface = rinterface.Define("fail_fiducial_scale"+str(i)+"_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && !(pass_fid_selection && fid_met_pt > 40))*base_weight*LHEScaleWeight["+str(i)+"]*2")
+                            rinterface = rinterface.Define("pass_fiducial_scale"+str(i)+"_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && (pass_fid_selection && fid_met_pt > 0))*base_weight*LHEScaleWeight["+str(i)+"]*2")
+                            rinterface = rinterface.Define("fail_fiducial_scale"+str(i)+"_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && !(pass_fid_selection && fid_met_pt > 0))*base_weight*LHEScaleWeight["+str(i)+"]*2")
                         else:    
-                            rinterface = rinterface.Define("pass_fiducial_scale"+str(i)+"_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && (pass_fid_selection && fid_met_pt > 40))*base_weight*LHEScaleWeight["+str(i)+"]")
-                            rinterface = rinterface.Define("fail_fiducial_scale"+str(i)+"_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && !(pass_fid_selection && fid_met_pt > 40))*base_weight*LHEScaleWeight["+str(i)+"]")
+                            rinterface = rinterface.Define("pass_fiducial_scale"+str(i)+"_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && (pass_fid_selection && fid_met_pt > 0))*base_weight*LHEScaleWeight["+str(i)+"]")
+                            rinterface = rinterface.Define("fail_fiducial_scale"+str(i)+"_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && !(pass_fid_selection && fid_met_pt > 0))*base_weight*LHEScaleWeight["+str(i)+"]")
 
                 if labels["wg+jets"]["syst-pdf"]:
                     for i in range(0,32):
@@ -1858,11 +1828,11 @@ for year in years:
                             continue
                         #this sample has a bug that causes the scale weight to be 1/2 the correct value
                         if sample["filename"] == args.workdir+"/data/wg/2016/1June2019/wgjets.root" or sample["filename"] == args.workdir+"/data/wg/2016/1June2019jetunc/wgjets.root":
-                            rinterface = rinterface.Define("pass_fiducial_pdf"+str(i)+"_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && (pass_fid_selection && fid_met_pt > 40))*base_weight*LHEPdfWeight["+str(i+1)+"]*2")
-                            rinterface = rinterface.Define("fail_fiducial_pdf"+str(i)+"_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && !(pass_fid_selection && fid_met_pt > 40))*base_weight*LHEPdfWeight["+str(i+1)+"]*2")
+                            rinterface = rinterface.Define("pass_fiducial_pdf"+str(i)+"_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && (pass_fid_selection && fid_met_pt > 0))*base_weight*LHEPdfWeight["+str(i+1)+"]*2")
+                            rinterface = rinterface.Define("fail_fiducial_pdf"+str(i)+"_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && !(pass_fid_selection && fid_met_pt > 0))*base_weight*LHEPdfWeight["+str(i+1)+"]*2")
                         else:    
-                            rinterface = rinterface.Define("pass_fiducial_pdf"+str(i)+"_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && (pass_fid_selection && fid_met_pt > 40))*base_weight*LHEPdfWeight["+str(i+1)+"]")
-                            rinterface = rinterface.Define("fail_fiducial_pdf"+str(i)+"_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && !(pass_fid_selection && fid_met_pt > 40))*base_weight*LHEPdfWeight["+str(i+1)+"]")
+                            rinterface = rinterface.Define("pass_fiducial_pdf"+str(i)+"_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && (pass_fid_selection && fid_met_pt > 0))*base_weight*LHEPdfWeight["+str(i+1)+"]")
+                            rinterface = rinterface.Define("fail_fiducial_pdf"+str(i)+"_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && !(pass_fid_selection && fid_met_pt > 0))*base_weight*LHEPdfWeight["+str(i+1)+"]")
 
             rinterface = rinterface.Define("pileup_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + ")*pileup_up_base_weight")
             rinterface = rinterface.Define("prefire_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + ")*prefire_up_base_weight")
@@ -2786,8 +2756,6 @@ for i in range(len(variables)):
     for label in labels.keys():
         if labels[label]["color"] == None:
             continue
-        if args.closure_test and label == "wg+jets":
-            continue
 
         if label == "w+jets":
             continue
@@ -2804,27 +2772,21 @@ for i in range(len(variables)):
     if data_driven:
         if not args.use_wjets_for_fake_photon:
             hstack.Add(fake_photon["hists"][i])
-        if not args.closure_test:
-            hstack.Add(fake_lepton["hists"][i])
-            hstack.Add(double_fake["hists"][i])
+        hstack.Add(fake_lepton["hists"][i])
+        hstack.Add(double_fake["hists"][i])
 
-    if not args.closure_test and (lepton_name == "electron" or lepton_name == "both"): 
-        if args.closure_test and label == "wg+jets":
-            continue
+    if lepton_name == "electron" or lepton_name == "both": 
         hsum.Add(e_to_p["hists"][i])
         hstack.Add(e_to_p["hists"][i])
 
-    if not args.closure_test:    
-        hsum.Add(e_to_p_non_res["hists"][i])
-        hstack.Add(e_to_p_non_res["hists"][i])
+    hsum.Add(e_to_p_non_res["hists"][i])
+    hstack.Add(e_to_p_non_res["hists"][i])
 
     if data_driven:
         if not args.use_wjets_for_fake_photon:
             hsum.Add(fake_photon["hists"][i])
-        if not args.closure_test:
-            hsum.Add(fake_lepton["hists"][i])
-            hsum.Add(double_fake["hists"][i])
-
+        hsum.Add(fake_lepton["hists"][i])
+        hsum.Add(double_fake["hists"][i])
 
     if data["hists"][i].GetMaximum() < hsum.GetMaximum():
         data["hists"][i].SetMaximum(hsum.GetMaximum()*1.55)
@@ -2864,10 +2826,7 @@ for i in range(len(variables)):
 #wpwpjjewk.Draw("same")
 
     j=0
-    if args.closure_test:
-        draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,data["hists"][i],"w+jets","lp")
-    else:    
-        draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,data["hists"][i],"data","lp")
+    draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,data["hists"][i],"data","lp")
 
     if  args.use_wjets_for_fake_photon and "w+jets" in labels:
         j=j+1    
@@ -2878,32 +2837,27 @@ for i in range(len(variables)):
         if not args.use_wjets_for_fake_photon:
             j=j+1
             draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,fake_photon["hists"][i],"fake photon","f")
-        if not args.closure_test:
-            j=j+1
-            if lepton_name == "muon":
-                draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,fake_lepton["hists"][i],"fake muon","f")
-            elif lepton_name == "electron":
-                draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,fake_lepton["hists"][i],"fake electron","f")
-            elif lepton_name == "both":
-                draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,fake_lepton["hists"][i],"fake lepton","f")
-            else:
-                assert(0)
-            j=j+1
-            draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,double_fake["hists"][i],"double fake","f")
+        j=j+1
+        if lepton_name == "muon":
+            draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,fake_lepton["hists"][i],"fake muon","f")
+        elif lepton_name == "electron":
+            draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,fake_lepton["hists"][i],"fake electron","f")
+        elif lepton_name == "both":
+            draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,fake_lepton["hists"][i],"fake lepton","f")
+        else:
+            assert(0)
+        j=j+1
+        draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,double_fake["hists"][i],"double fake","f")
 
-    if (lepton_name == "electron" or lepton_name == "both") and not args.closure_test: 
+    if lepton_name == "electron" or lepton_name == "both":
         j=j+1
         draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,e_to_p["hists"][i],"e->#gamma","f")
 
-    if not args.closure_test:
-        j=j+1
-        draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,e_to_p_non_res["hists"][i],"e->#gamma non-res","f")
+    j=j+1
+    draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,e_to_p_non_res["hists"][i],"e->#gamma non-res","f")
 
     for label in labels.keys():
         if labels[label]["color"] == None:
-            continue
-
-        if args.closure_test and label == "wg+jets":
             continue
 
         if label == "w+jets":
@@ -2950,9 +2904,6 @@ for i in range(len(variables)):
     c1.SaveAs(args.outputdir + "/" + variables_labels[i] + ".png")
 
 c1.Close()
-
-if args.closure_test:
-    sys.exit(0)
 
 wg_jets_integral_error = ROOT.Double()
 wg_jets_integral = labels["wg+jets"]["hists"][mlg_index].IntegralAndError(1,labels["wg+jets"]["hists"][mlg_index].GetXaxis().GetNbins(),wg_jets_integral_error)
