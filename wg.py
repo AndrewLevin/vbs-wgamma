@@ -34,6 +34,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--nthreads',dest='nthreads',default=0) #the argument to EnableImplicitMT
 parser.add_argument('--userdir',dest='userdir',default='/afs/cern.ch/user/a/amlevin/') #not used now
 parser.add_argument('--workdir',dest='workdir',default='/afs/cern.ch/work/a/amlevin/')
+parser.add_argument('--draw_non_fid',dest='draw_non_fid',action='store_true')
 parser.add_argument('--lep',dest='lep',default='both')
 parser.add_argument('--year',dest='year',default='all')
 parser.add_argument('--zveto',dest='zveto',action='store_true',default=False)
@@ -2201,6 +2202,14 @@ for year in years:
             if labels[label]["color"] == None:
                 continue
 
+            if label == "wg+jets":
+                labels[label]["hists-pass-fiducial"][i].SetFillColor(labels[label]["color-fid"])
+                labels[label]["hists-pass-fiducial"][i].SetFillStyle(1001)
+                labels[label]["hists-pass-fiducial"][i].SetLineColor(labels[label]["color-fid"])
+                labels[label]["hists-fail-fiducial"][i].SetFillColor(labels[label]["color-non-fid"])
+                labels[label]["hists-fail-fiducial"][i].SetFillStyle(1001)
+                labels[label]["hists-fail-fiducial"][i].SetLineColor(labels[label]["color-non-fid"])
+
             labels[label]["hists"][i].SetFillColor(labels[label]["color"])
             labels[label]["hists"][i].SetFillStyle(1001)
             labels[label]["hists"][i].SetLineColor(labels[label]["color"])
@@ -2760,8 +2769,18 @@ for i in range(len(variables)):
         if label == "w+jets":
             continue
 
-        hsum.Add(labels[label]["hists"][i])
-        hstack.Add(labels[label]["hists"][i])
+        if label == "wg+jets":
+            if args.draw_non_fid:
+                hsum.Add(labels[label]["hists-fail-fiducial"][i])
+                hstack.Add(labels[label]["hists-fail-fiducial"][i])
+                hsum.Add(labels[label]["hists-pass-fiducial"][i])
+                hstack.Add(labels[label]["hists-pass-fiducial"][i])
+            else:    
+                hsum.Add(labels[label]["hists"][i])
+                hstack.Add(labels[label]["hists"][i])
+        else:        
+            hsum.Add(labels[label]["hists"][i])
+            hstack.Add(labels[label]["hists"][i])
 
     if args.use_wjets_for_fake_photon and "w+jets" in labels:
         hsum.Add(labels["w+jets"]["hists"][i])
@@ -2832,7 +2851,6 @@ for i in range(len(variables)):
         j=j+1    
         draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,labels["w+jets"]["hists"][i],"w+jets","f")
 
-
     if data_driven :
         if not args.use_wjets_for_fake_photon:
             j=j+1
@@ -2863,13 +2881,22 @@ for i in range(len(variables)):
         if label == "w+jets":
             continue
 
-        j=j+1    
-#        draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,labels[label]["hists"][i],label,"f")
-        if len(label) > 10:
-            print "Warning: truncating the legend label "+str(label) + " to "+str(label[0:10]) 
-            draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,labels[label]["hists"][i],label[0:10],"f")
-        else:    
-            draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,labels[label]["hists"][i],label,"f")
+        if label == "wg+jets":
+            if args.draw_non_fid:
+                j=j+1    
+                draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,labels[label]["hists-pass-fiducial"][i],"wg+jets","f")
+                j=j+1    
+                draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,labels[label]["hists-fail-fiducial"][i],"wg+jets out","f")
+            else:    
+                j=j+1    
+                draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,labels[label]["hists"][i],label,"f")
+        else:        
+            j=j+1    
+            if len(label) > 11:
+                print "Warning: truncating the legend label "+str(label) + " to "+str(label[0:11]) 
+                draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,labels[label]["hists"][i],label[0:11],"f")
+            else:    
+                draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,labels[label]["hists"][i],label,"f")
 
     if args.draw_ewdim6:
         j=j+1
@@ -4569,13 +4596,13 @@ if args.make_datacard:
     wgjets_pass_fiducial_scale_syst=histogram_models[mlg_index].GetHistogram()
 
     for i in range(labels["wg+jets"]["hists-pass-fiducial-scale-variation0"][mlg_index].GetNbinsX()+1):
-        wgjets_pass_fiducial_scale_syst.SetBinContent(i,labels["wg+jets"]["hists"][mlg_index].GetBinContent(i)+labels["wg+jets"]["hists"][mlg_index].Integral()*max(
-            abs(labels["wg+jets"]["hists-pass-fiducial-scale-variation0"][mlg_index].GetBinContent(i)/labels["wg+jets"]["hists-pass-fiducial-scale-variation0"][mlg_index].Integral() - labels["wg+jets"]["hists"][mlg_index].GetBinContent(i)/labels["wg+jets"]["hists"][mlg_index].Integral()),
-            abs(labels["wg+jets"]["hists-pass-fiducial-scale-variation1"][mlg_index].GetBinContent(i)/labels["wg+jets"]["hists-pass-fiducial-scale-variation1"][mlg_index].Integral() - labels["wg+jets"]["hists"][mlg_index].GetBinContent(i)/labels["wg+jets"]["hists"][mlg_index].Integral()),
-            abs(labels["wg+jets"]["hists-pass-fiducial-scale-variation3"][mlg_index].GetBinContent(i)/labels["wg+jets"]["hists-pass-fiducial-scale-variation3"][mlg_index].Integral() - labels["wg+jets"]["hists"][mlg_index].GetBinContent(i)/labels["wg+jets"]["hists"][mlg_index].Integral()),
-            abs(labels["wg+jets"]["hists-pass-fiducial-scale-variation4"][mlg_index].GetBinContent(i)/labels["wg+jets"]["hists-pass-fiducial-scale-variation4"][mlg_index].Integral() - labels["wg+jets"]["hists"][mlg_index].GetBinContent(i)/labels["wg+jets"]["hists"][mlg_index].Integral()),
-            abs(labels["wg+jets"]["hists-pass-fiducial-scale-variation5"][mlg_index].GetBinContent(i)/labels["wg+jets"]["hists-pass-fiducial-scale-variation5"][mlg_index].Integral() - labels["wg+jets"]["hists"][mlg_index].GetBinContent(i)/labels["wg+jets"]["hists"][mlg_index].Integral()),
-            abs(labels["wg+jets"]["hists-pass-fiducial-scale-variation6"][mlg_index].GetBinContent(i)/labels["wg+jets"]["hists-pass-fiducial-scale-variation6"][mlg_index].Integral() - labels["wg+jets"]["hists"][mlg_index].GetBinContent(i)/labels["wg+jets"]["hists"][mlg_index].Integral())))
+        wgjets_pass_fiducial_scale_syst.SetBinContent(i,labels["wg+jets"]["hists-pass-fiducial"][mlg_index].GetBinContent(i)+labels["wg+jets"]["hists-pass-fiducial"][mlg_index].Integral()*max(
+            abs(labels["wg+jets"]["hists-pass-fiducial-scale-variation0"][mlg_index].GetBinContent(i)/labels["wg+jets"]["hists-pass-fiducial-scale-variation0"][mlg_index].Integral() - labels["wg+jets"]["hists-pass-fiducial"][mlg_index].GetBinContent(i)/labels["wg+jets"]["hists-pass-fiducial"][mlg_index].Integral()),
+            abs(labels["wg+jets"]["hists-pass-fiducial-scale-variation1"][mlg_index].GetBinContent(i)/labels["wg+jets"]["hists-pass-fiducial-scale-variation1"][mlg_index].Integral() - labels["wg+jets"]["hists-pass-fiducial"][mlg_index].GetBinContent(i)/labels["wg+jets"]["hists-pass-fiducial"][mlg_index].Integral()),
+            abs(labels["wg+jets"]["hists-pass-fiducial-scale-variation3"][mlg_index].GetBinContent(i)/labels["wg+jets"]["hists-pass-fiducial-scale-variation3"][mlg_index].Integral() - labels["wg+jets"]["hists-pass-fiducial"][mlg_index].GetBinContent(i)/labels["wg+jets"]["hists-pass-fiducial"][mlg_index].Integral()),
+            abs(labels["wg+jets"]["hists-pass-fiducial-scale-variation4"][mlg_index].GetBinContent(i)/labels["wg+jets"]["hists-pass-fiducial-scale-variation4"][mlg_index].Integral() - labels["wg+jets"]["hists-pass-fiducial"][mlg_index].GetBinContent(i)/labels["wg+jets"]["hists-pass-fiducial"][mlg_index].Integral()),
+            abs(labels["wg+jets"]["hists-pass-fiducial-scale-variation5"][mlg_index].GetBinContent(i)/labels["wg+jets"]["hists-pass-fiducial-scale-variation5"][mlg_index].Integral() - labels["wg+jets"]["hists-pass-fiducial"][mlg_index].GetBinContent(i)/labels["wg+jets"]["hists-pass-fiducial"][mlg_index].Integral()),
+            abs(labels["wg+jets"]["hists-pass-fiducial-scale-variation6"][mlg_index].GetBinContent(i)/labels["wg+jets"]["hists-pass-fiducial-scale-variation6"][mlg_index].Integral() - labels["wg+jets"]["hists-pass-fiducial"][mlg_index].GetBinContent(i)/labels["wg+jets"]["hists-pass-fiducial"][mlg_index].Integral())))
 
     wgjets_fail_fiducial_scale_syst=histogram_models[mlg_index].GetHistogram()
 
