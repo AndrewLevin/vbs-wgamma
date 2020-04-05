@@ -23,10 +23,10 @@ mg5amc_nlo_fiducial_xs = mg5amc_nlo_xs*n_weighted_mg5amc_pass_fid_selection/n_we
 #text2hdf5.py ~/wg/wg_dcard_theory_exp.txt -S 0 
 #combinetf.py ~/wg/wg_dcard_theory_exp.hdf5 --useSciPyMinimizer -t -1 --expectSignal=1 
 rexp = 1  
-rexpunc = 0.042145
-rexptheoryunc = 0.012379
+rexpunc = 0.040800
+rexptheoryunc = 0.012505
 rexpexpunc = 0.034434
-rexpnosystunc = 0.002968 
+rexpnosystunc = 0.002968
 
 #text2hdf5.py ~/wg/wg_dcard_theory_exp_mu_chan.txt 
 #combinetf.py ~/wg/wg_dcard_theory_exp_mu_chan.hdf5 --useSciPyMinimizer -t -1 --expectSignal=1 --binByBinStat
@@ -37,10 +37,10 @@ rexpnosystunc = 0.002968
 #text2hdf5.py ~/wg/wg_dcard_theory_exp_mu_chan.txt -S 0 
 #combinetf.py ~/wg/wg_dcard_theory_exp_mu_chan.hdf5 --useSciPyMinimizer -t -1 --expectSignal=1
 rexpmuon = 1  
-rexpmuonunc = 0.045213
-rexpmuontheoryunc = 0.016953
+rexpmuonunc = 0.042728
+rexpmuontheoryunc = 0.017750
 rexpmuonexpunc = 0.036548
-rexpmuonnosystunc = 0.003582 
+rexpmuonnosystunc = 0.003582
 
 #text2hdf5.py ~/wg/wg_dcard_theory_exp_el_chan.txt
 #combinetf.py ~/wg/wg_dcard_theory_exp_el_chan.hdf5 --useSciPyMinimizer -t -1 --expectSignal=1 --binByBinStat
@@ -51,20 +51,26 @@ rexpmuonnosystunc = 0.003582
 #text2hdf5.py ~/wg/wg_dcard_theory_exp_el_chan.txt -S 0 
 #combinetf.py ~/wg/wg_dcard_theory_exp_el_chan.hdf5 --useSciPyMinimizer -t -1 --expectSignal=1
 rexpelectron = 1  
-rexpelectronunc = 0.067247
-rexpelectrontheoryunc = 0.021975
+rexpelectronunc = 0.065906
+rexpelectrontheoryunc = 0.022843
 rexpelectronexpunc = 0.055481
 rexpelectronnosystunc = 0.005302
 
-print "xs based on muon channel = %0.2f +/- %0.2f"%(mg5amc_nlo_fiducial_xs * rexpmuon,mg5amc_nlo_fiducial_xs * rexpmuonunc)
+print "xs = %0.2f +/- %0.2f"%(mg5amc_nlo_fiducial_xs * rexp,mg5amc_nlo_fiducial_xs * rexpunc)
 
-print "xs based on muon channel = %0.2f +/- %0.2f (stat) +/- %0.2f (exp) +/- %0.2f (theory)"%(mg5amc_nlo_fiducial_xs * rexpmuon,mg5amc_nlo_fiducial_xs * rexpmuonnosystunc,mg5amc_nlo_fiducial_xs * math.sqrt(pow(rexpmuonexpunc,2)-pow(rexpmuonnosystunc,2)),mg5amc_nlo_fiducial_xs * math.sqrt(pow(rexpmuonunc,2)-pow(rexpmuonexpunc,2)))
+print "xs = %0.2f +/- %0.2f (stat) +/- %0.2f (exp) +/- %0.2f (theory)"%(mg5amc_nlo_fiducial_xs * rexp,mg5amc_nlo_fiducial_xs * rexpnosystunc,mg5amc_nlo_fiducial_xs * math.sqrt(pow(rexpexpunc,2)-pow(rexpnosystunc,2)),mg5amc_nlo_fiducial_xs * math.sqrt(pow(rexpunc,2)-pow(rexpexpunc,2)))
+
+print "xs = \sigma = %0.2f \\pm %0.2f \\text{ pb} = %0.2f \\pm %0.2f \\text{ (stat)} \\pm %0.2f \\text{ (exp)} \\pm %0.2f \\text{ (theory) pb}"%(mg5amc_nlo_fiducial_xs * rexp,mg5amc_nlo_fiducial_xs * rexpunc,mg5amc_nlo_fiducial_xs * rexp,mg5amc_nlo_fiducial_xs * rexpnosystunc,mg5amc_nlo_fiducial_xs * math.sqrt(pow(rexpexpunc,2)-pow(rexpnosystunc,2)),mg5amc_nlo_fiducial_xs * math.sqrt(pow(rexpunc,2)-pow(rexpexpunc,2)))
 
 print "xs based on electron channel = %0.2f +/- %0.2f"%(mg5amc_nlo_fiducial_xs * rexpelectron,mg5amc_nlo_fiducial_xs * rexpelectronunc)
 
 print "xs based on electron channel = %0.2f +/- %0.2f (stat) +/- %0.2f (exp) +/- %0.2f (theory)"%(mg5amc_nlo_fiducial_xs * rexpelectron,mg5amc_nlo_fiducial_xs * rexpelectronnosystunc,mg5amc_nlo_fiducial_xs * math.sqrt(pow(rexpelectronexpunc,2)-pow(rexpelectronnosystunc,2)),mg5amc_nlo_fiducial_xs * math.sqrt(pow(rexpelectronunc,2)-pow(rexpelectronexpunc,2)))
 
-print "xs = %0.2f +/- %0.2f"%(mg5amc_nlo_fiducial_xs * rexp,mg5amc_nlo_fiducial_xs * rexpunc)
+print "xs based on electron channel = \sigma = %0.2f \\pm %0.2f \\text{ pb} = %0.2f \\pm %0.2f \\text{ (stat)} \\pm %0.2f \\text{ (exp)} \\pm %0.2f \\text{ (theory) pb}"%(mg5amc_nlo_fiducial_xs * rexpelectron,mg5amc_nlo_fiducial_xs * rexpelectronunc,mg5amc_nlo_fiducial_xs * rexpelectron,mg5amc_nlo_fiducial_xs * rexpelectronnosystunc,mg5amc_nlo_fiducial_xs * math.sqrt(pow(rexpelectronexpunc,2)-pow(rexpelectronnosystunc,2)),mg5amc_nlo_fiducial_xs * math.sqrt(pow(rexpelectronunc,2)-pow(rexpelectronexpunc,2)))
 
-print "xs = %0.2f +/- %0.2f (stat) +/- %0.2f (exp) +/- %0.2f (theory)"%(mg5amc_nlo_fiducial_xs * rexp,mg5amc_nlo_fiducial_xs * rexpnosystunc,mg5amc_nlo_fiducial_xs * math.sqrt(pow(rexpexpunc,2)-pow(rexpnosystunc,2)),mg5amc_nlo_fiducial_xs * math.sqrt(pow(rexpunc,2)-pow(rexpexpunc,2)))
+print "xs based on muon channel = %0.2f +/- %0.2f"%(mg5amc_nlo_fiducial_xs * rexpmuon,mg5amc_nlo_fiducial_xs * rexpmuonunc)
+
+print "xs based on muon channel = %0.2f +/- %0.2f (stat) +/- %0.2f (exp) +/- %0.2f (theory)"%(mg5amc_nlo_fiducial_xs * rexpmuon,mg5amc_nlo_fiducial_xs * rexpmuonnosystunc,mg5amc_nlo_fiducial_xs * math.sqrt(pow(rexpmuonexpunc,2)-pow(rexpmuonnosystunc,2)),mg5amc_nlo_fiducial_xs * math.sqrt(pow(rexpmuonunc,2)-pow(rexpmuonexpunc,2)))
+
+print "xs based on muon channel = \sigma = %0.2f \\pm %0.2f \\text{ pb} = %0.2f \\pm %0.2f \\text{ (stat)} \\pm %0.2f \\text{ (exp)} \\pm %0.2f \\text{ (theory) pb}"%(mg5amc_nlo_fiducial_xs * rexpmuon,mg5amc_nlo_fiducial_xs * rexpmuonunc,mg5amc_nlo_fiducial_xs * rexpmuon,mg5amc_nlo_fiducial_xs * rexpmuonnosystunc,mg5amc_nlo_fiducial_xs * math.sqrt(pow(rexpmuonexpunc,2)-pow(rexpmuonnosystunc,2)),mg5amc_nlo_fiducial_xs * math.sqrt(pow(rexpmuonunc,2)-pow(rexpmuonexpunc,2)))
 
