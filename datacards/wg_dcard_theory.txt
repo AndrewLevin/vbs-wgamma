@@ -1,0 +1,41 @@
+Combination of wg_dcard_theory_el_chan.txt  wg_dcard_theory_mu_chan.txt
+imax 2 number of bins
+jmax 10 number of processes minus 1
+kmax 6 number of nuisance parameters
+----------------------------------------------------------------------------------------------------------------------------------
+shapes Wg              ch1             wg_dcard_el_chan_shapes.root wg wg_$SYSTEMATIC
+shapes Wg_out          ch1             wg_dcard_el_chan_shapes.root wgout wgout_$SYSTEMATIC
+shapes data_obs        ch1             wg_dcard_el_chan_shapes.root data_obs
+shapes double_fake     ch1             wg_dcard_el_chan_shapes.root doublefake doublefake_$SYSTEMATIC
+shapes e_to_p          ch1             wg_dcard_el_chan_shapes.root etop etop_$SYSTEMATIC
+shapes e_to_p_non_res  ch1             wg_dcard_el_chan_shapes.root etopnonres etopnonres_$SYSTEMATIC
+shapes fake_electron   ch1             wg_dcard_el_chan_shapes.root fakeelectron fakeelectron_$SYSTEMATIC
+shapes fake_photon     ch1             wg_dcard_el_chan_shapes.root fakephoton fakephoton_$SYSTEMATIC
+shapes topjets         ch1             wg_dcard_el_chan_shapes.root topjets topjets_$SYSTEMATIC
+shapes vvjets          ch1             wg_dcard_el_chan_shapes.root vvjets vvjets_$SYSTEMATIC
+shapes zgjets          ch1             wg_dcard_el_chan_shapes.root zgjets zgjets_$SYSTEMATIC
+shapes Wg              ch2             wg_dcard_mu_chan_shapes.root wg wg_$SYSTEMATIC
+shapes Wg_out          ch2             wg_dcard_mu_chan_shapes.root wgout wgout_$SYSTEMATIC
+shapes data_obs        ch2             wg_dcard_mu_chan_shapes.root data_obs
+shapes double_fake     ch2             wg_dcard_mu_chan_shapes.root doublefake doublefake_$SYSTEMATIC
+shapes e_to_p_non_res  ch2             wg_dcard_mu_chan_shapes.root etopnonres etopnonres_$SYSTEMATIC
+shapes fake_muon       ch2             wg_dcard_mu_chan_shapes.root fakemuon fakemuon_$SYSTEMATIC
+shapes fake_photon     ch2             wg_dcard_mu_chan_shapes.root fakephoton fakephoton_$SYSTEMATIC
+shapes topjets         ch2             wg_dcard_mu_chan_shapes.root topjets topjets_$SYSTEMATIC
+shapes vvjets          ch2             wg_dcard_mu_chan_shapes.root vvjets vvjets_$SYSTEMATIC
+shapes zgjets          ch2             wg_dcard_mu_chan_shapes.root zgjets zgjets_$SYSTEMATIC
+----------------------------------------------------------------------------------------------------------------------------------
+bin          ch1            ch2          
+observation  407033.794115  368172.745157
+----------------------------------------------------------------------------------------------------------------------------------
+bin                                ch1             ch1             ch1             ch1             ch1             ch1             ch1             ch1             ch1             ch1             ch2             ch2             ch2             ch2             ch2             ch2             ch2             ch2             ch2           
+process                            Wg              topjets         double_fake     e_to_p_non_res  fake_electron   e_to_p          vvjets          zgjets          Wg_out          fake_photon     Wg              fake_muon       topjets         double_fake     e_to_p_non_res  vvjets          zgjets          Wg_out          fake_photon   
+process                            0               1               2               3               4               5               6               7               8               9               0               10              1               2               3               6               7               8               9             
+rate                               98457.2578799   15157.7626831   19315.935123    5753.43522655   18395.926512    183899.40126    1362.37588944   21404.6134081   2288.01195347   40999.0741797   167320.934182   17920.4863051   22931.8744246   18861.7409274   8053.63965479   2147.21563395   43403.9460773   2694.35246519   84838.555486  
+----------------------------------------------------------------------------------------------------------------------------------
+wgoutpdf                shape1     -               -               -               -               -               -               -               -               1.0             -               -               -               -               -               -               -               -               1.0             -             
+wgoutscale              shape1     -               -               -               -               -               -               -               -               1.0             -               -               -               -               -               -               -               -               1.0             -             
+wgpdf                   shape1     1.0             -               -               -               -               -               -               -               -               -               1.0             -               -               -               -               -               -               -               -             
+wgscale                 shape1     1.0             -               -               -               -               -               -               -               -               -               1.0             -               -               -               -               -               -               -               -             
+zgpdf                   shape1     -               -               -               -               -               -               -               1.0             -               -               -               -               -               -               -               -               1.0             -               -             
+zgscale                 shape1     -               -               -               -               -               -               -               1.0             -               -               -               -               -               -               -               -               1.0             -               -             
