@@ -660,6 +660,16 @@ e_to_p["hists-pileup-up"] = []
 e_to_p["hists-prefire-up"] = []
 e_to_p["hists-jes-up"] = []
 e_to_p["hists-jer-up"] = []
+e_to_p_non_res["hists"] = []
+e_to_p_non_res["hists"] = []
+e_to_p_non_res["hists-electron-id-sf-up"] = []
+e_to_p_non_res["hists-electron-reco-sf-up"] = []
+e_to_p_non_res["hists-electron-hlt-sf-up"] = []
+e_to_p_non_res["hists-photon-id-sf-up"] = []
+e_to_p_non_res["hists-pileup-up"] = []
+e_to_p_non_res["hists-prefire-up"] = []
+e_to_p_non_res["hists-jes-up"] = []
+e_to_p_non_res["hists-jer-up"] = []
 ewdim6["hists"] = []
 
 for i in range(len(variables)):
@@ -677,7 +687,6 @@ for i in range(len(variables)):
     double_fake["hists"].append(histogram_models[i].GetHistogram())
     double_fake_alt["hists"].append(histogram_models[i].GetHistogram())
     double_fake_stat_up["hists"].append(histogram_models[i].GetHistogram())
-    e_to_p_non_res["hists"].append(histogram_models[i].GetHistogram())
     e_to_p["hists"].append(histogram_models[i].GetHistogram())
     e_to_p["hists-electron-id-sf-up"].append(histogram_models[i].GetHistogram())
     e_to_p["hists-electron-reco-sf-up"].append(histogram_models[i].GetHistogram())
@@ -687,6 +696,15 @@ for i in range(len(variables)):
     e_to_p["hists-prefire-up"].append(histogram_models[i].GetHistogram())
     e_to_p["hists-jes-up"].append(histogram_models[i].GetHistogram())
     e_to_p["hists-jer-up"].append(histogram_models[i].GetHistogram())
+    e_to_p_non_res["hists"].append(histogram_models[i].GetHistogram())
+    e_to_p_non_res["hists-electron-id-sf-up"].append(histogram_models[i].GetHistogram())
+    e_to_p_non_res["hists-electron-reco-sf-up"].append(histogram_models[i].GetHistogram())
+    e_to_p_non_res["hists-electron-hlt-sf-up"].append(histogram_models[i].GetHistogram())
+    e_to_p_non_res["hists-photon-id-sf-up"].append(histogram_models[i].GetHistogram())
+    e_to_p_non_res["hists-pileup-up"].append(histogram_models[i].GetHistogram())
+    e_to_p_non_res["hists-prefire-up"].append(histogram_models[i].GetHistogram())
+    e_to_p_non_res["hists-jes-up"].append(histogram_models[i].GetHistogram())
+    e_to_p_non_res["hists-jer-up"].append(histogram_models[i].GetHistogram())
     fake_signal_contamination["hists"].append(histogram_models[i].GetHistogram())
     ewdim6["hists"].append(histogram_models[i].GetHistogram())
 
@@ -709,7 +727,6 @@ for i in range(len(variables)):
     double_fake["hists"][i].Sumw2()
     double_fake_alt["hists"][i].Sumw2()
     double_fake_stat_up["hists"][i].Sumw2()
-    e_to_p_non_res["hists"][i].Sumw2()
     e_to_p["hists"][i].Sumw2()
     e_to_p["hists-electron-id-sf-up"][i].Sumw2()
     e_to_p["hists-electron-reco-sf-up"][i].Sumw2()
@@ -719,6 +736,15 @@ for i in range(len(variables)):
     e_to_p["hists-prefire-up"][i].Sumw2()
     e_to_p["hists-jes-up"][i].Sumw2()
     e_to_p["hists-jer-up"][i].Sumw2()
+    e_to_p_non_res["hists"][i].Sumw2()
+    e_to_p_non_res["hists-electron-id-sf-up"][i].Sumw2()
+    e_to_p_non_res["hists-electron-reco-sf-up"][i].Sumw2()
+    e_to_p_non_res["hists-electron-hlt-sf-up"][i].Sumw2()
+    e_to_p_non_res["hists-photon-id-sf-up"][i].Sumw2()
+    e_to_p_non_res["hists-pileup-up"][i].Sumw2()
+    e_to_p_non_res["hists-prefire-up"][i].Sumw2()
+    e_to_p_non_res["hists-jes-up"][i].Sumw2()
+    e_to_p_non_res["hists-jer-up"][i].Sumw2()
     ewdim6["hists"][i].Sumw2()
     fake_signal_contamination["hists"][i].Sumw2()
 
@@ -1900,10 +1926,17 @@ for year in years:
                 rinterface = rinterface.Define("e_to_p_photon_id_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1)*photon_id_sf_up_base_weight")
                 rinterface = rinterface.Define("e_to_p_jes_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1)*jes_up_base_weight")
                 rinterface = rinterface.Define("e_to_p_jer_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1)*jer_up_base_weight")
-
                 
             if sample["e_to_p_non_res"]:
-                rinterface = rinterface.Define("e_to_p_non_res_weight","photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1 ? base_weight : 0") 
+                rinterface = rinterface.Define("e_to_p_non_res_weight","photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1 ? base_weight : 0")
+                rinterface = rinterface.Define("e_to_p_non_res_pileup_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1)*pileup_up_base_weight")
+                rinterface = rinterface.Define("e_to_p_non_res_prefire_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1)*prefire_up_base_weight")
+                rinterface = rinterface.Define("e_to_p_non_res_electron_id_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1)*electron_id_sf_up_base_weight")
+                rinterface = rinterface.Define("e_to_p_non_res_electron_reco_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1)*electron_reco_sf_up_base_weight")
+                rinterface = rinterface.Define("e_to_p_non_res_electron_hlt_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1)*electron_hlt_sf_up_base_weight")
+                rinterface = rinterface.Define("e_to_p_non_res_photon_id_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1)*photon_id_sf_up_base_weight")
+                rinterface = rinterface.Define("e_to_p_non_res_jes_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1)*jes_up_base_weight")
+                rinterface = rinterface.Define("e_to_p_non_res_jer_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1)*jer_up_base_weight")
 
             for variable_definition in variable_definitions:
                 rinterface = rinterface.Define(variable_definition[0],variable_definition[1])
@@ -1960,6 +1993,14 @@ for year in years:
 
             if sample["e_to_p_non_res"]:
                 rresultptrs_e_to_p_non_res = []    
+                rresultptrs_e_to_p_non_res_electron_id_sf_up = []    
+                rresultptrs_e_to_p_non_res_electron_reco_sf_up = []    
+                rresultptrs_e_to_p_non_res_electron_hlt_sf_up = []    
+                rresultptrs_e_to_p_non_res_photon_id_sf_up = []    
+                rresultptrs_e_to_p_non_res_pileup_up = []    
+                rresultptrs_e_to_p_non_res_prefire_up = []    
+                rresultptrs_e_to_p_non_res_jes_up = []    
+                rresultptrs_e_to_p_non_res_jer_up = []    
             if label == "wg+jets":
                 rresultptrs_pass_fiducial = []    
                 rresultptrs_fail_fiducial = []    
@@ -2090,6 +2131,14 @@ for year in years:
 
                 if sample["e_to_p_non_res"]:
                     rresultptrs_e_to_p_non_res.append(rinterface.Histo1D(histogram_models[i],variables[i],"e_to_p_non_res_weight"))
+                    rresultptrs_e_to_p_non_res_electron_id_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"e_to_p_non_res_electron_id_sf_up_weight"))
+                    rresultptrs_e_to_p_non_res_electron_reco_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"e_to_p_non_res_electron_reco_sf_up_weight"))
+                    rresultptrs_e_to_p_non_res_electron_hlt_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"e_to_p_non_res_electron_hlt_sf_up_weight"))
+                    rresultptrs_e_to_p_non_res_photon_id_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"e_to_p_non_res_photon_id_sf_up_weight"))
+                    rresultptrs_e_to_p_non_res_pileup_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"e_to_p_non_res_pileup_up_weight"))
+                    rresultptrs_e_to_p_non_res_prefire_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"e_to_p_non_res_prefire_up_weight"))
+                    rresultptrs_e_to_p_non_res_jes_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"e_to_p_non_res_jes_up_weight"))
+                    rresultptrs_e_to_p_non_res_jer_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"e_to_p_non_res_jer_up_weight"))
 
             for i in range(len(variables)):
 
@@ -2196,6 +2245,14 @@ for year in years:
 
                 if sample["e_to_p_non_res"]:
                     e_to_p_non_res["hists"][i].Add(rresultptrs_e_to_p_non_res[i].GetValue())
+                    e_to_p_non_res["hists-electron-id-sf-up"][i].Add(rresultptrs_e_to_p_non_res_electron_id_sf_up[i].GetValue())
+                    e_to_p_non_res["hists-electron-reco-sf-up"][i].Add(rresultptrs_e_to_p_non_res_electron_reco_sf_up[i].GetValue())
+                    e_to_p_non_res["hists-electron-hlt-sf-up"][i].Add(rresultptrs_e_to_p_non_res_electron_hlt_sf_up[i].GetValue())
+                    e_to_p_non_res["hists-photon-id-sf-up"][i].Add(rresultptrs_e_to_p_non_res_photon_id_sf_up[i].GetValue())
+                    e_to_p_non_res["hists-pileup-up"][i].Add(rresultptrs_e_to_p_non_res_pileup_up[i].GetValue())
+                    e_to_p_non_res["hists-prefire-up"][i].Add(rresultptrs_e_to_p_non_res_prefire_up[i].GetValue())
+                    e_to_p_non_res["hists-jes-up"][i].Add(rresultptrs_e_to_p_non_res_jes_up[i].GetValue())
+                    e_to_p_non_res["hists-jer-up"][i].Add(rresultptrs_e_to_p_non_res_jer_up[i].GetValue())
                 
         for i in range(len(variables)):    
 
