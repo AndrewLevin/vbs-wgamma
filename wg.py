@@ -4550,7 +4550,7 @@ if args.make_datacard:
         mean_pdf=0
 
         for j in range(1,32):
-            mean_pdf += labels["wg+jets"]["hists-pass-fiducial-pdf-variation"+str(j)][mlg_index].GetBinContent(i)*labels["wg+jets"]["hists"][mlg_index].Integral()/labels["wg+jets"]["hists-pass-fiducial-pdf-variation"+str(j)][mlg_index].Integral()
+            mean_pdf += labels["wg+jets"]["hists-pass-fiducial-pdf-variation"+str(j)][mlg_index].GetBinContent(i)*labels["wg+jets"]["hists-pass-fiducial"][mlg_index].Integral()/labels["wg+jets"]["hists-pass-fiducial-pdf-variation"+str(j)][mlg_index].Integral()
 
         mean_pdf = mean_pdf/31
 
