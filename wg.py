@@ -613,6 +613,9 @@ if "wg+jets" in labels:
 
     fiducial_region_cuts_efficiency = nweightedeventspassgenselection/nweightedevents
 
+etopbinning = [25,35,45]
+#etopbinning = [25]
+
 data = {}
 fake_signal_contamination = {}
 
@@ -631,8 +634,10 @@ fake_lepton_stat_up = {}
 double_fake = {}
 double_fake_alt = {}
 double_fake_stat_up = {}
-e_to_p = {}
-e_to_p_non_res = {}
+e_to_p_total = {}
+e_to_p = []
+for i in range(len(etopbinning)):
+    e_to_p.append({})
 ewdim6 = {}
 
 data["hists"] = []
@@ -650,24 +655,25 @@ fake_lepton_stat_up["hists"] = []
 double_fake["hists"] = []
 double_fake_alt["hists"] = []
 double_fake_stat_up["hists"] = []
-e_to_p["hists"] = []
-e_to_p["hists-electron-id-sf-up"] = []
-e_to_p["hists-electron-reco-sf-up"] = []
-e_to_p["hists-electron-hlt-sf-up"] = []
-e_to_p["hists-photon-id-sf-up"] = []
-e_to_p["hists-pileup-up"] = []
-e_to_p["hists-prefire-up"] = []
-e_to_p["hists-jes-up"] = []
-e_to_p["hists-jer-up"] = []
-e_to_p_non_res["hists"] = []
-e_to_p_non_res["hists-electron-id-sf-up"] = []
-e_to_p_non_res["hists-electron-reco-sf-up"] = []
-e_to_p_non_res["hists-electron-hlt-sf-up"] = []
-e_to_p_non_res["hists-photon-id-sf-up"] = []
-e_to_p_non_res["hists-pileup-up"] = []
-e_to_p_non_res["hists-prefire-up"] = []
-e_to_p_non_res["hists-jes-up"] = []
-e_to_p_non_res["hists-jer-up"] = []
+for i in range(len(etopbinning)):
+    e_to_p[i]["hists"] = []
+    e_to_p[i]["hists-electron-id-sf-up"] = []
+    e_to_p[i]["hists-electron-reco-sf-up"] = []
+    e_to_p[i]["hists-electron-hlt-sf-up"] = []
+    e_to_p[i]["hists-photon-id-sf-up"] = []
+    e_to_p[i]["hists-pileup-up"] = []
+    e_to_p[i]["hists-prefire-up"] = []
+    e_to_p[i]["hists-jes-up"] = []
+    e_to_p[i]["hists-jer-up"] = []
+e_to_p_total["hists"] = []
+e_to_p_total["hists-electron-id-sf-up"] = []
+e_to_p_total["hists-electron-reco-sf-up"] = []
+e_to_p_total["hists-electron-hlt-sf-up"] = []
+e_to_p_total["hists-photon-id-sf-up"] = []
+e_to_p_total["hists-pileup-up"] = []
+e_to_p_total["hists-prefire-up"] = []
+e_to_p_total["hists-jes-up"] = []
+e_to_p_total["hists-jer-up"] = []
 ewdim6["hists"] = []
 
 for i in range(len(variables)):
@@ -685,24 +691,25 @@ for i in range(len(variables)):
     double_fake["hists"].append(histogram_models[i].GetHistogram())
     double_fake_alt["hists"].append(histogram_models[i].GetHistogram())
     double_fake_stat_up["hists"].append(histogram_models[i].GetHistogram())
-    e_to_p["hists"].append(histogram_models[i].GetHistogram())
-    e_to_p["hists-electron-id-sf-up"].append(histogram_models[i].GetHistogram())
-    e_to_p["hists-electron-reco-sf-up"].append(histogram_models[i].GetHistogram())
-    e_to_p["hists-electron-hlt-sf-up"].append(histogram_models[i].GetHistogram())
-    e_to_p["hists-photon-id-sf-up"].append(histogram_models[i].GetHistogram())
-    e_to_p["hists-pileup-up"].append(histogram_models[i].GetHistogram())
-    e_to_p["hists-prefire-up"].append(histogram_models[i].GetHistogram())
-    e_to_p["hists-jes-up"].append(histogram_models[i].GetHistogram())
-    e_to_p["hists-jer-up"].append(histogram_models[i].GetHistogram())
-    e_to_p_non_res["hists"].append(histogram_models[i].GetHistogram())
-    e_to_p_non_res["hists-electron-id-sf-up"].append(histogram_models[i].GetHistogram())
-    e_to_p_non_res["hists-electron-reco-sf-up"].append(histogram_models[i].GetHistogram())
-    e_to_p_non_res["hists-electron-hlt-sf-up"].append(histogram_models[i].GetHistogram())
-    e_to_p_non_res["hists-photon-id-sf-up"].append(histogram_models[i].GetHistogram())
-    e_to_p_non_res["hists-pileup-up"].append(histogram_models[i].GetHistogram())
-    e_to_p_non_res["hists-prefire-up"].append(histogram_models[i].GetHistogram())
-    e_to_p_non_res["hists-jes-up"].append(histogram_models[i].GetHistogram())
-    e_to_p_non_res["hists-jer-up"].append(histogram_models[i].GetHistogram())
+    for j in range(len(etopbinning)):
+        e_to_p[j]["hists"].append(histogram_models[i].GetHistogram())
+        e_to_p[j]["hists-electron-id-sf-up"].append(histogram_models[i].GetHistogram())
+        e_to_p[j]["hists-electron-reco-sf-up"].append(histogram_models[i].GetHistogram())
+        e_to_p[j]["hists-electron-hlt-sf-up"].append(histogram_models[i].GetHistogram())
+        e_to_p[j]["hists-photon-id-sf-up"].append(histogram_models[i].GetHistogram())
+        e_to_p[j]["hists-pileup-up"].append(histogram_models[i].GetHistogram())
+        e_to_p[j]["hists-prefire-up"].append(histogram_models[i].GetHistogram())
+        e_to_p[j]["hists-jes-up"].append(histogram_models[i].GetHistogram())
+        e_to_p[j]["hists-jer-up"].append(histogram_models[i].GetHistogram())
+    e_to_p_total["hists"].append(histogram_models[i].GetHistogram())
+    e_to_p_total["hists-electron-id-sf-up"].append(histogram_models[i].GetHistogram())
+    e_to_p_total["hists-electron-reco-sf-up"].append(histogram_models[i].GetHistogram())
+    e_to_p_total["hists-electron-hlt-sf-up"].append(histogram_models[i].GetHistogram())
+    e_to_p_total["hists-photon-id-sf-up"].append(histogram_models[i].GetHistogram())
+    e_to_p_total["hists-pileup-up"].append(histogram_models[i].GetHistogram())
+    e_to_p_total["hists-prefire-up"].append(histogram_models[i].GetHistogram())
+    e_to_p_total["hists-jes-up"].append(histogram_models[i].GetHistogram())
+    e_to_p_total["hists-jer-up"].append(histogram_models[i].GetHistogram())
     fake_signal_contamination["hists"].append(histogram_models[i].GetHistogram())
     ewdim6["hists"].append(histogram_models[i].GetHistogram())
 
@@ -725,24 +732,25 @@ for i in range(len(variables)):
     double_fake["hists"][i].Sumw2()
     double_fake_alt["hists"][i].Sumw2()
     double_fake_stat_up["hists"][i].Sumw2()
-    e_to_p["hists"][i].Sumw2()
-    e_to_p["hists-electron-id-sf-up"][i].Sumw2()
-    e_to_p["hists-electron-reco-sf-up"][i].Sumw2()
-    e_to_p["hists-electron-hlt-sf-up"][i].Sumw2()
-    e_to_p["hists-photon-id-sf-up"][i].Sumw2()
-    e_to_p["hists-pileup-up"][i].Sumw2()
-    e_to_p["hists-prefire-up"][i].Sumw2()
-    e_to_p["hists-jes-up"][i].Sumw2()
-    e_to_p["hists-jer-up"][i].Sumw2()
-    e_to_p_non_res["hists"][i].Sumw2()
-    e_to_p_non_res["hists-electron-id-sf-up"][i].Sumw2()
-    e_to_p_non_res["hists-electron-reco-sf-up"][i].Sumw2()
-    e_to_p_non_res["hists-electron-hlt-sf-up"][i].Sumw2()
-    e_to_p_non_res["hists-photon-id-sf-up"][i].Sumw2()
-    e_to_p_non_res["hists-pileup-up"][i].Sumw2()
-    e_to_p_non_res["hists-prefire-up"][i].Sumw2()
-    e_to_p_non_res["hists-jes-up"][i].Sumw2()
-    e_to_p_non_res["hists-jer-up"][i].Sumw2()
+    for j in range(len(etopbinning)):
+        e_to_p[j]["hists"][i].Sumw2()
+        e_to_p[j]["hists-electron-id-sf-up"][i].Sumw2()
+        e_to_p[j]["hists-electron-reco-sf-up"][i].Sumw2()
+        e_to_p[j]["hists-electron-hlt-sf-up"][i].Sumw2()
+        e_to_p[j]["hists-photon-id-sf-up"][i].Sumw2()
+        e_to_p[j]["hists-pileup-up"][i].Sumw2()
+        e_to_p[j]["hists-prefire-up"][i].Sumw2()
+        e_to_p[j]["hists-jes-up"][i].Sumw2()
+        e_to_p[j]["hists-jer-up"][i].Sumw2()
+    e_to_p_total["hists"][i].Sumw2()
+    e_to_p_total["hists-electron-id-sf-up"][i].Sumw2()
+    e_to_p_total["hists-electron-reco-sf-up"][i].Sumw2()
+    e_to_p_total["hists-electron-hlt-sf-up"][i].Sumw2()
+    e_to_p_total["hists-photon-id-sf-up"][i].Sumw2()
+    e_to_p_total["hists-pileup-up"][i].Sumw2()
+    e_to_p_total["hists-prefire-up"][i].Sumw2()
+    e_to_p_total["hists-jes-up"][i].Sumw2()
+    e_to_p_total["hists-jer-up"][i].Sumw2()
     ewdim6["hists"][i].Sumw2()
     fake_signal_contamination["hists"][i].Sumw2()
 
@@ -1914,28 +1922,22 @@ for year in years:
                 rinterface = rinterface.Define("wjets_fake_photon_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 1 && is_lepton_real == 1 && !(photon_gen_matching == 1|| photon_gen_matching == 4 || photon_gen_matching == 5 || photon_gen_matching == 6) ? get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,\"wjets\")*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0")
                 rinterface = rinterface.Define("wjets_chiso_fake_photon_weight","photon_selection == 3 && ((abs(photon_eta) < 1.5 && photon_pfRelIso03_chg*photon_pt < "+str(chiso_cut_barrel)+"*1000) || (abs(photon_eta) > 1.5 && photon_pfRelIso03_chg*photon_pt < "+str(chiso_cut_endcap)+"*1000)) && is_lepton_tight == 1 && is_lepton_real == 1 && !(photon_gen_matching == 1|| photon_gen_matching == 4 || photon_gen_matching == 5 || photon_gen_matching == 6) ? get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,\"wjets_chiso\")*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0")
 
-            if sample["e_to_p"]:
-                rinterface = rinterface.Define("e_to_p_weight","photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1 ? base_weight : 0")
-                rinterface = rinterface.Define("e_to_p_pileup_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1)*pileup_up_base_weight")
-                rinterface = rinterface.Define("e_to_p_prefire_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1)*prefire_up_base_weight")
-                rinterface = rinterface.Define("e_to_p_electron_id_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1)*electron_id_sf_up_base_weight")
-                rinterface = rinterface.Define("e_to_p_electron_reco_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1)*electron_reco_sf_up_base_weight")
-                rinterface = rinterface.Define("e_to_p_electron_hlt_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1)*electron_hlt_sf_up_base_weight")
-                rinterface = rinterface.Define("e_to_p_photon_id_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1)*photon_id_sf_up_base_weight")
-                rinterface = rinterface.Define("e_to_p_jes_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1)*jes_up_base_weight")
-                rinterface = rinterface.Define("e_to_p_jer_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1)*jer_up_base_weight")
+            if sample["e_to_p"] or sample["e_to_p_non_res"]:
+                for i in range(len(etopbinning)):
+                    if i == len(etopbinning) - 1:
+                        photon_pt = "(photon_pt > "+str(etopbinning[i])+")"
+                    else:    
+                        photon_pt = "("+str(etopbinning[i])+" < photon_pt && photon_pt < "+str(etopbinning[i+1])+")"
+                    rinterface = rinterface.Define("e_to_p_bin"+str(i)+"_weight",photon_pt+" && photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1 ? base_weight : 0")
+                    rinterface = rinterface.Define("e_to_p_bin"+str(i)+"_pileup_up_weight","("+photon_pt+" && photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1)*pileup_up_base_weight")
+                    rinterface = rinterface.Define("e_to_p_bin"+str(i)+"_prefire_up_weight","("+photon_pt+" && photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1)*prefire_up_base_weight")
+                    rinterface = rinterface.Define("e_to_p_bin"+str(i)+"_electron_id_sf_up_weight","("+photon_pt+" && photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1)*electron_id_sf_up_base_weight")
+                    rinterface = rinterface.Define("e_to_p_bin"+str(i)+"_electron_reco_sf_up_weight","("+photon_pt+" && photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1)*electron_reco_sf_up_base_weight")
+                    rinterface = rinterface.Define("e_to_p_bin"+str(i)+"_electron_hlt_sf_up_weight","("+photon_pt+" && photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1)*electron_hlt_sf_up_base_weight")
+                    rinterface = rinterface.Define("e_to_p_bin"+str(i)+"_photon_id_sf_up_weight","("+photon_pt+" && photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1)*photon_id_sf_up_base_weight")
+                    rinterface = rinterface.Define("e_to_p_bin"+str(i)+"_jes_up_weight","("+photon_pt+" && photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1)*jes_up_base_weight")
+                    rinterface = rinterface.Define("e_to_p_bin"+str(i)+"_jer_up_weight","("+photon_pt+" && photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1)*jer_up_base_weight")
                 
-            if sample["e_to_p_non_res"]:
-                rinterface = rinterface.Define("e_to_p_non_res_weight","photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1 ? base_weight : 0")
-                rinterface = rinterface.Define("e_to_p_non_res_pileup_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1)*pileup_up_base_weight")
-                rinterface = rinterface.Define("e_to_p_non_res_prefire_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1)*prefire_up_base_weight")
-                rinterface = rinterface.Define("e_to_p_non_res_electron_id_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1)*electron_id_sf_up_base_weight")
-                rinterface = rinterface.Define("e_to_p_non_res_electron_reco_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1)*electron_reco_sf_up_base_weight")
-                rinterface = rinterface.Define("e_to_p_non_res_electron_hlt_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1)*electron_hlt_sf_up_base_weight")
-                rinterface = rinterface.Define("e_to_p_non_res_photon_id_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1)*photon_id_sf_up_base_weight")
-                rinterface = rinterface.Define("e_to_p_non_res_jes_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1)*jes_up_base_weight")
-                rinterface = rinterface.Define("e_to_p_non_res_jer_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && photon_gen_matching == 1)*jer_up_base_weight")
-
             for variable_definition in variable_definitions:
                 rinterface = rinterface.Define(variable_definition[0],variable_definition[1])
 
@@ -1978,7 +1980,7 @@ for year in years:
             rresultptrs_muon_iso_sf_up = []    
             rresultptrs_muon_hlt_sf_up = []    
             rresultptrs_photon_id_sf_up = []    
-            if sample["e_to_p"]:
+            if sample["e_to_p"] or sample["e_to_p_non_res"]:
                 rresultptrs_e_to_p = []    
                 rresultptrs_e_to_p_electron_id_sf_up = []    
                 rresultptrs_e_to_p_electron_reco_sf_up = []    
@@ -1988,17 +1990,17 @@ for year in years:
                 rresultptrs_e_to_p_prefire_up = []    
                 rresultptrs_e_to_p_jes_up = []    
                 rresultptrs_e_to_p_jer_up = []    
+                for i in range(len(etopbinning)):
+                    rresultptrs_e_to_p.append([])
+                    rresultptrs_e_to_p_electron_id_sf_up.append([])
+                    rresultptrs_e_to_p_electron_reco_sf_up.append([])    
+                    rresultptrs_e_to_p_electron_hlt_sf_up.append([])    
+                    rresultptrs_e_to_p_photon_id_sf_up.append([])    
+                    rresultptrs_e_to_p_pileup_up.append([])    
+                    rresultptrs_e_to_p_prefire_up.append([])    
+                    rresultptrs_e_to_p_jes_up.append([])    
+                    rresultptrs_e_to_p_jer_up.append([])    
 
-            if sample["e_to_p_non_res"]:
-                rresultptrs_e_to_p_non_res = []    
-                rresultptrs_e_to_p_non_res_electron_id_sf_up = []    
-                rresultptrs_e_to_p_non_res_electron_reco_sf_up = []    
-                rresultptrs_e_to_p_non_res_electron_hlt_sf_up = []    
-                rresultptrs_e_to_p_non_res_photon_id_sf_up = []    
-                rresultptrs_e_to_p_non_res_pileup_up = []    
-                rresultptrs_e_to_p_non_res_prefire_up = []    
-                rresultptrs_e_to_p_non_res_jes_up = []    
-                rresultptrs_e_to_p_non_res_jer_up = []    
             if label == "wg+jets":
                 rresultptrs_pass_fiducial = []    
                 rresultptrs_fail_fiducial = []    
@@ -2116,27 +2118,17 @@ for year in years:
                             continue
                         rresultptrs_pdf[j].append(rinterface.Histo1D(histogram_models[i],variables[i],"pdf"+str(j)+"_weight"))
 
-                if sample["e_to_p"]:
-                    rresultptrs_e_to_p.append(rinterface.Histo1D(histogram_models[i],variables[i],"e_to_p_weight"))
-                    rresultptrs_e_to_p_electron_id_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"e_to_p_electron_id_sf_up_weight"))
-                    rresultptrs_e_to_p_electron_reco_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"e_to_p_electron_reco_sf_up_weight"))
-                    rresultptrs_e_to_p_electron_hlt_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"e_to_p_electron_hlt_sf_up_weight"))
-                    rresultptrs_e_to_p_photon_id_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"e_to_p_photon_id_sf_up_weight"))
-                    rresultptrs_e_to_p_pileup_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"e_to_p_pileup_up_weight"))
-                    rresultptrs_e_to_p_prefire_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"e_to_p_prefire_up_weight"))
-                    rresultptrs_e_to_p_jes_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"e_to_p_jes_up_weight"))
-                    rresultptrs_e_to_p_jer_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"e_to_p_jer_up_weight"))
-
-                if sample["e_to_p_non_res"]:
-                    rresultptrs_e_to_p_non_res.append(rinterface.Histo1D(histogram_models[i],variables[i],"e_to_p_non_res_weight"))
-                    rresultptrs_e_to_p_non_res_electron_id_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"e_to_p_non_res_electron_id_sf_up_weight"))
-                    rresultptrs_e_to_p_non_res_electron_reco_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"e_to_p_non_res_electron_reco_sf_up_weight"))
-                    rresultptrs_e_to_p_non_res_electron_hlt_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"e_to_p_non_res_electron_hlt_sf_up_weight"))
-                    rresultptrs_e_to_p_non_res_photon_id_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"e_to_p_non_res_photon_id_sf_up_weight"))
-                    rresultptrs_e_to_p_non_res_pileup_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"e_to_p_non_res_pileup_up_weight"))
-                    rresultptrs_e_to_p_non_res_prefire_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"e_to_p_non_res_prefire_up_weight"))
-                    rresultptrs_e_to_p_non_res_jes_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"e_to_p_non_res_jes_up_weight"))
-                    rresultptrs_e_to_p_non_res_jer_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"e_to_p_non_res_jer_up_weight"))
+                if sample["e_to_p"] or sample["e_to_p_non_res"]:
+                    for j in range(len(etopbinning)): 
+                        rresultptrs_e_to_p[j].append(rinterface.Histo1D(histogram_models[i],variables[i],"e_to_p_bin"+str(j)+"_weight"))
+                        rresultptrs_e_to_p_electron_id_sf_up[j].append(rinterface.Histo1D(histogram_models[i],variables[i],"e_to_p_bin"+str(j)+"_electron_id_sf_up_weight"))
+                        rresultptrs_e_to_p_electron_reco_sf_up[j].append(rinterface.Histo1D(histogram_models[i],variables[i],"e_to_p_bin"+str(j)+"_electron_reco_sf_up_weight"))
+                        rresultptrs_e_to_p_electron_hlt_sf_up[j].append(rinterface.Histo1D(histogram_models[i],variables[i],"e_to_p_bin"+str(j)+"_electron_hlt_sf_up_weight"))
+                        rresultptrs_e_to_p_photon_id_sf_up[j].append(rinterface.Histo1D(histogram_models[i],variables[i],"e_to_p_bin"+str(j)+"_photon_id_sf_up_weight"))
+                        rresultptrs_e_to_p_pileup_up[j].append(rinterface.Histo1D(histogram_models[i],variables[i],"e_to_p_bin"+str(j)+"_pileup_up_weight"))
+                        rresultptrs_e_to_p_prefire_up[j].append(rinterface.Histo1D(histogram_models[i],variables[i],"e_to_p_bin"+str(j)+"_prefire_up_weight"))
+                        rresultptrs_e_to_p_jes_up[j].append(rinterface.Histo1D(histogram_models[i],variables[i],"e_to_p_bin"+str(j)+"_jes_up_weight"))
+                        rresultptrs_e_to_p_jer_up[j].append(rinterface.Histo1D(histogram_models[i],variables[i],"e_to_p_bin"+str(j)+"_jer_up_weight"))
 
             for i in range(len(variables)):
 
@@ -2230,28 +2222,27 @@ for year in years:
                 double_fake["hists"][i].Add(rresultptrs_double_fake[i].GetValue())
                 double_fake_alt["hists"][i].Add(rresultptrs_double_fake_alt[i].GetValue())
                 double_fake_stat_up["hists"][i].Add(rresultptrs_double_fake_stat_up[i].GetValue())
-                if sample["e_to_p"]:
-                    e_to_p["hists"][i].Add(rresultptrs_e_to_p[i].GetValue())
-                    e_to_p["hists-electron-id-sf-up"][i].Add(rresultptrs_e_to_p_electron_id_sf_up[i].GetValue())
-                    e_to_p["hists-electron-reco-sf-up"][i].Add(rresultptrs_e_to_p_electron_reco_sf_up[i].GetValue())
-                    e_to_p["hists-electron-hlt-sf-up"][i].Add(rresultptrs_e_to_p_electron_hlt_sf_up[i].GetValue())
-                    e_to_p["hists-photon-id-sf-up"][i].Add(rresultptrs_e_to_p_photon_id_sf_up[i].GetValue())
-                    e_to_p["hists-pileup-up"][i].Add(rresultptrs_e_to_p_pileup_up[i].GetValue())
-                    e_to_p["hists-prefire-up"][i].Add(rresultptrs_e_to_p_prefire_up[i].GetValue())
-                    e_to_p["hists-jes-up"][i].Add(rresultptrs_e_to_p_jes_up[i].GetValue())
-                    e_to_p["hists-jer-up"][i].Add(rresultptrs_e_to_p_jer_up[i].GetValue())
+                if sample["e_to_p"] or sample["e_to_p_non_res"]:
+                    for j in range(len(etopbinning)): 
+                        e_to_p[j]["hists"][i].Add(rresultptrs_e_to_p[j][i].GetValue())
+                        e_to_p[j]["hists-electron-id-sf-up"][i].Add(rresultptrs_e_to_p_electron_id_sf_up[j][i].GetValue())
+                        e_to_p[j]["hists-electron-reco-sf-up"][i].Add(rresultptrs_e_to_p_electron_reco_sf_up[j][i].GetValue())
+                        e_to_p[j]["hists-electron-hlt-sf-up"][i].Add(rresultptrs_e_to_p_electron_hlt_sf_up[j][i].GetValue())
+                        e_to_p[j]["hists-photon-id-sf-up"][i].Add(rresultptrs_e_to_p_photon_id_sf_up[j][i].GetValue())
+                        e_to_p[j]["hists-pileup-up"][i].Add(rresultptrs_e_to_p_pileup_up[j][i].GetValue())
+                        e_to_p[j]["hists-prefire-up"][i].Add(rresultptrs_e_to_p_prefire_up[j][i].GetValue())
+                        e_to_p[j]["hists-jes-up"][i].Add(rresultptrs_e_to_p_jes_up[j][i].GetValue())
+                        e_to_p[j]["hists-jer-up"][i].Add(rresultptrs_e_to_p_jer_up[j][i].GetValue())
+                        e_to_p_total["hists"][i].Add(rresultptrs_e_to_p[j][i].GetValue())
+                        e_to_p_total["hists-electron-id-sf-up"][i].Add(rresultptrs_e_to_p_electron_id_sf_up[j][i].GetValue())
+                        e_to_p_total["hists-electron-reco-sf-up"][i].Add(rresultptrs_e_to_p_electron_reco_sf_up[j][i].GetValue())
+                        e_to_p_total["hists-electron-hlt-sf-up"][i].Add(rresultptrs_e_to_p_electron_hlt_sf_up[j][i].GetValue())
+                        e_to_p_total["hists-photon-id-sf-up"][i].Add(rresultptrs_e_to_p_photon_id_sf_up[j][i].GetValue())
+                        e_to_p_total["hists-pileup-up"][i].Add(rresultptrs_e_to_p_pileup_up[j][i].GetValue())
+                        e_to_p_total["hists-prefire-up"][i].Add(rresultptrs_e_to_p_prefire_up[j][i].GetValue())
+                        e_to_p_total["hists-jes-up"][i].Add(rresultptrs_e_to_p_jes_up[j][i].GetValue())
+                        e_to_p_total["hists-jer-up"][i].Add(rresultptrs_e_to_p_jer_up[j][i].GetValue())
 
-                if sample["e_to_p_non_res"]:
-                    e_to_p_non_res["hists"][i].Add(rresultptrs_e_to_p_non_res[i].GetValue())
-                    e_to_p_non_res["hists-electron-id-sf-up"][i].Add(rresultptrs_e_to_p_non_res_electron_id_sf_up[i].GetValue())
-                    e_to_p_non_res["hists-electron-reco-sf-up"][i].Add(rresultptrs_e_to_p_non_res_electron_reco_sf_up[i].GetValue())
-                    e_to_p_non_res["hists-electron-hlt-sf-up"][i].Add(rresultptrs_e_to_p_non_res_electron_hlt_sf_up[i].GetValue())
-                    e_to_p_non_res["hists-photon-id-sf-up"][i].Add(rresultptrs_e_to_p_non_res_photon_id_sf_up[i].GetValue())
-                    e_to_p_non_res["hists-pileup-up"][i].Add(rresultptrs_e_to_p_non_res_pileup_up[i].GetValue())
-                    e_to_p_non_res["hists-prefire-up"][i].Add(rresultptrs_e_to_p_non_res_prefire_up[i].GetValue())
-                    e_to_p_non_res["hists-jes-up"][i].Add(rresultptrs_e_to_p_non_res_jes_up[i].GetValue())
-                    e_to_p_non_res["hists-jer-up"][i].Add(rresultptrs_e_to_p_non_res_jer_up[i].GetValue())
-                
         for i in range(len(variables)):    
 
             if labels[label]["color"] == None:
@@ -2783,22 +2774,18 @@ for i in range(len(variables)):
     fake_photon["hists"][i].SetFillColor(ROOT.kGray+1)
     fake_lepton["hists"][i].SetFillColor(ROOT.kAzure-1)
     double_fake["hists"][i].SetFillColor(ROOT.kMagenta)
-    e_to_p["hists"][i].SetFillColor(ROOT.kSpring)
-    e_to_p_non_res["hists"][i].SetFillColor(ROOT.kYellow)
-
+    e_to_p_total["hists"][i].SetFillColor(ROOT.kSpring)
 
     fake_photon["hists"][i].SetLineColor(ROOT.kGray+1)
     fake_lepton["hists"][i].SetLineColor(ROOT.kAzure-1)
     double_fake["hists"][i].SetLineColor(ROOT.kMagenta)
-    e_to_p["hists"][i].SetLineColor(ROOT.kSpring)
-    e_to_p_non_res["hists"][i].SetLineColor(ROOT.kYellow)
+    e_to_p_total["hists"][i].SetLineColor(ROOT.kSpring)
 
 
     fake_photon["hists"][i].SetFillStyle(1001)
     fake_lepton["hists"][i].SetFillStyle(1001)
     double_fake["hists"][i].SetFillStyle(1001)
-    e_to_p["hists"][i].SetFillStyle(1001)
-    e_to_p_non_res["hists"][i].SetFillStyle(1001)
+    e_to_p_total["hists"][i].SetFillStyle(1001)
 
     s=str(totallumi)+" fb^{-1} (13 TeV)"
     lumilabel = ROOT.TLatex (0.95, 0.93, s)
@@ -2849,12 +2836,8 @@ for i in range(len(variables)):
         hstack.Add(fake_lepton["hists"][i])
         hstack.Add(double_fake["hists"][i])
 
-    if lepton_name == "electron" or lepton_name == "both": 
-        hsum.Add(e_to_p["hists"][i])
-        hstack.Add(e_to_p["hists"][i])
-
-    hsum.Add(e_to_p_non_res["hists"][i])
-    hstack.Add(e_to_p_non_res["hists"][i])
+    hsum.Add(e_to_p_total["hists"][i])
+    hstack.Add(e_to_p_total["hists"][i])
 
     if data_driven:
         if not args.use_wjets_for_fake_photon:
@@ -2922,12 +2905,8 @@ for i in range(len(variables)):
         j=j+1
         draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,double_fake["hists"][i],"double fake","f")
 
-    if lepton_name == "electron" or lepton_name == "both":
-        j=j+1
-        draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,e_to_p["hists"][i],"e->#gamma","f")
-
     j=j+1
-    draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,e_to_p_non_res["hists"][i],"e->#gamma non-res","f")
+    draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,e_to_p_total["hists"][i],"e->#gamma non-res","f")
 
     for label in labels.keys():
         if labels[label]["color"] == None:
@@ -2939,9 +2918,9 @@ for i in range(len(variables)):
         if label == "wg+jets":
             if args.draw_non_fid:
                 j=j+1    
-                draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,labels[label]["hists-pass-fiducial"][i],"wg+jets","f")
+                draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,labels[label]["hists-pass-fiducial"][i],"w#gamma+jets","f")
                 j=j+1    
-                draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,labels[label]["hists-fail-fiducial"][i],"wg+jets out","f")
+                draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,labels[label]["hists-fail-fiducial"][i],"w$gamma+jets out","f")
             else:    
                 j=j+1    
                 draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,labels[label]["hists"][i],label,"f")
@@ -3017,11 +2996,8 @@ double_fake_integral = double_fake["hists"][mlg_index].IntegralAndError(1,double
 data_integral_error = ROOT.Double()
 data_integral = data["hists"][mlg_index].IntegralAndError(1,data["hists"][mlg_index].GetXaxis().GetNbins(),data_integral_error)
 
-e_to_p_integral_error = ROOT.Double()
-e_to_p_integral = e_to_p["hists"][mlg_index].IntegralAndError(1,e_to_p["hists"][mlg_index].GetXaxis().GetNbins(),e_to_p_integral_error)
-
-e_to_p_non_res_integral_error = ROOT.Double()
-e_to_p_non_res_integral = e_to_p_non_res["hists"][mlg_index].IntegralAndError(1,e_to_p_non_res["hists"][mlg_index].GetXaxis().GetNbins(),e_to_p_non_res_integral_error)
+e_to_p_total_integral_error = ROOT.Double()
+e_to_p_total_integral = e_to_p_total["hists"][mlg_index].IntegralAndError(1,e_to_p_total["hists"][mlg_index].GetXaxis().GetNbins(),e_to_p_total_integral_error)
 
 fake_signal_contamination_integral_error = ROOT.Double()
 fake_signal_contamination_integral = fake_signal_contamination["hists"][mlg_index].IntegralAndError(1,fake_signal_contamination["hists"][mlg_index].GetXaxis().GetNbins(),fake_signal_contamination_integral_error)
@@ -3038,8 +3014,7 @@ print "fake photon = "+str(fake_photon_integral)+" +/- "+str(fake_photon_integra
 print "fake lepton = "+str(fake_lepton_integral)+" +/- "+str(fake_lepton_integral_error)
 print "double fake = "+str(double_fake_integral)+" +/- "+str(double_fake_integral_error)
 print "data = "+str(data_integral)+" +/- "+str(data_integral_error)
-print "e_to_p = "+str(e_to_p_integral)+" +/- "+str(e_to_p_integral_error)
-print "e_to_p_non_res = "+str(e_to_p_non_res_integral)+" +/- "+str(e_to_p_non_res_integral_error)
+print "e_to_p_total = "+str(e_to_p_total_integral)+" +/- "+str(e_to_p_total_integral_error)
 
 
 print """
@@ -3081,12 +3056,12 @@ vv_jets_integral,float(vv_jets_integral_error),
 fake_photon_integral,float(fake_photon_integral_error),
 fake_lepton_integral,float(fake_lepton_integral_error),
 double_fake_integral,float(double_fake_integral_error),
-e_to_p_integral,float(e_to_p_integral_error),args.lep,args.lep
+e_to_p_total_integral,float(e_to_p_total_integral_error),args.lep,args.lep
 )
 
-n_signal = data_integral - double_fake_integral - fake_photon_integral - fake_lepton_integral - top_jets_integral - vv_jets_integral - zg_jets_integral - e_to_p_non_res_integral
+n_signal = data_integral - double_fake_integral - fake_photon_integral - fake_lepton_integral - top_jets_integral - vv_jets_integral - zg_jets_integral - e_to_p_total_integral
 
-n_signal_error = sqrt(pow(data_integral_error,2) + pow(double_fake_integral_error,2) + pow(fake_lepton_integral_error,2)+ pow(fake_photon_integral_error,2)+pow(top_jets_integral_error,2)+ pow(vv_jets_integral_error,2)+ pow(zg_jets_integral_error,2)+pow(e_to_p_non_res_integral_error,2))
+n_signal_error = sqrt(pow(data_integral_error,2) + pow(double_fake_integral_error,2) + pow(fake_lepton_integral_error,2)+ pow(fake_photon_integral_error,2)+pow(top_jets_integral_error,2)+ pow(vv_jets_integral_error,2)+ pow(zg_jets_integral_error,2)+pow(e_to_p_total_integral_error,2))
 
 print "n_signal = "+str(n_signal) + " +/- " + str(n_signal_error)
 
@@ -3650,7 +3625,7 @@ if args.make_cut_and_count_datacard:
     dcard.write(" "+str(fake_photon["hists"][mlg_index].Integral())) 
     dcard.write(" "+str(fake_lepton["hists"][mlg_index].Integral())) 
     dcard.write(" "+str(double_fake["hists"][mlg_index].Integral())) 
-    dcard.write(" "+str(e_to_p_non_res["hists"][mlg_index].Integral())) 
+    dcard.write(" "+str(e_to_p_total["hists"][mlg_index].Integral())) 
    
     dcard.write('\n')    
 
@@ -3729,7 +3704,7 @@ if args.make_cut_and_count_datacard:
 
     dcard.write('\n')    
 
-    dcard.write("muonidsf lnN")
+    dcard.write("muonid lnN")
     dcard.write(" "+str(labels["wg+jets"]["hists-muon-id-sf-up"][mlg_index].Integral()/labels["wg+jets"]["hists"][mlg_index].Integral()))
 
     for label in labels.keys():
@@ -3744,7 +3719,7 @@ if args.make_cut_and_count_datacard:
 
     dcard.write('\n')    
 
-    dcard.write("muonisosf lnN")
+    dcard.write("muoniso lnN")
     dcard.write(" "+str(labels["wg+jets"]["hists-muon-iso-sf-up"][mlg_index].Integral()/labels["wg+jets"]["hists"][mlg_index].Integral()))
 
     for label in labels.keys():
@@ -3759,7 +3734,7 @@ if args.make_cut_and_count_datacard:
 
     dcard.write('\n')    
 
-    dcard.write("muonhltsf lnN")
+    dcard.write("muonhlt lnN")
     dcard.write(" "+str(labels["wg+jets"]["hists-muon-hlt-sf-up"][mlg_index].Integral()/labels["wg+jets"]["hists"][mlg_index].Integral()))
 
     for label in labels.keys():
@@ -3879,9 +3854,9 @@ if args.make_datacard:
     data["hists"][mlg_index].Add(labels["top+jets"]["hists"][mlg_index])
     data["hists"][mlg_index].Add(labels["zg+jets"]["hists"][mlg_index])
     data["hists"][mlg_index].Add(labels["vv+jets"]["hists"][mlg_index])
-    data["hists"][mlg_index].Add(e_to_p_non_res["hists"][mlg_index])
-    if args.lep == "electron":
-        data["hists"][mlg_index].Add(e_to_p["hists"][mlg_index])
+    data["hists"][mlg_index].Add(e_to_p_total["hists"][mlg_index])
+#    if args.lep == "electron":
+#        data["hists"][mlg_index].Add(e_to_p["hists"][mlg_index])
     data["hists"][mlg_index].Add(fake_photon["hists"][mlg_index])
     data["hists"][mlg_index].Add(fake_lepton["hists"][mlg_index])
     data["hists"][mlg_index].Add(double_fake["hists"][mlg_index])
@@ -3935,14 +3910,16 @@ if args.make_datacard:
         print >> dcard, "shapes fake_photon mu_chan wg_dcard_mu_chan_shapes.root fakephoton fakephoton_$SYSTEMATIC" 
         print >> dcard, "shapes fake_muon mu_chan wg_dcard_mu_chan_shapes.root fakemuon fakemuon_$SYSTEMATIC"
         print >> dcard, "shapes double_fake mu_chan wg_dcard_mu_chan_shapes.root doublefake doublefake_$SYSTEMATIC" 
-        print >> dcard, "shapes e_to_p_non_res mu_chan wg_dcard_mu_chan_shapes.root etopnonres etopnonres_$SYSTEMATIC" 
+#        print >> dcard, "shapes e_to_p_non_res mu_chan wg_dcard_mu_chan_shapes.root etopnonres etopnonres_$SYSTEMATIC" 
+        for i in range(len(etopbinning)):
+            print >> dcard, "shapes e_to_p_bin"+str(i)+" mu_chan wg_dcard_mu_chan_shapes.root etopbin"+str(i)+" etopbin"+str(i)+"_$SYSTEMATIC" 
     elif args.lep == "electron":
         print >> dcard, "shapes Wg_out el_chan wg_dcard_el_chan_shapes.root wgout wgout_$SYSTEMATIC" 
         print >> dcard, "shapes fake_photon el_chan wg_dcard_el_chan_shapes.root fakephoton fakephoton_$SYSTEMATIC" 
         print >> dcard, "shapes fake_electron el_chan wg_dcard_el_chan_shapes.root fakeelectron fakeelectron_$SYSTEMATIC"
         print >> dcard, "shapes double_fake el_chan wg_dcard_el_chan_shapes.root doublefake doublefake_$SYSTEMATIC" 
-        print >> dcard, "shapes e_to_p_non_res el_chan wg_dcard_el_chan_shapes.root etopnonres etopnonres_$SYSTEMATIC" 
-        print >> dcard, "shapes e_to_p el_chan wg_dcard_el_chan_shapes.root etop etop_$SYSTEMATIC" 
+        for i in range(len(etopbinning)):
+            print >> dcard, "shapes e_to_p_bin"+str(i)+" el_chan wg_dcard_el_chan_shapes.root etopbin"+str(i)+" etopbin"+str(i)+"_$SYSTEMATIC" 
     else:
         assert(0)    
 
@@ -3972,7 +3949,8 @@ if args.make_datacard:
         dcard.write(" mu_chan")
         dcard.write(" mu_chan")
         dcard.write(" mu_chan")
-        dcard.write(" mu_chan")
+        for i in range(len(etopbinning)):
+            dcard.write(" mu_chan")
         dcard.write('\n')    
     elif args.lep == "electron":
         dcard.write(" el_chan")
@@ -3984,8 +3962,8 @@ if args.make_datacard:
         dcard.write(" el_chan")
         dcard.write(" el_chan")
         dcard.write(" el_chan")
-        dcard.write(" el_chan")
-        dcard.write(" el_chan")
+        for i in range(len(etopbinning)):
+            dcard.write(" el_chan")
         dcard.write('\n')    
     else:
         assert(0)    
@@ -4007,22 +3985,28 @@ if args.make_datacard:
     else:
         assert(0)    
     dcard.write(" double_fake")
-    dcard.write(" e_to_p_non_res")
+    for i in range(len(etopbinning)):
+        dcard.write(" e_to_p_bin"+str(i))
     if args.lep == "muon":
         pass
     elif args.lep == "electron":
-        dcard.write(" e_to_p")
+#        dcard.write(" e_to_p")
+        pass
     else:
         assert(0)    
     dcard.write('\n')    
     dcard.write("process")
-    dcard.write(" 0")
+#    dcard.write(" 0")
+    for i in range(len(labels.keys())+len(etopbinning)+2):
+        dcard.write(" " + str(i))
     if args.lep == "muon":
-        for j in range(1,len(labels.keys())+3):
-            dcard.write(" " + str(j))
+#        for j in range(1,len(labels.keys())+3):
+#            dcard.write(" " + str(j))
+        pass
     elif args.lep == "electron":
-        for j in range(1,len(labels.keys())+4):
-            dcard.write(" " + str(j))
+#        for j in range(1,len(labels.keys())+4):
+#            dcard.write(" " + str(j))
+        pass
     else:
         assert(0)    
     dcard.write('\n')    
@@ -4039,11 +4023,13 @@ if args.make_datacard:
     dcard.write(" "+str(fake_photon["hists"][mlg_index].Integral())) 
     dcard.write(" "+str(fake_lepton["hists"][mlg_index].Integral())) 
     dcard.write(" "+str(double_fake["hists"][mlg_index].Integral())) 
-    dcard.write(" "+str(e_to_p_non_res["hists"][mlg_index].Integral())) 
+    for i in range(len(etopbinning)):
+        dcard.write(" "+str(e_to_p[i]["hists"][mlg_index].Integral())) 
     if args.lep == "muon":
         pass
     elif args.lep == "electron":
-        dcard.write(" "+str(e_to_p["hists"][mlg_index].Integral())) 
+        pass
+#        dcard.write(" "+str(e_to_p["hists"][mlg_index].Integral())) 
     else:
         assert(0)    
     dcard.write('\n')    
@@ -4060,11 +4046,13 @@ if args.make_datacard:
     dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
-    dcard.write(" 1.018")
+    for i in range(len(etopbinning)):
+        dcard.write(" 1.018")
     if args.lep == "muon":
         pass
     elif args.lep == "electron":
-        dcard.write(" -")
+#        dcard.write(" -")
+        pass
     else:
         assert(0)    
     
@@ -4083,13 +4071,15 @@ if args.make_datacard:
     dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
+    for i in range(len(etopbinning)):
+        dcard.write(" -")
     if args.lep == "muon":
         pass
     elif args.lep == "electron":
-        dcard.write(" -")
+#        dcard.write(" -")
+        pass
     else:
         assert(0)    
-
     dcard.write('\n')    
 
     dcard.write("prefire shape1")
@@ -4105,13 +4095,15 @@ if args.make_datacard:
     dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
+    for i in range(len(etopbinning)):
+        dcard.write(" -")
     if args.lep == "muon":
         pass
     elif args.lep == "electron":
-        dcard.write(" -")
+#        dcard.write(" -")
+        pass
     else:
         assert(0)    
-
     dcard.write('\n')    
     
     dcard.write("jes shape1")
@@ -4127,13 +4119,15 @@ if args.make_datacard:
     dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
+    for i in range(len(etopbinning)):
+        dcard.write(" -")
     if args.lep == "muon":
         pass
     elif args.lep == "electron":
-        dcard.write(" -")
+#        dcard.write(" -")
+        pass
     else:
         assert(0)    
-    
     dcard.write('\n')    
     
     dcard.write("jer shape1")
@@ -4149,16 +4143,19 @@ if args.make_datacard:
     dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
+    for i in range(len(etopbinning)):
+        dcard.write(" -")
     if args.lep == "muon":
         pass
     elif args.lep == "electron":
-        dcard.write(" -")
+#        dcard.write(" -")
+        pass
     else:
         assert(0)    
     dcard.write('\n')    
     
     if args.lep == "muon":
-        dcard.write("muonidsf shape1")
+        dcard.write("muonid shape1")
         dcard.write(" 1.0")
         dcard.write(" 1.0")
         for label in labels.keys():
@@ -4168,9 +4165,10 @@ if args.make_datacard:
         dcard.write(" -")
         dcard.write(" -")
         dcard.write(" -")
-        dcard.write(" -")
+        for i in range(len(etopbinning)):
+            dcard.write(" -")
         dcard.write('\n')    
-        dcard.write("muonhltsf shape1")
+        dcard.write("muonhlt shape1")
         dcard.write(" 1.0")
         dcard.write(" 1.0")
         for label in labels.keys():
@@ -4180,9 +4178,10 @@ if args.make_datacard:
         dcard.write(" -")
         dcard.write(" -")
         dcard.write(" -")
-        dcard.write(" -")
+        for i in range(len(etopbinning)):
+            dcard.write(" -")
         dcard.write('\n')    
-        dcard.write("muonisosf shape1")
+        dcard.write("muoniso shape1")
         dcard.write(" 1.0")
         dcard.write(" 1.0")
         for label in labels.keys():
@@ -4192,10 +4191,11 @@ if args.make_datacard:
         dcard.write(" -")
         dcard.write(" -")
         dcard.write(" -")
-        dcard.write(" -")
+        for i in range(len(etopbinning)):
+            dcard.write(" -")
         dcard.write('\n')    
     elif args.lep == "electron":
-        dcard.write("electronrecosf shape1")
+        dcard.write("electronreco shape1")
         dcard.write(" 1.0")
         dcard.write(" 1.0")
         for label in labels.keys():
@@ -4205,10 +4205,10 @@ if args.make_datacard:
         dcard.write(" -")
         dcard.write(" -")
         dcard.write(" -")
-        dcard.write(" -")
-        dcard.write(" -")
+        for i in range(len(etopbinning)):
+            dcard.write(" -")
         dcard.write('\n')    
-        dcard.write("electronidsf shape1")
+        dcard.write("electronid shape1")
         dcard.write(" 1.0")
         dcard.write(" 1.0")
         for label in labels.keys():
@@ -4218,10 +4218,10 @@ if args.make_datacard:
         dcard.write(" -")
         dcard.write(" -")
         dcard.write(" -")
-        dcard.write(" -")
-        dcard.write(" -")
+        for i in range(len(etopbinning)):
+            dcard.write(" -")
         dcard.write('\n')    
-        dcard.write("electronhltsf shape1")
+        dcard.write("electronhlt shape1")
         dcard.write(" 1.0")
         dcard.write(" 1.0")
         for label in labels.keys():
@@ -4231,8 +4231,8 @@ if args.make_datacard:
         dcard.write(" -")
         dcard.write(" -")
         dcard.write(" -")
-        dcard.write(" -")
-        dcard.write(" -")
+        for i in range(len(etopbinning)):
+            dcard.write(" -")
         dcard.write('\n')    
     else:
         assert(0)    
@@ -4250,10 +4250,13 @@ if args.make_datacard:
     dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
+    for i in range(len(etopbinning)):
+        dcard.write(" -")
     if args.lep == "muon":
         pass
     elif args.lep == "electron":
-        dcard.write(" -")
+        pass
+#        dcard.write(" -")
     else:
         assert(0)    
     dcard.write('\n')    
@@ -4310,11 +4313,13 @@ if args.make_datacard:
     dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
-    dcard.write(" -")
+    for i in range(len(etopbinning)):
+        dcard.write(" -")
     if args.lep == "muon":
         pass
     elif args.lep == "electron":
-        dcard.write(" -")
+        pass
+#        dcard.write(" -")
     else:
         assert(0)    
     dcard.write('\n')    
@@ -4331,11 +4336,14 @@ if args.make_datacard:
     dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
-    dcard.write(" -")
+    for i in range(len(etopbinning)):
+        dcard.write(" -")
+#    dcard.write(" -")
     if args.lep == "muon":
         pass
     elif args.lep == "electron":
-        dcard.write(" -")
+        pass
+#        dcard.write(" -")
     else:
         assert(0)    
     dcard.write('\n')    
@@ -4352,11 +4360,14 @@ if args.make_datacard:
     dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
-    dcard.write(" -")
+    for i in range(len(etopbinning)):
+        dcard.write(" -")
+#    dcard.write(" -")
     if args.lep == "muon":
         pass
     elif args.lep == "electron":
-        dcard.write(" -")
+#        dcard.write(" -")
+        pass
     else:
         assert(0)    
     dcard.write('\n')    
@@ -4373,11 +4384,14 @@ if args.make_datacard:
     dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
-    dcard.write(" -")
+    for i in range(len(etopbinning)):
+        dcard.write(" -")
+#    dcard.write(" -")
     if args.lep == "muon":
         pass
     elif args.lep == "electron":
-        dcard.write(" -")
+#        dcard.write(" -")
+        pass
     else:
         assert(0)    
     dcard.write('\n')    
@@ -4398,11 +4412,14 @@ if args.make_datacard:
     dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
-    dcard.write(" -")
+    for i in range(len(etopbinning)):
+        dcard.write(" -")
+#    dcard.write(" -")
     if args.lep == "muon":
         pass
     elif args.lep == "electron":
-        dcard.write(" -")
+#        dcard.write(" -")
+        pass
     else:
         assert(0)    
     dcard.write('\n')    
@@ -4423,20 +4440,34 @@ if args.make_datacard:
     dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
-    dcard.write(" -")
+    for i in range(len(etopbinning)):
+        dcard.write(" -")
+#    dcard.write(" -")
     if args.lep == "muon":
         pass
     elif args.lep == "electron":
-        dcard.write(" -")
+#        dcard.write(" -")
+        pass
     else:
         assert(0)    
     dcard.write('\n')    
 
     dcard.write("* autoMCStats 0\n")
+
+    if args.lep == "electron":
+        for i in range(len(etopbinning)):
+            dcard.write("etopbin"+str(i)+"norm rateParam el_chan e_to_p_bin"+str(i)+" 2 [0,10]\n")        
+    elif args.lep == "muon":
+        for i in range(len(etopbinning)):
+            dcard.write("etopbin"+str(i)+"norm rateParam mu_chan e_to_p_bin"+str(i)+" 2 [0,10]\n")        
+    else:
+        assert(0)
+
     if args.lep == "muon":
         pass
     elif args.lep == "electron":
-        dcard.write("etopnorm rateParam el_chan e_to_p 2 [0,10]\n")
+        pass
+#        dcard.write("etopnorm rateParam el_chan e_to_p 2 [0,10]\n")
     else:
         assert(0)    
 
@@ -4472,11 +4503,14 @@ if args.make_datacard:
         dcard.write(" 1.0")
         dcard.write(" -")
         dcard.write(" -")
-        dcard.write(" -")
+        for i in range(len(etopbinning)):
+            dcard.write(" -")
+#        dcard.write(" -")
         if args.lep == "muon":
             pass
         elif args.lep == "electron":
-            dcard.write(" -")
+            pass
+#            dcard.write(" -")
         else:
             assert(0)    
 
@@ -4502,11 +4536,13 @@ if args.make_datacard:
         dcard.write(" 1.0")
         dcard.write(" -")
         dcard.write(" -")
-        dcard.write(" -")
+        for i in range(len(etopbinning)):
+            dcard.write(" -")
         if args.lep == "muon":
             pass
         elif args.lep == "electron":
-            dcard.write(" -")
+            pass
+#            dcard.write(" -")
         else:
             assert(0)    
 
@@ -4558,8 +4594,9 @@ if args.make_datacard:
     labels["top+jets"]["hists"][mlg_index].Write("topjets")
     labels["zg+jets"]["hists"][mlg_index].Write("zgjets")
     labels["vv+jets"]["hists"][mlg_index].Write("vvjets")
-    e_to_p_non_res["hists"][mlg_index].Write("etopnonres")
-    e_to_p["hists"][mlg_index].Write("etop")
+    for i in range(len(etopbinning)):
+        e_to_p[i]["hists"][mlg_index].Write("etopbin"+str(i))
+    e_to_p_total["hists"][mlg_index].Write("etoptotal")
 
 #    tmphist=labels["wg+jets"]["hists"][mlg_index].Clone("")
 #    tmphist.Scale(fake_photon["hists"][mlg_index].Integral()/tmphist.Integral())
@@ -4744,83 +4781,83 @@ if args.make_datacard:
     labels["wg+jets"]["hists-fail-fiducial-prefire-up"][mlg_index].Write("wgout_prefireUp")
     makeDownShape(labels["wg+jets"]["hists-fail-fiducial-prefire-up"][mlg_index],labels["wg+jets"]["hists-fail-fiducial"][mlg_index]).Write("wgout_prefireDown")
 
-    labels["top+jets"]["hists-muon-id-sf-up"][mlg_index].Write("topjets_muonidsfUp")
-    makeDownShape(labels["top+jets"]["hists-muon-id-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]).Write("topjets_muonidsfDown")
-    labels["zg+jets"]["hists-muon-id-sf-up"][mlg_index].Write("zgjets_muonidsfUp")
-    makeDownShape(labels["zg+jets"]["hists-muon-id-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]).Write("zgjets_muonidsfDown")
-    labels["vv+jets"]["hists-muon-id-sf-up"][mlg_index].Write("vvjets_muonidsfUp")
-    makeDownShape(labels["vv+jets"]["hists-muon-id-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]).Write("vvjets_muonidsfDown")
-#    labels["wg+jets"]["hists-muon-id-sf-up"][mlg_index].Write("wg_muonidsfUp")
-#    makeDownShape(labels["wg+jets"]["hists-muon-id-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]).Write("wg_muonidsfDown")
-    labels["wg+jets"]["hists-pass-fiducial-muon-id-sf-up"][mlg_index].Write("wg_muonidsfUp")
-    makeDownShape(labels["wg+jets"]["hists-pass-fiducial-muon-id-sf-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]).Write("wg_muonidsfDown")
-    labels["wg+jets"]["hists-fail-fiducial-muon-id-sf-up"][mlg_index].Write("wgout_muonidsfUp")
-    makeDownShape(labels["wg+jets"]["hists-fail-fiducial-muon-id-sf-up"][mlg_index],labels["wg+jets"]["hists-fail-fiducial"][mlg_index]).Write("wgout_muonidsfDown")
+    labels["top+jets"]["hists-muon-id-sf-up"][mlg_index].Write("topjets_muonidUp")
+    makeDownShape(labels["top+jets"]["hists-muon-id-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]).Write("topjets_muonidDown")
+    labels["zg+jets"]["hists-muon-id-sf-up"][mlg_index].Write("zgjets_muonidUp")
+    makeDownShape(labels["zg+jets"]["hists-muon-id-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]).Write("zgjets_muonidDown")
+    labels["vv+jets"]["hists-muon-id-sf-up"][mlg_index].Write("vvjets_muonidUp")
+    makeDownShape(labels["vv+jets"]["hists-muon-id-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]).Write("vvjets_muonidDown")
+#    labels["wg+jets"]["hists-muon-id-sf-up"][mlg_index].Write("wg_muonidUp")
+#    makeDownShape(labels["wg+jets"]["hists-muon-id-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]).Write("wg_muonidDown")
+    labels["wg+jets"]["hists-pass-fiducial-muon-id-sf-up"][mlg_index].Write("wg_muonidUp")
+    makeDownShape(labels["wg+jets"]["hists-pass-fiducial-muon-id-sf-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]).Write("wg_muonidDown")
+    labels["wg+jets"]["hists-fail-fiducial-muon-id-sf-up"][mlg_index].Write("wgout_muonidUp")
+    makeDownShape(labels["wg+jets"]["hists-fail-fiducial-muon-id-sf-up"][mlg_index],labels["wg+jets"]["hists-fail-fiducial"][mlg_index]).Write("wgout_muonidDown")
     
-    labels["top+jets"]["hists-muon-iso-sf-up"][mlg_index].Write("topjets_muonisosfUp")
-    makeDownShape(labels["top+jets"]["hists-muon-iso-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]).Write("topjets_muonisosfDown")
-    labels["zg+jets"]["hists-muon-iso-sf-up"][mlg_index].Write("zgjets_muonisosfUp")
-    makeDownShape(labels["zg+jets"]["hists-muon-iso-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]).Write("zgjets_muonisosfDown")
-    labels["vv+jets"]["hists-muon-iso-sf-up"][mlg_index].Write("vvjets_muonisosfUp")
-    makeDownShape(labels["vv+jets"]["hists-muon-iso-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]).Write("vvjets_muonisosfDown")
-#    labels["wg+jets"]["hists-muon-iso-sf-up"][mlg_index].Write("wg_muonisosfUp")
-#    makeDownShape(labels["wg+jets"]["hists-muon-iso-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]).Write("wg_muonisosfDown")
-    labels["wg+jets"]["hists-pass-fiducial-muon-iso-sf-up"][mlg_index].Write("wg_muonisosfUp")
-    makeDownShape(labels["wg+jets"]["hists-pass-fiducial-muon-iso-sf-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]).Write("wg_muonisosfDown")
-    labels["wg+jets"]["hists-fail-fiducial-muon-iso-sf-up"][mlg_index].Write("wgout_muonisosfUp")
-    makeDownShape(labels["wg+jets"]["hists-fail-fiducial-muon-iso-sf-up"][mlg_index],labels["wg+jets"]["hists-fail-fiducial"][mlg_index]).Write("wgout_muonisosfDown")
+    labels["top+jets"]["hists-muon-iso-sf-up"][mlg_index].Write("topjets_muonisoUp")
+    makeDownShape(labels["top+jets"]["hists-muon-iso-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]).Write("topjets_muonisoDown")
+    labels["zg+jets"]["hists-muon-iso-sf-up"][mlg_index].Write("zgjets_muonisoUp")
+    makeDownShape(labels["zg+jets"]["hists-muon-iso-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]).Write("zgjets_muonisoDown")
+    labels["vv+jets"]["hists-muon-iso-sf-up"][mlg_index].Write("vvjets_muonisoUp")
+    makeDownShape(labels["vv+jets"]["hists-muon-iso-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]).Write("vvjets_muonisoDown")
+#    labels["wg+jets"]["hists-muon-iso-sf-up"][mlg_index].Write("wg_muonisoUp")
+#    makeDownShape(labels["wg+jets"]["hists-muon-iso-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]).Write("wg_muonisoDown")
+    labels["wg+jets"]["hists-pass-fiducial-muon-iso-sf-up"][mlg_index].Write("wg_muonisoUp")
+    makeDownShape(labels["wg+jets"]["hists-pass-fiducial-muon-iso-sf-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]).Write("wg_muonisoDown")
+    labels["wg+jets"]["hists-fail-fiducial-muon-iso-sf-up"][mlg_index].Write("wgout_muonisoUp")
+    makeDownShape(labels["wg+jets"]["hists-fail-fiducial-muon-iso-sf-up"][mlg_index],labels["wg+jets"]["hists-fail-fiducial"][mlg_index]).Write("wgout_muonisoDown")
     
-    labels["top+jets"]["hists-muon-hlt-sf-up"][mlg_index].Write("topjets_muonhltsfUp")
-    makeDownShape(labels["top+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]).Write("topjets_muonhltsfDown")
-    labels["zg+jets"]["hists-muon-hlt-sf-up"][mlg_index].Write("zgjets_muonhltsfUp")
-    makeDownShape(labels["zg+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]).Write("zgjets_muonhltsfDown")
-    labels["vv+jets"]["hists-muon-hlt-sf-up"][mlg_index].Write("vvjets_muonhltsfUp")
-    makeDownShape(labels["vv+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]).Write("vvjets_muonhltsfDown")
-#    labels["wg+jets"]["hists-muon-hlt-sf-up"][mlg_index].Write("wg_muonhltsfUp")
-#    makeDownShape(labels["wg+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]).Write("wg_muonhltsfDown")
-    labels["wg+jets"]["hists-pass-fiducial-muon-hlt-sf-up"][mlg_index].Write("wg_muonhltsfUp")
-    makeDownShape(labels["wg+jets"]["hists-pass-fiducial-muon-hlt-sf-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]).Write("wg_muonhltsfDown")
-    labels["wg+jets"]["hists-fail-fiducial-muon-hlt-sf-up"][mlg_index].Write("wgout_muonhltsfUp")
-    makeDownShape(labels["wg+jets"]["hists-fail-fiducial-muon-hlt-sf-up"][mlg_index],labels["wg+jets"]["hists-fail-fiducial"][mlg_index]).Write("wgout_muonhltsfDown")
+    labels["top+jets"]["hists-muon-hlt-sf-up"][mlg_index].Write("topjets_muonhltUp")
+    makeDownShape(labels["top+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]).Write("topjets_muonhltDown")
+    labels["zg+jets"]["hists-muon-hlt-sf-up"][mlg_index].Write("zgjets_muonhltUp")
+    makeDownShape(labels["zg+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]).Write("zgjets_muonhltDown")
+    labels["vv+jets"]["hists-muon-hlt-sf-up"][mlg_index].Write("vvjets_muonhltUp")
+    makeDownShape(labels["vv+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]).Write("vvjets_muonhltDown")
+#    labels["wg+jets"]["hists-muon-hlt-sf-up"][mlg_index].Write("wg_muonhltUp")
+#    makeDownShape(labels["wg+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]).Write("wg_muonhltDown")
+    labels["wg+jets"]["hists-pass-fiducial-muon-hlt-sf-up"][mlg_index].Write("wg_muonhltUp")
+    makeDownShape(labels["wg+jets"]["hists-pass-fiducial-muon-hlt-sf-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]).Write("wg_muonhltDown")
+    labels["wg+jets"]["hists-fail-fiducial-muon-hlt-sf-up"][mlg_index].Write("wgout_muonhltUp")
+    makeDownShape(labels["wg+jets"]["hists-fail-fiducial-muon-hlt-sf-up"][mlg_index],labels["wg+jets"]["hists-fail-fiducial"][mlg_index]).Write("wgout_muonhltDown")
     
-    labels["top+jets"]["hists-electron-reco-sf-up"][mlg_index].Write("topjets_electronrecosfUp")
-    makeDownShape(labels["top+jets"]["hists-electron-reco-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]).Write("topjets_electronrecosfDown")
-    labels["zg+jets"]["hists-electron-reco-sf-up"][mlg_index].Write("zgjets_electronrecosfUp")
-    makeDownShape(labels["vv+jets"]["hists-electron-reco-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]).Write("zgjets_electronrecosfDown")
-    labels["vv+jets"]["hists-electron-reco-sf-up"][mlg_index].Write("vvjets_electronrecosfUp")
-    makeDownShape(labels["vv+jets"]["hists-electron-reco-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]).Write("vvjets_electronrecosfDown")
-#    labels["wg+jets"]["hists-electron-reco-sf-up"][mlg_index].Write("wg_electronrecosfUp")
-#    makeDownShape(labels["wg+jets"]["hists-electron-reco-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]).Write("wg_electronrecosfDown")
-    labels["wg+jets"]["hists-pass-fiducial-electron-reco-sf-up"][mlg_index].Write("wg_electronrecosfUp")
-    makeDownShape(labels["wg+jets"]["hists-pass-fiducial-electron-reco-sf-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]).Write("wg_electronrecosfDown")
-    labels["wg+jets"]["hists-fail-fiducial-electron-reco-sf-up"][mlg_index].Write("wgout_electronrecosfUp")
-    makeDownShape(labels["wg+jets"]["hists-fail-fiducial-electron-reco-sf-up"][mlg_index],labels["wg+jets"]["hists-fail-fiducial"][mlg_index]).Write("wgout_electronrecosfDown")
+    labels["top+jets"]["hists-electron-reco-sf-up"][mlg_index].Write("topjets_electronrecoUp")
+    makeDownShape(labels["top+jets"]["hists-electron-reco-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]).Write("topjets_electronrecoDown")
+    labels["zg+jets"]["hists-electron-reco-sf-up"][mlg_index].Write("zgjets_electronrecoUp")
+    makeDownShape(labels["vv+jets"]["hists-electron-reco-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]).Write("zgjets_electronrecoDown")
+    labels["vv+jets"]["hists-electron-reco-sf-up"][mlg_index].Write("vvjets_electronrecoUp")
+    makeDownShape(labels["vv+jets"]["hists-electron-reco-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]).Write("vvjets_electronrecoDown")
+#    labels["wg+jets"]["hists-electron-reco-sf-up"][mlg_index].Write("wg_electronrecoUp")
+#    makeDownShape(labels["wg+jets"]["hists-electron-reco-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]).Write("wg_electronrecoDown")
+    labels["wg+jets"]["hists-pass-fiducial-electron-reco-sf-up"][mlg_index].Write("wg_electronrecoUp")
+    makeDownShape(labels["wg+jets"]["hists-pass-fiducial-electron-reco-sf-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]).Write("wg_electronrecoDown")
+    labels["wg+jets"]["hists-fail-fiducial-electron-reco-sf-up"][mlg_index].Write("wgout_electronrecoUp")
+    makeDownShape(labels["wg+jets"]["hists-fail-fiducial-electron-reco-sf-up"][mlg_index],labels["wg+jets"]["hists-fail-fiducial"][mlg_index]).Write("wgout_electronrecoDown")
 
-    labels["top+jets"]["hists-electron-id-sf-up"][mlg_index].Write("topjets_electronidsfUp")
-    makeDownShape(labels["top+jets"]["hists-electron-id-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]).Write("topjets_electronidsfDown")
-    labels["zg+jets"]["hists-electron-id-sf-up"][mlg_index].Write("zgjets_electronidsfUp")
-    makeDownShape(labels["vv+jets"]["hists-electron-id-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]).Write("zgjets_electronidsfDown")
-    labels["vv+jets"]["hists-electron-id-sf-up"][mlg_index].Write("vvjets_electronidsfUp")
-    makeDownShape(labels["vv+jets"]["hists-electron-id-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]).Write("vvjets_electronidsfDown")
-#    labels["wg+jets"]["hists-electron-id-sf-up"][mlg_index].Write("wg_electronidsfUp")
-#    makeDownShape(labels["wg+jets"]["hists-electron-id-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]).Write("wg_electronidsfDown")
-    labels["wg+jets"]["hists-pass-fiducial-electron-id-sf-up"][mlg_index].Write("wg_electronidsfUp")
-    makeDownShape(labels["wg+jets"]["hists-pass-fiducial-electron-id-sf-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]).Write("wg_electronidsfDown")
-    labels["wg+jets"]["hists-fail-fiducial-electron-id-sf-up"][mlg_index].Write("wgout_electronidsfUp")
-    makeDownShape(labels["wg+jets"]["hists-fail-fiducial-electron-id-sf-up"][mlg_index],labels["wg+jets"]["hists-fail-fiducial"][mlg_index]).Write("wgout_electronidsfDown")
+    labels["top+jets"]["hists-electron-id-sf-up"][mlg_index].Write("topjets_electronidUp")
+    makeDownShape(labels["top+jets"]["hists-electron-id-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]).Write("topjets_electronidDown")
+    labels["zg+jets"]["hists-electron-id-sf-up"][mlg_index].Write("zgjets_electronidUp")
+    makeDownShape(labels["vv+jets"]["hists-electron-id-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]).Write("zgjets_electronidDown")
+    labels["vv+jets"]["hists-electron-id-sf-up"][mlg_index].Write("vvjets_electronidUp")
+    makeDownShape(labels["vv+jets"]["hists-electron-id-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]).Write("vvjets_electronidDown")
+#    labels["wg+jets"]["hists-electron-id-sf-up"][mlg_index].Write("wg_electronidUp")
+#    makeDownShape(labels["wg+jets"]["hists-electron-id-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]).Write("wg_electronidDown")
+    labels["wg+jets"]["hists-pass-fiducial-electron-id-sf-up"][mlg_index].Write("wg_electronidUp")
+    makeDownShape(labels["wg+jets"]["hists-pass-fiducial-electron-id-sf-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]).Write("wg_electronidDown")
+    labels["wg+jets"]["hists-fail-fiducial-electron-id-sf-up"][mlg_index].Write("wgout_electronidUp")
+    makeDownShape(labels["wg+jets"]["hists-fail-fiducial-electron-id-sf-up"][mlg_index],labels["wg+jets"]["hists-fail-fiducial"][mlg_index]).Write("wgout_electronidDown")
 
-    labels["top+jets"]["hists-electron-hlt-sf-up"][mlg_index].Write("topjets_electronhltsfUp")
-    makeDownShape(labels["top+jets"]["hists-electron-hlt-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]).Write("topjets_electronhltsfDown")
-    labels["zg+jets"]["hists-electron-hlt-sf-up"][mlg_index].Write("zgjets_electronhltsfUp")
-    makeDownShape(labels["vv+jets"]["hists-electron-hlt-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]).Write("zgjets_electronhltsfDown")
-    labels["vv+jets"]["hists-electron-hlt-sf-up"][mlg_index].Write("vvjets_electronhltsfUp")
-    makeDownShape(labels["vv+jets"]["hists-electron-hlt-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]).Write("vvjets_electronhltsfDown")
-#    labels["wg+jets"]["hists-electron-hlt-sf-up"][mlg_index].Write("wg_electronhltsfUp")
-#    makeDownShape(labels["wg+jets"]["hists-electron-hlt-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]).Write("wg_electronhltsfDown")
-    labels["wg+jets"]["hists-pass-fiducial-electron-hlt-sf-up"][mlg_index].Write("wg_electronhltsfUp")
-    makeDownShape(labels["wg+jets"]["hists-pass-fiducial-electron-hlt-sf-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]).Write("wg_electronhltsfDown")
-    labels["wg+jets"]["hists-fail-fiducial-electron-hlt-sf-up"][mlg_index].Write("wgout_electronhltsfUp")
-    makeDownShape(labels["wg+jets"]["hists-fail-fiducial-electron-hlt-sf-up"][mlg_index],labels["wg+jets"]["hists-fail-fiducial"][mlg_index]).Write("wgout_electronhltsfDown")
+    labels["top+jets"]["hists-electron-hlt-sf-up"][mlg_index].Write("topjets_electronhltUp")
+    makeDownShape(labels["top+jets"]["hists-electron-hlt-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]).Write("topjets_electronhltDown")
+    labels["zg+jets"]["hists-electron-hlt-sf-up"][mlg_index].Write("zgjets_electronhltUp")
+    makeDownShape(labels["vv+jets"]["hists-electron-hlt-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]).Write("zgjets_electronhltDown")
+    labels["vv+jets"]["hists-electron-hlt-sf-up"][mlg_index].Write("vvjets_electronhltUp")
+    makeDownShape(labels["vv+jets"]["hists-electron-hlt-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]).Write("vvjets_electronhltDown")
+#    labels["wg+jets"]["hists-electron-hlt-sf-up"][mlg_index].Write("wg_electronhltUp")
+#    makeDownShape(labels["wg+jets"]["hists-electron-hlt-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]).Write("wg_electronhltDown")
+    labels["wg+jets"]["hists-pass-fiducial-electron-hlt-sf-up"][mlg_index].Write("wg_electronhltUp")
+    makeDownShape(labels["wg+jets"]["hists-pass-fiducial-electron-hlt-sf-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]).Write("wg_electronhltDown")
+    labels["wg+jets"]["hists-fail-fiducial-electron-hlt-sf-up"][mlg_index].Write("wgout_electronhltUp")
+    makeDownShape(labels["wg+jets"]["hists-fail-fiducial-electron-hlt-sf-up"][mlg_index],labels["wg+jets"]["hists-fail-fiducial"][mlg_index]).Write("wgout_electronhltDown")
     
     labels["top+jets"]["hists-jes-up"][mlg_index].Write("topjets_jesUp")
     makeDownShape(labels["top+jets"]["hists-jes-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]).Write("topjets_jesDown")
@@ -4892,7 +4929,7 @@ if args.make_datacard:
     RooDataHist_double_fake = ROOT.RooDataHist("doublefake","",ROOT.RooArgList(m),double_fake["hists"][mlg_index])
 #RooHistPdf_double_fake = ROOT.RooHistPdf("doublefake","",ROOT.RooArgSet(m),RooDataHist_double_fake)
 
-    RooDataHist_e_to_p_non_res = ROOT.RooDataHist("etopnonres","",ROOT.RooArgList(m),e_to_p_non_res["hists"][mlg_index])
+    RooDataHist_e_to_p_total = ROOT.RooDataHist("etoptotal","",ROOT.RooArgList(m),e_to_p_total["hists"][mlg_index])
 #RooHistPdf_e_to_p_non_res = ROOT.RooHistPdf("etopnonres","",ROOT.RooArgSet(m),RooDataHist_e_to_p_non_res)
 
 #wg scale
@@ -5040,137 +5077,137 @@ if args.make_datacard:
 
 #electron reco sf
 
-    RooDataHist_wg_electronrecosf_up = ROOT.RooDataHist("wg_electronrecosfUp","",ROOT.RooArgList(m),labels["wg+jets"]["hists-electron-reco-sf-up"][mlg_index])
-#RooHistPdf_wg_electronrecosf_up = ROOT.RooHistPdf("wg_electronrecosfUp","",ROOT.RooArgSet(m),RooDataHist_wg_electronrecosf_up)
-    RooDataHist_wg_electronrecosf_down = ROOT.RooDataHist("wg_electronrecosfDown","",ROOT.RooArgList(m),makeDownShape(labels["wg+jets"]["hists-electron-reco-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]))
-#RooHistPdf_wg_electronrecosf_down = ROOT.RooHistPdf("wg_electronrecosfDown","",ROOT.RooArgSet(m),RooDataHist_wg_electronrecosf_down)
+    RooDataHist_wg_electronrecosf_up = ROOT.RooDataHist("wg_electronrecoUp","",ROOT.RooArgList(m),labels["wg+jets"]["hists-electron-reco-sf-up"][mlg_index])
+#RooHistPdf_wg_electronrecosf_up = ROOT.RooHistPdf("wg_electronrecoUp","",ROOT.RooArgSet(m),RooDataHist_wg_electronrecosf_up)
+    RooDataHist_wg_electronrecosf_down = ROOT.RooDataHist("wg_electronrecoDown","",ROOT.RooArgList(m),makeDownShape(labels["wg+jets"]["hists-electron-reco-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]))
+#RooHistPdf_wg_electronrecosf_down = ROOT.RooHistPdf("wg_electronrecoDown","",ROOT.RooArgSet(m),RooDataHist_wg_electronrecosf_down)
 
-    RooDataHist_topjets_electronrecosf_up = ROOT.RooDataHist("topjets_electronrecosfUp","",ROOT.RooArgList(m),labels["top+jets"]["hists-electron-reco-sf-up"][mlg_index])
-#RooHistPdf_topjets_electronrecosf_up = ROOT.RooHistPdf("topjets_electronrecosfUp","",ROOT.RooArgSet(m),RooDataHist_topjets_electronrecosf_up)
-    RooDataHist_topjets_electronrecosf_down = ROOT.RooDataHist("topjets_electronrecosfDown","",ROOT.RooArgList(m),makeDownShape(labels["top+jets"]["hists-electron-reco-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]))
-#RooHistPdf_topjets_electronrecosf_down = ROOT.RooHistPdf("topjets_electronrecosfDown","",ROOT.RooArgSet(m),RooDataHist_topjets_electronrecosf_down)
+    RooDataHist_topjets_electronrecosf_up = ROOT.RooDataHist("topjets_electronrecoUp","",ROOT.RooArgList(m),labels["top+jets"]["hists-electron-reco-sf-up"][mlg_index])
+#RooHistPdf_topjets_electronrecosf_up = ROOT.RooHistPdf("topjets_electronrecoUp","",ROOT.RooArgSet(m),RooDataHist_topjets_electronrecosf_up)
+    RooDataHist_topjets_electronrecosf_down = ROOT.RooDataHist("topjets_electronrecoDown","",ROOT.RooArgList(m),makeDownShape(labels["top+jets"]["hists-electron-reco-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]))
+#RooHistPdf_topjets_electronrecosf_down = ROOT.RooHistPdf("topjets_electronrecoDown","",ROOT.RooArgSet(m),RooDataHist_topjets_electronrecosf_down)
 
-    RooDataHist_zgjets_electronrecosf_up = ROOT.RooDataHist("zgjets_electronrecosfUp","",ROOT.RooArgList(m),labels["zg+jets"]["hists-electron-reco-sf-up"][mlg_index])
-#RooHistPdf_zgjets_electronrecosf_up = ROOT.RooHistPdf("zgjets_electronrecosfUp","",ROOT.RooArgSet(m),RooDataHist_zgjets_electronrecosf_up)
-    RooDataHist_zgjets_electronrecosf_down = ROOT.RooDataHist("zgjets_electronrecosfDown","",ROOT.RooArgList(m),makeDownShape(labels["zg+jets"]["hists-electron-reco-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]))
-#RooHistPdf_zgjets_electronrecosf_down = ROOT.RooHistPdf("zgjets_electronrecosfDown","",ROOT.RooArgSet(m),RooDataHist_zgjets_electronrecosf_down)
+    RooDataHist_zgjets_electronrecosf_up = ROOT.RooDataHist("zgjets_electronrecoUp","",ROOT.RooArgList(m),labels["zg+jets"]["hists-electron-reco-sf-up"][mlg_index])
+#RooHistPdf_zgjets_electronrecosf_up = ROOT.RooHistPdf("zgjets_electronrecoUp","",ROOT.RooArgSet(m),RooDataHist_zgjets_electronrecosf_up)
+    RooDataHist_zgjets_electronrecosf_down = ROOT.RooDataHist("zgjets_electronrecoDown","",ROOT.RooArgList(m),makeDownShape(labels["zg+jets"]["hists-electron-reco-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]))
+#RooHistPdf_zgjets_electronrecosf_down = ROOT.RooHistPdf("zgjets_electronrecoDown","",ROOT.RooArgSet(m),RooDataHist_zgjets_electronrecosf_down)
 
-    RooDataHist_vvjets_electronrecosf_up = ROOT.RooDataHist("vvjets_electronrecosfUp","",ROOT.RooArgList(m),labels["vv+jets"]["hists-electron-reco-sf-up"][mlg_index])
-#RooHistPdf_vvjets_electronrecosf_up = ROOT.RooHistPdf("vvjets_electronrecosfUp","",ROOT.RooArgSet(m),RooDataHist_vvjets_electronrecosf_up)
-    RooDataHist_vvjets_electronrecosf_down = ROOT.RooDataHist("vvjets_electronrecosfDown","",ROOT.RooArgList(m),makeDownShape(labels["vv+jets"]["hists-electron-reco-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]))
-#RooHistPdf_vvjets_electronrecosf_down = ROOT.RooHistPdf("vvjets_electronrecosfDown","",ROOT.RooArgSet(m),RooDataHist_vvjets_electronrecosf_down)
+    RooDataHist_vvjets_electronrecosf_up = ROOT.RooDataHist("vvjets_electronrecoUp","",ROOT.RooArgList(m),labels["vv+jets"]["hists-electron-reco-sf-up"][mlg_index])
+#RooHistPdf_vvjets_electronrecosf_up = ROOT.RooHistPdf("vvjets_electronrecoUp","",ROOT.RooArgSet(m),RooDataHist_vvjets_electronrecosf_up)
+    RooDataHist_vvjets_electronrecosf_down = ROOT.RooDataHist("vvjets_electronrecoDown","",ROOT.RooArgList(m),makeDownShape(labels["vv+jets"]["hists-electron-reco-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]))
+#RooHistPdf_vvjets_electronrecosf_down = ROOT.RooHistPdf("vvjets_electronrecoDown","",ROOT.RooArgSet(m),RooDataHist_vvjets_electronrecosf_down)
 
 
 #electron id sf
 
-    RooDataHist_wg_electronidsf_up = ROOT.RooDataHist("wg_electronidsfUp","",ROOT.RooArgList(m),labels["wg+jets"]["hists-electron-id-sf-up"][mlg_index])
-#RooHistPdf_wg_electronidsf_up = ROOT.RooHistPdf("wg_electronidsfUp","",ROOT.RooArgSet(m),RooDataHist_wg_electronidsf_up)
-    RooDataHist_wg_electronidsf_down = ROOT.RooDataHist("wg_electronidsfDown","",ROOT.RooArgList(m),makeDownShape(labels["wg+jets"]["hists-electron-id-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]))
-#RooHistPdf_wg_electronidsf_down = ROOT.RooHistPdf("wg_electronidsfDown","",ROOT.RooArgSet(m),RooDataHist_wg_electronidsf_down)
+    RooDataHist_wg_electronidsf_up = ROOT.RooDataHist("wg_electronidUp","",ROOT.RooArgList(m),labels["wg+jets"]["hists-electron-id-sf-up"][mlg_index])
+#RooHistPdf_wg_electronidsf_up = ROOT.RooHistPdf("wg_electronidUp","",ROOT.RooArgSet(m),RooDataHist_wg_electronidsf_up)
+    RooDataHist_wg_electronidsf_down = ROOT.RooDataHist("wg_electronidDown","",ROOT.RooArgList(m),makeDownShape(labels["wg+jets"]["hists-electron-id-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]))
+#RooHistPdf_wg_electronidsf_down = ROOT.RooHistPdf("wg_electronidDown","",ROOT.RooArgSet(m),RooDataHist_wg_electronidsf_down)
 
-    RooDataHist_topjets_electronidsf_up = ROOT.RooDataHist("topjets_electronidsfUp","",ROOT.RooArgList(m),labels["top+jets"]["hists-electron-id-sf-up"][mlg_index])
-#RooHistPdf_topjets_electronidsf_up = ROOT.RooHistPdf("topjets_electronidsfUp","",ROOT.RooArgSet(m),RooDataHist_topjets_electronidsf_up)
-    RooDataHist_topjets_electronidsf_down = ROOT.RooDataHist("topjets_electronidsfDown","",ROOT.RooArgList(m),makeDownShape(labels["top+jets"]["hists-electron-id-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]))
-#RooHistPdf_topjets_electronidsf_down = ROOT.RooHistPdf("topjets_electronidsfDown","",ROOT.RooArgSet(m),RooDataHist_topjets_electronidsf_down)
+    RooDataHist_topjets_electronidsf_up = ROOT.RooDataHist("topjets_electronidUp","",ROOT.RooArgList(m),labels["top+jets"]["hists-electron-id-sf-up"][mlg_index])
+#RooHistPdf_topjets_electronidsf_up = ROOT.RooHistPdf("topjets_electronidUp","",ROOT.RooArgSet(m),RooDataHist_topjets_electronidsf_up)
+    RooDataHist_topjets_electronidsf_down = ROOT.RooDataHist("topjets_electronidDown","",ROOT.RooArgList(m),makeDownShape(labels["top+jets"]["hists-electron-id-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]))
+#RooHistPdf_topjets_electronidsf_down = ROOT.RooHistPdf("topjets_electronidDown","",ROOT.RooArgSet(m),RooDataHist_topjets_electronidsf_down)
 
-    RooDataHist_zgjets_electronidsf_up = ROOT.RooDataHist("zgjets_electronidsfUp","",ROOT.RooArgList(m),labels["zg+jets"]["hists-electron-id-sf-up"][mlg_index])
-#RooHistPdf_zgjets_electronidsf_up = ROOT.RooHistPdf("zgjets_electronidsfUp","",ROOT.RooArgSet(m),RooDataHist_zgjets_electronidsf_up)
-    RooDataHist_zgjets_electronidsf_down = ROOT.RooDataHist("zgjets_electronidsfDown","",ROOT.RooArgList(m),makeDownShape(labels["zg+jets"]["hists-electron-id-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]))
-#RooHistPdf_zgjets_electronidsf_down = ROOT.RooHistPdf("zgjets_electronidsfDown","",ROOT.RooArgSet(m),RooDataHist_zgjets_electronidsf_down)
+    RooDataHist_zgjets_electronidsf_up = ROOT.RooDataHist("zgjets_electronidUp","",ROOT.RooArgList(m),labels["zg+jets"]["hists-electron-id-sf-up"][mlg_index])
+#RooHistPdf_zgjets_electronidsf_up = ROOT.RooHistPdf("zgjets_electronidUp","",ROOT.RooArgSet(m),RooDataHist_zgjets_electronidsf_up)
+    RooDataHist_zgjets_electronidsf_down = ROOT.RooDataHist("zgjets_electronidDown","",ROOT.RooArgList(m),makeDownShape(labels["zg+jets"]["hists-electron-id-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]))
+#RooHistPdf_zgjets_electronidsf_down = ROOT.RooHistPdf("zgjets_electronidDown","",ROOT.RooArgSet(m),RooDataHist_zgjets_electronidsf_down)
 
-    RooDataHist_vvjets_electronidsf_up = ROOT.RooDataHist("vvjets_electronidsfUp","",ROOT.RooArgList(m),labels["vv+jets"]["hists-electron-id-sf-up"][mlg_index])
-#RooHistPdf_vvjets_electronidsf_up = ROOT.RooHistPdf("vvjets_electronidsfUp","",ROOT.RooArgSet(m),RooDataHist_vvjets_electronidsf_up)
-    RooDataHist_vvjets_electronidsf_down = ROOT.RooDataHist("vvjets_electronidsfDown","",ROOT.RooArgList(m),makeDownShape(labels["vv+jets"]["hists-electron-id-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]))
-#RooHistPdf_vvjets_electronidsf_down = ROOT.RooHistPdf("vvjets_electronidsfDown","",ROOT.RooArgSet(m),RooDataHist_vvjets_electronidsf_down)
+    RooDataHist_vvjets_electronidsf_up = ROOT.RooDataHist("vvjets_electronidUp","",ROOT.RooArgList(m),labels["vv+jets"]["hists-electron-id-sf-up"][mlg_index])
+#RooHistPdf_vvjets_electronidsf_up = ROOT.RooHistPdf("vvjets_electronidUp","",ROOT.RooArgSet(m),RooDataHist_vvjets_electronidsf_up)
+    RooDataHist_vvjets_electronidsf_down = ROOT.RooDataHist("vvjets_electronidDown","",ROOT.RooArgList(m),makeDownShape(labels["vv+jets"]["hists-electron-id-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]))
+#RooHistPdf_vvjets_electronidsf_down = ROOT.RooHistPdf("vvjets_electronidDown","",ROOT.RooArgSet(m),RooDataHist_vvjets_electronidsf_down)
 
 
 #electron hlt sf
 
-    RooDataHist_wg_electronhltsf_up = ROOT.RooDataHist("wg_electronhltsfUp","",ROOT.RooArgList(m),labels["wg+jets"]["hists-electron-hlt-sf-up"][mlg_index])
-#RooHistPdf_wg_electronhltsf_up = ROOT.RooHistPdf("wg_electronhltsfUp","",ROOT.RooArgSet(m),RooDataHist_wg_electronhltsf_up)
-    RooDataHist_wg_electronhltsf_down = ROOT.RooDataHist("wg_electronhltsfDown","",ROOT.RooArgList(m),makeDownShape(labels["wg+jets"]["hists-electron-hlt-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]))
-#RooHistPdf_wg_electronhltsf_down = ROOT.RooHistPdf("wg_electronhltsfDown","",ROOT.RooArgSet(m),RooDataHist_wg_electronhltsf_down)
+    RooDataHist_wg_electronhltsf_up = ROOT.RooDataHist("wg_electronhltUp","",ROOT.RooArgList(m),labels["wg+jets"]["hists-electron-hlt-sf-up"][mlg_index])
+#RooHistPdf_wg_electronhltsf_up = ROOT.RooHistPdf("wg_electronhltUp","",ROOT.RooArgSet(m),RooDataHist_wg_electronhltsf_up)
+    RooDataHist_wg_electronhltsf_down = ROOT.RooDataHist("wg_electronhltDown","",ROOT.RooArgList(m),makeDownShape(labels["wg+jets"]["hists-electron-hlt-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]))
+#RooHistPdf_wg_electronhltsf_down = ROOT.RooHistPdf("wg_electronhltDown","",ROOT.RooArgSet(m),RooDataHist_wg_electronhltsf_down)
 
-    RooDataHist_topjets_electronhltsf_up = ROOT.RooDataHist("topjets_electronhltsfUp","",ROOT.RooArgList(m),labels["top+jets"]["hists-electron-hlt-sf-up"][mlg_index])
-#RooHistPdf_topjets_electronhltsf_up = ROOT.RooHistPdf("topjets_electronhltsfUp","",ROOT.RooArgSet(m),RooDataHist_topjets_electronhltsf_up)
-    RooDataHist_topjets_electronhltsf_down = ROOT.RooDataHist("topjets_electronhltsfDown","",ROOT.RooArgList(m),makeDownShape(labels["top+jets"]["hists-electron-hlt-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]))
-#RooHistPdf_topjets_electronhltsf_down = ROOT.RooHistPdf("topjets_electronhltsfDown","",ROOT.RooArgSet(m),RooDataHist_topjets_electronhltsf_down)
+    RooDataHist_topjets_electronhltsf_up = ROOT.RooDataHist("topjets_electronhltUp","",ROOT.RooArgList(m),labels["top+jets"]["hists-electron-hlt-sf-up"][mlg_index])
+#RooHistPdf_topjets_electronhltsf_up = ROOT.RooHistPdf("topjets_electronhltUp","",ROOT.RooArgSet(m),RooDataHist_topjets_electronhltsf_up)
+    RooDataHist_topjets_electronhltsf_down = ROOT.RooDataHist("topjets_electronhltDown","",ROOT.RooArgList(m),makeDownShape(labels["top+jets"]["hists-electron-hlt-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]))
+#RooHistPdf_topjets_electronhltsf_down = ROOT.RooHistPdf("topjets_electronhltDown","",ROOT.RooArgSet(m),RooDataHist_topjets_electronhltsf_down)
 
-    RooDataHist_zgjets_electronhltsf_up = ROOT.RooDataHist("zgjets_electronhltsfUp","",ROOT.RooArgList(m),labels["zg+jets"]["hists-electron-hlt-sf-up"][mlg_index])
-#RooHistPdf_zgjets_electronhltsf_up = ROOT.RooHistPdf("zgjets_electronhltsfUp","",ROOT.RooArgSet(m),RooDataHist_zgjets_electronhltsf_up)
-    RooDataHist_zgjets_electronhltsf_down = ROOT.RooDataHist("zgjets_electronhltsfDown","",ROOT.RooArgList(m),makeDownShape(labels["zg+jets"]["hists-electron-hlt-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]))
-#RooHistPdf_zgjets_electronhltsf_down = ROOT.RooHistPdf("zgjets_electronhltsfDown","",ROOT.RooArgSet(m),RooDataHist_zgjets_electronhltsf_down)
+    RooDataHist_zgjets_electronhltsf_up = ROOT.RooDataHist("zgjets_electronhltUp","",ROOT.RooArgList(m),labels["zg+jets"]["hists-electron-hlt-sf-up"][mlg_index])
+#RooHistPdf_zgjets_electronhltsf_up = ROOT.RooHistPdf("zgjets_electronhltUp","",ROOT.RooArgSet(m),RooDataHist_zgjets_electronhltsf_up)
+    RooDataHist_zgjets_electronhltsf_down = ROOT.RooDataHist("zgjets_electronhltDown","",ROOT.RooArgList(m),makeDownShape(labels["zg+jets"]["hists-electron-hlt-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]))
+#RooHistPdf_zgjets_electronhltsf_down = ROOT.RooHistPdf("zgjets_electronhltDown","",ROOT.RooArgSet(m),RooDataHist_zgjets_electronhltsf_down)
 
-    RooDataHist_vvjets_electronhltsf_up = ROOT.RooDataHist("vvjets_electronhltsfUp","",ROOT.RooArgList(m),labels["vv+jets"]["hists-electron-hlt-sf-up"][mlg_index])
-#RooHistPdf_vvjets_electronhltsf_up = ROOT.RooHistPdf("vvjets_electronhltsfUp","",ROOT.RooArgSet(m),RooDataHist_vvjets_electronhltsf_up)
-    RooDataHist_vvjets_electronhltsf_down = ROOT.RooDataHist("vvjets_electronhltsfDown","",ROOT.RooArgList(m),makeDownShape(labels["vv+jets"]["hists-electron-hlt-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]))
-#RooHistPdf_vvjets_electronhltsf_down = ROOT.RooHistPdf("vvjets_electronhltsfDown","",ROOT.RooArgSet(m),RooDataHist_vvjets_electronhltsf_down)
+    RooDataHist_vvjets_electronhltsf_up = ROOT.RooDataHist("vvjets_electronhltUp","",ROOT.RooArgList(m),labels["vv+jets"]["hists-electron-hlt-sf-up"][mlg_index])
+#RooHistPdf_vvjets_electronhltsf_up = ROOT.RooHistPdf("vvjets_electronhltUp","",ROOT.RooArgSet(m),RooDataHist_vvjets_electronhltsf_up)
+    RooDataHist_vvjets_electronhltsf_down = ROOT.RooDataHist("vvjets_electronhltDown","",ROOT.RooArgList(m),makeDownShape(labels["vv+jets"]["hists-electron-hlt-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]))
+#RooHistPdf_vvjets_electronhltsf_down = ROOT.RooHistPdf("vvjets_electronhltDown","",ROOT.RooArgSet(m),RooDataHist_vvjets_electronhltsf_down)
 
 #muon hlt sf
 
-    RooDataHist_wg_muonhltsf_up = ROOT.RooDataHist("wg_muonhltsfUp","",ROOT.RooArgList(m),labels["wg+jets"]["hists-muon-hlt-sf-up"][mlg_index])
-#RooHistPdf_wg_muonhltsf_up = ROOT.RooHistPdf("wg_muonhltsfUp","",ROOT.RooArgSet(m),RooDataHist_wg_muonhltsf_up)
-    RooDataHist_wg_muonhltsf_down = ROOT.RooDataHist("wg_muonhltsfDown","",ROOT.RooArgList(m),makeDownShape(labels["wg+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]))
-#RooHistPdf_wg_muonhltsf_down = ROOT.RooHistPdf("wg_muonhltsfDown","",ROOT.RooArgSet(m),RooDataHist_wg_muonhltsf_down)
+    RooDataHist_wg_muonhltsf_up = ROOT.RooDataHist("wg_muonhltUp","",ROOT.RooArgList(m),labels["wg+jets"]["hists-muon-hlt-sf-up"][mlg_index])
+#RooHistPdf_wg_muonhltsf_up = ROOT.RooHistPdf("wg_muonhltUp","",ROOT.RooArgSet(m),RooDataHist_wg_muonhltsf_up)
+    RooDataHist_wg_muonhltsf_down = ROOT.RooDataHist("wg_muonhltDown","",ROOT.RooArgList(m),makeDownShape(labels["wg+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]))
+#RooHistPdf_wg_muonhltsf_down = ROOT.RooHistPdf("wg_muonhltDown","",ROOT.RooArgSet(m),RooDataHist_wg_muonhltsf_down)
 
-    RooDataHist_topjets_muonhltsf_up = ROOT.RooDataHist("topjets_muonhltsfUp","",ROOT.RooArgList(m),labels["top+jets"]["hists-muon-hlt-sf-up"][mlg_index])
-#RooHistPdf_topjets_muonhltsf_up = ROOT.RooHistPdf("topjets_muonhltsfUp","",ROOT.RooArgSet(m),RooDataHist_topjets_muonhltsf_up)
-    RooDataHist_topjets_muonhltsf_down = ROOT.RooDataHist("topjets_muonhltsfDown","",ROOT.RooArgList(m),makeDownShape(labels["top+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]))
-#RooHistPdf_topjets_muonhltsf_down = ROOT.RooHistPdf("topjets_muonhltsfDown","",ROOT.RooArgSet(m),RooDataHist_topjets_muonhltsf_down)
+    RooDataHist_topjets_muonhltsf_up = ROOT.RooDataHist("topjets_muonhltUp","",ROOT.RooArgList(m),labels["top+jets"]["hists-muon-hlt-sf-up"][mlg_index])
+#RooHistPdf_topjets_muonhltsf_up = ROOT.RooHistPdf("topjets_muonhltUp","",ROOT.RooArgSet(m),RooDataHist_topjets_muonhltsf_up)
+    RooDataHist_topjets_muonhltsf_down = ROOT.RooDataHist("topjets_muonhltDown","",ROOT.RooArgList(m),makeDownShape(labels["top+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]))
+#RooHistPdf_topjets_muonhltsf_down = ROOT.RooHistPdf("topjets_muonhltDown","",ROOT.RooArgSet(m),RooDataHist_topjets_muonhltsf_down)
 
-    RooDataHist_zgjets_muonhltsf_up = ROOT.RooDataHist("zgjets_muonhltsfUp","",ROOT.RooArgList(m),labels["zg+jets"]["hists-muon-hlt-sf-up"][mlg_index])
-#RooHistPdf_zgjets_muonhltsf_up = ROOT.RooHistPdf("zgjets_muonhltsfUp","",ROOT.RooArgSet(m),RooDataHist_zgjets_muonhltsf_up)
-    RooDataHist_zgjets_muonhltsf_down = ROOT.RooDataHist("zgjets_muonhltsfDown","",ROOT.RooArgList(m),makeDownShape(labels["zg+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]))
-#RooHistPdf_zgjets_muonhltsf_down = ROOT.RooHistPdf("zgjets_muonhltsfDown","",ROOT.RooArgSet(m),RooDataHist_zgjets_muonhltsf_down)
+    RooDataHist_zgjets_muonhltsf_up = ROOT.RooDataHist("zgjets_muonhltUp","",ROOT.RooArgList(m),labels["zg+jets"]["hists-muon-hlt-sf-up"][mlg_index])
+#RooHistPdf_zgjets_muonhltsf_up = ROOT.RooHistPdf("zgjets_muonhltUp","",ROOT.RooArgSet(m),RooDataHist_zgjets_muonhltsf_up)
+    RooDataHist_zgjets_muonhltsf_down = ROOT.RooDataHist("zgjets_muonhltDown","",ROOT.RooArgList(m),makeDownShape(labels["zg+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]))
+#RooHistPdf_zgjets_muonhltsf_down = ROOT.RooHistPdf("zgjets_muonhltDown","",ROOT.RooArgSet(m),RooDataHist_zgjets_muonhltsf_down)
 
-    RooDataHist_vvjets_muonhltsf_up = ROOT.RooDataHist("vvjets_muonhltsfUp","",ROOT.RooArgList(m),labels["vv+jets"]["hists-muon-hlt-sf-up"][mlg_index])
-#RooHistPdf_vvjets_muonhltsf_up = ROOT.RooHistPdf("vvjets_muonhltsfUp","",ROOT.RooArgSet(m),RooDataHist_vvjets_muonhltsf_up)
-    RooDataHist_vvjets_muonhltsf_down = ROOT.RooDataHist("vvjets_muonhltsfDown","",ROOT.RooArgList(m),makeDownShape(labels["vv+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]))
-#RooHistPdf_vvjets_muonhltsf_down = ROOT.RooHistPdf("vvjets_muonhltsfDown","",ROOT.RooArgSet(m),RooDataHist_vvjets_muonhltsf_down)
+    RooDataHist_vvjets_muonhltsf_up = ROOT.RooDataHist("vvjets_muonhltUp","",ROOT.RooArgList(m),labels["vv+jets"]["hists-muon-hlt-sf-up"][mlg_index])
+#RooHistPdf_vvjets_muonhltsf_up = ROOT.RooHistPdf("vvjets_muonhltUp","",ROOT.RooArgSet(m),RooDataHist_vvjets_muonhltsf_up)
+    RooDataHist_vvjets_muonhltsf_down = ROOT.RooDataHist("vvjets_muonhltDown","",ROOT.RooArgList(m),makeDownShape(labels["vv+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]))
+#RooHistPdf_vvjets_muonhltsf_down = ROOT.RooHistPdf("vvjets_muonhltDown","",ROOT.RooArgSet(m),RooDataHist_vvjets_muonhltsf_down)
 
 #muon iso sf
 
-    RooDataHist_wg_muonisosf_up = ROOT.RooDataHist("wg_muonisosfUp","",ROOT.RooArgList(m),labels["wg+jets"]["hists-muon-iso-sf-up"][mlg_index])
-#RooHistPdf_wg_muonisosf_up = ROOT.RooHistPdf("wg_muonisosfUp","",ROOT.RooArgSet(m),RooDataHist_wg_muonisosf_up)
-    RooDataHist_wg_muonisosf_down = ROOT.RooDataHist("wg_muonisosfDown","",ROOT.RooArgList(m),makeDownShape(labels["wg+jets"]["hists-muon-iso-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]))
-#RooHistPdf_wg_muonisosf_down = ROOT.RooHistPdf("wg_muonisosfDown","",ROOT.RooArgSet(m),RooDataHist_wg_muonisosf_down)
+    RooDataHist_wg_muonisosf_up = ROOT.RooDataHist("wg_muonisoUp","",ROOT.RooArgList(m),labels["wg+jets"]["hists-muon-iso-sf-up"][mlg_index])
+#RooHistPdf_wg_muonisosf_up = ROOT.RooHistPdf("wg_muonisoUp","",ROOT.RooArgSet(m),RooDataHist_wg_muonisosf_up)
+    RooDataHist_wg_muonisosf_down = ROOT.RooDataHist("wg_muonisoDown","",ROOT.RooArgList(m),makeDownShape(labels["wg+jets"]["hists-muon-iso-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]))
+#RooHistPdf_wg_muonisosf_down = ROOT.RooHistPdf("wg_muonisoDown","",ROOT.RooArgSet(m),RooDataHist_wg_muonisosf_down)
 
-    RooDataHist_topjets_muonisosf_up = ROOT.RooDataHist("topjets_muonisosfUp","",ROOT.RooArgList(m),labels["top+jets"]["hists-muon-iso-sf-up"][mlg_index])
-#RooHistPdf_topjets_muonisosf_up = ROOT.RooHistPdf("topjets_muonisosfUp","",ROOT.RooArgSet(m),RooDataHist_topjets_muonisosf_up)
-    RooDataHist_topjets_muonisosf_down = ROOT.RooDataHist("topjets_muonisosfDown","",ROOT.RooArgList(m),makeDownShape(labels["top+jets"]["hists-muon-iso-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]))
-#RooHistPdf_topjets_muonisosf_down = ROOT.RooHistPdf("topjets_muonisosfDown","",ROOT.RooArgSet(m),RooDataHist_topjets_muonisosf_down)
+    RooDataHist_topjets_muonisosf_up = ROOT.RooDataHist("topjets_muonisoUp","",ROOT.RooArgList(m),labels["top+jets"]["hists-muon-iso-sf-up"][mlg_index])
+#RooHistPdf_topjets_muonisosf_up = ROOT.RooHistPdf("topjets_muonisoUp","",ROOT.RooArgSet(m),RooDataHist_topjets_muonisosf_up)
+    RooDataHist_topjets_muonisosf_down = ROOT.RooDataHist("topjets_muonisoDown","",ROOT.RooArgList(m),makeDownShape(labels["top+jets"]["hists-muon-iso-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]))
+#RooHistPdf_topjets_muonisosf_down = ROOT.RooHistPdf("topjets_muonisoDown","",ROOT.RooArgSet(m),RooDataHist_topjets_muonisosf_down)
 
-    RooDataHist_zgjets_muonisosf_up = ROOT.RooDataHist("zgjets_muonisosfUp","",ROOT.RooArgList(m),labels["zg+jets"]["hists-muon-iso-sf-up"][mlg_index])
-#RooHistPdf_zgjets_muonisosf_up = ROOT.RooHistPdf("zgjets_muonisosfUp","",ROOT.RooArgSet(m),RooDataHist_zgjets_muonisosf_up)
-    RooDataHist_zgjets_muonisosf_down = ROOT.RooDataHist("zgjets_muonisosfDown","",ROOT.RooArgList(m),makeDownShape(labels["zg+jets"]["hists-muon-iso-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]))
-#RooHistPdf_zgjets_muonisosf_down = ROOT.RooHistPdf("zgjets_muonisosfDown","",ROOT.RooArgSet(m),RooDataHist_zgjets_muonisosf_down)
+    RooDataHist_zgjets_muonisosf_up = ROOT.RooDataHist("zgjets_muonisoUp","",ROOT.RooArgList(m),labels["zg+jets"]["hists-muon-iso-sf-up"][mlg_index])
+#RooHistPdf_zgjets_muonisosf_up = ROOT.RooHistPdf("zgjets_muonisoUp","",ROOT.RooArgSet(m),RooDataHist_zgjets_muonisosf_up)
+    RooDataHist_zgjets_muonisosf_down = ROOT.RooDataHist("zgjets_muonisoDown","",ROOT.RooArgList(m),makeDownShape(labels["zg+jets"]["hists-muon-iso-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]))
+#RooHistPdf_zgjets_muonisosf_down = ROOT.RooHistPdf("zgjets_muonisoDown","",ROOT.RooArgSet(m),RooDataHist_zgjets_muonisosf_down)
 
-    RooDataHist_vvjets_muonisosf_up = ROOT.RooDataHist("vvjets_muonisosfUp","",ROOT.RooArgList(m),labels["vv+jets"]["hists-muon-iso-sf-up"][mlg_index])
-#RooHistPdf_vvjets_muonisosf_up = ROOT.RooHistPdf("vvjets_muonisosfUp","",ROOT.RooArgSet(m),RooDataHist_vvjets_muonisosf_up)
-    RooDataHist_vvjets_muonisosf_down = ROOT.RooDataHist("vvjets_muonisosfDown","",ROOT.RooArgList(m),makeDownShape(labels["vv+jets"]["hists-muon-iso-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]))
-#RooHistPdf_vvjets_muonisosf_down = ROOT.RooHistPdf("vvjets_muonisosfDown","",ROOT.RooArgSet(m),RooDataHist_vvjets_muonisosf_down)
+    RooDataHist_vvjets_muonisosf_up = ROOT.RooDataHist("vvjets_muonisoUp","",ROOT.RooArgList(m),labels["vv+jets"]["hists-muon-iso-sf-up"][mlg_index])
+#RooHistPdf_vvjets_muonisosf_up = ROOT.RooHistPdf("vvjets_muonisoUp","",ROOT.RooArgSet(m),RooDataHist_vvjets_muonisosf_up)
+    RooDataHist_vvjets_muonisosf_down = ROOT.RooDataHist("vvjets_muonisoDown","",ROOT.RooArgList(m),makeDownShape(labels["vv+jets"]["hists-muon-iso-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]))
+#RooHistPdf_vvjets_muonisosf_down = ROOT.RooHistPdf("vvjets_muonisoDown","",ROOT.RooArgSet(m),RooDataHist_vvjets_muonisosf_down)
 
 #muon id sf
 
-    RooDataHist_wg_muonidsf_up = ROOT.RooDataHist("wg_muonidsfUp","",ROOT.RooArgList(m),labels["wg+jets"]["hists-muon-id-sf-up"][mlg_index])
-#RooHistPdf_wg_muonidsf_up = ROOT.RooHistPdf("wg_muonidsfUp","",ROOT.RooArgSet(m),RooDataHist_wg_muonidsf_up)
-    RooDataHist_wg_muonidsf_down = ROOT.RooDataHist("wg_muonidsfDown","",ROOT.RooArgList(m),makeDownShape(labels["wg+jets"]["hists-muon-id-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]))
-#RooHistPdf_wg_muonidsf_down = ROOT.RooHistPdf("wg_muonidsfDown","",ROOT.RooArgSet(m),RooDataHist_wg_muonidsf_down)
+    RooDataHist_wg_muonidsf_up = ROOT.RooDataHist("wg_muonidUp","",ROOT.RooArgList(m),labels["wg+jets"]["hists-muon-id-sf-up"][mlg_index])
+#RooHistPdf_wg_muonidsf_up = ROOT.RooHistPdf("wg_muonidUp","",ROOT.RooArgSet(m),RooDataHist_wg_muonidsf_up)
+    RooDataHist_wg_muonidsf_down = ROOT.RooDataHist("wg_muonidDown","",ROOT.RooArgList(m),makeDownShape(labels["wg+jets"]["hists-muon-id-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]))
+#RooHistPdf_wg_muonidsf_down = ROOT.RooHistPdf("wg_muonidDown","",ROOT.RooArgSet(m),RooDataHist_wg_muonidsf_down)
 
-    RooDataHist_topjets_muonidsf_up = ROOT.RooDataHist("topjets_muonidsfUp","",ROOT.RooArgList(m),labels["top+jets"]["hists-muon-id-sf-up"][mlg_index])
-#RooHistPdf_topjets_muonidsf_up = ROOT.RooHistPdf("topjets_muonidsfUp","",ROOT.RooArgSet(m),RooDataHist_topjets_muonidsf_up)
-    RooDataHist_topjets_muonidsf_down = ROOT.RooDataHist("topjets_muonidsfDown","",ROOT.RooArgList(m),makeDownShape(labels["top+jets"]["hists-muon-id-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]))
-#RooHistPdf_topjets_muonidsf_down = ROOT.RooHistPdf("topjets_muonidsfDown","",ROOT.RooArgSet(m),RooDataHist_topjets_muonidsf_down)
+    RooDataHist_topjets_muonidsf_up = ROOT.RooDataHist("topjets_muonidUp","",ROOT.RooArgList(m),labels["top+jets"]["hists-muon-id-sf-up"][mlg_index])
+#RooHistPdf_topjets_muonidsf_up = ROOT.RooHistPdf("topjets_muonidUp","",ROOT.RooArgSet(m),RooDataHist_topjets_muonidsf_up)
+    RooDataHist_topjets_muonidsf_down = ROOT.RooDataHist("topjets_muonidDown","",ROOT.RooArgList(m),makeDownShape(labels["top+jets"]["hists-muon-id-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]))
+#RooHistPdf_topjets_muonidsf_down = ROOT.RooHistPdf("topjets_muonidDown","",ROOT.RooArgSet(m),RooDataHist_topjets_muonidsf_down)
 
-    RooDataHist_zgjets_muonidsf_up = ROOT.RooDataHist("zgjets_muonidsfUp","",ROOT.RooArgList(m),labels["zg+jets"]["hists-muon-id-sf-up"][mlg_index])
-#RooHistPdf_zgjets_muonidsf_up = ROOT.RooHistPdf("zgjets_muonidsfUp","",ROOT.RooArgSet(m),RooDataHist_zgjets_muonidsf_up)
-    RooDataHist_zgjets_muonidsf_down = ROOT.RooDataHist("zgjets_muonidsfDown","",ROOT.RooArgList(m),makeDownShape(labels["zg+jets"]["hists-muon-id-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]))
-#RooHistPdf_zgjets_muonidsf_down = ROOT.RooHistPdf("zgjets_muonidsfDown","",ROOT.RooArgSet(m),RooDataHist_zgjets_muonidsf_down)
+    RooDataHist_zgjets_muonidsf_up = ROOT.RooDataHist("zgjets_muonidUp","",ROOT.RooArgList(m),labels["zg+jets"]["hists-muon-id-sf-up"][mlg_index])
+#RooHistPdf_zgjets_muonidsf_up = ROOT.RooHistPdf("zgjets_muonidUp","",ROOT.RooArgSet(m),RooDataHist_zgjets_muonidsf_up)
+    RooDataHist_zgjets_muonidsf_down = ROOT.RooDataHist("zgjets_muonidDown","",ROOT.RooArgList(m),makeDownShape(labels["zg+jets"]["hists-muon-id-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]))
+#RooHistPdf_zgjets_muonidsf_down = ROOT.RooHistPdf("zgjets_muonidDown","",ROOT.RooArgSet(m),RooDataHist_zgjets_muonidsf_down)
 
-    RooDataHist_vvjets_muonidsf_up = ROOT.RooDataHist("vvjets_muonidsfUp","",ROOT.RooArgList(m),labels["vv+jets"]["hists-muon-id-sf-up"][mlg_index])
-#RooHistPdf_vvjets_muonidsf_up = ROOT.RooHistPdf("vvjets_muonidsfUp","",ROOT.RooArgSet(m),RooDataHist_vvjets_muonidsf_up)
-    RooDataHist_vvjets_muonidsf_down = ROOT.RooDataHist("vvjets_muonidsfDown","",ROOT.RooArgList(m),makeDownShape(labels["vv+jets"]["hists-muon-id-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]))
-#RooHistPdf_vvjets_muonidsf_down = ROOT.RooHistPdf("vvjets_muonidsfDown","",ROOT.RooArgSet(m),RooDataHist_vvjets_muonidsf_down)
+    RooDataHist_vvjets_muonidsf_up = ROOT.RooDataHist("vvjets_muonidUp","",ROOT.RooArgList(m),labels["vv+jets"]["hists-muon-id-sf-up"][mlg_index])
+#RooHistPdf_vvjets_muonidsf_up = ROOT.RooHistPdf("vvjets_muonidUp","",ROOT.RooArgSet(m),RooDataHist_vvjets_muonidsf_up)
+    RooDataHist_vvjets_muonidsf_down = ROOT.RooDataHist("vvjets_muonidDown","",ROOT.RooArgList(m),makeDownShape(labels["vv+jets"]["hists-muon-id-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]))
+#RooHistPdf_vvjets_muonidsf_down = ROOT.RooHistPdf("vvjets_muonidDown","",ROOT.RooArgSet(m),RooDataHist_vvjets_muonidsf_down)
 
 #print "RooParametricShapeBinPdf_bwcb.getNorm() = " + str(RooParametricShapeBinPdf_bwcb.getNorm()) 
 
@@ -5200,7 +5237,7 @@ if args.make_datacard:
     getattr(ws,"import")(RooDataHist_fake_lepton)
     getattr(ws,"import")(RooDataHist_fake_photon)
     getattr(ws,"import")(RooDataHist_double_fake)
-    getattr(ws,"import")(RooDataHist_e_to_p_non_res)
+    getattr(ws,"import")(RooDataHist_e_to_p_total)
     
     getattr(ws,"import")(RooDataHist_fake_photon_syst1_up)
     getattr(ws,"import")(RooDataHist_fake_photon_syst1_down)
@@ -5447,8 +5484,10 @@ statuncmin(fake_photon["hists"][mlg_index]),
 statuncmax(fake_photon["hists"][mlg_index]),
 statuncmin(double_fake["hists"][mlg_index]),
 statuncmax(double_fake["hists"][mlg_index]),
-statuncmin(e_to_p_non_res["hists"][mlg_index]),
-statuncmax(e_to_p_non_res["hists"][mlg_index])
+#statuncmin(e_to_p_non_res["hists"][mlg_index]),
+#statuncmax(e_to_p_non_res["hists"][mlg_index])
+statuncmin(e_to_p_total["hists"][mlg_index]),
+statuncmax(e_to_p_total["hists"][mlg_index])
 )
 
 if args.lep == "muon" or args.lep == "both":
