@@ -495,18 +495,20 @@ if "wg+jets" in labels:
     labels["wg+jets"]["hists-fail-fiducial-jes-up"] = {}
     labels["wg+jets"]["hists-pass-fiducial-jer-up"] = {}
     labels["wg+jets"]["hists-fail-fiducial-jer-up"] = {}
-    labels["wg+jets"]["hists-pass-fiducial-muon-id-sf-up"] = {}
-    labels["wg+jets"]["hists-fail-fiducial-muon-id-sf-up"] = {}
-    labels["wg+jets"]["hists-pass-fiducial-muon-iso-sf-up"] = {}
-    labels["wg+jets"]["hists-fail-fiducial-muon-iso-sf-up"] = {}
-    labels["wg+jets"]["hists-pass-fiducial-muon-hlt-sf-up"] = {}
-    labels["wg+jets"]["hists-fail-fiducial-muon-hlt-sf-up"] = {}
+    labels["wg+jets"]["hists-pass-fiducial-photon-id-sf-up"] = {}
+    labels["wg+jets"]["hists-fail-fiducial-photon-id-sf-up"] = {}
     labels["wg+jets"]["hists-pass-fiducial-electron-reco-sf-up"] = {}
     labels["wg+jets"]["hists-fail-fiducial-electron-reco-sf-up"] = {}
     labels["wg+jets"]["hists-pass-fiducial-electron-id-sf-up"] = {}
     labels["wg+jets"]["hists-fail-fiducial-electron-id-sf-up"] = {}
     labels["wg+jets"]["hists-pass-fiducial-electron-hlt-sf-up"] = {}
     labels["wg+jets"]["hists-fail-fiducial-electron-hlt-sf-up"] = {}
+    labels["wg+jets"]["hists-pass-fiducial-muon-id-sf-up"] = {}
+    labels["wg+jets"]["hists-fail-fiducial-muon-id-sf-up"] = {}
+    labels["wg+jets"]["hists-pass-fiducial-muon-iso-sf-up"] = {}
+    labels["wg+jets"]["hists-fail-fiducial-muon-iso-sf-up"] = {}
+    labels["wg+jets"]["hists-pass-fiducial-muon-hlt-sf-up"] = {}
+    labels["wg+jets"]["hists-fail-fiducial-muon-hlt-sf-up"] = {}
     if labels["wg+jets"]["syst-pdf"]:
         for i in range(0,32):
             labels["wg+jets"]["hists-pass-fiducial-pdf-variation"+str(i)] = {}
@@ -538,18 +540,10 @@ if "wg+jets" in labels:
         labels["wg+jets"]["hists-pass-fiducial-jer-up"][i].Sumw2()
         labels["wg+jets"]["hists-fail-fiducial-jer-up"][i] = histogram_models[i].GetHistogram()
         labels["wg+jets"]["hists-fail-fiducial-jer-up"][i].Sumw2()
-        labels["wg+jets"]["hists-pass-fiducial-muon-id-sf-up"][i] = histogram_models[i].GetHistogram()
-        labels["wg+jets"]["hists-pass-fiducial-muon-id-sf-up"][i].Sumw2()
-        labels["wg+jets"]["hists-fail-fiducial-muon-id-sf-up"][i] = histogram_models[i].GetHistogram()
-        labels["wg+jets"]["hists-fail-fiducial-muon-id-sf-up"][i].Sumw2()
-        labels["wg+jets"]["hists-pass-fiducial-muon-iso-sf-up"][i] = histogram_models[i].GetHistogram()
-        labels["wg+jets"]["hists-pass-fiducial-muon-iso-sf-up"][i].Sumw2()
-        labels["wg+jets"]["hists-fail-fiducial-muon-iso-sf-up"][i] = histogram_models[i].GetHistogram()
-        labels["wg+jets"]["hists-fail-fiducial-muon-iso-sf-up"][i].Sumw2()
-        labels["wg+jets"]["hists-pass-fiducial-muon-hlt-sf-up"][i] = histogram_models[i].GetHistogram()
-        labels["wg+jets"]["hists-pass-fiducial-muon-hlt-sf-up"][i].Sumw2()
-        labels["wg+jets"]["hists-fail-fiducial-muon-hlt-sf-up"][i] = histogram_models[i].GetHistogram()
-        labels["wg+jets"]["hists-fail-fiducial-muon-hlt-sf-up"][i].Sumw2()
+        labels["wg+jets"]["hists-pass-fiducial-photon-id-sf-up"][i] = histogram_models[i].GetHistogram()
+        labels["wg+jets"]["hists-pass-fiducial-photon-id-sf-up"][i].Sumw2()
+        labels["wg+jets"]["hists-fail-fiducial-photon-id-sf-up"][i] = histogram_models[i].GetHistogram()
+        labels["wg+jets"]["hists-fail-fiducial-photon-id-sf-up"][i].Sumw2()
         labels["wg+jets"]["hists-pass-fiducial-electron-reco-sf-up"][i] = histogram_models[i].GetHistogram()
         labels["wg+jets"]["hists-pass-fiducial-electron-reco-sf-up"][i].Sumw2()
         labels["wg+jets"]["hists-fail-fiducial-electron-reco-sf-up"][i] = histogram_models[i].GetHistogram()
@@ -562,6 +556,18 @@ if "wg+jets" in labels:
         labels["wg+jets"]["hists-pass-fiducial-electron-hlt-sf-up"][i].Sumw2()
         labels["wg+jets"]["hists-fail-fiducial-electron-hlt-sf-up"][i] = histogram_models[i].GetHistogram()
         labels["wg+jets"]["hists-fail-fiducial-electron-hlt-sf-up"][i].Sumw2()
+        labels["wg+jets"]["hists-pass-fiducial-muon-id-sf-up"][i] = histogram_models[i].GetHistogram()
+        labels["wg+jets"]["hists-pass-fiducial-muon-id-sf-up"][i].Sumw2()
+        labels["wg+jets"]["hists-fail-fiducial-muon-id-sf-up"][i] = histogram_models[i].GetHistogram()
+        labels["wg+jets"]["hists-fail-fiducial-muon-id-sf-up"][i].Sumw2()
+        labels["wg+jets"]["hists-pass-fiducial-muon-iso-sf-up"][i] = histogram_models[i].GetHistogram()
+        labels["wg+jets"]["hists-pass-fiducial-muon-iso-sf-up"][i].Sumw2()
+        labels["wg+jets"]["hists-fail-fiducial-muon-iso-sf-up"][i] = histogram_models[i].GetHistogram()
+        labels["wg+jets"]["hists-fail-fiducial-muon-iso-sf-up"][i].Sumw2()
+        labels["wg+jets"]["hists-pass-fiducial-muon-hlt-sf-up"][i] = histogram_models[i].GetHistogram()
+        labels["wg+jets"]["hists-pass-fiducial-muon-hlt-sf-up"][i].Sumw2()
+        labels["wg+jets"]["hists-fail-fiducial-muon-hlt-sf-up"][i] = histogram_models[i].GetHistogram()
+        labels["wg+jets"]["hists-fail-fiducial-muon-hlt-sf-up"][i].Sumw2()
 
         if labels["wg+jets"]["syst-pdf"]:
             for j in range(0,32):
@@ -1833,6 +1839,8 @@ for year in years:
                 rinterface = rinterface.Define("fail_fiducial_jes_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && !(pass_fid_selection && fid_met_pt > 0))*jes_up_base_weight")
                 rinterface = rinterface.Define("pass_fiducial_jer_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && (pass_fid_selection && fid_met_pt > 0))*jer_up_base_weight")
                 rinterface = rinterface.Define("fail_fiducial_jer_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && !(pass_fid_selection && fid_met_pt > 0))*jer_up_base_weight")
+                rinterface = rinterface.Define("pass_fiducial_photon_id_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && (pass_fid_selection && fid_met_pt > 0))*photon_id_sf_up_base_weight")
+                rinterface = rinterface.Define("fail_fiducial_photon_id_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && !(pass_fid_selection && fid_met_pt > 0))*photon_id_sf_up_base_weight")
                 rinterface = rinterface.Define("pass_fiducial_electron_reco_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && (pass_fid_selection && fid_met_pt > 0))*electron_reco_sf_up_base_weight")
                 rinterface = rinterface.Define("fail_fiducial_electron_reco_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && !(pass_fid_selection && fid_met_pt > 0))*electron_reco_sf_up_base_weight")
                 rinterface = rinterface.Define("pass_fiducial_electron_id_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && (pass_fid_selection && fid_met_pt > 0))*electron_id_sf_up_base_weight")
@@ -2002,38 +2010,40 @@ for year in years:
                     rresultptrs_e_to_p_jer_up.append([])    
 
             if label == "wg+jets":
-                rresultptrs_pass_fiducial = []    
-                rresultptrs_fail_fiducial = []    
-                rresultptrs_pass_fiducial_pileup_up = []    
-                rresultptrs_fail_fiducial_pileup_up = []    
-                rresultptrs_pass_fiducial_prefire_up = []    
-                rresultptrs_fail_fiducial_prefire_up = []   
-                rresultptrs_pass_fiducial_jes_up = []    
-                rresultptrs_fail_fiducial_jes_up = []     
-                rresultptrs_pass_fiducial_jer_up = []    
-                rresultptrs_fail_fiducial_jer_up = []     
-                rresultptrs_pass_fiducial_electron_reco_sf_up = []    
-                rresultptrs_fail_fiducial_electron_reco_sf_up = []     
-                rresultptrs_pass_fiducial_electron_id_sf_up = []    
-                rresultptrs_fail_fiducial_electron_id_sf_up = []     
-                rresultptrs_pass_fiducial_electron_hlt_sf_up = []    
-                rresultptrs_fail_fiducial_electron_hlt_sf_up = []     
-                rresultptrs_pass_fiducial_muon_id_sf_up = []    
-                rresultptrs_fail_fiducial_muon_id_sf_up = []     
-                rresultptrs_pass_fiducial_muon_iso_sf_up = []    
-                rresultptrs_fail_fiducial_muon_iso_sf_up = []     
-                rresultptrs_pass_fiducial_muon_hlt_sf_up = []    
-                rresultptrs_fail_fiducial_muon_hlt_sf_up = []     
+                rresultptrs_pass_fiducial = []
+                rresultptrs_fail_fiducial = []
+                rresultptrs_pass_fiducial_pileup_up = []
+                rresultptrs_fail_fiducial_pileup_up = []
+                rresultptrs_pass_fiducial_prefire_up = []
+                rresultptrs_fail_fiducial_prefire_up = []
+                rresultptrs_pass_fiducial_jes_up = []
+                rresultptrs_fail_fiducial_jes_up = []
+                rresultptrs_pass_fiducial_jer_up = []
+                rresultptrs_fail_fiducial_jer_up = [] 
+                rresultptrs_pass_fiducial_photon_id_sf_up = []
+                rresultptrs_fail_fiducial_photon_id_sf_up = [] 
+                rresultptrs_pass_fiducial_electron_reco_sf_up = []
+                rresultptrs_fail_fiducial_electron_reco_sf_up = [] 
+                rresultptrs_pass_fiducial_electron_id_sf_up = []
+                rresultptrs_fail_fiducial_electron_id_sf_up = [] 
+                rresultptrs_pass_fiducial_electron_hlt_sf_up = []
+                rresultptrs_fail_fiducial_electron_hlt_sf_up = [] 
+                rresultptrs_pass_fiducial_muon_id_sf_up = []
+                rresultptrs_fail_fiducial_muon_id_sf_up = []
+                rresultptrs_pass_fiducial_muon_iso_sf_up = []
+                rresultptrs_fail_fiducial_muon_iso_sf_up = [] 
+                rresultptrs_pass_fiducial_muon_hlt_sf_up = []
+                rresultptrs_fail_fiducial_muon_hlt_sf_up = [] 
                 if labels["wg+jets"]["syst-scale"]:
-                    rresultptrs_pass_fiducial_scale = []    
-                    rresultptrs_fail_fiducial_scale = []    
+                    rresultptrs_pass_fiducial_scale = []
+                    rresultptrs_fail_fiducial_scale = []
                     for i in range(0,8):
                         rresultptrs_pass_fiducial_scale.append([])    
                         rresultptrs_fail_fiducial_scale.append([])    
                     
                 if labels["wg+jets"]["syst-pdf"]:
-                    rresultptrs_pass_fiducial_pdf = []    
-                    rresultptrs_fail_fiducial_pdf = []    
+                    rresultptrs_pass_fiducial_pdf = []
+                    rresultptrs_fail_fiducial_pdf = []
                     for i in range(0,32):
                         if (year == "2017" or year == "2018") and args.no_pdf_var_for_2017_and_2018:
                             continue
@@ -2065,6 +2075,8 @@ for year in years:
                         rresultptrs_fail_fiducial_jes_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"fail_fiducial_jes_up_weight"))
                         rresultptrs_pass_fiducial_jer_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"pass_fiducial_jer_up_weight"))
                         rresultptrs_fail_fiducial_jer_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"fail_fiducial_jer_up_weight"))
+                        rresultptrs_pass_fiducial_photon_id_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"pass_fiducial_photon_id_sf_up_weight"))
+                        rresultptrs_fail_fiducial_photon_id_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"fail_fiducial_photon_id_sf_up_weight"))
                         rresultptrs_pass_fiducial_electron_reco_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"pass_fiducial_electron_reco_sf_up_weight"))
                         rresultptrs_fail_fiducial_electron_reco_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"fail_fiducial_electron_reco_sf_up_weight"))
                         rresultptrs_pass_fiducial_electron_id_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"pass_fiducial_electron_id_sf_up_weight"))
@@ -2154,6 +2166,8 @@ for year in years:
                         labels[label]["hists-fail-fiducial-jes-up"][i].Add(rresultptrs_fail_fiducial_jes_up[i].GetValue())
                         labels[label]["hists-pass-fiducial-jer-up"][i].Add(rresultptrs_pass_fiducial_jer_up[i].GetValue())
                         labels[label]["hists-fail-fiducial-jer-up"][i].Add(rresultptrs_fail_fiducial_jer_up[i].GetValue())
+                        labels[label]["hists-pass-fiducial-photon-id-sf-up"][i].Add(rresultptrs_pass_fiducial_photon_id_sf_up[i].GetValue())
+                        labels[label]["hists-fail-fiducial-photon-id-sf-up"][i].Add(rresultptrs_fail_fiducial_photon_id_sf_up[i].GetValue())
                         labels[label]["hists-pass-fiducial-electron-reco-sf-up"][i].Add(rresultptrs_pass_fiducial_electron_reco_sf_up[i].GetValue())
                         labels[label]["hists-fail-fiducial-electron-reco-sf-up"][i].Add(rresultptrs_fail_fiducial_electron_reco_sf_up[i].GetValue())
                         labels[label]["hists-pass-fiducial-electron-id-sf-up"][i].Add(rresultptrs_pass_fiducial_electron_id_sf_up[i].GetValue())
@@ -4153,6 +4167,20 @@ if args.make_datacard:
     else:
         assert(0)    
     dcard.write('\n')    
+
+    dcard.write("photonid shape1")
+    dcard.write(" 1.0")
+    dcard.write(" 1.0")
+    for label in labels.keys():
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        dcard.write(" 1.0")
+    dcard.write(" -")
+    dcard.write(" -")
+    dcard.write(" -")
+    for i in range(len(etopbinning)):
+        dcard.write(" -")
+    dcard.write('\n')    
     
     if args.lep == "muon":
         dcard.write("muonid shape1")
@@ -4780,6 +4808,19 @@ if args.make_datacard:
     makeDownShape(labels["wg+jets"]["hists-pass-fiducial-prefire-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]).Write("wg_prefireDown")
     labels["wg+jets"]["hists-fail-fiducial-prefire-up"][mlg_index].Write("wgout_prefireUp")
     makeDownShape(labels["wg+jets"]["hists-fail-fiducial-prefire-up"][mlg_index],labels["wg+jets"]["hists-fail-fiducial"][mlg_index]).Write("wgout_prefireDown")
+
+    labels["top+jets"]["hists-photon-id-sf-up"][mlg_index].Write("topjets_photonidUp")
+    makeDownShape(labels["top+jets"]["hists-photon-id-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]).Write("topjets_photonidDown")
+    labels["zg+jets"]["hists-photon-id-sf-up"][mlg_index].Write("zgjets_photonidUp")
+    makeDownShape(labels["zg+jets"]["hists-photon-id-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]).Write("zgjets_photonidDown")
+    labels["vv+jets"]["hists-photon-id-sf-up"][mlg_index].Write("vvjets_photonidUp")
+    makeDownShape(labels["vv+jets"]["hists-photon-id-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]).Write("vvjets_photonidDown")
+#    labels["wg+jets"]["hists-photon-id-sf-up"][mlg_index].Write("wg_photonidUp")
+#    makeDownShape(labels["wg+jets"]["hists-photon-id-sf-up"][mlg_index],labels["wg+jets"]["hists"][mlg_index]).Write("wg_photonidDown")
+    labels["wg+jets"]["hists-pass-fiducial-photon-id-sf-up"][mlg_index].Write("wg_photonidUp")
+    makeDownShape(labels["wg+jets"]["hists-pass-fiducial-photon-id-sf-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]).Write("wg_photonidDown")
+    labels["wg+jets"]["hists-fail-fiducial-photon-id-sf-up"][mlg_index].Write("wgout_photonidUp")
+    makeDownShape(labels["wg+jets"]["hists-fail-fiducial-photon-id-sf-up"][mlg_index],labels["wg+jets"]["hists-fail-fiducial"][mlg_index]).Write("wgout_photonidDown")
 
     labels["top+jets"]["hists-muon-id-sf-up"][mlg_index].Write("topjets_muonidUp")
     makeDownShape(labels["top+jets"]["hists-muon-id-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]).Write("topjets_muonidDown")
@@ -5415,6 +5456,8 @@ JES & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & -  \\\
 JER & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & -  \\\\
 \\hline
 stat & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f  \\\\
+\\hline
+photon ID and iso & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & -  \\\\
 \\hline"""%(
 uncmin(wgjets_pass_fiducial_scale_syst,labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
 uncmax(wgjets_pass_fiducial_scale_syst,labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
@@ -5487,7 +5530,16 @@ statuncmax(double_fake["hists"][mlg_index]),
 #statuncmin(e_to_p_non_res["hists"][mlg_index]),
 #statuncmax(e_to_p_non_res["hists"][mlg_index])
 statuncmin(e_to_p_total["hists"][mlg_index]),
-statuncmax(e_to_p_total["hists"][mlg_index])
+statuncmax(e_to_p_total["hists"][mlg_index]),
+
+uncmin(labels["wg+jets"]["hists-pass-fiducial-photon-id-sf-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
+uncmax(labels["wg+jets"]["hists-pass-fiducial-photon-id-sf-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
+uncmin(labels["zg+jets"]["hists-photon-id-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]),
+uncmax(labels["zg+jets"]["hists-photon-id-sf-up"][mlg_index],labels["zg+jets"]["hists"][mlg_index]),
+uncmin(labels["top+jets"]["hists-photon-id-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]),
+uncmax(labels["top+jets"]["hists-photon-id-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]),
+uncmin(labels["vv+jets"]["hists-photon-id-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
+uncmax(labels["vv+jets"]["hists-photon-id-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index])
 )
 
 if args.lep == "muon" or args.lep == "both":
