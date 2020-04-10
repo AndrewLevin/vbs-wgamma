@@ -5,7 +5,7 @@ import argparse
 parser = argparse.ArgumentParser()
 
 parser.add_argument('--year',dest='year',default='2016')
-parser.add_argument('-o',dest='outdir',default="/eos/user/a/amlevin/www/tmp/wg/fake-photon-fits/")
+parser.add_argument('-o',dest='outdir',default="/eos/user/a/amlevin/www/wg/fake-photon-fits/")
 
 args = parser.parse_args()
 
