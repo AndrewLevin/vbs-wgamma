@@ -253,7 +253,7 @@ for lepton_name in lepton_names:
                     fake_photon_template_hist_data = ROOT.TH1F("fake_photon_template_hist_data_sample"+str(k),"fake_photon_template_hist_data_sample"+str(k),n_bins,sieie_lower,sieie_upper)
                     fake_photon_template_hist_data.Sumw2()
 
-                    fake_photon_tree.Draw("photon1_sieie >> total_hist_data_sample"+str(k),photon1_eta_range+ " && "+lepton_pdg_id+" && (photon1_selection == 0 || photon1_selection == 4) && "+photon1_pt_range_cutstring + " && pass_selection1 && "+str(photon1_veto_signal_selection_cutstring) + " && " + photon1_recoil_cutstring + "&& njets_fake >= "+str(njets_min) + " && njets_fake_template <= "+str(njets_max))
+                    fake_photon_tree.Draw("photon1_sieie >> total_hist_data_sample"+str(k),photon1_eta_range+ " && "+lepton_pdg_id+" && (photon1_selection == 0 || photon1_selection == 4) && "+photon1_pt_range_cutstring + " && pass_selection1 && "+str(photon1_veto_signal_selection_cutstring) + " && " + photon1_recoil_cutstring + "&& njets_fake >= "+str(njets_min) + " && njets_fake <= "+str(njets_max))
 
                     fake_photon_tree.Draw("photon2_sieie >> fake_photon_template_hist_data_sample"+str(k),photon2_eta_range + " && "+lepton_pdg_id+" && "+photon2_pt_range_cutstring + " && pass_selection2 && "+str(photon2_veto_signal_selection_cutstring)  + " && " + photon2_recoil_cutstring +" && njets_fake_template  >= "+str(njets_min) + " && njets_fake_template <= " + str(njets_max))
 
@@ -293,8 +293,8 @@ for lepton_name in lepton_names:
                     total_hist_pos.Sumw2()
                     total_hist_neg.Sumw2()
 
-                    fake_photon_tree.Draw("photon1_sieie >> total_hist_pos_sample"+str(k),photon1_eta_range+ " && "+lepton_pdg_id+" && (photon1_selection == 0 || photon1_selection == 4) && "+photon1_pt_range_cutstring + " && pass_selection1 && "+str(photon1_veto_signal_selection_cutstring) + " && " + photon1_recoil_cutstring + "&& njets_fake >= "+str(njets_min) + " && njets_fake_template <= "+str(njets_max) + " && gen_weight > 0 && " + photon1_gen_matching_cutstring)
-                    fake_photon_tree.Draw("photon1_sieie >> total_hist_neg_sample"+str(k),photon1_eta_range+ " && "+lepton_pdg_id+" && (photon1_selection == 0 || photon1_selection == 4) && "+photon1_pt_range_cutstring + " && pass_selection1 && "+str(photon1_veto_signal_selection_cutstring) + " && " + photon1_recoil_cutstring + "&& njets_fake >= "+str(njets_min) + " && njets_fake_template <= "+str(njets_max) + " && gen_weight < 0 && "+photon1_gen_matching_cutstring)
+                    fake_photon_tree.Draw("photon1_sieie >> total_hist_pos_sample"+str(k),photon1_eta_range+ " && "+lepton_pdg_id+" && (photon1_selection == 0 || photon1_selection == 4) && "+photon1_pt_range_cutstring + " && pass_selection1 && "+str(photon1_veto_signal_selection_cutstring) + " && " + photon1_recoil_cutstring + "&& njets_fake >= "+str(njets_min) + " && njets_fake <= "+str(njets_max) + " && gen_weight > 0 && " + photon1_gen_matching_cutstring)
+                    fake_photon_tree.Draw("photon1_sieie >> total_hist_neg_sample"+str(k),photon1_eta_range+ " && "+lepton_pdg_id+" && (photon1_selection == 0 || photon1_selection == 4) && "+photon1_pt_range_cutstring + " && pass_selection1 && "+str(photon1_veto_signal_selection_cutstring) + " && " + photon1_recoil_cutstring + "&& njets_fake >= "+str(njets_min) + " && njets_fake <= "+str(njets_max) + " && gen_weight < 0 && "+photon1_gen_matching_cutstring)
 
                     total_hist_pos.Scale(fake_photon_mc_sample["xs"]*1000*lumi/fake_photon_mc_sample["file"].Get("nEventsGenWeighted").GetBinContent(1))
                     total_hist_neg.Scale(-fake_photon_mc_sample["xs"]*1000*lumi/fake_photon_mc_sample["file"].Get("nEventsGenWeighted").GetBinContent(1))
