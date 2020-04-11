@@ -4,6 +4,10 @@ keep run
 keep luminosityBlock
 keep event
 keep Generator_weight
+keep GenJet_eta
+keep GenJet_phi
+keep GenJet_mass
+keep GenJet_pt
 keep GenPart_eta
 keep GenPart_phi
 keep GenPart_mass

@@ -39,6 +39,8 @@ keep lepton_pdg_id
 keep lepton_pt
 keep lepton_eta
 keep lepton_phi
+keep photon1_genjet_matching
+keep photon2_genjet_matching
 keep photon1_gen_matching
 keep photon2_gen_matching
 keep photon1_gen_matching_old
