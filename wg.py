@@ -619,8 +619,8 @@ if "wg+jets" in labels:
 
     fiducial_region_cuts_efficiency = nweightedeventspassgenselection/nweightedevents
 
-etopbinning = [25,35,45]
-#etopbinning = [25]
+#etopbinning = [25,35,45]
+etopbinning = [25]
 
 data = {}
 fake_signal_contamination = {}
