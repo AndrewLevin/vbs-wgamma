@@ -10,12 +10,12 @@ shapes Wg_out mu_chan wg_dcard_mu_chan_shapes.root wgout wgout_$SYSTEMATIC
 shapes fake_photon mu_chan wg_dcard_mu_chan_shapes.root fakephoton fakephoton_$SYSTEMATIC
 shapes fake_muon mu_chan wg_dcard_mu_chan_shapes.root fakemuon fakemuon_$SYSTEMATIC
 shapes double_fake mu_chan wg_dcard_mu_chan_shapes.root doublefake doublefake_$SYSTEMATIC
-shapes e_to_p_non_res mu_chan wg_dcard_mu_chan_shapes.root etopnonres etopnonres_$SYSTEMATIC
-Observation 368172.745157
+shapes e_to_p_bin0 mu_chan wg_dcard_mu_chan_shapes.root etopbin0 etopbin0_$SYSTEMATIC
+Observation 369106.380355
 bin mu_chan mu_chan mu_chan mu_chan mu_chan mu_chan mu_chan mu_chan mu_chan
-process Wg Wg_out topjets zgjets vvjets fake_photon fake_muon double_fake e_to_p_non_res
+process Wg Wg_out topjets zgjets vvjets fake_photon fake_muon double_fake e_to_p_bin0
 process 0 1 2 3 4 5 6 7 8
-rate 167320.934182 2694.35246519 22931.8744246 43403.9460773 2147.21563395 84838.555486 17920.4863051 18861.7409274 8053.63965479
+rate 167320.934182 2694.35246519 22931.8744246 43403.9460773 2147.21563395 85394.7151269 17805.445023 19005.0763047 8402.82111662
 wgscale shape1 1.0 - - - - - - - -
 wgpdf shape1 1.0 - - - - - - - -
 wgoutscale shape1 - 1.0 - - - - - - -
