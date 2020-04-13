@@ -1068,19 +1068,17 @@ if (version == "wjets") {
     float fr = 0;
     if (year == "2016") {
         if (abs(eta) < 1.4442) {
-            if (pt < 25 and pt > 20) fr = 0.6469175340272219;
-            else if (pt < 30 and pt > 25) fr = 0.7593930635838149;
-            else if (pt < 40 and pt > 30) fr = 0.9052396878483837;
-            else if (pt < 50 and pt > 40) fr = 0.7128205128205127;
-            else if (pt > 50) fr = 0.5080459770114942;
+            if (pt < 30 and pt > 20) fr = 0.863562091503268;
+            else if (pt < 40 and pt > 30) fr = 0.8110749185667753;
+            else if (pt < 50 and pt > 40) fr = 0.8356164383561644;
+            else if (pt > 50) fr = 0.6576763485477178;
             else assert(0); 
         }
         else if (1.566 < abs(eta) && abs(eta) < 2.5) {
-           if (pt < 25 and pt > 20) fr = 0.9821810406272273;
-               else if (pt < 30 and pt > 25) fr = 1.160148975791434;
-               else if (pt < 40 and pt > 30) fr = 1.0594965675057209;
-               else if (pt < 50 and pt > 40) fr = 1.2920353982300883;
-               else if (pt > 50) fr = 1.2293577981651373;
+           if (pt < 30 and pt > 20) fr = 0.7814113597246127;
+               else if (pt < 40 and pt > 30) fr = 1.2465373961218837;
+               else if (pt < 50 and pt > 40) fr = 1.1513157894736843;
+               else if (pt > 50) fr = 1.3089430894308942;
                else assert(0); 
            }
         }
@@ -1091,8 +1089,7 @@ else if (version == "wjets_chiso") {
     float fr = 0;
     if (year == "2016") {
         if (abs(eta) < 1.4442) {
-            if (pt < 25 and pt > 20) fr = 2.139452780229479;
-            else if (pt < 30 and pt > 25) fr = 1.7089430894308941;
+            if (pt < 30 and pt > 20) fr = 2.0475529330093716;
             else if (pt < 40 and pt > 30) fr = 1.4072790294627382;
             else if (pt < 50 and pt > 40) fr = 1.053030303030303;
             else if (pt > 50) fr = 0.8095238095238096;
@@ -1100,8 +1097,7 @@ else if (version == "wjets_chiso") {
     
            }
            else if (1.566 < abs(eta) && abs(eta) < 2.5) {
-               if (pt < 25 and pt > 20) fr = 3.8277777777777775;
-               else if (pt < 30 and pt > 25) fr = 2.708695652173913;
+               if (pt < 30 and pt > 20) fr = 3.556842105263158;
                else if (pt < 40 and pt > 30) fr = 2.292079207920792;
                else if (pt < 50 and pt > 40) fr = 2.1470588235294117;
                else if (pt > 50) fr = 2.5769230769230766;
@@ -1114,58 +1110,52 @@ else if (version == "nominal" || version == "alt" || version == "stat_up") { //b
     float fr = 0;
     if (year == "2016") {
        if (abs(eta) < 1.4442) {
-          if (pt < 25 and pt > 20) fr = 0.6996237332067621;
-          else if (pt < 30 and pt > 25) fr = 0.7485724858910313;
-          else if (pt < 40 and pt > 30) fr = 0.6920954897858362;
-          else if (pt < 50 and pt > 40) fr = 0.5922363985857421;
-          else if (pt > 50) fr = 0.4151116840422024;
+          if (pt < 30 and pt > 20) fr = 0.7383849589038014;
+          else if (pt < 40 and pt > 30) fr = 0.711832976726155;
+          else if (pt < 50 and pt > 40) fr = 0.6096371946961419;
+          else if (pt > 50) fr = 0.4248350921227493;
           else assert(0); 
     
        }
        else if (1.566 < abs(eta) && abs(eta) < 2.5) {
-          if (pt < 25 and pt > 20) fr = 0.9248844370602675;
-          else if (pt < 30 and pt > 25) fr = 0.9799675969963608;
-          else if (pt < 40 and pt > 30) fr = 0.9750818843293853;
-          else if (pt < 50 and pt > 40) fr = 0.937879263758023;
-          else if (pt > 50) fr = 0.9580822239127585;
+          if (pt < 30 and pt > 20) fr = 0.9641149730355477;
+          else if (pt < 40 and pt > 30) fr = 0.9881713412122083;
+          else if (pt < 50 and pt > 40) fr = 0.9490490494146919;
+          else if (pt > 50) fr = 0.9670757894326804;
           else assert(0); 
        }
     }
     else if (year == "2017") {
        if (abs(eta) < 1.4442) {
-          if (pt < 25 and pt > 20) fr = 0.6912680790821342;
-          else if (pt < 30 and pt > 25) fr = 0.7636732062430018;
-          else if (pt < 40 and pt > 30) fr = 0.7309187507758684;
-          else if (pt < 50 and pt > 40) fr = 0.6559368305211164;
-          else if (pt > 50) fr = 0.5068425857427465;
+          if (pt < 30 and pt > 20) fr = 0.74097488174064;
+          else if (pt < 40 and pt > 30) fr = 0.7575997778550154;
+          else if (pt < 50 and pt > 40) fr = 0.6795843358575392;
+          else if (pt > 50) fr = 0.5202412984429878;
           else assert(0); 
     
        }
        else if (1.566 < abs(eta) && abs(eta) < 2.5) {
-          if (pt < 25 and pt > 20) fr = 0.3147229931595173;
-          else if (pt < 30 and pt > 25) fr = 0.34277057433872954;
-          else if (pt < 40 and pt > 30) fr = 0.34959057399376964;
-          else if (pt < 50 and pt > 40) fr = 0.4001123746683101;
-          else if (pt > 50) fr = 0.5109029075333011;
+          if (pt < 30 and pt > 20) fr = 0.3500132190964065;
+          else if (pt < 40 and pt > 30) fr = 0.3708241722875352;
+          else if (pt < 50 and pt > 40) fr = 0.426602270486085;
+          else if (pt > 50) fr = 0.5421704176994768;
           else assert(0); 
        }
     }
     else if (year == "2018") {
        if (abs(eta) < 1.4442) {
-          if (pt < 25 and pt > 20) fr =  0.6819628126916278;
-          else if (pt < 30 and pt > 25) fr = 0.7738571901458522;
-          else if (pt < 40 and pt > 30) fr = 0.7516333386056144;
-          else if (pt < 50 and pt > 40) fr = 0.6950256916933786;
-          else if (pt > 50) fr = 0.504158202340239;
+          if (pt < 30 and pt > 20) fr = 0.7403414019248873;
+          else if (pt < 40 and pt > 30) fr = 0.7790466202005484;
+          else if (pt < 50 and pt > 40) fr = 0.71722564116773;
+          else if (pt > 50) fr = 0.515278581311353;
           else assert(0); 
     
        }
        else if (1.566 < abs(eta) && abs(eta) < 2.5) {
-          if (pt < 25 and pt > 20) fr =  0.27489785614816215;
-          else if (pt < 30 and pt > 25) fr = 0.31779777996179676;
-          else if (pt < 40 and pt > 30) fr = 0.33081812493411455;
-          else if (pt < 50 and pt > 40) fr = 0.35671632932371405;
-          else if (pt > 50) fr = 0.49287015359051706;
+          if (pt < 30 and pt > 20) fr = 0.3086299852372086;
+          else if (pt < 40 and pt > 30) fr = 0.34880515284451147;
+          else if (pt < 50 and pt > 40) fr = 0.37604537406362587;
+          else if (pt > 50) fr = 0.5203825122902803;
           else assert(0); 
        }
     }
@@ -1173,56 +1163,50 @@ else if (version == "nominal" || version == "alt" || version == "stat_up") { //b
     if (version == "alt") {
        if (year == "2016") {
           if (abs(eta) < 1.4442) {
-             if (pt < 25 and pt > 20) fr += 0.6469175340272219 -  0.6808966653040407;
-             else if (pt < 30 and pt > 25) fr += 0.7593930635838149 -  0.7624786257622868;
-             else if (pt < 40 and pt > 30) fr += 0.9052396878483837 - 0.7427103452313788;
-             else if (pt < 50 and pt > 40) fr += 0.7128205128205127 -  0.6443786091779561;
-             else if (pt > 50) fr += 0.5080459770114942 - 0.4012017084603665;
+             if (pt < 30 and pt > 20) fr += 0.863562091503268 - 0.733248094217973;
+             else if (pt < 40 and pt > 30) fr += 0.8110749185667753 - 0.7931335006595595;
+             else if (pt < 50 and pt > 40) fr += 0.8356164383561644 - 0.682480210665109;
+             else if (pt > 50) fr += 0.6576763485477178 - 0.4236927109550702;
              else assert(0); 
     
           }
           else if (1.566 < abs(eta) && abs(eta) < 2.5) {
-             if (pt < 25 and pt > 20) fr += 0.9821810406272273 -  0.9593621632637661;
-             else if (pt < 30 and pt > 25) fr += 1.160148975791434 -  0.9402109983117282;
-             else if (pt < 40 and pt > 30) fr += 1.0594965675057209 - 0.8076708282273575;
-             else if (pt < 50 and pt > 40) fr += 1.2920353982300883 - 1.2271914169232672;
-             else if (pt > 50) fr += 1.2293577981651373  - 0.9377974387415269;
+             if (pt < 30 and pt > 20) fr += 0.7814113597246127 - 1.0000609792613757;
+             else if (pt < 40 and pt > 30) fr += 1.2465373961218837 - 0.8299609184544505;
+             else if (pt < 50 and pt > 40) fr += 1.1513157894736843 - 1.2664123432054573;
+             else if (pt > 50) fr += 1.3089430894308942 - 0.9603173729944264;
              else assert(0); 
           }
        }
        else if (year == "2017") {
           if (abs(eta) < 1.4442) {
-             if (pt < 25 and pt > 20) fr += 0.5920017017655818 -  0.675219301111022;
-             else if (pt < 30 and pt > 25) fr += 0.7620164126611957 -  0.7880502803690924;
-             else if (pt < 40 and pt > 30) fr += 0.8587786259541983 - 0.8149971396299441; 
-             else if (pt < 50 and pt > 40) fr += 0.7945945945945946 - 0.732169348128166;
-             else if (pt > 50) fr += 0.5646551724137931 - 0.5889482915913384;
+             if (pt < 30 and pt > 20) fr += 0.7338530066815144-0.7450558550432999;
+             else if (pt < 40 and pt > 30) fr += 0.7475409836065574-0.8841120276900355; 
+             else if (pt < 50 and pt > 40) fr += 1.0245098039215685-0.7939865634894522;
+             else if (pt > 50) fr += 0.7470817120622568-0.6225170980914996;
              else assert(0); 
           }
           else if (1.566 < abs(eta) && abs(eta) < 2.5) {
-             if (pt < 25 and pt > 20) fr += 0.5351190476190476 -  0.3336229060031224;
-             else if (pt < 30 and pt > 25) fr += 0.7174603174603175 -  0.4214485303045893;
-             else if (pt < 40 and pt > 30) fr += 0.6980198019801981 - 0.44808235568211063;
-             else if (pt < 50 and pt > 40) fr += 0.746031746031746 - 0.4882394061692232;
-             else if (pt > 50) fr += 0.6575342465753424 - 0.7417937101120567;
+             if (pt < 30 and pt > 20) fr += 0.6666666666666666-0.3979138739228848;
+             else if (pt < 40 and pt > 30) fr += 0.7617021276595745-0.5119586040478171;
+             else if (pt < 50 and pt > 40) fr += 0.8472222222222222-0.5687851363533186;
+             else if (pt > 50) fr += 1.0857142857142856-0.8108939928786887;
              else assert(0); 
           }
        }
        else if (year == "2018") {
           if (abs(eta) < 1.4442) {
-             if (pt < 25 and pt > 20) fr += 0.6434456928838951 - 0.7508905741815809;
-             else if (pt < 30 and pt > 25) fr += 0.6980392156862745 - 0.8258283193385701;
-             else if (pt < 40 and pt > 30) fr += 0.8702064896755163 - 0.8435371457514238;
-             else if (pt < 50 and pt > 40) fr += 0.9174311926605504 -  0.7456986592354332;
-             else if (pt > 50) fr += 0.6343283582089553 - 0.4698553383698952;
+             if (pt < 30 and pt > 20) fr += 0.8406708595387841-0.8303084927443096;
+             else if (pt < 40 and pt > 30) fr += 0.948051948051948-0.9197645786035942;
+             else if (pt < 50 and pt > 40) fr += 0.7518796992481203-0.7737938893939876;
+             else if (pt > 50) fr += 0.7315436241610739-0.47164126712162807;
              else assert(0); 
           }
           else if (1.566 < abs(eta) && abs(eta) < 2.5) {
-             if (pt < 25 and pt > 20) fr += 0.5732368896925858 - 0.34631002339070077;
-             else if (pt < 30 and pt > 25) fr += 0.8591549295774648 - 0.3435483305230785;
-             else if (pt < 40 and pt > 30) fr += 0.8108108108108107 - 0.409059955258932;
-             else if (pt < 50 and pt > 40) fr += 0.5967741935483871 - 0.4055865165305403;
-             else if (pt > 50) fr += 0.9268292682926829 - 0.4696040830060756;
+             if (pt < 30 and pt > 20) fr += 0.6810344827586207-0.3930515103150424;
+             else if (pt < 40 and pt > 30) fr += 0.759493670886076-0.47176049745670173;
+             else if (pt < 50 and pt > 40) fr += 0.6212121212121212-0.43181336073191234;
+             else if (pt > 50) fr += 0.8333333333333334-0.5139996676356342;
              else assert(0); 
           }
        }
@@ -1231,56 +1215,50 @@ else if (version == "nominal" || version == "alt" || version == "stat_up") { //b
     if (version == "stat_up") {
        if (year == "2016") {
           if (abs(eta) < 1.4442) {
-             if (pt < 25 and pt > 20) fr += 0.002937265704094981;
-             else if (pt < 30 and pt > 25) fr += 0.0062805701638771845;
-             else if (pt < 40 and pt > 30) fr += 0.006477726168950861;
-             else if (pt < 50 and pt > 40) fr += 0.0087970999952064;
-             else if (pt > 50) fr += 0.005442704584429666;
+             if (pt < 30 and pt > 20) fr += 0.0026960729583444783;
+             else if (pt < 40 and pt > 30) fr += 0.006662460844367098;
+             else if (pt < 50 and pt > 40) fr += 0.009055572023850591;
+             else if (pt > 50) fr += 0.005570192293811733;
              else assert(0); 
     
           }
           else if (1.566 < abs(eta) && abs(eta) < 2.5) {
-             if (pt < 25 and pt > 20) fr += 0.0064449696265627115;
-             else if (pt < 30 and pt > 25) fr += 0.01258402077183808;
-             else if (pt < 40 and pt > 30) fr += 0.014621685284402344;
-             else if (pt < 50 and pt > 40) fr += 0.023745888823496042;
-             else if (pt > 50) fr += 0.025855780798136833;
+             if (pt < 30 and pt > 20) fr += 0.005818625145987401;
+             else if (pt < 40 and pt > 30) fr += 0.014817966152871172;
+             else if (pt < 50 and pt > 40) fr += 0.024028693336438096;
+             else if (pt > 50) fr += 0.02609849029933926;
              else assert(0); 
           }
        }
        else if (year == "2017") {
           if (abs(eta) < 1.4442) {
-             if (pt < 25 and pt > 20) fr += 0.6912680790821342;
-             else if (pt < 30 and pt > 25) fr += 0.7636732062430018;
-             else if (pt < 40 and pt > 30) fr += 0.7309187507758684;
-             else if (pt < 50 and pt > 40) fr += 0.6559368305211164;
-             else if (pt > 50) fr += 0.5068425857427465;
+             if (pt < 30 and pt > 20) fr += 0.0026718396811323355;
+             else if (pt < 40 and pt > 30) fr += 0.007173244839053661;
+             else if (pt < 50 and pt > 40) fr += 0.009763056116442556;
+             else if (pt > 50) fr += 0.006612945121205288;
              else assert(0); 
           }
           else if (1.566 < abs(eta) && abs(eta) < 2.5) {
-             if (pt < 25 and pt > 20) fr += 0.3147229931595173;
-             else if (pt < 30 and pt > 25) fr += 0.34277057433872954;
-             else if (pt < 40 and pt > 30) fr += 0.34959057399376964;
-             else if (pt < 50 and pt > 40) fr += 0.4001123746683101;
-             else if (pt > 50) fr += 0.5109029075333011;
+             if (pt < 30 and pt > 20) fr += 0.002657455941380463;
+             else if (pt < 40 and pt > 30) fr += 0.006949455204473568;
+             else if (pt < 50 and pt > 40) fr += 0.013323254649466083;
+             else if (pt > 50) fr += 0.017033894200413374;
              else assert(0); 
           }
        }
        else if (year == "2018") {
           if (abs(eta) < 1.4442) {
-             if (pt < 25 and pt > 20) fr += 0.0024140690750868183;
-             else if (pt < 30 and pt > 25) fr += 0.005184544256765383;
-             else if (pt < 40 and pt > 30) fr += 0.005868144318298048;
-             else if (pt < 50 and pt > 40) fr += 0.008224769860031768;
-             else if (pt > 50) fr += 0.005667933573402517;
+             if (pt < 30 and pt > 20) fr += 0.002262126317855081;
+             else if (pt < 40 and pt > 30) fr += 0.006082165017453894;
+             else if (pt < 50 and pt > 40) fr += 0.00848747881815101;
+             else if (pt > 50) fr += 0.005792952999897535;
              else assert(0); 
           }
           else if (1.566 < abs(eta) && abs(eta) < 2.5) {
-             if (pt < 25 and pt > 20) fr += 0.0019240540418093948;
-             else if (pt < 30 and pt > 25) fr += 0.0038455484020956843;
-             else if (pt < 40 and pt > 30) fr += 0.004759983282437974;
-             else if (pt < 50 and pt > 40) fr += 0.00822110783712988;
-             else if (pt > 50) fr += 0.011315829843225643;
+             if (pt < 30 and pt > 20) fr += 0.0018299453388268458;
+             else if (pt < 40 and pt > 30) fr += 0.005018789997370193;
+             else if (pt < 50 and pt > 40) fr += 0.008666577102573342;
+             else if (pt > 50) fr += 0.011947487425581427;
              else assert(0); 
           }
        }
@@ -1928,7 +1906,7 @@ for year in years:
             if label == "w+jets" and year == "2016":
 #                rinterface = rinterface.Define("wjets_fake_photon_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_wjets_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id)*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0")
                 rinterface = rinterface.Define("wjets_fake_photon_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 1 && is_lepton_real == 1 && !(photon_gen_matching == 1|| photon_gen_matching == 4 || photon_gen_matching == 5 || photon_gen_matching == 6) ? get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,\"wjets\")*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0")
-                rinterface = rinterface.Define("wjets_chiso_fake_photon_weight","photon_selection == 3 && ((abs(photon_eta) < 1.5 && photon_pfRelIso03_chg*photon_pt < "+str(chiso_cut_barrel)+"*1000) || (abs(photon_eta) > 1.5 && photon_pfRelIso03_chg*photon_pt < "+str(chiso_cut_endcap)+"*1000)) && is_lepton_tight == 1 && is_lepton_real == 1 && !(photon_gen_matching == 1|| photon_gen_matching == 4 || photon_gen_matching == 5 || photon_gen_matching == 6) ? get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,\"wjets_chiso\")*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0")
+                rinterface = rinterface.Define("wjets_chiso_fake_photon_weight","photon_selection == 3 && ((abs(photon_eta) < 1.5 && photon_pfRelIso03_chg*photon_pt < "+str(chiso_cut_barrel)+"*1.75) || (abs(photon_eta) > 1.5 && photon_pfRelIso03_chg*photon_pt < "+str(chiso_cut_endcap)+"*1.75)) && is_lepton_tight == 1 && is_lepton_real == 1 && !(photon_gen_matching == 1|| photon_gen_matching == 4 || photon_gen_matching == 5 || photon_gen_matching == 6) ? get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,\"wjets_chiso\")*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0")
 
             if sample["e_to_p"] or sample["e_to_p_non_res"]:
                 for i in range(len(etopbinning)):
