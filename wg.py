@@ -1068,17 +1068,17 @@ if (version == "wjets") {
     float fr = 0;
     if (year == "2016") {
         if (abs(eta) < 1.4442) {
-            if (pt < 30 and pt > 20) fr = 0.863562091503268;
-            else if (pt < 40 and pt > 30) fr = 0.8110749185667753;
-            else if (pt < 50 and pt > 40) fr = 0.8356164383561644;
-            else if (pt > 50) fr = 0.6576763485477178;
+            if (pt < 30 and pt > 20) fr = 0.7749266862170089;
+            else if (pt < 40 and pt > 30) fr = 0.7447657028913259;
+            else if (pt < 50 and pt > 40) fr = 0.7568238213399504;
+            else if (pt > 50) fr = 0.6084452975047984;
             else assert(0); 
         }
         else if (1.566 < abs(eta) && abs(eta) < 2.5) {
-           if (pt < 30 and pt > 20) fr = 0.7814113597246127;
-               else if (pt < 40 and pt > 30) fr = 1.2465373961218837;
-               else if (pt < 50 and pt > 40) fr = 1.1513157894736843;
-               else if (pt > 50) fr = 1.3089430894308942;
+           if (pt < 30 and pt > 20) fr = 0.7579298831385644;
+               else if (pt < 40 and pt > 30) fr = 1.1749347258485643;
+               else if (pt < 50 and pt > 40) fr = 1.1290322580645162;
+               else if (pt > 50) fr = 1.2777777777777775;
                else assert(0); 
            }
         }
