@@ -332,11 +332,6 @@ for i in range(len(photon1_eta_ranges)):
                 if fake_photon_mc_sample["prompt"]:
                     photon1_gen_matching_cutstring = "(photon1_gen_matching == 6 || photon1_gen_matching == 5 || photon1_gen_matching == 4 || photon1_gen_matching == 1)"
                     photon2_gen_matching_cutstring = "(photon2_gen_matching == 6 || photon2_gen_matching == 5 || photon2_gen_matching == 4 || photon2_gen_matching == 1)"
-                else:
-                    photon1_gen_matching_cutstring = "!(photon1_gen_matching == 6 || photon1_gen_matching == 5 || photon1_gen_matching == 4 || photon1_gen_matching == 1)"
-                    photon2_gen_matching_cutstring = "!(photon2_gen_matching == 6 || photon2_gen_matching == 5 || photon2_gen_matching == 4 || photon2_gen_matching == 1)"    
-
-                if fake_photon_mc_sample["prompt"]:
                     denominator-=fake_photon_tree.GetEntries(photon1_eta_range+ " && "+lepton_pdg_id + " && (photon1_selection == "+den_pho_sel+") && "+ photon1_pt_range_cutstring + " && pass_selection1" + " && " + photon1_recoil_cutstring + " && njets_fake >= "+ str(njets_min) + " && njets_fake <= "+str(njets_max) + " && photon1_sieie < "+str(max_sieie) + " && photon1_pfRelIso03_chg*photon1_pt < "+str(max_chiso) + " && gen_weight > 0 && " + photon1_gen_matching_cutstring+ " && " + str(photon1_veto_signal_selection_cutstring))*fake_photon_mc_sample["xs"]*1000*lumi/fake_photon_mc_sample["file"].Get("nEventsGenWeighted").GetBinContent(1)
                     denominator+=fake_photon_tree.GetEntries(photon1_eta_range+ " && "+lepton_pdg_id + " && (photon1_selection == "+den_pho_sel+") && "+ photon1_pt_range_cutstring + " && pass_selection1" + " && " + photon1_recoil_cutstring + " && njets_fake >= "+ str(njets_min) + " && njets_fake <= "+str(njets_max) + " && photon1_sieie < "+str(max_sieie) + " && photon1_pfRelIso03_chg*photon1_pt < "+str(max_chiso) + " && gen_weight < 0 && "  + photon1_gen_matching_cutstring + " && " + str(photon1_veto_signal_selection_cutstring))*fake_photon_mc_sample["xs"]*1000*lumi/fake_photon_mc_sample["file"].Get("nEventsGenWeighted").GetBinContent(1)
 
