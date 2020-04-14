@@ -48,27 +48,38 @@ for iev,wjets_event in enumerate(wjets_events):
 
     wjets_event["pileup events"] = []
 
-    events = Events ([wjets_event["filename"]])
+    while True:
+        try:
 
-#    puSummaryInfo,puSummaryInfoLabel = Handle("vector<PileupSummaryInfo>"),("mixData")
-    puSummaryInfo,puSummaryInfoLabel = Handle("vector<PileupSummaryInfo>"),("slimmedAddPileupInfo")
+            events = Events ([wjets_event["filename"]])
 
-    for event in events:
+#            puSummaryInfo,puSummaryInfoLabel = Handle("vector<PileupSummaryInfo>"),("mixData")
+            puSummaryInfo,puSummaryInfoLabel = Handle("vector<PileupSummaryInfo>"),("slimmedAddPileupInfo")
 
-        if event.eventAuxiliary().luminosityBlock() != wjets_event["lumi"]:
-            continue
+            for event in events:
 
-        if event.eventAuxiliary().event() != wjets_event["event"]:
-            continue
+                if event.eventAuxiliary().luminosityBlock() != wjets_event["lumi"]:
+                    continue
+
+                if event.eventAuxiliary().event() != wjets_event["event"]:
+                    continue
                 
-        event.getByLabel(puSummaryInfoLabel, puSummaryInfo)
+                event.getByLabel(puSummaryInfoLabel, puSummaryInfo)
 
-        for pu in puSummaryInfo.product():
-            if pu.getBunchCrossing() != 0:
-                continue
+                for pu in puSummaryInfo.product():
+                    if pu.getBunchCrossing() != 0:
+                        continue
 
-            for eventid in pu.getPU_EventID():
-                wjets_event["pileup events"].append({ "event" : int(eventid.event()), "lumi" : int(eventid.luminosityBlock()) })
+                    for eventid in pu.getPU_EventID():
+                        wjets_event["pileup events"].append({ "event" : int(eventid.event()), "lumi" : int(eventid.luminosityBlock()) })
+
+                break
+
+            break
+
+        except:
+
+            pass
 
 f_wjets_events_info = open("wjets_v2_events_info.txt","w")
 
