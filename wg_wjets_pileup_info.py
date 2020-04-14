@@ -2,7 +2,7 @@ import json
 
 print "Reading input DAS query JSON"
 
-f_wjets_lumis_json=open("wjets_v1_lfns_lumis.txt")
+f_wjets_lumis_json=open("wjets_v2_lfns_lumis.txt")
 
 wjets_lumis_json=json.loads(f_wjets_lumis_json.read())
 
@@ -19,7 +19,7 @@ for i in range(len(wjets_lumis_json)):
 
 print "Reading input event JSON"
 
-f_wjets_events_json=open("wjets_events.v1.txt")
+f_wjets_events_json=open("wjets_events.v2.txt")
 
 print "Setting filenames"
 
@@ -50,7 +50,8 @@ for iev,wjets_event in enumerate(wjets_events):
 
     events = Events ([wjets_event["filename"]])
 
-    puSummaryInfo,puSummaryInfoLabel = Handle("vector<PileupSummaryInfo>"),("mixData")
+#    puSummaryInfo,puSummaryInfoLabel = Handle("vector<PileupSummaryInfo>"),("mixData")
+    puSummaryInfo,puSummaryInfoLabel = Handle("vector<PileupSummaryInfo>"),("slimmedAddPileupInfo")
 
     for event in events:
 
@@ -69,6 +70,6 @@ for iev,wjets_event in enumerate(wjets_events):
             for eventid in pu.getPU_EventID():
                 wjets_event["pileup events"].append({ "event" : int(eventid.event()), "lumi" : int(eventid.luminosityBlock()) })
 
-f_wjets_events_info = open("wjets_v1_events_info.txt","w")
+f_wjets_events_info = open("wjets_v2_events_info.txt","w")
 
 json.dump(wjets_events,f_wjets_events_info)
