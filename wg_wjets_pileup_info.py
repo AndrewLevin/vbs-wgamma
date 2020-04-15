@@ -1,8 +1,20 @@
+import ROOT
+ROOT.PyConfig.IgnoreCommandLineOptions = True
+import argparse
+
+parser = argparse.ArgumentParser()
+
+parser.add_argument('-w',dest='wjetsdasquery',required=True)
+parser.add_argument('-i',dest='inevtlist',required=True)
+parser.add_argument('-o',dest='outevtlist',required=True)
+
+args = parser.parse_args()
+
 import json
 
 print "Reading input DAS query JSON"
 
-f_wjets_lumis_json=open("wjets_v2_lfns_lumis.txt")
+f_wjets_lumis_json=open(args.wjetsdasquery)
 
 wjets_lumis_json=json.loads(f_wjets_lumis_json.read())
 
@@ -19,15 +31,15 @@ for i in range(len(wjets_lumis_json)):
 
 print "Reading input event JSON"
 
-f_wjets_events_json=open("wjets_events.v2.txt")
+f_wjets_events_json=open(args.inevtlist)
 
 print "Setting filenames"
 
-wjets_events= []
+wjets_events_pileup_info = []
 
 for line in f_wjets_events_json:
     assert(len(line.strip('\n').split(' ')) == 4)
-    wjets_events.append({ 
+    wjets_events_pileup_info.append({ 
         "lumi" : int(line.strip('\n').split(' ')[0]),
         "event": int(line.strip('\n').split(' ')[1]),
         "photon eta" : float(line.strip('\n').split(' ')[2]),
@@ -37,31 +49,29 @@ for line in f_wjets_events_json:
 
 print "Adding pileup event info"
 
-for iev,wjets_event in enumerate(wjets_events):
+from DataFormats.FWLite import Events, Handle
+
+for iev,wjets_event_pileup_info in enumerate(wjets_events_pileup_info):
 
     if iev % 10 == 0:
-        print "iev/len(wjets_events) = "+str(iev)+"/"+str(len(wjets_events))
+        print "iev/len(wjets_events_pileup_info) = "+str(iev)+"/"+str(len(wjets_events_pileup_info))
 
-    import ROOT
-    import sys
-    from DataFormats.FWLite import Events, Handle
-
-    wjets_event["pileup events"] = []
+    wjets_event_pileup_info["pileup events"] = []
 
     while True:
         try:
 
-            events = Events ([wjets_event["filename"]])
+            events = Events ([wjets_event_pileup_info["filename"]])
 
 #            puSummaryInfo,puSummaryInfoLabel = Handle("vector<PileupSummaryInfo>"),("mixData")
             puSummaryInfo,puSummaryInfoLabel = Handle("vector<PileupSummaryInfo>"),("slimmedAddPileupInfo")
 
             for event in events:
 
-                if event.eventAuxiliary().luminosityBlock() != wjets_event["lumi"]:
+                if event.eventAuxiliary().luminosityBlock() != wjets_event_pileup_info["lumi"]:
                     continue
 
-                if event.eventAuxiliary().event() != wjets_event["event"]:
+                if event.eventAuxiliary().event() != wjets_event_pileup_info["event"]:
                     continue
                 
                 event.getByLabel(puSummaryInfoLabel, puSummaryInfo)
@@ -71,7 +81,7 @@ for iev,wjets_event in enumerate(wjets_events):
                         continue
 
                     for eventid in pu.getPU_EventID():
-                        wjets_event["pileup events"].append({ "event" : int(eventid.event()), "lumi" : int(eventid.luminosityBlock()) })
+                        wjets_event_pileup_info["pileup events"].append({ "event" : int(eventid.event()), "lumi" : int(eventid.luminosityBlock()) })
 
                 break
 
@@ -81,6 +91,6 @@ for iev,wjets_event in enumerate(wjets_events):
 
             pass
 
-f_wjets_events_info = open("wjets_v2_events_info.txt","w")
+f_wjets_events_pileup_info = open(args.outevtlist,"w")
 
-json.dump(wjets_events,f_wjets_events_info)
+json.dump(wjets_events_pileup_info,f_wjets_events_pileup_info)
