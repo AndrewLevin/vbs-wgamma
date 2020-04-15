@@ -1,4 +1,15 @@
 import ROOT
+ROOT.PyConfig.IgnoreCommandLineOptions = True
+import argparse
+
+parser = argparse.ArgumentParser()
+
+parser.add_argument('-m',dest='minbiasdasquery',required=True)
+parser.add_argument('-i',dest='inevtlist',required=True)
+parser.add_argument('-o',dest='outevtlist',required=True)
+
+args = parser.parse_args()
+
 from DataFormats.FWLite import Events, Handle
 import json
 
@@ -30,7 +41,7 @@ def deltaR(eta1,phi1,eta2=None,phi2=None):
 
 print "Reading input DAS query JSON"
 
-f_minbias_lumis_json=open("minbias_lfns_lumis.txt")
+f_minbias_lumis_json=open(args.minbiasdasquery)
 
 minbias_lumis_json=json.loads(f_minbias_lumis_json.read())
 
@@ -47,7 +58,7 @@ for i in range(len(minbias_lumis_json)):
 
 print "Reading input event json"
 
-f_wjets_events_json=open("wjets_v1_events_info.txt")
+f_wjets_events_json=open(args.inevtlist)
 
 wjets_events=json.loads(f_wjets_events_json.read())
 
@@ -62,12 +73,14 @@ for wjets_event in wjets_events:
             wjets_event["pileup filenames"].append("root://cms-xrd-global.cern.ch/"+lumi_to_file[pu_event["lumi"]])
 
 print "Setting photon promptness flags"
-        
+
 for iev,wjets_event in enumerate(wjets_events):
+
+    wjets_event["prompt"] = False
 
     while(True):
 
-        if iev % 1 == 0:
+        if iev % 5 == 0:
             print "iev/len(wjets_events) = "+str(iev)+"/"+str(len(wjets_events))
 
         infilelist = []    
@@ -75,13 +88,14 @@ for iev,wjets_event in enumerate(wjets_events):
         for pu_filename in wjets_event["pileup filenames"]:
             infilelist.append(pu_filename)
 
-        try:    
+        try:
     
-            events = Events (infilelist)    
+            events = Events (infilelist)
 
             genparticles, genParticlesLabel = Handle("vector<reco::GenParticle>"), "genParticles"
         
             for event in events:
+
                 if not {"lumi" : event.eventAuxiliary().luminosityBlock(), "event" : event.eventAuxiliary().event()} in wjets_event["pileup events"]:
                     continue
 
@@ -100,7 +114,10 @@ for iev,wjets_event in enumerate(wjets_events):
                     if genparticle.pt() < 5:
                         continue
 
-                    print str(genparticle.status())+" "+str(genparticle.pdgId())+" "+str(genparticle.pt())+" "+str(dr_genpart_photon)+" "+str(genparticle.mother(0).pdgId())    
+                    if genparticle.mother(0).pdgId() == 22:
+                        wjets_event["prompt"] = True
+
+#                    print str(genparticle.status())+" "+str(genparticle.pdgId())+" "+str(genparticle.pt())+" "+str(dr_genpart_photon)+" "+str(genparticle.mother(0).pdgId())    
 
             break
                     
@@ -108,3 +125,6 @@ for iev,wjets_event in enumerate(wjets_events):
 
             pass
 
+f_wjets_events_info = open(args.outevtlist,"w")
+
+json.dump(wjets_events,f_wjets_events_info)
