@@ -483,8 +483,14 @@ for label in labels.keys():
             sample["tree"] = sample["file"].Get("Events")
             sample["nweightedevents"] = sample["file"].Get("nEventsGenWeighted").GetBinContent(1)
 
-if "wg+jets" in labels:
+if "w+jets" in labels:
+    labels["w+jets"]["hists-prompt-pileup"] = {}
 
+    for i in range(len(variables)):    
+        labels["w+jets"]["hists-prompt-pileup"][i] = histogram_models[i].GetHistogram()
+        labels["w+jets"]["hists-prompt-pileup"][i].Sumw2()
+
+if "wg+jets" in labels:
     labels["wg+jets"]["hists-pass-fiducial"] = {}
     labels["wg+jets"]["hists-fail-fiducial"] = {}
     labels["wg+jets"]["hists-pass-fiducial-pileup-up"] = {}
@@ -762,6 +768,111 @@ for i in range(len(variables)):
 
 ROOT.gROOT.cd()
 
+include_headers_cpp = '''
+
+#include <iostream>
+#include <fstream>
+#include <map>
+#include "/cvmfs/cms.cern.ch/slc7_amd64_gcc820/external/json/3.7.3/include/nlohmann/json.hpp"
+
+'''
+
+wjets_pileup_photons_flags_initialization_cpp = '''
+
+nlohmann::json wjets_2016v1_json;
+nlohmann::json wjets_2016v2_json;
+nlohmann::json wjets_2017v1_json;
+nlohmann::json wjets_2017v2_json;
+nlohmann::json wjets_2017v3_json;
+nlohmann::json wjets_2018_json;
+
+std::ifstream wjets_2016v1_infile("wjets_2016v1_events_info.txt");
+std::ifstream wjets_2016v2_infile("wjets_2016v2_events_info.txt");
+std::ifstream wjets_2017v1_infile("wjets_2017v1_events_info.txt");
+std::ifstream wjets_2017v2_infile("wjets_2017v2_events_info.txt");
+std::ifstream wjets_2017v3_infile("wjets_2017v3_events_info.txt");
+std::ifstream wjets_2018_infile("wjets_2018_events_info.txt");
+
+wjets_2016v1_infile >> wjets_2016v1_json;
+wjets_2016v2_infile >> wjets_2016v2_json;
+wjets_2017v1_infile >> wjets_2017v1_json;
+wjets_2017v2_infile >> wjets_2017v2_json;
+wjets_2017v3_infile >> wjets_2017v3_json;
+wjets_2018_infile >> wjets_2018_json;
+
+std::map<std::pair<int,int>,bool> wjets_2016v1_prompt_pileup_photon_map;
+std::map<std::pair<int,int>,bool> wjets_2016v2_prompt_pileup_photon_map;
+std::map<std::pair<int,int>,bool> wjets_2017v1_prompt_pileup_photon_map;
+std::map<std::pair<int,int>,bool> wjets_2017v2_prompt_pileup_photon_map;
+std::map<std::pair<int,int>,bool> wjets_2017v3_prompt_pileup_photon_map;
+std::map<std::pair<int,int>,bool> wjets_2018_prompt_pileup_photon_map;
+
+for (int k = 0; k < wjets_2016v1_json.size(); ++k) {
+    wjets_2016v1_prompt_pileup_photon_map[std::make_pair(int(wjets_2016v1_json[k]["lumi"]),int(wjets_2016v1_json[k]["event"]))] = wjets_2016v1_json[k]["prompt"];
+}
+
+for (int k = 0; k < wjets_2016v2_json.size(); ++k) {
+    wjets_2016v2_prompt_pileup_photon_map[std::make_pair(int(wjets_2016v2_json[k]["lumi"]),int(wjets_2016v2_json[k]["event"]))] = wjets_2016v2_json[k]["prompt"];
+}
+
+for (int k = 0; k < wjets_2017v1_json.size(); ++k) {
+    wjets_2017v1_prompt_pileup_photon_map[std::make_pair(int(wjets_2017v1_json[k]["lumi"]),int(wjets_2017v1_json[k]["event"]))] = wjets_2017v1_json[k]["prompt"];
+}
+
+for (int k = 0; k < wjets_2017v2_json.size(); ++k) {
+    wjets_2017v2_prompt_pileup_photon_map[std::make_pair(int(wjets_2017v2_json[k]["lumi"]),int(wjets_2017v2_json[k]["event"]))] = wjets_2017v2_json[k]["prompt"];
+}
+
+for (int k = 0; k < wjets_2017v3_json.size(); ++k) {
+    wjets_2017v3_prompt_pileup_photon_map[std::make_pair(int(wjets_2017v3_json[k]["lumi"]),int(wjets_2017v3_json[k]["event"]))] = wjets_2017v3_json[k]["prompt"];
+}
+
+for (int k = 0; k < wjets_2018_json.size(); ++k) {
+    wjets_2018_prompt_pileup_photon_map[std::make_pair(int(wjets_2018_json[k]["lumi"]),int(wjets_2018_json[k]["event"]))] = wjets_2018_json[k]["prompt"];
+}
+
+'''
+
+wjets_pileup_photons_flags_cpp = '''
+
+
+bool is_photon_prompt(int lumi,int event, string year, string dsetversion) {
+
+    if (year == "2016" && dsetversion == "v1") {
+        if (wjets_2016v1_prompt_pileup_photon_map[std::make_pair(lumi,event)])
+            return true;
+    }
+    else if (year == "2016" && dsetversion == "v2") {
+        if (wjets_2016v2_prompt_pileup_photon_map[std::make_pair(lumi,event)])
+            return true;
+    }
+    else if (year == "2017" && dsetversion == "v1") {
+        if (wjets_2017v1_prompt_pileup_photon_map[std::make_pair(lumi,event)])
+            return true;
+    }
+    else if (year == "2017" && dsetversion == "v2") {
+        if (wjets_2017v2_prompt_pileup_photon_map[std::make_pair(lumi,event)])
+            return true;
+    }
+    else if (year == "2017" && dsetversion == "v3") {
+        if (wjets_2017v3_prompt_pileup_photon_map[std::make_pair(lumi,event)])
+            return true;
+    }
+    else if (year == "2018" && dsetversion == "") {
+        if (wjets_2018_prompt_pileup_photon_map[std::make_pair(lumi,event)])
+            return true;
+    }
+    else
+        exit(1);
+
+
+
+    return false;
+}
+
+'''
+
+
 eff_scale_factor_cpp = '''
 
 TFile photon_id_2016_sf_file("eff_scale_factors/2016/Fall17V2_2016_Medium_photons.root");
@@ -850,7 +961,7 @@ float electron_efficiency_scale_factor(float pt, float eta, string year,bool id_
         electron_hlt_sf = electron_hlt_2018_sf;
     }
     else
-        assert(0);
+        exit(1);
 
     int electron_id_sf_xaxisbin = -1;
     int electron_id_sf_yaxisbin = -1;
@@ -867,7 +978,7 @@ float electron_efficiency_scale_factor(float pt, float eta, string year,bool id_
         electron_id_sf_xaxisbin = electron_id_sf->GetXaxis()->FindFixBin(eta);
         electron_id_sf_yaxisbin = electron_id_sf->GetYaxis()->FindFixBin(TMath::Min(pt,float(electron_id_sf->GetYaxis()->GetBinCenter(electron_id_sf->GetNbinsY()))));
     }
-    else assert(0);
+    else exit(1);
 
     int electron_hlt_sf_xaxisbin = -1;
     int electron_hlt_sf_yaxisbin = -1;
@@ -884,7 +995,7 @@ float electron_efficiency_scale_factor(float pt, float eta, string year,bool id_
         electron_hlt_sf_xaxisbin = electron_hlt_sf->GetXaxis()->FindFixBin(eta);
         electron_hlt_sf_yaxisbin = electron_hlt_sf->GetYaxis()->FindFixBin(TMath::Min(pt,float(electron_hlt_sf->GetYaxis()->GetBinCenter(electron_hlt_sf->GetNbinsY()))));
     }
-    else assert(0);
+    else exit(1);
 
 
     float sf_id = electron_id_sf->GetBinContent(electron_id_sf_xaxisbin,electron_id_sf_yaxisbin); 
@@ -907,7 +1018,7 @@ float photon_efficiency_scale_factor(float pt,float eta,string year,bool err_up=
     if (year == "2016") photon_id_sf = photon_id_2016_sf;
     else if (year == "2017") photon_id_sf = photon_id_2017_sf;
     else if (year == "2018") photon_id_sf = photon_id_2018_sf;
-    else assert(0);
+    else exit(1);
 
     float mypt = TMath::Min(pt,float(photon_id_sf->GetYaxis()->GetBinCenter(photon_id_sf->GetNbinsY())));
     float myeta = TMath::Max(TMath::Min(eta,float(photon_id_sf->GetXaxis()->GetBinCenter(photon_id_sf->GetNbinsX()))),float(photon_id_sf->GetXaxis()->GetBinCenter(1)));
@@ -940,7 +1051,7 @@ float muon_efficiency_scale_factor(float pt,float eta,string year,bool iso_err_u
         muon_id_sf = muon_id_2018_sf;
         muon_hlt_sf = muon_hlt_2018_sf;
     }
-    else assert(0);
+    else exit(1);
 
     int muon_iso_sf_xaxisbin = -1;
     int muon_iso_sf_yaxisbin = -1;
@@ -957,7 +1068,7 @@ float muon_efficiency_scale_factor(float pt,float eta,string year,bool iso_err_u
         muon_iso_sf_yaxisbin = muon_iso_sf->GetYaxis()->FindFixBin(abs(eta));
         muon_iso_sf_xaxisbin = muon_iso_sf->GetXaxis()->FindFixBin(TMath::Min(pt,float(muon_iso_sf->GetXaxis()->GetBinCenter(muon_iso_sf->GetNbinsX()))));
     }
-    else assert(0);
+    else exit(1);
 
     int muon_id_sf_xaxisbin = -1;
     int muon_id_sf_yaxisbin = -1;
@@ -974,7 +1085,7 @@ float muon_efficiency_scale_factor(float pt,float eta,string year,bool iso_err_u
         muon_id_sf_yaxisbin = muon_id_sf->GetYaxis()->FindFixBin(abs(eta));
         muon_id_sf_xaxisbin = muon_id_sf->GetXaxis()->FindFixBin(TMath::Min(pt,float(muon_id_sf->GetXaxis()->GetBinCenter(muon_id_sf->GetNbinsX()))));
     }
-    else assert(0);
+    else exit(1);
 
     int muon_hlt_sf_xaxisbin = -1;
     int muon_hlt_sf_yaxisbin = -1;
@@ -991,7 +1102,7 @@ float muon_efficiency_scale_factor(float pt,float eta,string year,bool iso_err_u
         muon_hlt_sf_xaxisbin = muon_hlt_sf->GetXaxis()->FindFixBin(abs(eta));
         muon_hlt_sf_yaxisbin = muon_hlt_sf->GetYaxis()->FindFixBin(TMath::Min(pt,float(muon_hlt_sf->GetYaxis()->GetBinCenter(muon_hlt_sf->GetNbinsY()))));
     }
-    else assert(0);
+    else exit(1);
 
     float iso_sf = muon_iso_sf->GetBinContent(muon_iso_sf_xaxisbin,muon_iso_sf_yaxisbin);
 
@@ -1039,7 +1150,7 @@ float get_fake_lepton_weight(float eta, float pt, string year, int lepton_pdg_id
     else if (year == "2017" && abs(lepton_pdg_id) == 11) fr_hist = electron_2017_fr_hist;
     else if (year == "2018" && abs(lepton_pdg_id) == 13) fr_hist = muon_2018_fr_hist;
     else if (year == "2018" && abs(lepton_pdg_id) == 11) fr_hist = electron_2018_fr_hist;
-    else assert(0);
+    else exit(1);
 
     float myeta  = TMath::Min(abs(eta),float(2.4999));
     float mypt  = TMath::Min(pt,float(44.999));
@@ -1072,14 +1183,14 @@ if (version == "wjets") {
             else if (pt < 40 and pt > 30) fr = 0.7447657028913259;
             else if (pt < 50 and pt > 40) fr = 0.7568238213399504;
             else if (pt > 50) fr = 0.6084452975047984;
-            else assert(0); 
+            else exit(1); 
         }
         else if (1.566 < abs(eta) && abs(eta) < 2.5) {
            if (pt < 30 and pt > 20) fr = 0.7579298831385644;
                else if (pt < 40 and pt > 30) fr = 1.1749347258485643;
                else if (pt < 50 and pt > 40) fr = 1.1290322580645162;
                else if (pt > 50) fr = 1.2777777777777775;
-               else assert(0); 
+               else exit(1); 
            }
         }
         return fr;
@@ -1093,7 +1204,7 @@ else if (version == "wjets_chiso") {
             else if (pt < 40 and pt > 30) fr = 1.4072790294627382;
             else if (pt < 50 and pt > 40) fr = 1.053030303030303;
             else if (pt > 50) fr = 0.8095238095238096;
-            else assert(0); 
+            else exit(1); 
     
            }
            else if (1.566 < abs(eta) && abs(eta) < 2.5) {
@@ -1101,7 +1212,7 @@ else if (version == "wjets_chiso") {
                else if (pt < 40 and pt > 30) fr = 2.292079207920792;
                else if (pt < 50 and pt > 40) fr = 2.1470588235294117;
                else if (pt > 50) fr = 2.5769230769230766;
-               else assert(0); 
+               else exit(1); 
            }
         }
         return fr;
@@ -1114,7 +1225,7 @@ else if (version == "nominal" || version == "alt" || version == "stat_up") { //b
           else if (pt < 40 and pt > 30) fr = 0.711832976726155;
           else if (pt < 50 and pt > 40) fr = 0.6096371946961419;
           else if (pt > 50) fr = 0.4248350921227493;
-          else assert(0); 
+          else exit(1); 
     
        }
        else if (1.566 < abs(eta) && abs(eta) < 2.5) {
@@ -1122,7 +1233,7 @@ else if (version == "nominal" || version == "alt" || version == "stat_up") { //b
           else if (pt < 40 and pt > 30) fr = 0.9881713412122083;
           else if (pt < 50 and pt > 40) fr = 0.9490490494146919;
           else if (pt > 50) fr = 0.9670757894326804;
-          else assert(0); 
+          else exit(1); 
        }
     }
     else if (year == "2017") {
@@ -1131,7 +1242,7 @@ else if (version == "nominal" || version == "alt" || version == "stat_up") { //b
           else if (pt < 40 and pt > 30) fr = 0.7575997778550154;
           else if (pt < 50 and pt > 40) fr = 0.6795843358575392;
           else if (pt > 50) fr = 0.5202412984429878;
-          else assert(0); 
+          else exit(1); 
     
        }
        else if (1.566 < abs(eta) && abs(eta) < 2.5) {
@@ -1139,7 +1250,7 @@ else if (version == "nominal" || version == "alt" || version == "stat_up") { //b
           else if (pt < 40 and pt > 30) fr = 0.3708241722875352;
           else if (pt < 50 and pt > 40) fr = 0.426602270486085;
           else if (pt > 50) fr = 0.5421704176994768;
-          else assert(0); 
+          else exit(1); 
        }
     }
     else if (year == "2018") {
@@ -1148,7 +1259,7 @@ else if (version == "nominal" || version == "alt" || version == "stat_up") { //b
           else if (pt < 40 and pt > 30) fr = 0.7790466202005484;
           else if (pt < 50 and pt > 40) fr = 0.71722564116773;
           else if (pt > 50) fr = 0.515278581311353;
-          else assert(0); 
+          else exit(1); 
     
        }
        else if (1.566 < abs(eta) && abs(eta) < 2.5) {
@@ -1156,7 +1267,7 @@ else if (version == "nominal" || version == "alt" || version == "stat_up") { //b
           else if (pt < 40 and pt > 30) fr = 0.34880515284451147;
           else if (pt < 50 and pt > 40) fr = 0.37604537406362587;
           else if (pt > 50) fr = 0.5203825122902803;
-          else assert(0); 
+          else exit(1); 
        }
     }
 
@@ -1167,7 +1278,7 @@ else if (version == "nominal" || version == "alt" || version == "stat_up") { //b
              else if (pt < 40 and pt > 30) fr += 0.8110749185667753 - 0.7931335006595595;
              else if (pt < 50 and pt > 40) fr += 0.8356164383561644 - 0.682480210665109;
              else if (pt > 50) fr += 0.6576763485477178 - 0.4236927109550702;
-             else assert(0); 
+             else exit(1); 
     
           }
           else if (1.566 < abs(eta) && abs(eta) < 2.5) {
@@ -1175,7 +1286,7 @@ else if (version == "nominal" || version == "alt" || version == "stat_up") { //b
              else if (pt < 40 and pt > 30) fr += 1.2465373961218837 - 0.8299609184544505;
              else if (pt < 50 and pt > 40) fr += 1.1513157894736843 - 1.2664123432054573;
              else if (pt > 50) fr += 1.3089430894308942 - 0.9603173729944264;
-             else assert(0); 
+             else exit(1); 
           }
        }
        else if (year == "2017") {
@@ -1184,14 +1295,14 @@ else if (version == "nominal" || version == "alt" || version == "stat_up") { //b
              else if (pt < 40 and pt > 30) fr += 0.7475409836065574-0.8841120276900355; 
              else if (pt < 50 and pt > 40) fr += 1.0245098039215685-0.7939865634894522;
              else if (pt > 50) fr += 0.7470817120622568-0.6225170980914996;
-             else assert(0); 
+             else exit(1); 
           }
           else if (1.566 < abs(eta) && abs(eta) < 2.5) {
              if (pt < 30 and pt > 20) fr += 0.6666666666666666-0.3979138739228848;
              else if (pt < 40 and pt > 30) fr += 0.7617021276595745-0.5119586040478171;
              else if (pt < 50 and pt > 40) fr += 0.8472222222222222-0.5687851363533186;
              else if (pt > 50) fr += 1.0857142857142856-0.8108939928786887;
-             else assert(0); 
+             else exit(1); 
           }
        }
        else if (year == "2018") {
@@ -1200,14 +1311,14 @@ else if (version == "nominal" || version == "alt" || version == "stat_up") { //b
              else if (pt < 40 and pt > 30) fr += 0.948051948051948-0.9197645786035942;
              else if (pt < 50 and pt > 40) fr += 0.7518796992481203-0.7737938893939876;
              else if (pt > 50) fr += 0.7315436241610739-0.47164126712162807;
-             else assert(0); 
+             else exit(1); 
           }
           else if (1.566 < abs(eta) && abs(eta) < 2.5) {
              if (pt < 30 and pt > 20) fr += 0.6810344827586207-0.3930515103150424;
              else if (pt < 40 and pt > 30) fr += 0.759493670886076-0.47176049745670173;
              else if (pt < 50 and pt > 40) fr += 0.6212121212121212-0.43181336073191234;
              else if (pt > 50) fr += 0.8333333333333334-0.5139996676356342;
-             else assert(0); 
+             else exit(1); 
           }
        }
     }
@@ -1219,7 +1330,7 @@ else if (version == "nominal" || version == "alt" || version == "stat_up") { //b
              else if (pt < 40 and pt > 30) fr += 0.006662460844367098;
              else if (pt < 50 and pt > 40) fr += 0.009055572023850591;
              else if (pt > 50) fr += 0.005570192293811733;
-             else assert(0); 
+             else exit(1); 
     
           }
           else if (1.566 < abs(eta) && abs(eta) < 2.5) {
@@ -1227,7 +1338,7 @@ else if (version == "nominal" || version == "alt" || version == "stat_up") { //b
              else if (pt < 40 and pt > 30) fr += 0.014817966152871172;
              else if (pt < 50 and pt > 40) fr += 0.024028693336438096;
              else if (pt > 50) fr += 0.02609849029933926;
-             else assert(0); 
+             else exit(1); 
           }
        }
        else if (year == "2017") {
@@ -1236,14 +1347,14 @@ else if (version == "nominal" || version == "alt" || version == "stat_up") { //b
              else if (pt < 40 and pt > 30) fr += 0.007173244839053661;
              else if (pt < 50 and pt > 40) fr += 0.009763056116442556;
              else if (pt > 50) fr += 0.006612945121205288;
-             else assert(0); 
+             else exit(1); 
           }
           else if (1.566 < abs(eta) && abs(eta) < 2.5) {
              if (pt < 30 and pt > 20) fr += 0.002657455941380463;
              else if (pt < 40 and pt > 30) fr += 0.006949455204473568;
              else if (pt < 50 and pt > 40) fr += 0.013323254649466083;
              else if (pt > 50) fr += 0.017033894200413374;
-             else assert(0); 
+             else exit(1); 
           }
        }
        else if (year == "2018") {
@@ -1252,14 +1363,14 @@ else if (version == "nominal" || version == "alt" || version == "stat_up") { //b
              else if (pt < 40 and pt > 30) fr += 0.006082165017453894;
              else if (pt < 50 and pt > 40) fr += 0.00848747881815101;
              else if (pt > 50) fr += 0.005792952999897535;
-             else assert(0); 
+             else exit(1); 
           }
           else if (1.566 < abs(eta) && abs(eta) < 2.5) {
              if (pt < 30 and pt > 20) fr += 0.0018299453388268458;
              else if (pt < 40 and pt > 30) fr += 0.005018789997370193;
              else if (pt < 50 and pt > 40) fr += 0.008666577102573342;
              else if (pt > 50) fr += 0.011947487425581427;
-             else assert(0); 
+             else exit(1); 
           }
        }
     }
@@ -1268,7 +1379,7 @@ else if (version == "nominal" || version == "alt" || version == "stat_up") { //b
     return fr;
 } else {
 
-assert(0);
+exit(1);
 
 }
 
@@ -1277,9 +1388,14 @@ return 0;
 }
 '''
 
+ROOT.gInterpreter.Declare(include_headers_cpp)
+ROOT.gInterpreter.ProcessLine(wjets_pileup_photons_flags_initialization_cpp)
+ROOT.gInterpreter.Declare(wjets_pileup_photons_flags_cpp)
 ROOT.gInterpreter.Declare(fake_lepton_weight_cpp)
 ROOT.gInterpreter.Declare(fake_photon_weight_cpp)
 ROOT.gInterpreter.Declare(eff_scale_factor_cpp)
+
+
 
 #ewdim6_index = 31
 #ewdim6_index = 30
@@ -1806,6 +1922,9 @@ for year in years:
 
             rinterface = rinterface.Define("weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + ")*base_weight")
 
+            if label == "w+jets":
+                rinterface = rinterface.Define("prompt_pileup_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && !photon_genjet_matching && is_photon_prompt(lumi,event,\""+year+"\",dsetversion[0]))*base_weight")
+
             if label == "wg+jets":
                 rinterface = rinterface.Define("pass_fiducial_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && (pass_fid_selection && fid_met_pt > 0))*base_weight")
                 rinterface = rinterface.Define("fail_fiducial_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && !(pass_fid_selection && fid_met_pt > 0))*base_weight")
@@ -1987,6 +2106,8 @@ for year in years:
                     rresultptrs_e_to_p_jes_up.append([])    
                     rresultptrs_e_to_p_jer_up.append([])    
 
+            if label == "w+jets":
+                rresultptrs_prompt_pileup = []
             if label == "wg+jets":
                 rresultptrs_pass_fiducial = []
                 rresultptrs_fail_fiducial = []
@@ -2042,6 +2163,8 @@ for year in years:
                     rresultptrs_electron_reco_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"electron_reco_sf_up_weight"))
                     rresultptrs_electron_hlt_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"electron_hlt_sf_up_weight"))
                     rresultptrs_photon_id_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"photon_id_sf_up_weight"))
+                    if label == "w+jets":
+                        rresultptrs_prompt_pileup.append(rinterface.Histo1D(histogram_models[i],variables[i],"prompt_pileup_weight"))
                     if label == "wg+jets":
                         rresultptrs_pass_fiducial.append(rinterface.Histo1D(histogram_models[i],variables[i],"pass_fiducial_weight"))
                         rresultptrs_fail_fiducial.append(rinterface.Histo1D(histogram_models[i],variables[i],"fail_fiducial_weight"))
@@ -2078,7 +2201,6 @@ for year in years:
                                     continue
                                 rresultptrs_pass_fiducial_pdf[j].append(rinterface.Histo1D(histogram_models[i],variables[i],"pass_fiducial_pdf"+str(j)+"_weight"))
                                 rresultptrs_fail_fiducial_pdf[j].append(rinterface.Histo1D(histogram_models[i],variables[i],"fail_fiducial_pdf"+str(j)+"_weight"))
-
 
                     if label != "w+jets":
                         rresultptrs_jes_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"jes_up_weight"))
@@ -2133,6 +2255,8 @@ for year in years:
                     labels[label]["hists-muon-iso-sf-up"][i].Add(rresultptrs_muon_iso_sf_up[i].GetValue())
                     labels[label]["hists-muon-hlt-sf-up"][i].Add(rresultptrs_muon_hlt_sf_up[i].GetValue())
                     labels[label]["hists-photon-id-sf-up"][i].Add(rresultptrs_photon_id_sf_up[i].GetValue())
+                    if label == "w+jets":
+                        labels[label]["hists-prompt-pileup"][i].Add(rresultptrs_prompt_pileup[i].GetValue())
                     if label == "wg+jets":
                         labels[label]["hists-pass-fiducial"][i].Add(rresultptrs_pass_fiducial[i].GetValue())
                         labels[label]["hists-fail-fiducial"][i].Add(rresultptrs_fail_fiducial[i].GetValue())
@@ -3057,13 +3181,17 @@ n_signal_error = sqrt(pow(data_integral_error,2) + pow(double_fake_integral_erro
 
 print "n_signal = "+str(n_signal) + " +/- " + str(n_signal_error)
 
-#labels["wg+jets"]["hists"]["photon_pt"].Print("all")
-
 double_fake["hists"][mlg_index].Print("all")
 fake_lepton["hists"][mlg_index].Print("all")
 fake_photon["hists"][mlg_index].Print("all")
 fake_photon_alt["hists"][mlg_index].Print("all")
 fake_photon_stat_up["hists"][mlg_index].Print("all")
+
+print "andrew debug 1" 
+
+labels["w+jets"]["hists-prompt-pileup"][mlg_index].Print("all")
+
+print "andrew debug 2" 
 
 if lepton_name == "muon":
 
