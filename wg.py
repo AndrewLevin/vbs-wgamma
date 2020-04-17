@@ -5690,14 +5690,6 @@ fakephotonsyst2uncmin = lambda uplist,nom : 100*(min([abs(uplist[i-1].GetBinCont
 
 fakephotonsyst2uncmax = lambda uplist,nom : 100*(max([abs(uplist[i-1].GetBinContent(i)/nom.GetBinContent(i)-1) for i in goodbins(nom)]))
 
-print "andrew debug 1"
-print statuncmin(fake_lepton["hists"][mlg_index])
-print statuncmax(fake_lepton["hists"][mlg_index])
-fake_lepton["hists"][mlg_index].Print("all")
-labels["wg+jets"]["hists"][mlg_index].Print("all")
-labels["w+jets"]["hists-prompt-pileup"][mlg_index].Print("all")
-print "andrew debug 2"
-
 print """\\begin{table}[htbp]
 \\begin{center}
 \\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
