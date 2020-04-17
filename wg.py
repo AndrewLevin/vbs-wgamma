@@ -166,7 +166,6 @@ def get_filter_string(year,isdata=True,lep=None):
     elif lep == "both":    
         if year == "2016":
             return "(pass_selection && " + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && ((abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 26) || (abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 30)))"
-#            return "(pass_selection && " + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && ((abs(lepton_pdg_id) == 13 && photon_pt > 20 && lepton_pt > 26) || (abs(lepton_pdg_id) == 11 && photon_pt > 20 && lepton_pt > 30)))"
         elif year == "2017":
             return "(pass_selection && " + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && ((abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 30) || (abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35)))"
         elif year == "2018":
@@ -485,10 +484,43 @@ for label in labels.keys():
 
 if "w+jets" in labels:
     labels["w+jets"]["hists-prompt-pileup"] = {}
+    labels["w+jets"]["hists-prompt-pileup-pileup-up"] = {}
+    labels["w+jets"]["hists-prompt-pileup-prefire-up"] = {}
+#    labels["w+jets"]["hists-prompt-pileup-jes-up"] = {}
+#    labels["w+jets"]["hists-prompt-pileup-jer-up"] = {}
+    labels["w+jets"]["hists-prompt-pileup-photon-id-sf-up"] = {}
+    labels["w+jets"]["hists-prompt-pileup-electron-reco-sf-up"] = {}
+    labels["w+jets"]["hists-prompt-pileup-electron-id-sf-up"] = {}
+    labels["w+jets"]["hists-prompt-pileup-electron-hlt-sf-up"] = {}
+    labels["w+jets"]["hists-prompt-pileup-muon-id-sf-up"] = {}
+    labels["w+jets"]["hists-prompt-pileup-muon-iso-sf-up"] = {}
+    labels["w+jets"]["hists-prompt-pileup-muon-hlt-sf-up"] = {}
 
     for i in range(len(variables)):    
         labels["w+jets"]["hists-prompt-pileup"][i] = histogram_models[i].GetHistogram()
         labels["w+jets"]["hists-prompt-pileup"][i].Sumw2()
+        labels["w+jets"]["hists-prompt-pileup-pileup-up"][i] = histogram_models[i].GetHistogram()
+        labels["w+jets"]["hists-prompt-pileup-pileup-up"][i].Sumw2()
+        labels["w+jets"]["hists-prompt-pileup-prefire-up"][i] = histogram_models[i].GetHistogram()
+        labels["w+jets"]["hists-prompt-pileup-prefire-up"][i].Sumw2()
+#        labels["w+jets"]["hists-prompt-pileup-jes-up"][i] = histogram_models[i].GetHistogram()
+#        labels["w+jets"]["hists-prompt-pileup-jes-up"][i].Sumw2()
+#        labels["w+jets"]["hists-prompt-pileup-jer-up"][i] = histogram_models[i].GetHistogram()
+#        labels["w+jets"]["hists-prompt-pileup-jer-up"][i].Sumw2()
+        labels["w+jets"]["hists-prompt-pileup-photon-id-sf-up"][i] = histogram_models[i].GetHistogram()
+        labels["w+jets"]["hists-prompt-pileup-photon-id-sf-up"][i].Sumw2()
+        labels["w+jets"]["hists-prompt-pileup-electron-reco-sf-up"][i] = histogram_models[i].GetHistogram()
+        labels["w+jets"]["hists-prompt-pileup-electron-reco-sf-up"][i].Sumw2()
+        labels["w+jets"]["hists-prompt-pileup-electron-id-sf-up"][i] = histogram_models[i].GetHistogram()
+        labels["w+jets"]["hists-prompt-pileup-electron-id-sf-up"][i].Sumw2()
+        labels["w+jets"]["hists-prompt-pileup-electron-hlt-sf-up"][i] = histogram_models[i].GetHistogram()
+        labels["w+jets"]["hists-prompt-pileup-electron-hlt-sf-up"][i].Sumw2()
+        labels["w+jets"]["hists-prompt-pileup-muon-id-sf-up"][i] = histogram_models[i].GetHistogram()
+        labels["w+jets"]["hists-prompt-pileup-muon-id-sf-up"][i].Sumw2()
+        labels["w+jets"]["hists-prompt-pileup-muon-iso-sf-up"][i] = histogram_models[i].GetHistogram()
+        labels["w+jets"]["hists-prompt-pileup-muon-iso-sf-up"][i].Sumw2()
+        labels["w+jets"]["hists-prompt-pileup-muon-hlt-sf-up"][i] = histogram_models[i].GetHistogram()
+        labels["w+jets"]["hists-prompt-pileup-muon-hlt-sf-up"][i].Sumw2()
 
 if "wg+jets" in labels:
     labels["wg+jets"]["hists-pass-fiducial"] = {}
@@ -864,8 +896,6 @@ bool is_photon_prompt(int lumi,int event, string year, string dsetversion) {
     }
     else
         exit(1);
-
-
 
     return false;
 }
@@ -1924,6 +1954,15 @@ for year in years:
 
             if label == "w+jets":
                 rinterface = rinterface.Define("prompt_pileup_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && !photon_genjet_matching && is_photon_prompt(lumi,event,\""+year+"\",dsetversion[0]))*base_weight")
+                rinterface = rinterface.Define("prompt_pileup_pileup_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && !photon_genjet_matching && is_photon_prompt(lumi,event,\""+year+"\",dsetversion[0]))*pileup_up_base_weight")
+                rinterface = rinterface.Define("prompt_pileup_prefire_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && !photon_genjet_matching && is_photon_prompt(lumi,event,\""+year+"\",dsetversion[0]))*prefire_up_base_weight")
+                rinterface = rinterface.Define("prompt_pileup_photon_id_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && !photon_genjet_matching && is_photon_prompt(lumi,event,\""+year+"\",dsetversion[0]))*photon_id_sf_up_base_weight")
+                rinterface = rinterface.Define("prompt_pileup_electron_reco_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && !photon_genjet_matching && is_photon_prompt(lumi,event,\""+year+"\",dsetversion[0]))*electron_reco_sf_up_base_weight")
+                rinterface = rinterface.Define("prompt_pileup_electron_id_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && !photon_genjet_matching && is_photon_prompt(lumi,event,\""+year+"\",dsetversion[0]))*electron_id_sf_up_base_weight")
+                rinterface = rinterface.Define("prompt_pileup_electron_hlt_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && !photon_genjet_matching && is_photon_prompt(lumi,event,\""+year+"\",dsetversion[0]))*electron_hlt_sf_up_base_weight")
+                rinterface = rinterface.Define("prompt_pileup_muon_id_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && !photon_genjet_matching && is_photon_prompt(lumi,event,\""+year+"\",dsetversion[0]))*muon_id_sf_up_base_weight")
+                rinterface = rinterface.Define("prompt_pileup_muon_hlt_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && !photon_genjet_matching && is_photon_prompt(lumi,event,\""+year+"\",dsetversion[0]))*muon_hlt_sf_up_base_weight")
+                rinterface = rinterface.Define("prompt_pileup_muon_iso_sf_up_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && !photon_genjet_matching && is_photon_prompt(lumi,event,\""+year+"\",dsetversion[0]))*muon_iso_sf_up_base_weight")
 
             if label == "wg+jets":
                 rinterface = rinterface.Define("pass_fiducial_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && (pass_fid_selection && fid_met_pt > 0))*base_weight")
@@ -2015,12 +2054,19 @@ for year in years:
             rinterface = rinterface.Define("fake_lepton_weight","photon_selection == 0 && is_lepton_tight == 0 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_fake_lepton_weight(lepton_eta,lepton_pt,\""+year+"\",lepton_pdg_id)*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0")
             rinterface = rinterface.Define("fake_lepton_stat_up_weight","photon_selection == 0 && is_lepton_tight == 0 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_fake_lepton_weight(lepton_eta,lepton_pt,\""+year+"\",lepton_pdg_id,\"up\")*xs_weight*puWeight*"+prefire_weight_string + "*" + get_postfilter_selection_string()+" : 0")
             rinterface = rinterface.Define("fake_lepton_stat_down_weight","photon_selection == 0 && is_lepton_tight == 0 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_fake_lepton_weight(lepton_eta,lepton_pt,\""+year+"\",lepton_pdg_id,\"down\")*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0")
-            rinterface = rinterface.Define("fake_photon_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id)*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0")
-            rinterface = rinterface.Define("fake_photon_alt_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,\"alt\")*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0")
-            rinterface = rinterface.Define("fake_photon_stat_up_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,\"stat_up\")*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0")
             rinterface = rinterface.Define("double_fake_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 0 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_fake_lepton_weight(lepton_eta,lepton_pt,\""+year+"\",lepton_pdg_id)*get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id)*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0") 
             rinterface = rinterface.Define("double_fake_alt_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 0 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_fake_lepton_weight(lepton_eta,lepton_pt,\""+year+"\",lepton_pdg_id)*get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,\"alt\")*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0") 
             rinterface = rinterface.Define("double_fake_stat_up_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 0 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_fake_lepton_weight(lepton_eta,lepton_pt,\""+year+"\",lepton_pdg_id)*get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,\"stat_up\")*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0") 
+
+            if label == "w+jets":
+                rinterface = rinterface.Define("fake_photon_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 1 && is_lepton_real == 1 && !photon_genjet_matching && is_photon_prompt(lumi,event,\""+year+"\",dsetversion[0]) ? get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id)*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0")
+                rinterface = rinterface.Define("fake_photon_alt_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 1 && is_lepton_real == 1 && !photon_genjet_matching && is_photon_prompt(lumi,event,\""+year+"\",dsetversion[0]) ? get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,\"alt\")*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0")
+                rinterface = rinterface.Define("fake_photon_stat_up_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 1 && is_lepton_real == 1 && !photon_genjet_matching && is_photon_prompt(lumi,event,\""+year+"\",dsetversion[0]) ? get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,\"stat_up\")*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0")
+            else:
+                rinterface = rinterface.Define("fake_photon_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id)*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0")
+                rinterface = rinterface.Define("fake_photon_alt_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,\"alt\")*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0")
+                rinterface = rinterface.Define("fake_photon_stat_up_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,\"stat_up\")*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0")
+    
 
             if label == "w+jets" and year == "2016":
 #                rinterface = rinterface.Define("wjets_fake_photon_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_wjets_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id)*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0")
@@ -2108,6 +2154,15 @@ for year in years:
 
             if label == "w+jets":
                 rresultptrs_prompt_pileup = []
+                rresultptrs_prompt_pileup_pileup_up = []
+                rresultptrs_prompt_pileup_prefire_up = []
+                rresultptrs_prompt_pileup_photon_id_sf_up = []
+                rresultptrs_prompt_pileup_electron_reco_sf_up = []
+                rresultptrs_prompt_pileup_electron_id_sf_up = []
+                rresultptrs_prompt_pileup_electron_hlt_sf_up = []
+                rresultptrs_prompt_pileup_muon_id_sf_up = []
+                rresultptrs_prompt_pileup_muon_iso_sf_up = []
+                rresultptrs_prompt_pileup_muon_hlt_sf_up = []
             if label == "wg+jets":
                 rresultptrs_pass_fiducial = []
                 rresultptrs_fail_fiducial = []
@@ -2165,6 +2220,15 @@ for year in years:
                     rresultptrs_photon_id_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"photon_id_sf_up_weight"))
                     if label == "w+jets":
                         rresultptrs_prompt_pileup.append(rinterface.Histo1D(histogram_models[i],variables[i],"prompt_pileup_weight"))
+                        rresultptrs_prompt_pileup_pileup_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"prompt_pileup_pileup_up_weight"))
+                        rresultptrs_prompt_pileup_prefire_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"prompt_pileup_prefire_up_weight"))
+                        rresultptrs_prompt_pileup_photon_id_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"prompt_pileup_photon_id_sf_up_weight"))
+                        rresultptrs_prompt_pileup_electron_reco_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"prompt_pileup_electron_reco_sf_up_weight"))
+                        rresultptrs_prompt_pileup_electron_id_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"prompt_pileup_electron_id_sf_up_weight"))
+                        rresultptrs_prompt_pileup_electron_hlt_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"prompt_pileup_electron_hlt_sf_up_weight"))
+                        rresultptrs_prompt_pileup_muon_id_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"prompt_pileup_muon_id_sf_up_weight"))
+                        rresultptrs_prompt_pileup_muon_iso_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"prompt_pileup_muon_iso_sf_up_weight"))
+                        rresultptrs_prompt_pileup_muon_hlt_sf_up.append(rinterface.Histo1D(histogram_models[i],variables[i],"prompt_pileup_muon_hlt_sf_up_weight"))
                     if label == "wg+jets":
                         rresultptrs_pass_fiducial.append(rinterface.Histo1D(histogram_models[i],variables[i],"pass_fiducial_weight"))
                         rresultptrs_fail_fiducial.append(rinterface.Histo1D(histogram_models[i],variables[i],"fail_fiducial_weight"))
@@ -2257,6 +2321,15 @@ for year in years:
                     labels[label]["hists-photon-id-sf-up"][i].Add(rresultptrs_photon_id_sf_up[i].GetValue())
                     if label == "w+jets":
                         labels[label]["hists-prompt-pileup"][i].Add(rresultptrs_prompt_pileup[i].GetValue())
+                        labels[label]["hists-prompt-pileup-pileup-up"][i].Add(rresultptrs_prompt_pileup_pileup_up[i].GetValue())
+                        labels[label]["hists-prompt-pileup-prefire-up"][i].Add(rresultptrs_prompt_pileup_prefire_up[i].GetValue())
+                        labels[label]["hists-prompt-pileup-photon-id-sf-up"][i].Add(rresultptrs_prompt_pileup_photon_id_sf_up[i].GetValue())
+                        labels[label]["hists-prompt-pileup-electron-reco-sf-up"][i].Add(rresultptrs_prompt_pileup_electron_reco_sf_up[i].GetValue())
+                        labels[label]["hists-prompt-pileup-electron-id-sf-up"][i].Add(rresultptrs_prompt_pileup_electron_id_sf_up[i].GetValue())
+                        labels[label]["hists-prompt-pileup-electron-hlt-sf-up"][i].Add(rresultptrs_prompt_pileup_electron_hlt_sf_up[i].GetValue())
+                        labels[label]["hists-prompt-pileup-muon-id-sf-up"][i].Add(rresultptrs_prompt_pileup_muon_id_sf_up[i].GetValue())
+                        labels[label]["hists-prompt-pileup-muon-iso-sf-up"][i].Add(rresultptrs_prompt_pileup_muon_iso_sf_up[i].GetValue())
+                        labels[label]["hists-prompt-pileup-muon-hlt-sf-up"][i].Add(rresultptrs_prompt_pileup_muon_hlt_sf_up[i].GetValue())
                     if label == "wg+jets":
                         labels[label]["hists-pass-fiducial"][i].Add(rresultptrs_pass_fiducial[i].GetValue())
                         labels[label]["hists-fail-fiducial"][i].Add(rresultptrs_fail_fiducial[i].GetValue())
@@ -2363,6 +2436,11 @@ for year in years:
 
             if labels[label]["color"] == None:
                 continue
+
+            if label == "w+jets":
+                labels[label]["hists-prompt-pileup"][i].SetFillColor(ROOT.kOrange+3)
+                labels[label]["hists-prompt-pileup"][i].SetFillStyle(1001)
+                labels[label]["hists-prompt-pileup"][i].SetLineColor(ROOT.kOrange+3)
 
             if label == "wg+jets":
                 labels[label]["hists-pass-fiducial"][i].SetFillColor(labels[label]["color-fid"])
@@ -2501,10 +2579,6 @@ for i in range(len(variables)):
     non_closure[len(non_closure)-1].Draw()
     set_axis_fonts(non_closure[len(non_closure)-1],"x",getXaxisLabel(variables[i]))
     c.SaveAs(args.outputdir + "/" + "non_closure_"+variables_labels[i]+".png")
-
-#print "andrew debug -2"
-#non_closure[mlg_index]
-#print "andrew debug -1"
 
 for i in range(len(variables)):
 
@@ -2914,6 +2988,7 @@ for i in range(len(variables)):
         wjets_fake_photon_2016["hists"][i].SetFillColor(labels["w+jets"]["color"])
         wjets_fake_photon_2016["hists"][i].SetFillStyle(1001)
         wjets_fake_photon_2016["hists"][i].SetLineColor(labels["w+jets"]["color"])
+
 #
     hsum = data["hists"][i].Clone()
     hsum.Scale(0.0)
@@ -2925,9 +3000,9 @@ for i in range(len(variables)):
             continue
 
         if label == "w+jets":
-            continue
-
-        if label == "wg+jets":
+            hsum.Add(labels[label]["hists-prompt-pileup"][i])
+            hstack.Add(labels[label]["hists-prompt-pileup"][i])
+        elif label == "wg+jets":
             if args.draw_non_fid:
                 hsum.Add(labels[label]["hists-fail-fiducial"][i])
                 hstack.Add(labels[label]["hists-fail-fiducial"][i])
@@ -3029,9 +3104,9 @@ for i in range(len(variables)):
             continue
 
         if label == "w+jets":
-            continue
-
-        if label == "wg+jets":
+            j=j+1    
+            draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,labels[label]["hists-prompt-pileup"][i],"pileup","f")
+        elif label == "wg+jets":
             if args.draw_non_fid:
                 j=j+1    
                 draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,labels[label]["hists-pass-fiducial"][i],"w#gamma+jets","f")
@@ -3187,11 +3262,7 @@ fake_photon["hists"][mlg_index].Print("all")
 fake_photon_alt["hists"][mlg_index].Print("all")
 fake_photon_stat_up["hists"][mlg_index].Print("all")
 
-print "andrew debug 1" 
-
 labels["w+jets"]["hists-prompt-pileup"][mlg_index].Print("all")
-
-print "andrew debug 2" 
 
 if lepton_name == "muon":
 
@@ -3487,8 +3558,6 @@ trandom.SetSeed(0)
 fake_photon_syst2_up=[]
 fake_photon_syst2_up_relative=[]
 
-#print "andrew debug 1"
-
 #nnuisances = 100
 nnuisances = histogram_models[mlg_index].GetHistogram().GetNbinsX()
 
@@ -3723,6 +3792,9 @@ if args.make_cut_and_count_datacard:
             continue
         dcard.write(" " + label.replace("+",""))
 
+    if "w+jets" in labels:
+        dcard.write(" pileup")
+
     dcard.write(" fake_photon")
     dcard.write(" fake_lepton")
     dcard.write(" double_fake")
@@ -3742,6 +3814,8 @@ if args.make_cut_and_count_datacard:
             continue
         dcard.write(" "+ str(labels[label]["hists"][mlg_index].Integral()))
 
+    if "w+jets" in labels:
+        dcard.write(" "+str(labels["w+jets"]["hists-prompt-pileup"][mlg_index].Integral())) 
     dcard.write(" "+str(fake_photon["hists"][mlg_index].Integral())) 
     dcard.write(" "+str(fake_lepton["hists"][mlg_index].Integral())) 
     dcard.write(" "+str(double_fake["hists"][mlg_index].Integral())) 
@@ -4027,6 +4101,7 @@ if args.make_datacard:
 
     if args.lep == "muon":
         print >> dcard, "shapes Wg_out mu_chan wg_dcard_mu_chan_shapes.root wgout wgout_$SYSTEMATIC" 
+        print >> dcard, "shapes pileup mu_chan wg_dcard_mu_chan_shapes.root pileup pileup_$SYSTEMATIC" 
         print >> dcard, "shapes fake_photon mu_chan wg_dcard_mu_chan_shapes.root fakephoton fakephoton_$SYSTEMATIC" 
         print >> dcard, "shapes fake_muon mu_chan wg_dcard_mu_chan_shapes.root fakemuon fakemuon_$SYSTEMATIC"
         print >> dcard, "shapes double_fake mu_chan wg_dcard_mu_chan_shapes.root doublefake doublefake_$SYSTEMATIC" 
@@ -4035,6 +4110,7 @@ if args.make_datacard:
             print >> dcard, "shapes e_to_p_bin"+str(i)+" mu_chan wg_dcard_mu_chan_shapes.root etopbin"+str(i)+" etopbin"+str(i)+"_$SYSTEMATIC" 
     elif args.lep == "electron":
         print >> dcard, "shapes Wg_out el_chan wg_dcard_el_chan_shapes.root wgout wgout_$SYSTEMATIC" 
+        print >> dcard, "shapes pileup el_chan wg_dcard_el_chan_shapes.root pileup pileup_$SYSTEMATIC" 
         print >> dcard, "shapes fake_photon el_chan wg_dcard_el_chan_shapes.root fakephoton fakephoton_$SYSTEMATIC" 
         print >> dcard, "shapes fake_electron el_chan wg_dcard_el_chan_shapes.root fakeelectron fakeelectron_$SYSTEMATIC"
         print >> dcard, "shapes double_fake el_chan wg_dcard_el_chan_shapes.root doublefake doublefake_$SYSTEMATIC" 
@@ -4065,6 +4141,8 @@ if args.make_datacard:
             if label == "no label" or label == "wg+jets" or label == "w+jets":
                 continue
             dcard.write(" mu_chan")
+        if "w+jets" in labels:
+            dcard.write(" mu_chan")    
         dcard.write(" mu_chan")
         dcard.write(" mu_chan")
         dcard.write(" mu_chan")
@@ -4078,6 +4156,8 @@ if args.make_datacard:
             if label == "no label" or label == "wg+jets" or label == "w+jets":
                 continue
             dcard.write(" el_chan")
+        if "w+jets" in labels:
+            dcard.write(" el_chan")        
         dcard.write(" el_chan")
         dcard.write(" el_chan")
         dcard.write(" el_chan")
@@ -4097,6 +4177,8 @@ if args.make_datacard:
             continue
         dcard.write(" " + label.replace("+",""))
 
+    if "w+jets" in labels:
+        dcard.write(" pileup")
     dcard.write(" fake_photon")
     if args.lep == "muon":
         dcard.write(" fake_muon")
@@ -4117,8 +4199,20 @@ if args.make_datacard:
     dcard.write('\n')    
     dcard.write("process")
 #    dcard.write(" 0")
-    for i in range(len(labels.keys())+len(etopbinning)+2):
+
+    nprocesses = 0
+    nprocesses += 2 #wg+jets and wg+jets out-of-fiducial 
+    for label in labels:
+        if label == "no label" or label == "wg+jets" or label == "w+jets":
+            continue
+        nprocesses += 1    
+    if "w+jets" in labels:
+        nprocesses += 1 #pileup
+    nprocesses += 3 #fake photon, fake lepton, double fake
+    nprocesses += len(etopbinning) 
+    for i in range(nprocesses):
         dcard.write(" " + str(i))
+
     if args.lep == "muon":
 #        for j in range(1,len(labels.keys())+3):
 #            dcard.write(" " + str(j))
@@ -4140,6 +4234,8 @@ if args.make_datacard:
             continue
         dcard.write(" "+ str(labels[label]["hists"][mlg_index].Integral()))
 
+    if "w+jets" in labels:
+        dcard.write(" "+str(labels["w+jets"]["hists-prompt-pileup"][mlg_index].Integral())) 
     dcard.write(" "+str(fake_photon["hists"][mlg_index].Integral())) 
     dcard.write(" "+str(fake_lepton["hists"][mlg_index].Integral())) 
     dcard.write(" "+str(double_fake["hists"][mlg_index].Integral())) 
@@ -4163,6 +4259,8 @@ if args.make_datacard:
             continue
         dcard.write(" 1.018")
 
+    if "w+jets" in labels:
+        dcard.write(" 1.018")
     dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
@@ -4187,6 +4285,8 @@ if args.make_datacard:
             continue
         dcard.write(" 1.0")
 
+    if "w+jets" in labels:
+        dcard.write(" 1.0")
     dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
@@ -4211,6 +4311,8 @@ if args.make_datacard:
             continue
         dcard.write(" 1.0")
 
+    if "w+jets" in labels:
+        dcard.write(" 1.0")
     dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
@@ -4235,6 +4337,8 @@ if args.make_datacard:
             continue
         dcard.write(" 1.0")
 
+    if "w+jets" in labels:
+        dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
@@ -4259,6 +4363,8 @@ if args.make_datacard:
             continue
         dcard.write(" 1.0")
 
+    if "w+jets" in labels:
+        dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
@@ -4281,6 +4387,8 @@ if args.make_datacard:
         if label == "no label" or label == "wg+jets" or label == "w+jets":
             continue
         dcard.write(" 1.0")
+    if "w+jets" in labels:
+        dcard.write(" 1.0")
     dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
@@ -4296,6 +4404,8 @@ if args.make_datacard:
             if label == "no label" or label == "wg+jets" or label == "w+jets":
                 continue
             dcard.write(" 1.0")
+        if "w+jets" in labels:
+            dcard.write(" 1.0")
         dcard.write(" -")
         dcard.write(" -")
         dcard.write(" -")
@@ -4309,6 +4419,8 @@ if args.make_datacard:
             if label == "no label" or label == "wg+jets" or label == "w+jets":
                 continue
             dcard.write(" 1.0")
+        if "w+jets" in labels:
+            dcard.write(" 1.0")
         dcard.write(" -")
         dcard.write(" -")
         dcard.write(" -")
@@ -4321,6 +4433,8 @@ if args.make_datacard:
         for label in labels.keys():
             if label == "no label" or label == "wg+jets" or label == "w+jets":
                 continue
+            dcard.write(" 1.0")
+        if "w+jets" in labels:
             dcard.write(" 1.0")
         dcard.write(" -")
         dcard.write(" -")
@@ -4336,6 +4450,8 @@ if args.make_datacard:
             if label == "no label" or label == "wg+jets" or label == "w+jets":
                 continue
             dcard.write(" 1.0")
+        if "w+jets" in labels:
+            dcard.write(" 1.0")
         dcard.write(" -")
         dcard.write(" -")
         dcard.write(" -")
@@ -4349,6 +4465,8 @@ if args.make_datacard:
             if label == "no label" or label == "wg+jets" or label == "w+jets":
                 continue
             dcard.write(" 1.0")
+        if "w+jets" in labels:
+            dcard.write(" 1.0")
         dcard.write(" -")
         dcard.write(" -")
         dcard.write(" -")
@@ -4361,6 +4479,8 @@ if args.make_datacard:
         for label in labels.keys():
             if label == "no label" or label == "wg+jets" or label == "w+jets":
                 continue
+            dcard.write(" 1.0")
+        if "w+jets" in labels:
             dcard.write(" 1.0")
         dcard.write(" -")
         dcard.write(" -")
@@ -4380,6 +4500,8 @@ if args.make_datacard:
             continue
         dcard.write(" -")
 
+    if "w+jets" in labels:
+        dcard.write(" -")
     dcard.write(" 1.0")
     dcard.write(" -")
     dcard.write(" -")
@@ -4444,6 +4566,8 @@ if args.make_datacard:
             continue
         dcard.write(" -")
 
+    if "w+jets" in labels:
+        dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
@@ -4466,7 +4590,8 @@ if args.make_datacard:
         if label == "no label" or label == "wg+jets" or label == "w+jets":
             continue
         dcard.write(" -")
-
+    if "w+jets" in labels:
+        dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
@@ -4490,7 +4615,8 @@ if args.make_datacard:
         if label == "no label" or label == "wg+jets" or label == "w+jets":
             continue
         dcard.write(" -")
-
+    if "w+jets" in labels:
+        dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
@@ -4514,7 +4640,8 @@ if args.make_datacard:
         if label == "no label" or label == "wg+jets" or label == "w+jets":
             continue
         dcard.write(" -")
-
+    if "w+jets" in labels:
+        dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
@@ -4542,7 +4669,8 @@ if args.make_datacard:
             dcard.write(" 1.0")
         else:    
             dcard.write(" -")
-
+    if "w+jets" in labels:
+        dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
@@ -4570,7 +4698,8 @@ if args.make_datacard:
             dcard.write(" 1.0")
         else:    
             dcard.write(" -")
-
+    if "w+jets" in labels:
+        dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
     dcard.write(" -")
@@ -4633,7 +4762,8 @@ if args.make_datacard:
             if label == "no label" or label == "wg+jets" or label == "w+jets":
                 continue
             dcard.write(" -")
-        
+        if "w+jets" in labels:
+            dcard.write(" -")        
         dcard.write(" 1.0")
         dcard.write(" -")
         dcard.write(" -")
@@ -4665,7 +4795,8 @@ if args.make_datacard:
             if label == "no label" or label == "wg+jets" or label == "w+jets":
                 continue
             dcard.write(" -")
-        
+        if "w+jets" in labels:
+            dcard.write(" -")        
         dcard.write(" -")
         dcard.write(" 1.0")
         dcard.write(" -")
@@ -4723,6 +4854,8 @@ if args.make_datacard:
 
     data["hists"][mlg_index].Write("data_obs")
 #    labels["wg+jets"]["hists"][mlg_index].Write("wg")
+    if "w+jets" in labels:
+        labels["w+jets"]["hists-prompt-pileup"][mlg_index].Write("pileup")
     labels["wg+jets"]["hists-pass-fiducial"][mlg_index].Write("wg")
     labels["wg+jets"]["hists-fail-fiducial"][mlg_index].Write("wgout")
     labels["top+jets"]["hists"][mlg_index].Write("topjets")
@@ -4901,6 +5034,9 @@ if args.make_datacard:
     makeDownShape(labels["wg+jets"]["hists-pass-fiducial-pileup-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]).Write("wg_pileupDown")
     labels["wg+jets"]["hists-fail-fiducial-pileup-up"][mlg_index].Write("wgout_pileupUp")
     makeDownShape(labels["wg+jets"]["hists-fail-fiducial-pileup-up"][mlg_index],labels["wg+jets"]["hists-fail-fiducial"][mlg_index]).Write("wgout_pileupDown")
+    if "w+jets" in labels:
+        labels["w+jets"]["hists-prompt-pileup-pileup-up"][mlg_index].Write("pileup_pileupUp")
+        makeDownShape(labels["w+jets"]["hists-prompt-pileup-pileup-up"][mlg_index],labels["w+jets"]["hists-prompt-pileup"][mlg_index]).Write("pileup_pileupDown")
     
     labels["top+jets"]["hists-prefire-up"][mlg_index].Write("topjets_prefireUp")
     makeDownShape(labels["top+jets"]["hists-prefire-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]).Write("topjets_prefireDown")
@@ -4914,6 +5050,9 @@ if args.make_datacard:
     makeDownShape(labels["wg+jets"]["hists-pass-fiducial-prefire-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]).Write("wg_prefireDown")
     labels["wg+jets"]["hists-fail-fiducial-prefire-up"][mlg_index].Write("wgout_prefireUp")
     makeDownShape(labels["wg+jets"]["hists-fail-fiducial-prefire-up"][mlg_index],labels["wg+jets"]["hists-fail-fiducial"][mlg_index]).Write("wgout_prefireDown")
+    if "w+jets" in labels:
+        labels["w+jets"]["hists-prompt-pileup-prefire-up"][mlg_index].Write("pileup_prefireUp")
+        makeDownShape(labels["w+jets"]["hists-prompt-pileup-prefire-up"][mlg_index],labels["w+jets"]["hists-prompt-pileup"][mlg_index]).Write("pileup_prefireDown")
 
     labels["top+jets"]["hists-photon-id-sf-up"][mlg_index].Write("topjets_photonidUp")
     makeDownShape(labels["top+jets"]["hists-photon-id-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]).Write("topjets_photonidDown")
@@ -4927,6 +5066,9 @@ if args.make_datacard:
     makeDownShape(labels["wg+jets"]["hists-pass-fiducial-photon-id-sf-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]).Write("wg_photonidDown")
     labels["wg+jets"]["hists-fail-fiducial-photon-id-sf-up"][mlg_index].Write("wgout_photonidUp")
     makeDownShape(labels["wg+jets"]["hists-fail-fiducial-photon-id-sf-up"][mlg_index],labels["wg+jets"]["hists-fail-fiducial"][mlg_index]).Write("wgout_photonidDown")
+    if "w+jets" in labels:
+        labels["w+jets"]["hists-prompt-pileup-photon-id-sf-up"][mlg_index].Write("pileup_photonidUp")
+        makeDownShape(labels["w+jets"]["hists-prompt-pileup-photon-id-sf-up"][mlg_index],labels["w+jets"]["hists-prompt-pileup"][mlg_index]).Write("pileup_photonidDown")
 
     labels["top+jets"]["hists-muon-id-sf-up"][mlg_index].Write("topjets_muonidUp")
     makeDownShape(labels["top+jets"]["hists-muon-id-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]).Write("topjets_muonidDown")
@@ -4940,7 +5082,10 @@ if args.make_datacard:
     makeDownShape(labels["wg+jets"]["hists-pass-fiducial-muon-id-sf-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]).Write("wg_muonidDown")
     labels["wg+jets"]["hists-fail-fiducial-muon-id-sf-up"][mlg_index].Write("wgout_muonidUp")
     makeDownShape(labels["wg+jets"]["hists-fail-fiducial-muon-id-sf-up"][mlg_index],labels["wg+jets"]["hists-fail-fiducial"][mlg_index]).Write("wgout_muonidDown")
-    
+    if "w+jets" in labels:
+        labels["w+jets"]["hists-prompt-pileup-muon-id-sf-up"][mlg_index].Write("pileup_muonidUp")
+        makeDownShape(labels["w+jets"]["hists-prompt-pileup-muon-id-sf-up"][mlg_index],labels["w+jets"]["hists-prompt-pileup"][mlg_index]).Write("pileup_muonidDown") 
+   
     labels["top+jets"]["hists-muon-iso-sf-up"][mlg_index].Write("topjets_muonisoUp")
     makeDownShape(labels["top+jets"]["hists-muon-iso-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]).Write("topjets_muonisoDown")
     labels["zg+jets"]["hists-muon-iso-sf-up"][mlg_index].Write("zgjets_muonisoUp")
@@ -4953,6 +5098,9 @@ if args.make_datacard:
     makeDownShape(labels["wg+jets"]["hists-pass-fiducial-muon-iso-sf-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]).Write("wg_muonisoDown")
     labels["wg+jets"]["hists-fail-fiducial-muon-iso-sf-up"][mlg_index].Write("wgout_muonisoUp")
     makeDownShape(labels["wg+jets"]["hists-fail-fiducial-muon-iso-sf-up"][mlg_index],labels["wg+jets"]["hists-fail-fiducial"][mlg_index]).Write("wgout_muonisoDown")
+    if "w+jets" in labels:
+        labels["w+jets"]["hists-prompt-pileup-muon-iso-sf-up"][mlg_index].Write("pileup_muonisoUp")
+        makeDownShape(labels["w+jets"]["hists-prompt-pileup-muon-iso-sf-up"][mlg_index],labels["w+jets"]["hists-prompt-pileup"][mlg_index]).Write("pileup_muonisoDown") 
     
     labels["top+jets"]["hists-muon-hlt-sf-up"][mlg_index].Write("topjets_muonhltUp")
     makeDownShape(labels["top+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]).Write("topjets_muonhltDown")
@@ -4966,6 +5114,9 @@ if args.make_datacard:
     makeDownShape(labels["wg+jets"]["hists-pass-fiducial-muon-hlt-sf-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]).Write("wg_muonhltDown")
     labels["wg+jets"]["hists-fail-fiducial-muon-hlt-sf-up"][mlg_index].Write("wgout_muonhltUp")
     makeDownShape(labels["wg+jets"]["hists-fail-fiducial-muon-hlt-sf-up"][mlg_index],labels["wg+jets"]["hists-fail-fiducial"][mlg_index]).Write("wgout_muonhltDown")
+    if "w+jets" in labels:
+        labels["w+jets"]["hists-prompt-pileup-muon-hlt-sf-up"][mlg_index].Write("pileup_muonhltUp")
+        makeDownShape(labels["w+jets"]["hists-prompt-pileup-muon-hlt-sf-up"][mlg_index],labels["w+jets"]["hists-prompt-pileup"][mlg_index]).Write("pileup_muonhltDown") 
     
     labels["top+jets"]["hists-electron-reco-sf-up"][mlg_index].Write("topjets_electronrecoUp")
     makeDownShape(labels["top+jets"]["hists-electron-reco-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]).Write("topjets_electronrecoDown")
@@ -4979,6 +5130,9 @@ if args.make_datacard:
     makeDownShape(labels["wg+jets"]["hists-pass-fiducial-electron-reco-sf-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]).Write("wg_electronrecoDown")
     labels["wg+jets"]["hists-fail-fiducial-electron-reco-sf-up"][mlg_index].Write("wgout_electronrecoUp")
     makeDownShape(labels["wg+jets"]["hists-fail-fiducial-electron-reco-sf-up"][mlg_index],labels["wg+jets"]["hists-fail-fiducial"][mlg_index]).Write("wgout_electronrecoDown")
+    if "w+jets" in labels:
+        labels["w+jets"]["hists-prompt-pileup-electron-reco-sf-up"][mlg_index].Write("pileup_electronrecoUp")
+        makeDownShape(labels["w+jets"]["hists-prompt-pileup-electron-reco-sf-up"][mlg_index],labels["w+jets"]["hists-prompt-pileup"][mlg_index]).Write("pileup_electronrecoDown") 
 
     labels["top+jets"]["hists-electron-id-sf-up"][mlg_index].Write("topjets_electronidUp")
     makeDownShape(labels["top+jets"]["hists-electron-id-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]).Write("topjets_electronidDown")
@@ -4992,6 +5146,9 @@ if args.make_datacard:
     makeDownShape(labels["wg+jets"]["hists-pass-fiducial-electron-id-sf-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]).Write("wg_electronidDown")
     labels["wg+jets"]["hists-fail-fiducial-electron-id-sf-up"][mlg_index].Write("wgout_electronidUp")
     makeDownShape(labels["wg+jets"]["hists-fail-fiducial-electron-id-sf-up"][mlg_index],labels["wg+jets"]["hists-fail-fiducial"][mlg_index]).Write("wgout_electronidDown")
+    if "w+jets" in labels:
+        labels["w+jets"]["hists-prompt-pileup-electron-id-sf-up"][mlg_index].Write("pileup_electronidUp")
+        makeDownShape(labels["w+jets"]["hists-prompt-pileup-electron-id-sf-up"][mlg_index],labels["w+jets"]["hists-prompt-pileup"][mlg_index]).Write("pileup_electronidDown") 
 
     labels["top+jets"]["hists-electron-hlt-sf-up"][mlg_index].Write("topjets_electronhltUp")
     makeDownShape(labels["top+jets"]["hists-electron-hlt-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]).Write("topjets_electronhltDown")
@@ -5005,6 +5162,9 @@ if args.make_datacard:
     makeDownShape(labels["wg+jets"]["hists-pass-fiducial-electron-hlt-sf-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]).Write("wg_electronhltDown")
     labels["wg+jets"]["hists-fail-fiducial-electron-hlt-sf-up"][mlg_index].Write("wgout_electronhltUp")
     makeDownShape(labels["wg+jets"]["hists-fail-fiducial-electron-hlt-sf-up"][mlg_index],labels["wg+jets"]["hists-fail-fiducial"][mlg_index]).Write("wgout_electronhltDown")
+    if "w+jets" in labels:
+        labels["w+jets"]["hists-prompt-pileup-electron-hlt-sf-up"][mlg_index].Write("pileup_electronhltUp")
+        makeDownShape(labels["w+jets"]["hists-prompt-pileup-electron-hlt-sf-up"][mlg_index],labels["w+jets"]["hists-prompt-pileup"][mlg_index]).Write("pileup_electronhltDown") 
     
     labels["top+jets"]["hists-jes-up"][mlg_index].Write("topjets_jesUp")
     makeDownShape(labels["top+jets"]["hists-jes-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]).Write("topjets_jesDown")
@@ -5530,40 +5690,48 @@ fakephotonsyst2uncmin = lambda uplist,nom : 100*(min([abs(uplist[i-1].GetBinCont
 
 fakephotonsyst2uncmax = lambda uplist,nom : 100*(max([abs(uplist[i-1].GetBinContent(i)/nom.GetBinContent(i)-1) for i in goodbins(nom)]))
 
+print "andrew debug 1"
+print statuncmin(fake_lepton["hists"][mlg_index])
+print statuncmax(fake_lepton["hists"][mlg_index])
+fake_lepton["hists"][mlg_index].Print("all")
+labels["wg+jets"]["hists"][mlg_index].Print("all")
+labels["w+jets"]["hists-prompt-pileup"][mlg_index].Print("all")
+print "andrew debug 2"
+
 print """\\begin{table}[htbp]
 \\begin{center}
 \\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
 \\hline
-   & WG & ZG & top & VV & fake lepton & fake photon & double fake & e to p   \\\\
+   & WG & ZG & top & VV & pileup & fake lepton & fake photon & double fake & e to p   \\\\
 \\hline
 \\hline
-lumi & 1.8 & 1.8 & 1.8 & 1.8 & - & - & - & - \\\\
+lumi & 1.8 & 1.8 & 1.8 & 1.8 & 1.8 & - & - & - & - \\\\
 \\hline
-wgscale & %0.2f-%0.2f & - & - & - & 30 & - & 30 & - \\\\
+wgscale & %0.2f-%0.2f & - & - & - & - & 30 & - & 30 & - \\\\
 \\hline
-wgpdf & %0.2f-%0.2f & - & - & - & 30 & - & 30 & - \\\\
+wgpdf & %0.2f-%0.2f & - & - & - & - & 30 & - & 30 & - \\\\
 \\hline
-zgscale & - & %0.2f-%0.2f & - & - & 30 & - & 30 & - \\\\
+zgscale & - & %0.2f-%0.2f & - & - & - & 30 & - & 30 & - \\\\
 \\hline
-zgpdf & - & %0.2f-%0.2f & - & - & 30 & - & 30 & - \\\\
+zgpdf & - & %0.2f-%0.2f & - & - & - & 30 & - & 30 & - \\\\
 \\hline
-fake lepton &  - & - & - & - & 30 & - & 30 & - \\\\
+fake lepton &  - & - & - & - & - & 30 & - & 30 & - \\\\
 \\hline
-fake photon comp 1 &  - & - & - & - & - & %0.2f-%0.2f & - & - \\\\
+fake photon comp 1 &  - & - & - & - & - & - & %0.2f-%0.2f & - & - \\\\
 \\hline
-fake photon comp 2 &  - & - & - & - & - & %0.2f-%0.2f & - & - \\\\
+fake photon comp 2 &  - & - & - & - & - & - & %0.2f-%0.2f & - & - \\\\
 \\hline
-pileup & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & -  \\\\
+pileup & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & - \\\\
 \\hline
-prefire & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & -  \\\\
+prefire & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & -  \\\\
 \\hline
-JES & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & -  \\\\
+JES & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & - & -  \\\\
 \\hline
-JER & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & -  \\\\
+JER & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & - & -  \\\\
 \\hline
-stat & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f  \\\\
+stat & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f \\\\
 \\hline
-photon ID and iso & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & -  \\\\
+photon ID and iso & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & - \\\\
 \\hline"""%(
 uncmin(wgjets_pass_fiducial_scale_syst,labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
 uncmax(wgjets_pass_fiducial_scale_syst,labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
@@ -5591,6 +5759,8 @@ uncmin(labels["top+jets"]["hists-pileup-up"][mlg_index],labels["top+jets"]["hist
 uncmax(labels["top+jets"]["hists-pileup-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]),
 uncmin(labels["vv+jets"]["hists-pileup-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
 uncmax(labels["vv+jets"]["hists-pileup-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
+uncmin(labels["w+jets"]["hists-prompt-pileup-pileup-up"][mlg_index],labels["w+jets"]["hists-prompt-pileup"][mlg_index]),
+uncmax(labels["w+jets"]["hists-prompt-pileup-pileup-up"][mlg_index],labels["w+jets"]["hists-prompt-pileup"][mlg_index]),
 
 uncmin(labels["wg+jets"]["hists-pass-fiducial-prefire-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
 uncmax(labels["wg+jets"]["hists-pass-fiducial-prefire-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
@@ -5600,6 +5770,8 @@ uncmin(labels["top+jets"]["hists-prefire-up"][mlg_index],labels["top+jets"]["his
 uncmax(labels["top+jets"]["hists-prefire-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]),
 uncmin(labels["vv+jets"]["hists-prefire-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
 uncmax(labels["vv+jets"]["hists-prefire-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
+uncmin(labels["w+jets"]["hists-prompt-pileup-prefire-up"][mlg_index],labels["w+jets"]["hists-prompt-pileup"][mlg_index]),
+uncmax(labels["w+jets"]["hists-prompt-pileup-prefire-up"][mlg_index],labels["w+jets"]["hists-prompt-pileup"][mlg_index]),
 
 uncmin(labels["wg+jets"]["hists-pass-fiducial-jes-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
 uncmax(labels["wg+jets"]["hists-pass-fiducial-jes-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
@@ -5609,6 +5781,8 @@ uncmin(labels["top+jets"]["hists-jes-up"][mlg_index],labels["top+jets"]["hists"]
 uncmax(labels["top+jets"]["hists-jes-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]),
 uncmin(labels["vv+jets"]["hists-jes-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
 uncmax(labels["vv+jets"]["hists-jes-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
+#uncmin(labels["w+jets"]["hists-prompt-pileup-jes-up"][mlg_index],labels["w+jets"]["hists-prompt-pileup"][mlg_index]),
+#uncmax(labels["w+jets"]["hists-prompt-pileup-jes-up"][mlg_index],labels["w+jets"]["hists-prompt-pileup"][mlg_index]),
 
 uncmin(labels["wg+jets"]["hists-pass-fiducial-jer-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
 uncmax(labels["wg+jets"]["hists-pass-fiducial-jer-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
@@ -5618,6 +5792,8 @@ uncmin(labels["top+jets"]["hists-jer-up"][mlg_index],labels["top+jets"]["hists"]
 uncmax(labels["top+jets"]["hists-jer-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]),
 uncmin(labels["vv+jets"]["hists-jer-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
 uncmax(labels["vv+jets"]["hists-jer-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
+#uncmin(labels["w+jets"]["hists-prompt-pileup-jer-up"][mlg_index],labels["w+jets"]["hists-prompt-pileup"][mlg_index]),
+#uncmax(labels["w+jets"]["hists-prompt-pileup-jer-up"][mlg_index],labels["w+jets"]["hists-prompt-pileup"][mlg_index]),
 
 statuncmin(labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
 statuncmax(labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
@@ -5627,6 +5803,8 @@ statuncmin(labels["top+jets"]["hists"][mlg_index]),
 statuncmax(labels["top+jets"]["hists"][mlg_index]),
 statuncmin(labels["vv+jets"]["hists"][mlg_index]),
 statuncmax(labels["vv+jets"]["hists"][mlg_index]),
+statuncmin(labels["w+jets"]["hists-prompt-pileup"][mlg_index]),
+statuncmax(labels["w+jets"]["hists-prompt-pileup"][mlg_index]),
 statuncmin(fake_lepton["hists"][mlg_index]),
 statuncmax(fake_lepton["hists"][mlg_index]),
 statuncmin(fake_photon["hists"][mlg_index]),
@@ -5645,15 +5823,17 @@ uncmax(labels["zg+jets"]["hists-photon-id-sf-up"][mlg_index],labels["zg+jets"]["
 uncmin(labels["top+jets"]["hists-photon-id-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]),
 uncmax(labels["top+jets"]["hists-photon-id-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]),
 uncmin(labels["vv+jets"]["hists-photon-id-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
-uncmax(labels["vv+jets"]["hists-photon-id-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index])
+uncmax(labels["vv+jets"]["hists-photon-id-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
+uncmin(labels["w+jets"]["hists-prompt-pileup-photon-id-sf-up"][mlg_index],labels["w+jets"]["hists-prompt-pileup"][mlg_index]),
+uncmax(labels["w+jets"]["hists-prompt-pileup-photon-id-sf-up"][mlg_index],labels["w+jets"]["hists-prompt-pileup"][mlg_index])
 )
 
 if args.lep == "muon" or args.lep == "both":
-    print """muon ID & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & -  \\\\
+    print """muon ID & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & -  \\\\
 \\hline
-muon iso & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & -  \\\\
+muon iso & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & -  \\\\
 \\hline
-muon HLT & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & -  \\\\
+muon HLT & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & -  \\\\
 \\hline"""%(
         uncmin(labels["wg+jets"]["hists-pass-fiducial-muon-id-sf-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
         uncmax(labels["wg+jets"]["hists-pass-fiducial-muon-id-sf-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
@@ -5663,6 +5843,8 @@ muon HLT & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & -
         uncmax(labels["top+jets"]["hists-muon-id-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]),
         uncmin(labels["vv+jets"]["hists-muon-id-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
         uncmax(labels["vv+jets"]["hists-muon-id-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
+        uncmin(labels["w+jets"]["hists-prompt-pileup-muon-id-sf-up"][mlg_index],labels["w+jets"]["hists-prompt-pileup"][mlg_index]),
+        uncmax(labels["w+jets"]["hists-prompt-pileup-muon-id-sf-up"][mlg_index],labels["w+jets"]["hists-prompt-pileup"][mlg_index]),
 
         uncmin(labels["wg+jets"]["hists-pass-fiducial-muon-iso-sf-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
         uncmax(labels["wg+jets"]["hists-pass-fiducial-muon-iso-sf-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
@@ -5672,6 +5854,8 @@ muon HLT & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & -
         uncmax(labels["top+jets"]["hists-muon-iso-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]),
         uncmin(labels["vv+jets"]["hists-muon-iso-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
         uncmax(labels["vv+jets"]["hists-muon-iso-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
+        uncmin(labels["w+jets"]["hists-prompt-pileup-muon-iso-sf-up"][mlg_index],labels["w+jets"]["hists-prompt-pileup"][mlg_index]),
+        uncmax(labels["w+jets"]["hists-prompt-pileup-muon-iso-sf-up"][mlg_index],labels["w+jets"]["hists-prompt-pileup"][mlg_index]),
 
         uncmin(labels["wg+jets"]["hists-pass-fiducial-muon-hlt-sf-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
         uncmax(labels["wg+jets"]["hists-pass-fiducial-muon-hlt-sf-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
@@ -5680,14 +5864,16 @@ muon HLT & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & -
         uncmin(labels["top+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]),
         uncmax(labels["top+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]),
         uncmin(labels["vv+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
-        uncmax(labels["vv+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index])
+        uncmax(labels["vv+jets"]["hists-muon-hlt-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
+        uncmin(labels["w+jets"]["hists-prompt-pileup-muon-hlt-sf-up"][mlg_index],labels["w+jets"]["hists-prompt-pileup"][mlg_index]),
+        uncmax(labels["w+jets"]["hists-prompt-pileup-muon-hlt-sf-up"][mlg_index],labels["w+jets"]["hists-prompt-pileup"][mlg_index])
     )
 elif args.lep == "electron" or args.lep == "both":
-    print """electron reco & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & -  \\\\
+    print """electron reco & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & -  \\\\
 \\hline
-electron ID and iso & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & -  \\\\
+electron ID and iso & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & -  \\\\
 \\hline
-electron HLT & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & -  \\\\
+electron HLT & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & - & -  \\\\
 \\hline"""%(
         uncmin(labels["wg+jets"]["hists-pass-fiducial-electron-reco-sf-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
         uncmax(labels["wg+jets"]["hists-pass-fiducial-electron-reco-sf-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
@@ -5697,6 +5883,8 @@ electron HLT & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & -
         uncmax(labels["top+jets"]["hists-electron-reco-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]),
         uncmin(labels["vv+jets"]["hists-electron-reco-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
         uncmax(labels["vv+jets"]["hists-electron-reco-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
+        uncmin(labels["w+jets"]["hists-prompt-pileup-electron-reco-sf-up"][mlg_index],labels["w+jets"]["hists-prompt-pileup"][mlg_index]),
+        uncmax(labels["w+jets"]["hists-prompt-pileup-electron-reco-sf-up"][mlg_index],labels["w+jets"]["hists-prompt-pileup"][mlg_index]),
 
         uncmin(labels["wg+jets"]["hists-pass-fiducial-electron-id-sf-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
         uncmax(labels["wg+jets"]["hists-pass-fiducial-electron-id-sf-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
@@ -5706,6 +5894,8 @@ electron HLT & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & -
         uncmax(labels["top+jets"]["hists-electron-id-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]),
         uncmin(labels["vv+jets"]["hists-electron-id-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
         uncmax(labels["vv+jets"]["hists-electron-id-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
+        uncmin(labels["w+jets"]["hists-prompt-pileup-electron-id-sf-up"][mlg_index],labels["w+jets"]["hists-prompt-pileup"][mlg_index]),
+        uncmax(labels["w+jets"]["hists-prompt-pileup-electron-id-sf-up"][mlg_index],labels["w+jets"]["hists-prompt-pileup"][mlg_index]),
 
         uncmin(labels["wg+jets"]["hists-pass-fiducial-electron-hlt-sf-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
         uncmax(labels["wg+jets"]["hists-pass-fiducial-electron-hlt-sf-up"][mlg_index],labels["wg+jets"]["hists-pass-fiducial"][mlg_index]),
@@ -5714,7 +5904,9 @@ electron HLT & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & %0.2f-%0.2f & - & - & -
         uncmin(labels["top+jets"]["hists-electron-hlt-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]),
         uncmax(labels["top+jets"]["hists-electron-hlt-sf-up"][mlg_index],labels["top+jets"]["hists"][mlg_index]),
         uncmin(labels["vv+jets"]["hists-electron-hlt-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
-        uncmax(labels["vv+jets"]["hists-electron-hlt-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index])
+        uncmax(labels["vv+jets"]["hists-electron-hlt-sf-up"][mlg_index],labels["vv+jets"]["hists"][mlg_index]),
+        uncmin(labels["w+jets"]["hists-prompt-pileup-electron-hlt-sf-up"][mlg_index],labels["w+jets"]["hists-prompt-pileup"][mlg_index]),
+        uncmax(labels["w+jets"]["hists-prompt-pileup-electron-hlt-sf-up"][mlg_index],labels["w+jets"]["hists-prompt-pileup"][mlg_index])
     )
 else:
     assert(0)
