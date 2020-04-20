@@ -4796,35 +4796,33 @@ if args.make_datacard:
         assert(0)    
     dcard.write('\n')    
 
-    dcard.write("sigfakesubtraction shape1")
-    dcard.write(" -")
-    dcard.write(" -")
-
-    for label in labels.keys():
-        if label == "no label" or label == "wg+jets" or label == "w+jets":
-            continue
-        
-        if label == "zg+jets":
-            dcard.write(" -")
-        else:    
-            dcard.write(" -")
-    if "w+jets" in labels:
-        dcard.write(" -")
-    dcard.write(" -")
-    dcard.write(" 1.0")
-    dcard.write(" -")
-
-    for i in range(len(etopbinning)):
-        dcard.write(" -")
+#    dcard.write("sigfakesubtraction shape1")
 #    dcard.write(" -")
-    if args.lep == "muon":
-        pass
-    elif args.lep == "electron":
+#    dcard.write(" -")
+
+#    for label in labels.keys():
+#        if label == "no label" or label == "wg+jets" or label == "w+jets":
+#            continue
+#        
+#        if label == "zg+jets":
+#            dcard.write(" -")
+#        else:    
+#            dcard.write(" -")
+#    if "w+jets" in labels:
 #        dcard.write(" -")
-        pass
-    else:
-        assert(0)    
-    dcard.write('\n')    
+#    dcard.write(" -")
+#    dcard.write(" 1.0")
+#    dcard.write(" -")
+#
+#    for i in range(len(etopbinning)):
+#        dcard.write(" -")
+#    if args.lep == "muon":
+#        pass
+#    elif args.lep == "electron":
+#        pass
+#    else:
+#        assert(0)    
+#    dcard.write('\n')    
 
     dcard.write("* autoMCStats 0\n")
 
