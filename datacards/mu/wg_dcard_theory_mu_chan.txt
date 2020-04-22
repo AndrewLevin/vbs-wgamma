@@ -7,18 +7,19 @@ shapes topjets mu_chan wg_dcard_mu_chan_shapes.root topjets topjets_$SYSTEMATIC
 shapes zgjets mu_chan wg_dcard_mu_chan_shapes.root zgjets zgjets_$SYSTEMATIC
 shapes vvjets mu_chan wg_dcard_mu_chan_shapes.root vvjets vvjets_$SYSTEMATIC
 shapes Wg_out mu_chan wg_dcard_mu_chan_shapes.root wgout wgout_$SYSTEMATIC
+shapes pileup mu_chan wg_dcard_mu_chan_shapes.root pileup pileup_$SYSTEMATIC
 shapes fake_photon mu_chan wg_dcard_mu_chan_shapes.root fakephoton fakephoton_$SYSTEMATIC
 shapes fake_muon mu_chan wg_dcard_mu_chan_shapes.root fakemuon fakemuon_$SYSTEMATIC
 shapes double_fake mu_chan wg_dcard_mu_chan_shapes.root doublefake doublefake_$SYSTEMATIC
 shapes e_to_p_bin0 mu_chan wg_dcard_mu_chan_shapes.root etopbin0 etopbin0_$SYSTEMATIC
-Observation 369106.380355
-bin mu_chan mu_chan mu_chan mu_chan mu_chan mu_chan mu_chan mu_chan mu_chan
-process Wg Wg_out topjets zgjets vvjets fake_photon fake_muon double_fake e_to_p_bin0
-process 0 1 2 3 4 5 6 7 8
-rate 167320.934182 2694.35246519 22931.8744246 43403.9460773 2147.21563395 85394.7151269 17805.445023 19005.0763047 8402.82111662
-wgscale shape1 1.0 - - - - - - - -
-wgpdf shape1 1.0 - - - - - - - -
-wgoutscale shape1 - 1.0 - - - - - - -
-wgoutpdf shape1 - 1.0 - - - - - - -
-zgscale shape1 - - - 1.0 - - - - -
-zgpdf shape1 - - - 1.0 - - - - -
+Observation 369172.060613
+bin mu_chan mu_chan mu_chan mu_chan mu_chan mu_chan mu_chan mu_chan mu_chan mu_chan
+process Wg Wg_out topjets zgjets vvjets pileup fake_photon fake_muon double_fake e_to_p_bin0
+process 0 1 2 3 4 5 6 7 8 9
+rate 167320.934182 2694.35246519 22931.8744246 43403.9460773 2147.21563395 16093.9517264 84800.2499971 18481.7007131 18988.9660033 8402.82111662
+wgscale shape1 1.0 - - - - - - - - -
+wgpdf shape1 1.0 - - - - - - - - -
+wgoutscale shape1 - 1.0 - - - - - - - -
+wgoutpdf shape1 - 1.0 - - - - - - - -
+zgscale shape1 - - - 1.0 - - - - - -
+zgpdf shape1 - - - 1.0 - - - - - -

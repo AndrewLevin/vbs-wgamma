@@ -7,18 +7,19 @@ shapes topjets el_chan wg_dcard_el_chan_shapes.root topjets topjets_$SYSTEMATIC
 shapes zgjets el_chan wg_dcard_el_chan_shapes.root zgjets zgjets_$SYSTEMATIC
 shapes vvjets el_chan wg_dcard_el_chan_shapes.root vvjets vvjets_$SYSTEMATIC
 shapes Wg_out el_chan wg_dcard_el_chan_shapes.root wgout wgout_$SYSTEMATIC
+shapes pileup el_chan wg_dcard_el_chan_shapes.root pileup pileup_$SYSTEMATIC
 shapes fake_photon el_chan wg_dcard_el_chan_shapes.root fakephoton fakephoton_$SYSTEMATIC
 shapes fake_electron el_chan wg_dcard_el_chan_shapes.root fakeelectron fakeelectron_$SYSTEMATIC
 shapes double_fake el_chan wg_dcard_el_chan_shapes.root doublefake doublefake_$SYSTEMATIC
 shapes e_to_p_bin0 el_chan wg_dcard_el_chan_shapes.root etopbin0 etopbin0_$SYSTEMATIC
-Observation 401654.760547
-bin el_chan el_chan el_chan el_chan el_chan el_chan el_chan el_chan el_chan
-process Wg Wg_out topjets zgjets vvjets fake_photon fake_electron double_fake e_to_p_bin0
-process 0 1 2 3 4 5 6 7 8
-rate 98457.2578799 2288.01195347 15157.7626831 21404.6134081 1362.37588944 41356.4477742 18249.4297926 19479.4599064 183899.40126
-wgscale shape1 1.0 - - - - - - - -
-wgpdf shape1 1.0 - - - - - - - -
-wgoutscale shape1 - 1.0 - - - - - - -
-wgoutpdf shape1 - 1.0 - - - - - - -
-zgscale shape1 - - - 1.0 - - - - -
-zgpdf shape1 - - - 1.0 - - - - -
+Observation 112721.83061
+bin el_chan el_chan el_chan el_chan el_chan el_chan el_chan el_chan el_chan el_chan
+process Wg Wg_out topjets zgjets vvjets pileup fake_photon fake_electron double_fake e_to_p_bin0
+process 0 1 2 3 4 5 6 7 8 9
+rate 51659.971076 1196.51962548 8837.22227416 4264.12642646 704.567673185 8930.83855904 19188.7611615 11800.8418639 7930.72117227 7139.09933738
+wgscale shape1 1.0 - - - - - - - - -
+wgpdf shape1 1.0 - - - - - - - - -
+wgoutscale shape1 - 1.0 - - - - - - - -
+wgoutpdf shape1 - 1.0 - - - - - - - -
+zgscale shape1 - - - 1.0 - - - - - -
+zgpdf shape1 - - - 1.0 - - - - - -
