@@ -14,47 +14,47 @@ n_weighted_mg5amc = mg5amc_wgjets_file.Get("nEventsGenWeighted").GetBinContent(1
 
 mg5amc_nlo_fiducial_xs = mg5amc_nlo_xs*n_weighted_mg5amc_pass_fid_selection/n_weighted_mg5amc
 
-#text2hdf5.py ~/wg/wg_dcard_theory_exp.txt 
-#combinetf.py ~/wg/wg_dcard_theory_exp.hdf5 --useSciPyMinimizer -t -1 --expectSignal=1 --binByBinStat
-#text2hdf5.py ~/wg/wg_dcard_theory.txt
-#combinetf.py ~/wg/wg_dcard_theory.hdf5 --useSciPyMinimizer -t -1 --expectSignal=1 
-#text2hdf5.py ~/wg/wg_dcard_exp.txt
-#combinetf.py ~/wg/wg_dcard_exp.hdf5 --useSciPyMinimizer -t -1 --expectSignal=1 --binByBinStat
-#text2hdf5.py ~/wg/wg_dcard_theory_exp.txt -S 0 
-#combinetf.py ~/wg/wg_dcard_theory_exp.hdf5 --useSciPyMinimizer -t -1 --expectSignal=1 
+#text2hdf5.py ~/wg/datacards/el_mu/wg_dcard_theory_exp.txt -o wg_dcard_theory_exp.hdf5
+#combinetf.py wg_dcard_theory_exp.hdf5 --useSciPyMinimizer -t -1 --expectSignal=1 --binByBinStat
+#text2hdf5.py ~/wg/datacards/el_mu/wg_dcard_theory.txt -o wg_dcard_theory.hdf5 
+#combinetf.py wg_dcard_theory.hdf5 --useSciPyMinimizer -t -1 --expectSignal=1 
+#text2hdf5.py ~/wg/datacards/el_mu/wg_dcard_exp.txt -o wg_dcard_exp.hdf5
+#combinetf.py el_mu/wg_dcard_exp.hdf5 --useSciPyMinimizer -t -1 --expectSignal=1 --binByBinStat
+#text2hdf5.py ~/wg/datacards/el_mu/wg_dcard_theory_exp.txt -S 0 -o wg_dcard_no_syst.hdf5
+#combinetf.py wg_dcard_no_syst.hdf5 --useSciPyMinimizer -t -1 --expectSignal=1 
 rexp = 1  
-rexpunc = 0.039546
-rexptheoryunc = 0.006748
-rexpexpunc = 0.038928
-rexpnosystunc = 0.002961
+rexpunc = 0.055183
+rexptheoryunc = 0.007275
+rexpexpunc = 0.054637
+rexpnosystunc = 0.003219
 
-#text2hdf5.py ~/wg/wg_dcard_theory_exp_el_chan.txt
-#combinetf.py ~/wg/wg_dcard_theory_exp_el_chan.hdf5 --useSciPyMinimizer -t -1 --expectSignal=1 --binByBinStat
-#text2hdf5.py ~/wg/wg_dcard_theory_el_chan.txt
-#combinetf.py ~/wg/wg_dcard_theory_el_chan.hdf5 --useSciPyMinimizer -t -1 --expectSignal=1
-#text2hdf5.py ~/wg/wg_dcard_exp_el_chan.txt 
-#combinetf.py ~/wg/wg_dcard_exp_el_chan.hdf5 --useSciPyMinimizer -t -1 --expectSignal=1 --binByBinStat
-#text2hdf5.py ~/wg/wg_dcard_theory_exp_el_chan.txt -S 0 
-#combinetf.py ~/wg/wg_dcard_theory_exp_el_chan.hdf5 --useSciPyMinimizer -t -1 --expectSignal=1
+#text2hdf5.py ~/wg/datacards/el/wg_dcard_theory_exp_el_chan.txt -o wg_dcard_theory_exp_el_chan.hdf5
+#combinetf.py wg_dcard_theory_exp_el_chan.hdf5 --useSciPyMinimizer -t -1 --expectSignal=1 --binByBinStat
+#text2hdf5.py ~/wg/datacards/el/wg_dcard_theory_el_chan.txt -o wg_dcard_theory_el_chan.hdf5
+#combinetf.py wg_dcard_theory_el_chan.hdf5 --useSciPyMinimizer -t -1 --expectSignal=1
+#text2hdf5.py ~/wg/datacards/el/wg_dcard_exp_el_chan.txt -o wg_dcard_exp_el_chan.hdf5
+#combinetf.py wg_dcard_exp_el_chan.hdf5 --useSciPyMinimizer -t -1 --expectSignal=1 --binByBinStat
+#text2hdf5.py ~/wg/datacards/el/wg_dcard_theory_exp_el_chan.txt -S 0  -o wg_dcard_no_syst_el_chan.hdf 
+#combinetf.py wg_dcard_no_syst_el_chan.hdf5 --useSciPyMinimizer -t -1 --expectSignal=1
 rexpelectron = 1  
-rexpelectronunc = 0.062047
-rexpelectrontheoryunc = 0.011856
-rexpelectronexpunc = 0.059980
-rexpelectronnosystunc = 0.005243
+rexpelectronunc = 0.099369
+rexpelectrontheoryunc = 0.014500
+rexpelectronexpunc = 0.098231
+rexpelectronnosystunc = 0.006727
 
-#text2hdf5.py ~/wg/wg_dcard_theory_exp_mu_chan.txt 
-#combinetf.py ~/wg/wg_dcard_theory_exp_mu_chan.hdf5 --useSciPyMinimizer -t -1 --expectSignal=1 --binByBinStat
-#text2hdf5.py ~/wg/wg_dcard_theory_mu_chan.txt
-#combinetf.py ~/wg/wg_dcard_theory_mu_chan.hdf5 --useSciPyMinimizer -t -1 --expectSignal=1
-#text2hdf5.py ~/wg/wg_dcard_exp_mu_chan.txt 
-#combinetf.py ~/wg/wg_dcard_exp_mu_chan.hdf5 --useSciPyMinimizer -t -1 --expectSignal=1 --binByBinStat
-#text2hdf5.py ~/wg/wg_dcard_theory_exp_mu_chan.txt -S 0 
-#combinetf.py ~/wg/wg_dcard_theory_exp_mu_chan.hdf5 --useSciPyMinimizer -t -1 --expectSignal=1
+#text2hdf5.py ~/wg/datacards/mu/wg_dcard_theory_exp_mu_chan.txt -o wg_dcard_theory_exp_mu_chan.hdf5
+#combinetf.py wg_dcard_theory_exp_mu_chan.hdf5 --useSciPyMinimizer -t -1 --expectSignal=1 --binByBinStat
+#text2hdf5.py ~/wg/datacards/mu/wg_dcard_theory_mu_chan.txt -o wg_dcard_theory_mu_chan.hdf5
+#combinetf.py wg_dcard_theory_mu_chan.hdf5 --useSciPyMinimizer -t -1 --expectSignal=1
+#text2hdf5.py ~/wg/datacards/mu/wg_dcard_exp_mu_chan.txt -o wg_dcard_exp_mu_chan.hdf5
+#combinetf.py wg_dcard_exp_mu_chan.hdf5 --useSciPyMinimizer -t -1 --expectSignal=1 --binByBinStat
+#text2hdf5.py ~/wg/datacards/mu/wg_dcard_theory_exp_mu_chan.txt -S 0 -o wg_dcard_no_syst_mu_chan.hdf5
+#combinetf.py wg_dcard_no_syst_mu_chan.hdf5 --useSciPyMinimizer -t -1 --expectSignal=1
 rexpmuon = 1  
-rexpmuonunc = 0.047604
-rexpmuontheoryunc = 0.008272 
-rexpmuonexpunc = 0.046550
-rexpmuonnosystunc = 0.003587
+rexpmuonunc = 0.059571
+rexpmuontheoryunc = 0.008407
+rexpmuonexpunc = 0.058747
+rexpmuonnosystunc = 0.003664
 
 print "xs = %0.2f +/- %0.2f"%(mg5amc_nlo_fiducial_xs * rexp,mg5amc_nlo_fiducial_xs * rexpunc)
 
