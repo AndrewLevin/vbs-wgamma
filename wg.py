@@ -210,8 +210,10 @@ mlg_bin_width=2
 #variables_labels = ["ewdim6_photon_pt","dphilg","met","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","lepton_phi","photon_phi","njets40","mt","npvs","drlg"]
 
 if args.make_all_plots:
-    variables = ["photon_pt_overflow","detalg","dphilpuppimet","dphilg","puppimet","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","mlg_overflow","lepton_phi","photon_phi","njets40","mt","puppimt","npvs","drlg","photon_pt","met","photon_recoil","dphigpuppimet","puppimetphi","mlg","mlg","mlg","mlg","mlg","mlg","mlg","photon_pt","photon_pt"]
-    variables_labels = ["ewdim6_photon_pt","detalg","dphilpuppimet","dphilg","puppimet","lepton_pt","lepton_eta","photon_pt","photon_eta","fit_mlg","mlg","lepton_phi","photon_phi","njets40","mt","puppimt","npvs","drlg","photon_pt_20to180","met","photon_recoil","dphigpuppimet","puppimetphi","mlg_large_bins","mlg_3bins","mlg_1bin","mlg_10bins","mlg_15bins","mlg_6bins","mlg_variable_binning","photon_pt","photon_pt"]
+#    variables = ["photon_pt_overflow","detalg","dphilpuppimet","dphilg","puppimet","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","mlg_overflow","lepton_phi","photon_phi","njets40","mt","puppimt","npvs","drlg","photon_pt","met","photon_recoil","dphigpuppimet","puppimetphi","mlg","mlg","mlg","mlg","mlg","mlg","mlg","photon_pt","photon_pt"]
+#    variables_labels = ["ewdim6_photon_pt","detalg","dphilpuppimet","dphilg","puppimet","lepton_pt","lepton_eta","photon_pt","photon_eta","fit_mlg","mlg","lepton_phi","photon_phi","njets40","mt","puppimt","npvs","drlg","photon_pt_20to180","met","photon_recoil","dphigpuppimet","puppimetphi","mlg_large_bins","mlg_3bins","mlg_1bin","mlg_10bins","mlg_15bins","mlg_6bins","mlg_variable_binning","photon_pt","photon_pt"]
+    variables = ["photon_pt_overflow","detalg","dphilpuppimet","dphilg","puppimet","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","mlg_overflow","lepton_phi","photon_phi","njets40","puppimt","npvs","drlg","photon_pt","dphigpuppimet","puppimetphi","mlg","mlg","mlg","mlg"]
+    variables_labels = ["ewdim6_photon_pt","detalg","dphilpuppimet","dphilg","puppimet","lepton_pt","lepton_eta","photon_pt","photon_eta","fit_mlg","mlg","lepton_phi","photon_phi","njets40","puppimt","npvs","drlg","photon_pt_20to180","dphigpuppimet","puppimetphi","mlg_3bins","mlg_10bins","mlg_15bins","mlg_6bins"]
 else:
 #    variables = ["mlg_overflow"]
     variables = ["mlg"]
@@ -266,24 +268,24 @@ if args.make_all_plots:
         ROOT.RDF.TH1DModel("lepton_phi","",56,-3.5,3.5), 
         ROOT.RDF.TH1DModel("photon_phi","",56,-3.5,3.5), 
         ROOT.RDF.TH1DModel("","",7,-0.5,6.5), #njets40
-        ROOT.RDF.TH1DModel("mt","",10,0,200), 
+#        ROOT.RDF.TH1DModel("mt","",10,0,200), 
         ROOT.RDF.TH1DModel("puppimt","",40,40,200), 
         ROOT.RDF.TH1DModel("npvs","",51,-0.5,50.5), 
         ROOT.RDF.TH1DModel("","",50,0,5), #drlg
         ROOT.RDF.TH1DModel('photon_pt', '', 48, 20., 180 ),
-        ROOT.RDF.TH1DModel("met", "", 15 , 0., 300 ),
-        ROOT.RDF.TH1DModel('photon_recoil', '', 20, -70., 130 ),
+#        ROOT.RDF.TH1DModel("met", "", 15 , 0., 300 ),
+#        ROOT.RDF.TH1DModel('photon_recoil', '', 20, -70., 130 ),
         ROOT.RDF.TH1DModel('','',48,0,pi), #dphigmet
         ROOT.RDF.TH1DModel("","",56,-3.5,3.5), #puppimetphi
-        ROOT.RDF.TH1DModel("mlg","",30,0,300), #mlg
+#        ROOT.RDF.TH1DModel("mlg","",30,0,300), #mlg
         ROOT.RDF.TH1DModel("mlg","",3,0,300), #mlg
-        ROOT.RDF.TH1DModel("mlg","",1,0,300), #mlg
+#        ROOT.RDF.TH1DModel("mlg","",1,0,300), #mlg
         ROOT.RDF.TH1DModel("mlg","",10,0,300), #mlg
         ROOT.RDF.TH1DModel("mlg","",15,0,300), #mlg
         ROOT.RDF.TH1DModel("mlg","",6,0,300), #mlg
-        ROOT.RDF.TH1DModel('', '', len(binning_mlg) - 1, binning_mlg ), #variable mlg binning,
-        ROOT.RDF.TH1DModel('photon_pt', '', 40, 100., 400 ),
-        ROOT.RDF.TH1DModel('photon_pt', '', 10, 300., 400 ),
+#        ROOT.RDF.TH1DModel('', '', len(binning_mlg) - 1, binning_mlg ), #variable mlg binning,
+#        ROOT.RDF.TH1DModel('photon_pt', '', 40, 100., 400 ),
+#        ROOT.RDF.TH1DModel('photon_pt', '', 10, 300., 400 ),
 ] 
 else:
     histogram_models = [
