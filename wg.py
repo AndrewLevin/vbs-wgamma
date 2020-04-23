@@ -212,8 +212,8 @@ mlg_bin_width=2
 if args.make_all_plots:
 #    variables = ["photon_pt_overflow","detalg","dphilpuppimet","dphilg","puppimet","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","mlg_overflow","lepton_phi","photon_phi","njets40","mt","puppimt","npvs","drlg","photon_pt","met","photon_recoil","dphigpuppimet","puppimetphi","mlg","mlg","mlg","mlg","mlg","mlg","mlg","photon_pt","photon_pt"]
 #    variables_labels = ["ewdim6_photon_pt","detalg","dphilpuppimet","dphilg","puppimet","lepton_pt","lepton_eta","photon_pt","photon_eta","fit_mlg","mlg","lepton_phi","photon_phi","njets40","mt","puppimt","npvs","drlg","photon_pt_20to180","met","photon_recoil","dphigpuppimet","puppimetphi","mlg_large_bins","mlg_3bins","mlg_1bin","mlg_10bins","mlg_15bins","mlg_6bins","mlg_variable_binning","photon_pt","photon_pt"]
-    variables = ["photon_pt_overflow","detalg","dphilpuppimet","dphilg","puppimet","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","mlg_overflow","lepton_phi","photon_phi","njets40","puppimt","npvs","drlg","photon_pt","dphigpuppimet","puppimetphi","mlg","mlg","mlg","mlg"]
-    variables_labels = ["ewdim6_photon_pt","detalg","dphilpuppimet","dphilg","puppimet","lepton_pt","lepton_eta","photon_pt","photon_eta","fit_mlg","mlg","lepton_phi","photon_phi","njets40","puppimt","npvs","drlg","photon_pt_20to180","dphigpuppimet","puppimetphi","mlg_3bins","mlg_10bins","mlg_15bins","mlg_6bins"]
+    variables = ["photon_pt_overflow","detalg","dphilpuppimet","dphilg","puppimet","lepton_pt","lepton_eta","photon_eta","mlg","lepton_phi","photon_phi","njets40","puppimt","npvs","drlg","photon_pt","dphigpuppimet","puppimetphi","mlg","mlg","mlg","mlg"]
+    variables_labels = ["ewdim6_photon_pt","detalg","dphilpuppimet","dphilg","puppimet","lepton_pt","lepton_eta","photon_eta","fit_mlg","lepton_phi","photon_phi","njets40","puppimt","npvs","drlg","photon_pt_20to180","dphigpuppimet","puppimetphi","mlg_3bins","mlg_10bins","mlg_15bins","mlg_6bins"]
 else:
 #    variables = ["mlg_overflow"]
     variables = ["mlg"]
@@ -260,11 +260,11 @@ if args.make_all_plots:
         ROOT.RDF.TH1DModel("met", "", 40, 40., 200 ), 
         ROOT.RDF.TH1DModel('lepton_pt', '', 48, 20., 180 ), 
         ROOT.RDF.TH1DModel('lepton_eta', '', 50, -2.5, 2.5 ),
-        ROOT.RDF.TH1DModel('', '', n_photon_pt_bins, binning_photon_pt ), 
+#        ROOT.RDF.TH1DModel('', '', n_photon_pt_bins, binning_photon_pt ), 
         ROOT.RDF.TH1DModel('photon_eta', '', 50, -2.5, 2.5 ), 
         #ROOT.RDF.TH1DModel("mlg","",mlg_fit_upper_bound/2,0,mlg_fit_upper_bound), 
         ROOT.RDF.TH1DModel("mlg","",(mlg_fit_upper_bound-mlg_fit_lower_bound)/mlg_bin_width,mlg_fit_lower_bound,mlg_fit_upper_bound),  
-        ROOT.RDF.TH1DModel("mlg","",(mlg_fit_upper_bound-mlg_fit_lower_bound+mlg_bin_width)/mlg_bin_width,mlg_fit_lower_bound,mlg_fit_upper_bound+mlg_bin_width), 
+#        ROOT.RDF.TH1DModel("mlg","",(mlg_fit_upper_bound-mlg_fit_lower_bound+mlg_bin_width)/mlg_bin_width,mlg_fit_lower_bound,mlg_fit_upper_bound+mlg_bin_width), 
         ROOT.RDF.TH1DModel("lepton_phi","",56,-3.5,3.5), 
         ROOT.RDF.TH1DModel("photon_phi","",56,-3.5,3.5), 
         ROOT.RDF.TH1DModel("","",7,-0.5,6.5), #njets40
@@ -2313,7 +2313,8 @@ for year in years:
             if  label != "w+jets":
                 rinterface = rdf.Filter(get_filter_string(year,isdata=False))
             else:    
-                rinterface = rdf.Filter(get_filter_string(year,isdata=True,lep="both"))
+#                rinterface = rdf.Filter(get_filter_string(year,isdata=True,lep="both"))
+                rinterface = rdf.Filter(get_filter_string(year,isdata=True))
 
             rinterface = rinterface.Define("xs_weight",str(sample["xs"]*1000*lumi/sample["nweightedevents"]) + "*gen_weight/abs(gen_weight)") 
 
