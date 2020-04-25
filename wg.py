@@ -2839,15 +2839,17 @@ for year in years:
             import itertools
 
             try:
-                res = pool.map_async(processMCSampleStar, itertools.izip([1]))
+                res = pool.map_async(processMCSampleStar, itertools.izip([None]))
                 results = res.get(10000)[0]
             except Exception as e:
-                print("Caught Exception %s, terminating workers"%(str(e)))
+                print "Exception:"
+                print e
                 pool.terminate()
                 sys.exit(0)
-            except: # catch *all* exceptions
+            except:
                 e = sys.exc_info()[0]
-                print("Caught non-Python Exception %s"%(e))
+                print "exception:"
+                print e
                 pool.terminate()
                 sys.exit(0)
             else:    
