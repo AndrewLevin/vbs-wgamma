@@ -210,12 +210,16 @@ mlg_bin_width=2
 #variables_labels = ["ewdim6_photon_pt","dphilg","met","lepton_pt","lepton_eta","photon_pt","photon_eta","mlg","lepton_phi","photon_phi","njets40","mt","npvs","drlg"]
 
 if args.make_all_plots:
-    variables = ["photon_pt_overflow","detalg","dphilpuppimet","dphilg","puppimet","lepton_pt","lepton_eta","photon_eta","mlg","mlg_overflow","lepton_phi","photon_phi","njets40","puppimt","npvs","drlg","photon_pt","dphigpuppimet","puppimetphi","mlg","mlg","mlg","mlg","mlg","mlg"]
-    variables_labels = ["ewdim6_photon_pt","detalg","dphilpuppimet","dphilg","puppimet","lepton_pt","lepton_eta","photon_eta","fit_mlg","mlg","lepton_phi","photon_phi","njets40","puppimt","npvs","drlg","photon_pt","dphigpuppimet","puppimetphi","mlg_large_bins","mlg_3bins","mlg_1bin","mlg_10bins","mlg_15bins","mlg_6bins"]
+    variables = ["detalg","dphilpuppimet","dphilg","puppimet","lepton_pt","lepton_eta","photon_eta","mlg","mlg_overflow","lepton_phi","photon_phi","njets40","puppimt","npvs","drlg","photon_pt","dphigpuppimet","puppimetphi","mlg","mlg","mlg","mlg","mlg","mlg"]
+    variables_labels = ["detalg","dphilpuppimet","dphilg","puppimet","lepton_pt","lepton_eta","photon_eta","fit_mlg","mlg","lepton_phi","photon_phi","njets40","puppimt","npvs","drlg","photon_pt","dphigpuppimet","puppimetphi","mlg_large_bins","mlg_3bins","mlg_1bin","mlg_10bins","mlg_15bins","mlg_6bins"]
 else:
 #    variables = ["mlg_overflow"]
     variables = ["mlg"]
     variables_labels = ["fit_mlg"]
+
+if args.ewdim6:
+    variables.append("photon_pt_overflow")
+    variables_labels.append("ewdim6_photon_pt")
 
 assert(len(variables) == len(variables_labels))
 
@@ -241,7 +245,6 @@ if args.make_all_plots:
         ["dphilg" , "abs(lepton_phi - photon_phi) > TMath::Pi() ? abs(abs(lepton_phi - photon_phi) - 2*TMath::Pi()) : abs(lepton_phi - photon_phi)"],
         ["drlg" , "sqrt(dphilg*dphilg+detalg*detalg)" ],
 #        ["photon_recoil","cos(photon_phi)*(-lepton_pt*cos(lepton_phi)-puppimet*cos(puppimetphi)) + sin(photon_phi)*(-lepton_pt*sin(lepton_phi) -puppimet*sin(puppimetphi))"],
-        ["photon_pt_overflow","TMath::Min(float(photon_pt),float("+str(   (binning_photon_pt[n_photon_pt_bins] + binning_photon_pt[n_photon_pt_bins-1])/2) +"))"  ],
         ["mlg_overflow","TMath::Min(float(mlg),float("+str(mlg_fit_upper_bound+mlg_bin_width/2.)+"))"]
     ]
 else:
@@ -249,9 +252,12 @@ else:
 #        ["mlg_overflow","TMath::Min(float(mlg),float("+str(mlg_fit_upper_bound+mlg_bin_width/2.)+"))"],
 ]
 
+if args.ewdim6:
+    variable_definitions.append(["photon_pt_overflow","TMath::Min(float(photon_pt),float("+str(   (binning_photon_pt[n_photon_pt_bins] + binning_photon_pt[n_photon_pt_bins-1])/2) +"))"])
+
+
 if args.make_all_plots:
     histogram_models = [
-        ROOT.RDF.TH1DModel('', '', n_photon_pt_bins, binning_photon_pt ),
         ROOT.RDF.TH1DModel('','',50,0,5), #detalg
         ROOT.RDF.TH1DModel('','',48,0,pi), #dphilmet
         ROOT.RDF.TH1DModel('','',12,0,pi), #dphilg
@@ -291,13 +297,17 @@ else:
 #        ROOT.RDF.TH1DModel("mlg","",(mlg_fit_upper_bound-mlg_fit_lower_bound+mlg_bin_width)/mlg_bin_width,mlg_fit_lower_bound,mlg_fit_upper_bound+mlg_bin_width), 
     ]
 
+if args.ewdim6:
+    histogram_models.append(ROOT.RDF.TH1DModel('', '', n_photon_pt_bins, binning_photon_pt ))
+
 assert(len(variables) == len(histogram_models))
 
 if args.make_all_plots:
     mlg_index = 8
 else:
     mlg_index = 0
-#mlg_index = 29
+
+ewdim6_index = len(histogram_models)-1
 
 ewdim6_samples = {
 "2016" : [{"xs" : 5.248, "filename" : args.workdir+"/data/wg/2016/1June2019/wgjetsewdim6.root"}],
@@ -1756,12 +1766,6 @@ ROOT.gInterpreter.Declare(fake_lepton_weight_cpp)
 ROOT.gInterpreter.Declare(fake_photon_weight_cpp)
 ROOT.gInterpreter.Declare(eff_scale_factor_cpp)
 
-
-
-#ewdim6_index = 31
-#ewdim6_index = 30
-ewdim6_index = 0
-
 if args.ewdim6:
 
     sm_lhe_weight = 0
@@ -1881,23 +1885,23 @@ if args.ewdim6:
 
         for i in range(len(cwww_reweights)):
             rinterface = rinterface.Define("cwww_weight_"+str(i),"weight*LHEReweightingWeight["+str(cwww_reweights[i])+"]")
-            rresultptrs_cwww.append(rinterface.Histo1D(histogram_models[0],variables[0],"cwww_weight_"+str(i)))
+            rresultptrs_cwww.append(rinterface.Histo1D(histogram_models[ewdim6_index],variables[ewdim6_index],"cwww_weight_"+str(i)))
             
         for i in range(len(cw_reweights)):
             rinterface = rinterface.Define("cw_weight_"+str(i),"weight*LHEReweightingWeight["+str(cw_reweights[i])+"]")
-            rresultptrs_cw.append(rinterface.Histo1D(histogram_models[0],variables[0],"cw_weight_"+str(i)))
+            rresultptrs_cw.append(rinterface.Histo1D(histogram_models[ewdim6_index],variables[ewdim6_index],"cw_weight_"+str(i)))
 
         for i in range(len(cb_reweights)):
             rinterface = rinterface.Define("cb_weight_"+str(i),"weight*LHEReweightingWeight["+str(cb_reweights[i])+"]")
-            rresultptrs_cb.append(rinterface.Histo1D(histogram_models[0],variables[0],"cb_weight_"+str(i)))
+            rresultptrs_cb.append(rinterface.Histo1D(histogram_models[ewdim6_index],variables[ewdim6_index],"cb_weight_"+str(i)))
 
         for i in range(len(cpwww_reweights)):
             rinterface = rinterface.Define("cpwww_weight_"+str(i),"weight*LHEReweightingWeight["+str(cpwww_reweights[i])+"]")
-            rresultptrs_cpwww.append(rinterface.Histo1D(histogram_models[0],variables[0],"cpwww_weight_"+str(i)))
+            rresultptrs_cpwww.append(rinterface.Histo1D(histogram_models[ewdim6_index],variables[ewdim6_index],"cpwww_weight_"+str(i)))
 
         for i in range(len(cpw_reweights)):
             rinterface = rinterface.Define("cpw_weight_"+str(i),"weight*LHEReweightingWeight["+str(cpw_reweights[i])+"]")
-            rresultptrs_cpw.append(rinterface.Histo1D(histogram_models[0],variables[0],"cpw_weight_"+str(i)))
+            rresultptrs_cpw.append(rinterface.Histo1D(histogram_models[ewdim6_index],variables[ewdim6_index],"cpw_weight_"+str(i)))
 
         rinterface = rinterface.Define("sm_weight","weight*LHEReweightingWeight["+str(sm_lhe_weight)+"]")
         rresultptr_sm = rinterface.Histo1D(histogram_models[ewdim6_index],variables[ewdim6_index],"sm_weight")
