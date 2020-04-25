@@ -2050,8 +2050,6 @@ data_mlg_tree.Branch('m',array_data_mlg,'m/F')
 
 for year in years:
 
-    continue
-
     if year == "2016":
         lumi=35.9
     elif year == "2017":
