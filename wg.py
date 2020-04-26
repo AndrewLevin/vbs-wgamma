@@ -3911,11 +3911,11 @@ for i in range(len(variables)):
 
     if data["hists"][i].GetMaximum() < hsum.GetMaximum():
         data["hists"][i].SetMaximum(hsum.GetMaximum()*1.55)
-#        data["hists"][i].SetMaximum(hsum.GetMaximum()*2.55)
     else:
         data["hists"][i].SetMaximum(data["hists"][i].GetMaximum()*1.55)
-#        data["hists"][i].SetMaximum(data["hists"][i].GetMaximum()*2.55)
-        
+
+    hstack.SetMaximum(hsum.GetMaximum()*1.55)        
+    hsum.SetMaximum(hsum.GetMaximum()*1.55)        
 
     data["hists"][i].SetMinimum(0)
     hstack.SetMinimum(0)
@@ -4022,7 +4022,8 @@ for i in range(len(variables)):
     gstat.SetLineColor(ROOT.kWhite);
     gstat.Draw("E2same");
 
-    data["hists"][i].Draw("same")
+    if variables[i] != "photon_pt_overflow":
+        data["hists"][i].Draw("same")
 
     c1.Update()
     c1.ForceUpdate()
