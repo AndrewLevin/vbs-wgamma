@@ -2077,6 +2077,9 @@ def processMCSample(dummy):
 #                rinterface = rinterface.Define("wjets_fake_photon_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_wjets_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id)*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0")
         rinterface_wjets_2016 = rinterface_wjets_2016.Define("wjets_fake_photon_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 1 && is_lepton_real == 1 && !(photon_gen_matching == 1|| photon_gen_matching == 4 || photon_gen_matching == 5 || photon_gen_matching == 6) ? get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,\"wjets\")*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0")
         rinterface_wjets_2016 = rinterface_wjets_2016.Define("wjets_chiso_fake_photon_weight","photon_selection == 3 && ((abs(photon_eta) < 1.5 && photon_pfRelIso03_chg*photon_pt < "+str(chiso_cut_barrel)+"*1.75) || (abs(photon_eta) > 1.5 && photon_pfRelIso03_chg*photon_pt < "+str(chiso_cut_endcap)+"*1.75)) && is_lepton_tight == 1 && is_lepton_real == 1 && !(photon_gen_matching == 1|| photon_gen_matching == 4 || photon_gen_matching == 5 || photon_gen_matching == 6) ? get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,\"wjets_chiso\")*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0")
+        for variable_definition in variable_definitions:
+            rinterface_wjets_2016 = rinterface_wjets_2016.Define(variable_definition[0],variable_definition[1])
+
 
     if sample["e_to_p"] or sample["e_to_p_non_res"]:
         for i in range(len(etopbinning)):
@@ -3722,7 +3725,7 @@ if "wg+jets" in labels:
 if args.draw_ewdim6:
     for i in range(1,n_photon_pt_bins+1):
         #hardcoded to use bin 6 of the scaling histogram for now 
-        ewdim6["hists"][0].SetBinContent(i,cb_scaling_hists[i].GetBinContent(7)*labels["wg+jets"]["hists"][0].GetBinContent(i))
+        ewdim6["hists"][ewdim6_index].SetBinContent(i,cb_scaling_hists[i].GetBinContent(7)*labels["wg+jets"]["hists"][ewdim6_index].GetBinContent(i))
 
 for i in range(len(variables)):
     if args.float_sig_fake_cont:
@@ -3918,9 +3921,11 @@ for i in range(len(variables)):
     hstack.SetMinimum(0)
     hsum.SetMinimum(0)
 
-    data["hists"][i].Draw("")
-
-    hstack.Draw("hist same")
+    if variables[i] == "photon_pt_overflow":
+        hstack.Draw("hist")
+    else:
+        data["hists"][i].Draw("")
+        hstack.Draw("hist same")
 
     if args.draw_ewdim6:
         ewdim6["hists"][i].Print("all")
