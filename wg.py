@@ -1209,26 +1209,62 @@ wjets_pileup_photons_flags_cpp = '''
 bool is_photon_prompt(int lumi,int event, string year, string dsetversion) {
 
     if (year == "2016" && dsetversion == "v1") {
+
+        if (wjets_2016v1_prompt_pileup_photon_map.find(std::make_pair(lumi,event)) == wjets_2016v1_prompt_pileup_photon_map.end()){
+            std::cout << "(lumi,event) = (" << lumi << "," << event << ") not in map" << std::endl;
+            exit(1);
+        }
+
         if (wjets_2016v1_prompt_pileup_photon_map[std::make_pair(lumi,event)])
             return true;
     }
     else if (year == "2016" && dsetversion == "v2") {
+
+        if (wjets_2016v2_prompt_pileup_photon_map.find(std::make_pair(lumi,event)) == wjets_2016v2_prompt_pileup_photon_map.end()){
+            std::cout << "(lumi,event) = (" << lumi << "," << event << ") not in map" << std::endl;
+            exit(1);
+        }
+
         if (wjets_2016v2_prompt_pileup_photon_map[std::make_pair(lumi,event)])
             return true;
     }
     else if (year == "2017" && dsetversion == "v1") {
+
+        if (wjets_2017v1_prompt_pileup_photon_map.find(std::make_pair(lumi,event)) == wjets_2017v1_prompt_pileup_photon_map.end()){
+            std::cout << "(lumi,event) = (" << lumi << "," << event << ") not in map" << std::endl;
+            exit(1);
+        }
+
         if (wjets_2017v1_prompt_pileup_photon_map[std::make_pair(lumi,event)])
             return true;
     }
     else if (year == "2017" && dsetversion == "v2") {
+
+        if (wjets_2017v2_prompt_pileup_photon_map.find(std::make_pair(lumi,event)) == wjets_2017v2_prompt_pileup_photon_map.end()){
+            std::cout << "(lumi,event) = (" << lumi << "," << event << ") not in map" << std::endl;
+            exit(1);
+        }
+
         if (wjets_2017v2_prompt_pileup_photon_map[std::make_pair(lumi,event)])
             return true;
     }
     else if (year == "2017" && dsetversion == "v3") {
+
+        if (wjets_2017v3_prompt_pileup_photon_map.find(std::make_pair(lumi,event)) == wjets_2017v3_prompt_pileup_photon_map.end()){
+            std::cout << "(lumi,event) = (" << lumi << "," << event << ") not in map" << std::endl;
+            exit(1);
+        }
+
         if (wjets_2017v3_prompt_pileup_photon_map[std::make_pair(lumi,event)])
             return true;
     }
     else if (year == "2018" && dsetversion == "") {
+
+        if (wjets_2018_prompt_pileup_photon_map.find(std::make_pair(lumi,event)) == wjets_2018_prompt_pileup_photon_map.end()){
+            std::cout << "(lumi,event) = (" << lumi << "," << event << ") not in map" << std::endl;
+            exit(1);
+        }
+
         if (wjets_2018_prompt_pileup_photon_map[std::make_pair(lumi,event)])
             return true;
     }
@@ -1788,7 +1824,8 @@ def processMCSample(dummy):
         pass
         if photon_gen_matching_cutstring != "(":
             photon_gen_matching_cutstring += " || "
-        photon_gen_matching_cutstring+="(!(photon_gen_matching == 1 || photon_gen_matching == 4 || photon_gen_matching == 5 || photon_gen_matching == 6) && photon_genjet_matching) || (!is_photon_prompt(lumi,event,\""+year+"\",dsetversion[0]) && !photon_genjet_matching)"
+        #if we used (!is_photon_prompt && !photon_genjet_matching) instead of (!photon_genjet_matching && !is_photon_prompt), then we would call is_photon_prompt for some events that are not in the std::map
+        photon_gen_matching_cutstring+="(!(photon_gen_matching == 1 || photon_gen_matching == 4 || photon_gen_matching == 5 || photon_gen_matching == 6) && photon_genjet_matching) || (!photon_genjet_matching && !is_photon_prompt(lumi,event,\""+year+"\",dsetversion[0]))" 
                 
     if photon_gen_matching_for_fake_cutstring != "(":    
         photon_gen_matching_for_fake_cutstring+= ")"    
