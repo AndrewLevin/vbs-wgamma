@@ -1806,9 +1806,11 @@ def processMCSample(dummy):
     if  label != "w+jets":
         rinterface = rdf.Filter(get_filter_string(year,isdata=False))
     else:    
-#                rinterface = rdf.Filter(get_filter_string(year,isdata=True,lep="both"))
         rinterface = rdf.Filter(get_filter_string(year,isdata=True))
+        if year == "2016":
+            rinterface_wjets_2016 = rdf.Filter(get_filter_string(year,isdata=True,lep="both"))
 
+            
     rinterface = rinterface.Define("xs_weight",str(sample["xs"]*1000*lumi/sample["nweightedevents"]) + "*gen_weight/abs(gen_weight)") 
 
     if year == "2016" or year == "2017":    
@@ -2065,12 +2067,16 @@ def processMCSample(dummy):
         rinterface = rinterface.Define("fake_photon_electron_hlt_sf_up_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id)*electron_hlt_sf_up_base_weight : 0")
         rinterface = rinterface.Define("fake_photon_alt_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,\"alt\")*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0")
         rinterface = rinterface.Define("fake_photon_stat_up_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,\"stat_up\")*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0")
-    
+
+
 
     if label == "w+jets" and year == "2016":
+        rinterface_wjets_2016 = rinterface_wjets_2016.Define("xs_weight",str(sample["xs"]*1000*lumi/sample["nweightedevents"]) + "*gen_weight/abs(gen_weight)") 
+        rinterface_wjets_2016 = rinterface_wjets_2016.Define("base_weight",get_postfilter_selection_string()+"*xs_weight*puWeight*"+prefire_weight_string+"*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\") : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\"))")      
+        rinterface_wjets_2016 = rinterface_wjets_2016.Define("weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + ")*base_weight")
 #                rinterface = rinterface.Define("wjets_fake_photon_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_wjets_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id)*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0")
-        rinterface = rinterface.Define("wjets_fake_photon_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 1 && is_lepton_real == 1 && !(photon_gen_matching == 1|| photon_gen_matching == 4 || photon_gen_matching == 5 || photon_gen_matching == 6) ? get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,\"wjets\")*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0")
-        rinterface = rinterface.Define("wjets_chiso_fake_photon_weight","photon_selection == 3 && ((abs(photon_eta) < 1.5 && photon_pfRelIso03_chg*photon_pt < "+str(chiso_cut_barrel)+"*1.75) || (abs(photon_eta) > 1.5 && photon_pfRelIso03_chg*photon_pt < "+str(chiso_cut_endcap)+"*1.75)) && is_lepton_tight == 1 && is_lepton_real == 1 && !(photon_gen_matching == 1|| photon_gen_matching == 4 || photon_gen_matching == 5 || photon_gen_matching == 6) ? get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,\"wjets_chiso\")*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0")
+        rinterface_wjets_2016 = rinterface_wjets_2016.Define("wjets_fake_photon_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 1 && is_lepton_real == 1 && !(photon_gen_matching == 1|| photon_gen_matching == 4 || photon_gen_matching == 5 || photon_gen_matching == 6) ? get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,\"wjets\")*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0")
+        rinterface_wjets_2016 = rinterface_wjets_2016.Define("wjets_chiso_fake_photon_weight","photon_selection == 3 && ((abs(photon_eta) < 1.5 && photon_pfRelIso03_chg*photon_pt < "+str(chiso_cut_barrel)+"*1.75) || (abs(photon_eta) > 1.5 && photon_pfRelIso03_chg*photon_pt < "+str(chiso_cut_endcap)+"*1.75)) && is_lepton_tight == 1 && is_lepton_real == 1 && !(photon_gen_matching == 1|| photon_gen_matching == 4 || photon_gen_matching == 5 || photon_gen_matching == 6) ? get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,\"wjets_chiso\")*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0")
 
     if sample["e_to_p"] or sample["e_to_p_non_res"]:
         for i in range(len(etopbinning)):
@@ -2239,9 +2245,9 @@ def processMCSample(dummy):
                 rresultptrs[i]["jer_up"] =rinterface.Histo1D(histogram_models[i],variables[i],"jer_up_weight")
 
         if label == "w+jets" and year == "2016":
-            rresultptrs[i]["wjets_fake_photon_chiso"] =rinterface.Histo1D(histogram_models[i],variables[i],"wjets_chiso_fake_photon_weight")        
-            rresultptrs[i]["wjets_fake_photon"] =rinterface.Histo1D(histogram_models[i],variables[i],"wjets_fake_photon_weight")    
-            rresultptrs[i]["wjets"] =rinterface.Histo1D(histogram_models[i],variables[i],"weight")    
+            rresultptrs[i]["wjets_fake_photon_chiso"] = rinterface_wjets_2016.Histo1D(histogram_models[i],variables[i],"wjets_chiso_fake_photon_weight")        
+            rresultptrs[i]["wjets_fake_photon"] = rinterface_wjets_2016.Histo1D(histogram_models[i],variables[i],"wjets_fake_photon_weight")    
+            rresultptrs[i]["wjets"] = rinterface_wjets_2016.Histo1D(histogram_models[i],variables[i],"weight")    
 
         rresultptrs[i]["fake_photon"] =rinterface.Histo1D(histogram_models[i],variables[i],"fake_photon_weight")
         rresultptrs[i]["fake_photon_pileup_up"] =rinterface.Histo1D(histogram_models[i],variables[i],"fake_photon_pileup_up_weight")
