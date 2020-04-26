@@ -7020,8 +7020,8 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
             print "Warning: double fake estimate is "+str(double_fake["hists"][ewdim6_index].GetBinContent(i))+ " for bin " + str(i) + ". It will be replaced with 0.0001"
         dcard.write(" 0.0001") 
 
-    if e_to_p["hists"][ewdim6_index].GetBinContent(i) > 0:        
-        dcard.write(" "+str(e_to_p["hists"][ewdim6_index].GetBinContent(i))) 
+    if e_to_p_total["hists"][ewdim6_index].GetBinContent(i) > 0:        
+        dcard.write(" "+str(e_to_p_total["hists"][ewdim6_index].GetBinContent(i))) 
     else:
         dcard.write(" 0.0001") 
    
@@ -7175,8 +7175,8 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
     dcard.write(" -")
     dcard.write(" -")                
     dcard.write(" -")                
-    if e_to_p["hists"][ewdim6_index].GetBinContent(i) > 0:
-        dcard.write(" "+str(e_to_p["hists-electron-hlt-sf-up"][ewdim6_index].GetBinContent(i)/e_to_p["hists"][ewdim6_index].GetBinContent(i)))
+    if e_to_p_total["hists"][ewdim6_index].GetBinContent(i) > 0:
+        dcard.write(" "+str(e_to_p_total["hists-electron-hlt-sf-up"][ewdim6_index].GetBinContent(i)/e_to_p_total["hists"][ewdim6_index].GetBinContent(i)))
     else:    
         dcard.write(" -")            
     dcard.write("\n")  
@@ -7193,8 +7193,8 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
     dcard.write(" -")
     dcard.write(" -")                
     dcard.write(" -")                
-    if e_to_p["hists"][ewdim6_index].GetBinContent(i) > 0:
-        dcard.write(" "+str(e_to_p["hists-electron-id-sf-up"][ewdim6_index].GetBinContent(i)/e_to_p["hists"][ewdim6_index].GetBinContent(i)))
+    if e_to_p_total["hists"][ewdim6_index].GetBinContent(i) > 0:
+        dcard.write(" "+str(e_to_p_total["hists-electron-id-sf-up"][ewdim6_index].GetBinContent(i)/e_to_p_total["hists"][ewdim6_index].GetBinContent(i)))
     else:    
         dcard.write(" -")            
     dcard.write("\n")  
@@ -7211,8 +7211,8 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
     dcard.write(" -")
     dcard.write(" -")                
     dcard.write(" -")                
-    if e_to_p["hists"][ewdim6_index].GetBinContent(i) > 0:
-        dcard.write(" "+str(e_to_p["hists-electron-reco-sf-up"][ewdim6_index].GetBinContent(i)/e_to_p["hists"][ewdim6_index].GetBinContent(i)))
+    if e_to_p_total["hists"][ewdim6_index].GetBinContent(i) > 0:
+        dcard.write(" "+str(e_to_p_total["hists-electron-reco-sf-up"][ewdim6_index].GetBinContent(i)/e_to_p_total["hists"][ewdim6_index].GetBinContent(i)))
     else:    
         dcard.write(" -")            
     dcard.write("\n")  
@@ -7229,8 +7229,8 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
     dcard.write(" -")
     dcard.write(" -")                
     dcard.write(" -")                
-    if e_to_p["hists"][ewdim6_index].GetBinContent(i) > 0:
-        dcard.write(" "+str(e_to_p["hists-photon-id-sf-up"][ewdim6_index].GetBinContent(i)/e_to_p["hists"][ewdim6_index].GetBinContent(i)))
+    if e_to_p_total["hists"][ewdim6_index].GetBinContent(i) > 0:
+        dcard.write(" "+str(e_to_p_total["hists-photon-id-sf-up"][ewdim6_index].GetBinContent(i)/e_to_p_total["hists"][ewdim6_index].GetBinContent(i)))
     else:    
         dcard.write(" -")            
     dcard.write("\n")  
@@ -7247,8 +7247,8 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
     dcard.write(" -")
     dcard.write(" -")                
     dcard.write(" -")                
-    if e_to_p["hists"][ewdim6_index].GetBinContent(i) > 0:
-        dcard.write(" "+str(e_to_p["hists-jes-up"][ewdim6_index].GetBinContent(i)/e_to_p["hists"][ewdim6_index].GetBinContent(i)))
+    if e_to_p_total["hists"][ewdim6_index].GetBinContent(i) > 0:
+        dcard.write(" "+str(e_to_p_total["hists-jes-up"][ewdim6_index].GetBinContent(i)/e_to_p_total["hists"][ewdim6_index].GetBinContent(i)))
     else:    
         dcard.write(" -")            
     dcard.write("\n")  
@@ -7265,8 +7265,8 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
     dcard.write(" -")
     dcard.write(" -")                
     dcard.write(" -")                
-    if e_to_p["hists"][ewdim6_index].GetBinContent(i) > 0:
-        dcard.write(" "+str(e_to_p["hists-jer-up"][ewdim6_index].GetBinContent(i)/e_to_p["hists"][ewdim6_index].GetBinContent(i)))
+    if e_to_p_total["hists"][ewdim6_index].GetBinContent(i) > 0:
+        dcard.write(" "+str(e_to_p_total["hists-jer-up"][ewdim6_index].GetBinContent(i)/e_to_p_total["hists"][ewdim6_index].GetBinContent(i)))
     else:    
         dcard.write(" -")            
     dcard.write("\n")  
@@ -7283,8 +7283,8 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
     dcard.write(" -")
     dcard.write(" -")                
     dcard.write(" -")            
-    if e_to_p["hists"][ewdim6_index].GetBinContent(i) > 0:
-        dcard.write(" "+str(e_to_p["hists-prefire-up"][ewdim6_index].GetBinContent(i)/e_to_p["hists"][ewdim6_index].GetBinContent(i)))
+    if e_to_p_total["hists"][ewdim6_index].GetBinContent(i) > 0:
+        dcard.write(" "+str(e_to_p_total["hists-prefire-up"][ewdim6_index].GetBinContent(i)/e_to_p_total["hists"][ewdim6_index].GetBinContent(i)))
     else:    
         dcard.write(" -")            
     dcard.write("\n")  
@@ -7301,8 +7301,8 @@ for i in range(1,sm_lhe_weight_hist.GetNbinsX()+1):
     dcard.write(" -")
     dcard.write(" -")                
     dcard.write(" -")        
-    if e_to_p["hists"][ewdim6_index].GetBinContent(i) > 0:
-        dcard.write(" "+str(e_to_p["hists-pileup-up"][ewdim6_index].GetBinContent(i)/e_to_p["hists"][ewdim6_index].GetBinContent(i)))
+    if e_to_p_total["hists"][ewdim6_index].GetBinContent(i) > 0:
+        dcard.write(" "+str(e_to_p_total["hists-pileup-up"][ewdim6_index].GetBinContent(i)/e_to_p_total["hists"][ewdim6_index].GetBinContent(i)))
     else:    
         dcard.write(" -")        
     dcard.write("\n")  
