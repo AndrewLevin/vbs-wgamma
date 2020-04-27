@@ -308,8 +308,8 @@ ewdim6_index = len(histogram_models)-1
 
 ewdim6_samples = {
 "2016" : [{"xs" : 5.248, "filename" : args.workdir+"/data/wg/2016/1June2019/wgjetsewdim6.root"}],
-"2017" : [{"xs" : 5.248, "filename" : args.workdir+"/data/wg/2016/1June2019/wgjetsewdim6.root"}],
-"2018" : [{"xs" : 5.248, "filename" : args.workdir+"/data/wg/2016/1June2019/wgjetsewdim6.root"}]
+"2017" : [{"xs" : 5.248, "filename" : args.workdir+"/data/wg/2017/1June2019/wgjetsewdim6.root"}],
+"2018" : [{"xs" : 5.248, "filename" : args.workdir+"/data/wg/2018/1June2019/wgjetsewdim6.root"}]
 }
 
 for year in years:
