@@ -3990,7 +3990,7 @@ for i in range(len(variables)):
 
     if  args.use_wjets_for_fake_photon and "w+jets" in labels:
         j=j+1    
-        draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,labels["w+jets"]["hists"][i],"w+jets","f")
+        draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,labels["w+jets"]["hists"][i],"W+jets","f")
 
     if data_driven :
         if not args.use_wjets_for_fake_photon:
@@ -4021,19 +4021,16 @@ for i in range(len(variables)):
         elif label == "wg+jets":
             if args.draw_non_fid:
                 j=j+1    
-                draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,labels[label]["hists-pass-fiducial"][i],"w#gamma+jets","f")
+                draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,labels[label]["hists-pass-fiducial"][i],"W#gamma+jets","f")
                 j=j+1    
-                draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,labels[label]["hists-fail-fiducial"][i],"w$gamma+jets out","f")
+                draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,labels[label]["hists-fail-fiducial"][i],"W$gamma+jets out","f")
             else:    
                 j=j+1    
-                draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,labels[label]["hists"][i],label,"f")
+#                draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,labels[label]["hists"][i],label,"f")
+                draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,labels[label]["hists"][i],labels[label]["legend"],"f")
         else:        
             j=j+1    
-            if len(label) > 11:
-                print "Warning: truncating the legend label "+str(label) + " to "+str(label[0:11]) 
-                draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,labels[label]["hists"][i],label[0:11],"f")
-            else:    
-                draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,labels[label]["hists"][i],label,"f")
+            draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,labels[label]["hists"][i],labels[label]["legend"],"f")
 
     if args.draw_ewdim6:
         j=j+1

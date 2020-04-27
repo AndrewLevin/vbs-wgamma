@@ -2,6 +2,7 @@ import ROOT
 
 labels = { 
     "w+jets" : {
+        "legend" : "W+jets",
         "syst-pdf" : False, 
         "syst-scale" : False, 
         "color" : ROOT.kGray+1,
@@ -19,6 +20,7 @@ labels = {
         }
     },
     "top+jets" : {
+        "legend" : "top+jets",
         "syst-pdf" : False, 
         "syst-scale" : False, 
         "color" : ROOT.kRed, 
@@ -70,6 +72,7 @@ labels = {
             }
         },
     "vv+jets" : {
+        "legend" : "VV+jets",
         "syst-pdf" : False, 
         "syst-scale" : False, 
         "color" : ROOT.kGreen+3, 
@@ -99,6 +102,7 @@ labels = {
         },
 
     "wg+jets" : {
+        "legend" : "W#gamma+jets",
         "syst-pdf": True, 
         "syst-scale": True, 
 #        "syst-pdf": False, 
@@ -129,6 +133,7 @@ labels = {
             }
         }, 
     "zg+jets" : {
+        "legend" : "Z#gamma+jets",
 #        "syst-pdf" : False, 
 #        "syst-scale" : False, 
         "syst-pdf" : True, 
@@ -165,18 +170,18 @@ labels = {
             "2016":
         
             [
-                {"filename": " /afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019jetunc/zjets.root", "xs" : 2*6225.42, "non_fsr" : False, "e_to_p_non_res" : False, "e_to_p" : True, "fsr" : False, "e_to_p_for_fake" : True, "non-prompt" : False} ##6225.42 is the nnlo cross-section
+                {"filename": " /afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019jetunc/zjets.root", "xs" : 6225.42, "non_fsr" : False, "e_to_p_non_res" : False, "e_to_p" : True, "fsr" : False, "e_to_p_for_fake" : True, "non-prompt" : False} ##6225.42 is the nnlo cross-section
                 ], 
             "2017":
         
             [
-                {"filename": " /afs/cern.ch/work/a/amlevin/data/wg/2017/1June2019jetunc/zjets.root", "xs" : 2*6225.42, "non_fsr" : False, "e_to_p_non_res" : False, "e_to_p" : True, "fsr" : False, "e_to_p_for_fake" : True, "non-prompt" : False} ##6225.42 is the nnlo cross-section
+                {"filename": " /afs/cern.ch/work/a/amlevin/data/wg/2017/1June2019jetunc/zjets.root", "xs" : 6225.42, "non_fsr" : False, "e_to_p_non_res" : False, "e_to_p" : True, "fsr" : False, "e_to_p_for_fake" : True, "non-prompt" : False} ##6225.42 is the nnlo cross-section
 
                 ], 
             "2018":
         
             [
-                {"filename": " /afs/cern.ch/work/a/amlevin/data/wg/2018/1June2019jetunc/zjets.root", "xs" : 2*6225.42, "non_fsr" : False, "e_to_p_non_res" : False, "e_to_p" : True, "fsr" : False, "e_to_p_for_fake" : True, "non-prompt" : False} ##6225.42 is the nnlo cross-section
+                {"filename": " /afs/cern.ch/work/a/amlevin/data/wg/2018/1June2019jetunc/zjets.root", "xs" : 6225.42, "non_fsr" : False, "e_to_p_non_res" : False, "e_to_p" : True, "fsr" : False, "e_to_p_for_fake" : True, "non-prompt" : False} ##6225.42 is the nnlo cross-section
 
                 ] 
             }
