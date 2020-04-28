@@ -4085,6 +4085,9 @@ data_integral = data["hists"][mlg_index].IntegralAndError(1,data["hists"][mlg_in
 e_to_p_total_integral_error = ROOT.Double()
 e_to_p_total_integral = e_to_p_total["hists"][mlg_index].IntegralAndError(1,e_to_p_total["hists"][mlg_index].GetXaxis().GetNbins(),e_to_p_total_integral_error)
 
+pileup_integral_error = ROOT.Double()
+pileup_integral = labels["w+jets"]["hists-prompt-pileup"][mlg_index].IntegralAndError(1,labels["w+jets"]["hists-prompt-pileup"][mlg_index].GetXaxis().GetNbins(),pileup_integral_error)
+
 fake_signal_contamination_integral_error = ROOT.Double()
 fake_signal_contamination_integral = fake_signal_contamination["hists"][mlg_index].IntegralAndError(1,fake_signal_contamination["hists"][mlg_index].GetXaxis().GetNbins(),fake_signal_contamination_integral_error)
 
@@ -4101,6 +4104,7 @@ print "fake lepton = "+str(fake_lepton_integral)+" +/- "+str(fake_lepton_integra
 print "double fake = "+str(double_fake_integral)+" +/- "+str(double_fake_integral_error)
 print "data = "+str(data_integral)+" +/- "+str(data_integral_error)
 print "e_to_p_total = "+str(e_to_p_total_integral)+" +/- "+str(e_to_p_total_integral_error)
+print "pileup = "+str(pileup_integral)+" +/- "+str(pileup_integral_error)
 
 
 print """
@@ -4128,6 +4132,8 @@ double fake & $%0.2f \pm %0.2f$ \\
 \hline
 electron to photon & $%0.2f \pm %0.2f$ \\
 \hline
+pileup & $%0.2f \pm %0.2f$ \\
+\hline
 \end{tabular}
 \end{center}
 \caption{Number of background expected events per category in the %s channel. The uncertainty is statistical. $W\gamma$ and $W\gamma$ out are the contributions to the signal region from the $W\gamma$ process originating from inside and outside the fiducial region, respectively.}
@@ -4142,7 +4148,9 @@ vv_jets_integral,float(vv_jets_integral_error),
 fake_photon_integral,float(fake_photon_integral_error),
 fake_lepton_integral,float(fake_lepton_integral_error),
 double_fake_integral,float(double_fake_integral_error),
-e_to_p_total_integral,float(e_to_p_total_integral_error),args.lep,args.lep
+e_to_p_total_integral,float(e_to_p_total_integral_error),
+pileup_integral,float(pileup_integral_error),
+args.lep,args.lep
 )
 
 n_signal = data_integral - double_fake_integral - fake_photon_integral - fake_lepton_integral - top_jets_integral - vv_jets_integral - zg_jets_integral - e_to_p_total_integral
