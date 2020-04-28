@@ -1,17 +1,13 @@
 import ROOT
 import math
 
+fid_reg_cuts = "(pass_fid_selection && fid_met_pt > 40)"
 
 mg5amc_nlo_xs =  178.6
 
 mg5amc_wgjets_filename = "/afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019/wgjets.root"
 
 mg5amc_wgjets_file =  ROOT.TFile(mg5amc_wgjets_filename)
-
-n_weighted_mg5amc_pass_lhe_selection = mg5amc_wgjets_file.Get("nEventsGenWeighted_PassFidSelection").GetBinContent(1)
-n_weighted_mg5amc_pass_gen_selection = mg5amc_wgjets_file.Get("nEventsGenWeighted_PassFidSelection").GetBinContent(1)
-n_weighted_mg5amc = mg5amc_wgjets_file.Get("nEventsGenWeighted").GetBinContent(1)
-#n_weighted_mg5amc_pass_lhe_and_gen_selection = mg5amc_wgjets_file.Get("nWeightedEventsPassLHEAndGenSelection").GetBinContent(1)
 
 powheg_plus_nlo_xs =  33420.0
 powheg_minus_nlo_xs =  24780.0
@@ -20,22 +16,19 @@ print "powheg_nlo_xs = " + str(powheg_plus_nlo_xs + powheg_minus_nlo_xs)
 
 print "m5amc_nlo_xs = " + str(mg5amc_nlo_xs)
 
-powheg_plus_wgjets_filename = "/afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019/powhegwplusg.root"
-powheg_minus_wgjets_filename = "/afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019/powhegwminusg.root"
+powheg_plus_wgjets_filename = "/afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019/powhegwplusg.root.bak"
+powheg_minus_wgjets_filename = "/afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019/powhegwminusg.root.bak"
 
 powheg_plus_wgjets_file =  ROOT.TFile(powheg_plus_wgjets_filename)
 powheg_minus_wgjets_file =  ROOT.TFile(powheg_minus_wgjets_filename)
 
-n_weighted_powheg_plus_pass_lhe_selection = powheg_plus_wgjets_file.Get("nEventsGenWeighted_PassFidSelection").GetBinContent(1)
-n_weighted_powheg_minus_pass_lhe_selection = powheg_minus_wgjets_file.Get("nEventsGenWeighted_PassFidSelection").GetBinContent(1)
-
 n_weighted_powheg_plus = powheg_plus_wgjets_file.Get("nEventsGenWeighted").GetBinContent(1)
 n_weighted_powheg_minus = powheg_minus_wgjets_file.Get("nEventsGenWeighted").GetBinContent(1)
 
-n_weighted_powheg_plus_pass_gen_selection = powheg_plus_wgjets_file.Get("nEventsGenWeighted_PassFidSelection").GetBinContent(1)
-n_weighted_powheg_minus_pass_gen_selection = powheg_minus_wgjets_file.Get("nEventsGenWeighted_PassFidSelection").GetBinContent(1)
+n_weighted_powheg_plus_pass_gen_selection = powheg_plus_wgjets_file.Get("Events").GetEntries(fid_reg_cuts + " && gen_weight > 0") - powheg_plus_wgjets_file.Get("Events").GetEntries(fid_reg_cuts + " && gen_weight < 0")
+n_weighted_powheg_minus_pass_gen_selection = powheg_minus_wgjets_file.Get("Events").GetEntries(fid_reg_cuts+ " && gen_weight > 0") - powheg_minus_wgjets_file.Get("Events").GetEntries(fid_reg_cuts+ " && gen_weight < 0")
 
-mg5amc_nlo_fiducial_xs =  mg5amc_nlo_xs*mg5amc_wgjets_file.Get("nEventsGenWeighted_PassFidSelection").GetBinContent(1)/mg5amc_wgjets_file.Get("nEventsGenWeighted").GetBinContent(1)
+mg5amc_nlo_fiducial_xs =  mg5amc_nlo_xs*(mg5amc_wgjets_file.Get("Events").GetEntries(fid_reg_cuts + " && gen_weight > 0") - mg5amc_wgjets_file.Get("Events").GetEntries(fid_reg_cuts + " && gen_weight < 0"))/mg5amc_wgjets_file.Get("nEventsGenWeighted").GetBinContent(1)
 
 powheg_nlo_fiducial_xs = powheg_plus_nlo_xs*n_weighted_powheg_plus_pass_gen_selection/n_weighted_powheg_plus + powheg_minus_nlo_xs*n_weighted_powheg_minus_pass_gen_selection/n_weighted_powheg_minus
 
