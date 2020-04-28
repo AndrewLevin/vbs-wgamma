@@ -43,7 +43,6 @@ parser.add_argument('--phoeta',dest='phoeta',default='both')
 parser.add_argument('--make_datacard',dest='make_datacard',action='store_true',default=False)
 parser.add_argument('--make_cut_and_count_datacard',dest='make_cut_and_count_datacard',action='store_true',default=False)
 parser.add_argument('--closure_test',dest='closure_test',action='store_true',default=False)
-parser.add_argument('--no_pdf_var_for_2017_and_2018',dest='no_pdf_var_for_2017_and_2018',action='store_true',default=False)
 parser.add_argument('--no_wjets_for_2017_and_2018',dest='no_wjets_for_2017_and_2018',action='store_true',default=False)
 parser.add_argument('--ewdim6',dest='ewdim6',action='store_true',default=False)
 parser.add_argument('--use_wjets_for_fake_photon',dest='use_wjets_for_fake_photon',action='store_true',default=False)
@@ -870,8 +869,6 @@ if "wg+jets" in labels:
                     
         if labels["wg+jets"]["syst-pdf"]:
             for i in range(1,32):
-                if (year == "2017" or year == "2018") and args.no_pdf_var_for_2017_and_2018:
-                    continue
                 labels["wg+jets"]["samples"][year][0]["nweightedevents_pdfweight"+str(i)]=labels["wg+jets"]["samples"][year][0]["file"].Get("nEventsGenWeighted_PassFidSelection_PDFWeight"+str(i)).GetBinContent(1)
 
                 if labels["wg+jets"]["samples"][year][0]["filename"] == args.workdir+"/data/wg/2016/1June2019/wgjets.root" or labels["wg+jets"]["samples"][year][0]["filename"] == args.workdir+"/data/wg/2016/1June2019jet/wgjets.root":
@@ -1999,9 +1996,7 @@ def processMCSample(dummy):
 
         if labels["wg+jets"]["syst-pdf"]:
             for i in range(0,32):
-                if (year == "2017" or year == "2018") and args.no_pdf_var_for_2017_and_2018:
-                    continue
-                        #this sample has a bug that causes the scale weight to be 1/2 the correct value
+                #this sample has a bug that causes the scale weight to be 1/2 the correct value
                 if sample["filename"] == args.workdir+"/data/wg/2016/1June2019/wgjets.root" or sample["filename"] == args.workdir+"/data/wg/2016/1June2019jetunc/wgjets.root":
                     rinterface = rinterface.Define("pass_fiducial_pdf"+str(i)+"_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && fid)*base_weight*LHEPdfWeight["+str(i+1)+"]*2")
                     rinterface = rinterface.Define("fail_fiducial_pdf"+str(i)+"_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && !fid)*base_weight*LHEPdfWeight["+str(i+1)+"]*2")
@@ -2033,9 +2028,6 @@ def processMCSample(dummy):
 
     if labels[label]["syst-pdf"]:
         for i in range(0,32):
-            if (year == "2017" or year == "2018") and args.no_pdf_var_for_2017_and_2018:
-                continue
-                    #this sample has a bug that causes the scale weight to be 1/2 the correct value
             if sample["filename"] == args.workdir+"/data/wg/2016/1June2019/wgjets.root" or sample["filename"] == args.workdir+"/data/wg/2016/1June2019jetunc/wgjets.root":
                 rinterface = rinterface.Define("pdf"+str(i)+"_weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + ")*base_weight*LHEPdfWeight["+str(i+1)+"]*2")
             else:    
@@ -2276,8 +2268,6 @@ def processMCSample(dummy):
                         rresultptrs[i]["fail_fiducial_scale"+str(j)] =rinterface.Histo1D(histogram_models[i],variables[i],"fail_fiducial_scale"+str(j)+"_weight")
                 if labels["wg+jets"]["syst-pdf"]:
                     for j in range(0,32):
-                        if (year == "2017" or year == "2018") and args.no_pdf_var_for_2017_and_2018:
-                            continue
                         rresultptrs[i]["pass_fiducial_pdf"+str(j)] =rinterface.Histo1D(histogram_models[i],variables[i],"pass_fiducial_pdf"+str(j)+"_weight")
                         rresultptrs[i]["fail_fiducial_pdf"+str(j)] =rinterface.Histo1D(histogram_models[i],variables[i],"fail_fiducial_pdf"+str(j)+"_weight")
 
@@ -2343,8 +2333,6 @@ def processMCSample(dummy):
                 rresultptrs[i]["scale"+str(j)] =rinterface.Histo1D(histogram_models[i],variables[i],"scale"+str(j)+"_weight")
         if labels[label]["syst-pdf"]:
             for j in range(0,32):
-                if (year == "2017" or year == "2018") and args.no_pdf_var_for_2017_and_2018:
-                    continue
                 rresultptrs[i]["pdf"+str(j)] =rinterface.Histo1D(histogram_models[i],variables[i],"pdf"+str(j)+"_weight")
 
         if sample["e_to_p"] or sample["e_to_p_non_res"]:
@@ -2500,8 +2488,6 @@ for year in years:
 
                         if labels["wg+jets"]["syst-pdf"]:
                             for j in range(0,32):
-                                if (year == "2017" or year == "2018") and args.no_pdf_var_for_2017_and_2018:
-                                    continue
                                 labels["wg+jets"]["hists-pass-fiducial-pdf-variation"+str(j)][i].Add(results[i]["pass_fiducial_pdf"+str(j)])
                                 labels["wg+jets"]["hists-fail-fiducial-pdf-variation"+str(j)][i].Add(results[i]["fail_fiducial_pdf"+str(j)])
 
@@ -2597,8 +2583,6 @@ for year in years:
 
                 if labels[label]["syst-pdf"]:
                     for j in range(0,32):
-                        if (year == "2017" or year == "2018") and args.no_pdf_var_for_2017_and_2018:
-                            continue
                         labels[label]["hists-pdf-variation"+str(j)][i].Add(results[i]["pdf"+str(j)])
 
                 if label == "wg+jets":
@@ -4024,7 +4008,7 @@ for i in range(len(variables)):
                 j=j+1    
                 draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,labels[label]["hists-pass-fiducial"][i],"W#gamma+jets","f")
                 j=j+1    
-                draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,labels[label]["hists-fail-fiducial"][i],"W$gamma+jets out","f")
+                draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,labels[label]["hists-fail-fiducial"][i],"W#gamma+jets out","f")
             else:    
                 j=j+1    
 #                draw_legend(xpositions[j],0.84 - ypositions[j]*yoffset,labels[label]["hists"][i],label,"f")
@@ -4234,9 +4218,6 @@ if lepton_name == "muon":
             else:
                 assert(0)
 
-            if (year == "2017" or year == "2018") and args.no_pdf_var_for_2017_and_2018:
-                continue
-
             xs_times_lumi_pdf_variation += labels["wg+jets"]["samples"][year][0]["xs"]*1000*lumi*labels["wg+jets"]["samples"][year][0]["nweightedevents_pdfweight"+str(i)]/labels["wg+jets"]["samples"][year][0]["nweightedevents"]
 
         xs_inputs_muon["xs_times_lumi_pdf_variation"+str(i)] = xs_times_lumi_pdf_variation
@@ -4352,9 +4333,6 @@ elif lepton_name == "electron":
                 lumi=59.6
             else:
                 assert(0)
-
-            if (year == "2017" or year == "2018") and args.no_pdf_var_for_2017_and_2018:
-                continue
 
             xs_times_lumi_pdf_variation += labels["wg+jets"]["samples"][year][0]["xs"]*1000*lumi*labels["wg+jets"]["samples"][year][0]["nweightedevents_pdfweight"+str(i)]/labels["wg+jets"]["samples"][year][0]["nweightedevents"]
 
