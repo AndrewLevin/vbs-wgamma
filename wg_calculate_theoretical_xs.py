@@ -16,8 +16,8 @@ print "powheg_nlo_xs = " + str(powheg_plus_nlo_xs + powheg_minus_nlo_xs)
 
 print "m5amc_nlo_xs = " + str(mg5amc_nlo_xs)
 
-powheg_plus_wgjets_filename = "/afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019/powhegwplusg.root.bak"
-powheg_minus_wgjets_filename = "/afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019/powhegwminusg.root.bak"
+powheg_plus_wgjets_filename = "/afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019/powhegwplusg.root"
+powheg_minus_wgjets_filename = "/afs/cern.ch/work/a/amlevin/data/wg/2016/1June2019/powhegwminusg.root"
 
 powheg_plus_wgjets_file =  ROOT.TFile(powheg_plus_wgjets_filename)
 powheg_minus_wgjets_file =  ROOT.TFile(powheg_minus_wgjets_filename)
