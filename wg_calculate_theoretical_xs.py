@@ -1,7 +1,7 @@
 import ROOT
 import math
 
-fid_reg_cuts = "(pass_fid_selection && fid_met_pt > 40)"
+fid_reg_cuts = "(pass_fid_selection && fid_met_pt > 0)"
 
 mg5amc_nlo_xs =  178.6
 
