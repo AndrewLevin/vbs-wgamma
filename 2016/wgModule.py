@@ -87,6 +87,11 @@ class wgProducer(Module):
         self.out.fillBranch("lumi",event.luminosityBlock)
         self.out.fillBranch("run",event.run)
 
+        if hasattr(event,'Generator_weight'):
+            self.out.fillBranch("gen_weight",event.Generator_weight)
+        else:    
+            self.out.fillBranch("gen_weight",0)
+
         #do this first for processing speed-up
         if not (event.HLT_Ele27_WPTight_Gsf or event.HLT_IsoMu24 or event.HLT_IsoTkMu24):
             self.out.fillBranch("pass_selection",0)
@@ -701,11 +706,6 @@ class wgProducer(Module):
                         photon_gen_matching_old += 4 #non-fsr photon
 
         self.out.fillBranch("photon_gen_matching_old",photon_gen_matching_old)
-
-        if hasattr(event,'Generator_weight'):
-            self.out.fillBranch("gen_weight",event.Generator_weight)
-        else:    
-            self.out.fillBranch("gen_weight",0)
 
         if hasattr(event,'Pileup_nPU'):    
             self.out.fillBranch("npu",event.Pileup_nPU)
