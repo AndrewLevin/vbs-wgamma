@@ -43,9 +43,21 @@ for i in range(0,8):
     if i == 2 or i == 5:
         continue
 
-    mg5amc_nlo_fiducial_xs_qcd_scale_i = mg5amc_nlo_xs*2*mg5amc_wgjets_file.Get("nEventsGenWeighted_PassFidSelection_QCDScaleWeight"+str(i)).GetBinContent(1)/mg5amc_wgjets_file.Get("nEventsGenWeighted").GetBinContent(1)
+    mg5amc_nlo_rdf = ROOT.RDataFrame("Events",mg5amc_wgjets_filename)    
 
-    powheg_nlo_fiducial_xs_qcd_scale_i = powheg_plus_nlo_xs*3*powheg_plus_wgjets_file.Get("nEventsGenWeighted_PassFidSelection_QCDScaleWeight"+str(i)).GetBinContent(1)/powheg_plus_wgjets_file.Get("nEventsGenWeighted").GetBinContent(1)+powheg_minus_nlo_xs*3*powheg_minus_wgjets_file.Get("nEventsGenWeighted_PassFidSelection_QCDScaleWeight"+str(i)).GetBinContent(1)/powheg_minus_wgjets_file.Get("nEventsGenWeighted").GetBinContent(1) 
+    mg5amc_nlo_neventsgenweight_passfidselection_qcdscaleweight = mg5amc_nlo_rdf.Filter(fid_reg_cuts).Define("weight","LHEScaleWeight["+str(i)+"]*2*gen_weight/abs(gen_weight)").Sum("weight").GetValue()
+
+    mg5amc_nlo_fiducial_xs_qcd_scale_i = mg5amc_nlo_xs*mg5amc_nlo_neventsgenweight_passfidselection_qcdscaleweight/mg5amc_wgjets_file.Get("nEventsGenWeighted").GetBinContent(1)
+
+    powheg_plus_wgjets_rdf = ROOT.RDataFrame("Events",powheg_plus_wgjets_filename)    
+
+    powheg_plus_wgjets_neventsgenweight_passfidselection_qcdscaleweight = powheg_plus_wgjets_rdf.Filter(fid_reg_cuts).Define("weight","LHEScaleWeight["+str(i)+"]*gen_weight/abs(gen_weight)").Sum("weight").GetValue()
+
+    powheg_minus_wgjets_rdf = ROOT.RDataFrame("Events",powheg_minus_wgjets_filename)    
+
+    powheg_minus_wgjets_neventsgenweight_passfidselection_qcdscaleweight = powheg_minus_wgjets_rdf.Filter(fid_reg_cuts).Define("weight","LHEScaleWeight["+str(i)+"]*gen_weight/abs(gen_weight)").Sum("weight").GetValue()
+
+    powheg_nlo_fiducial_xs_qcd_scale_i = powheg_plus_nlo_xs*3*powheg_plus_wgjets_neventsgenweight_passfidselection_qcdscaleweight/powheg_plus_wgjets_file.Get("nEventsGenWeighted").GetBinContent(1)+powheg_minus_nlo_xs*3*powheg_minus_wgjets_neventsgenweight_passfidselection_qcdscaleweight/powheg_minus_wgjets_file.Get("nEventsGenWeighted").GetBinContent(1) 
 
     if abs(mg5amc_nlo_fiducial_xs_qcd_scale_i - mg5amc_nlo_fiducial_xs) > mg5amc_nlo_fiducial_xs_qcd_scale_unc:
         mg5amc_nlo_fiducial_xs_qcd_scale_unc = abs(mg5amc_nlo_fiducial_xs_qcd_scale_i - mg5amc_nlo_fiducial_xs)
