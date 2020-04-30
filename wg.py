@@ -4014,6 +4014,17 @@ for i in range(len(variables)):
     hstack.SetMinimum(0)
     hsum.SetMinimum(0)
 
+    tpad1=ROOT.TPad("", "", 0, 0.3, 1, 1.0)
+    tpad1.Draw()
+    
+    c1.cd()
+
+    tpad2 =ROOT.TPad("", "", 0, 0.05, 1, 0.3)
+
+    tpad2.Draw()
+
+    tpad1.cd()
+
     if variables[i] == "photon_pt_overflow":
         hstack.Draw("hist")
     else:
@@ -4114,6 +4125,50 @@ for i in range(len(variables)):
 
     if variables[i] != "photon_pt_overflow":
         data["hists"][i].Draw("same")
+
+    tpad2.cd()
+
+    ratio=histogram_models[i].GetHistogram()
+
+    numerator=data["hists"][i].Clone()
+    denominator=hsum.Clone()
+
+    for j in range(1,denominator.GetNbinsX()):
+        denominator.SetBinError(j,0)
+
+    ratio.Add(numerator)    
+
+    ratio.Divide(denominator)
+
+    ratio.SetMaximum(1.2)
+
+    ratio.SetMinimum(0.8)
+
+    uncband = hsum.Clone()
+
+    gratiounc = ROOT.TGraphAsymmErrors(hsum);
+
+    for j in range(0,gratiounc.GetN()):
+        gratiounc.SetPoint (j, hsum.GetXaxis().GetBinCenter(j+1), 1);
+        if hsum.GetBinContent(j+1) > 0:
+            gratiounc.SetPointEYlow (j, hsum.GetBinError(j+1)/hsum.GetBinContent(j+1))
+            gratiounc.SetPointEYhigh (j, hsum.GetBinError(j+1)/hsum.GetBinContent(j+1))
+        else:
+            gratiounc.SetPointEYlow (j, 0)
+            gratiounc.SetPointEYhigh (j, 0)
+
+    gratiounc.SetFillColor(12);
+    gratiounc.SetFillStyle(3345);
+    gratiounc.SetMarkerSize(0);
+    gratiounc.SetLineWidth(0);
+    gratiounc.SetLineColor(ROOT.kWhite);
+    gratiounc.Draw("E2same");
+
+    ratio.Draw()
+
+    gratiounc.Draw("E2same")
+
+    c1.cd()
 
     c1.Update()
     c1.ForceUpdate()
