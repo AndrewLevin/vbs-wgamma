@@ -1602,17 +1602,17 @@ if (version == "wjets") {
     float fr = 0;
     if (year == "2016") {
         if (abs(eta) < 1.4442) {
-            if (pt < 30 && pt > 20) fr = 0.7749266862170089;
-            else if (pt < 40 && pt > 30) fr = 0.7447657028913259;
-            else if (pt < 50 && pt > 40) fr = 0.7568238213399504;
-            else if (pt > 50) fr = 0.6084452975047984;
+            if (pt < 30 && pt > 20) fr = 0.863562091503268;
+            else if (pt < 40 && pt > 30) fr = 0.8110749185667753;
+            else if (pt < 50 && pt > 40) fr = 0.8356164383561644;
+            else if (pt > 50) fr = 0.6576763485477178;
             else exit(1); 
         }
         else if (1.566 < abs(eta) && abs(eta) < 2.5) {
-           if (pt < 30 && pt > 20) fr = 0.7579298831385644;
-               else if (pt < 40 && pt > 30) fr = 1.1749347258485643;
-               else if (pt < 50 && pt > 40) fr = 1.1290322580645162;
-               else if (pt > 50) fr = 1.2777777777777775;
+           if (pt < 30 && pt > 20) fr = 0.7814113597246127;
+               else if (pt < 40 && pt > 30) fr = 1.2465373961218837;
+               else if (pt < 50 && pt > 40) fr = 1.1513157894736843;
+               else if (pt > 50) fr = 1.3089430894308942;
                else exit(1); 
            }
         }
@@ -2125,9 +2125,9 @@ def processMCSample(dummy):
     if label == "w+jets" and year == "2016":
         rinterface_wjets_2016 = rinterface_wjets_2016.Define("xs_weight",str(sample["xs"]*1000*lumi/sample["nweightedevents"]) + "*gen_weight/abs(gen_weight)") 
         rinterface_wjets_2016 = rinterface_wjets_2016.Define("base_weight",get_postfilter_selection_string()+"*xs_weight*puWeight*"+prefire_weight_string+"*photon_efficiency_scale_factor(photon_pt,photon_eta,\""+year+"\")*(abs(lepton_pdg_id) == 13 ? muon_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\") : electron_efficiency_scale_factor(lepton_pt,lepton_eta,\""+year+"\"))")      
-        rinterface_wjets_2016 = rinterface_wjets_2016.Define("weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + ")*base_weight")
-#                rinterface = rinterface.Define("wjets_fake_photon_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_for_fake_cutstring+" ? get_wjets_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id)*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0")
-        rinterface_wjets_2016 = rinterface_wjets_2016.Define("wjets_fake_photon_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 1 && is_lepton_real == 1 && !(photon_gen_matching == 1|| photon_gen_matching == 4 || photon_gen_matching == 5 || photon_gen_matching == 6) && (photon_genjet_matching || !is_photon_prompt(lumi,event,\""+year+"\",dsetversion[0])) ? get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,\"wjets\")*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0")
+#        rinterface_wjets_2016 = rinterface_wjets_2016.Define("weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && "+photon_gen_matching_cutstring + " && photon_genjet_matching)*base_weight")
+        rinterface_wjets_2016 = rinterface_wjets_2016.Define("weight","(photon_selection == 0 && is_lepton_tight == 1 && is_lepton_real == 1 && !(photon_gen_matching == 1|| photon_gen_matching == 4 || photon_gen_matching == 5 || photon_gen_matching == 6) && (photon_genjet_matching || !is_photon_prompt(lumi,event,\""+year+"\",dsetversion[0])))*base_weight")
+        rinterface_wjets_2016 = rinterface_wjets_2016.Define("wjets_fake_photon_weight","photon_selection == 4 && "+fake_photon_sieie_cut_cutstring + " && " + fake_photon_chiso_cut_cutstring+" && is_lepton_tight == 1 && is_lepton_real == 1 && !(photon_gen_matching == 1|| photon_gen_matching == 4 || photon_gen_matching == 5 || photon_gen_matching == 6) && (photon_genjet_matching || !is_photon_prompt(lumi,event,\""+year+"\",dsetversion[0])) ? get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,\"wjets\")*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+": 0")
         rinterface_wjets_2016 = rinterface_wjets_2016.Define("wjets_chiso_fake_photon_weight","photon_selection == 3 && ((abs(photon_eta) < 1.5 && photon_pfRelIso03_chg*photon_pt < "+str(chiso_cut_barrel)+"*1.75) || (abs(photon_eta) > 1.5 && photon_pfRelIso03_chg*photon_pt < "+str(chiso_cut_endcap)+"*1.75)) && is_lepton_tight == 1 && is_lepton_real == 1 && !(photon_gen_matching == 1|| photon_gen_matching == 4 || photon_gen_matching == 5 || photon_gen_matching == 6) ? get_fake_photon_weight(photon_eta,photon_pt,\""+year+"\",lepton_pdg_id,\"wjets_chiso\")*xs_weight*puWeight*"+prefire_weight_string+"*" + get_postfilter_selection_string()+" : 0")
         for variable_definition in variable_definitions:
             rinterface_wjets_2016 = rinterface_wjets_2016.Define(variable_definition[0],variable_definition[1])
@@ -3902,7 +3902,85 @@ for i in range(len(variables)):
         double_fake["hists-muon-hlt-sf-up"][i].Add(labels["wg+jets"]["hists-double-fake-pass-fiducial-muon-hlt-sf-up"][i])
         pass
 
+fake_photon_syst2_smoothed = []
+non_closure_smoothed = []
 
+for i in range(len(variables)):
+    window_size = max(int(wjets_2016["hists"][i].GetNbinsX()/5),1)
+
+    fake_photon_syst2_smoothed.append(histogram_models[i].GetHistogram())
+    non_closure_smoothed.append(histogram_models[i].GetHistogram())
+    num_smoothed = histogram_models[i].GetHistogram()
+    den_smoothed = histogram_models[i].GetHistogram()
+
+    for j in range(1,wjets_2016["hists"][i].GetNbinsX()+1):
+        rebinnum=ROOT.TH1F("","",2*window_size+1,0,2*window_size+1)
+        rebinden=ROOT.TH1F("","",2*window_size+1,0,2*window_size+1)
+
+        rebinnum.Sumw2()
+        rebinden.Sumw2()
+
+        if j < window_size+1:
+
+            for k in range(1,2*window_size+2):
+                rebinnum.SetBinContent(k,wjets_2016["hists"][i].GetBinContent(k))
+                rebinnum.SetBinError(k,wjets_2016["hists"][i].GetBinError(k))
+                rebinden.SetBinContent(k,wjets_fake_photon_2016["hists"][i].GetBinContent(k))
+                rebinden.SetBinError(k,wjets_fake_photon_2016["hists"][i].GetBinError(k))
+        elif j > wjets_2016["hists"][i].GetNbinsX() - window_size-1:        
+            for k in range(wjets_2016["hists"][i].GetNbinsX()+1-2*window_size-1,wjets_2016["hists"][i].GetNbinsX()+1):
+                rebinnum.SetBinContent(k-wjets_2016["hists"][i].GetNbinsX()-1+2*window_size+1+1,wjets_2016["hists"][i].GetBinContent(k))
+                rebinnum.SetBinError(k-wjets_2016["hists"][i].GetNbinsX()-1+2*window_size+1+1,wjets_2016["hists"][i].GetBinError(k))
+                rebinden.SetBinContent(k-wjets_2016["hists"][i].GetNbinsX()-1+2*window_size+1+1,wjets_fake_photon_2016["hists"][i].GetBinContent(k))
+                rebinden.SetBinError(k-wjets_2016["hists"][i].GetNbinsX()-1+2*window_size+1+1,wjets_fake_photon_2016["hists"][i].GetBinError(k))
+        else:
+            for k in range(j-window_size,j+window_size+1):
+                rebinnum.SetBinContent(k-j+window_size+1,wjets_2016["hists"][i].GetBinContent(k))
+                rebinnum.SetBinError(k-j+window_size+1,wjets_2016["hists"][i].GetBinError(k))
+                rebinden.SetBinContent(k-j+window_size+1,wjets_fake_photon_2016["hists"][i].GetBinContent(k))
+                rebinden.SetBinError(k-j+window_size+1,wjets_fake_photon_2016["hists"][i].GetBinError(k))
+
+#        rebinden.Scale(0.75)
+                 
+        rebinnum.Rebin(2*window_size+1)
+        rebinden.Rebin(2*window_size+1)
+
+        num_smoothed.SetBinContent(j,rebinnum.GetBinContent(1))
+        den_smoothed.SetBinContent(j,rebinden.GetBinContent(1))
+
+        num_smoothed.SetBinError(j,rebinnum.GetBinError(1))
+        den_smoothed.SetBinError(j,rebinden.GetBinError(1))
+
+        rebinnum.Divide(rebinden)
+
+        fake_photon_syst2_smoothed[len(fake_photon_syst2_smoothed)-1].SetBinContent(j,fake_photon["hists"][i].GetBinContent(j)*rebinnum.GetBinContent(1))
+        fake_photon_syst2_smoothed[len(fake_photon_syst2_smoothed)-1].SetBinError(j,fake_photon["hists"][i].GetBinContent(j)*rebinnum.GetBinError(1))
+        non_closure_smoothed[len(non_closure_smoothed)-1].SetBinContent(j,rebinnum.GetBinContent(1))
+        non_closure_smoothed[len(non_closure_smoothed)-1].SetBinError(j,rebinnum.GetBinError(1))
+
+    c = ROOT.TCanvas("c", "c",5,50,500,500)
+    fake_photon["hists"][i].SetLineColor(ROOT.kRed)
+    fake_photon_syst2_smoothed[len(fake_photon_syst2_smoothed)-1].SetLineColor(ROOT.kBlue)
+    fake_photon["hists"][i].SetMinimum(0)
+    fake_photon["hists"][i].SetMaximum(1.55*max(fake_photon["hists"][i].GetMaximum(),fake_photon_syst2_smoothed[len(fake_photon_syst2_smoothed)-1].GetMaximum()))
+    fake_photon["hists"][i].Draw()
+    fake_photon_syst2_smoothed[len(fake_photon_syst2_smoothed)-1].Draw("same")
+    c.SaveAs(args.outputdir + "/" + "fake_photon_syst2_"+variables_labels[i]+".png")
+
+    c = ROOT.TCanvas("c", "c",5,50,500,500)
+    non_closure_smoothed[len(non_closure_smoothed)-1].SetMinimum(0.5)
+    non_closure_smoothed[len(non_closure_smoothed)-1].SetMaximum(1.5)
+    non_closure_smoothed[len(non_closure_smoothed)-1].Draw()
+    c.SaveAs(args.outputdir + "/" + "non_closure_smoothed_"+variables_labels[i]+".png")
+
+    c = ROOT.TCanvas("c", "c",5,50,500,500)
+    num_smoothed.SetMinimum(0)
+    num_smoothed.SetMaximum(1.55*max(num_smoothed.GetMaximum(),den_smoothed.GetMaximum()))
+    num_smoothed.SetLineColor(ROOT.kRed)
+    den_smoothed.SetLineColor(ROOT.kBlue)
+    num_smoothed.Draw()
+    den_smoothed.Draw("same")
+    c.SaveAs(args.outputdir + "/" + "closure_smoothed_"+variables_labels[i]+".png")
 
 c1 = ROOT.TCanvas("c1", "c1",5,50,500,500)
 
@@ -4121,6 +4199,199 @@ for i in range(len(variables)):
     gstat.SetMarkerSize(0);
     gstat.SetLineWidth(0);
     gstat.SetLineColor(ROOT.kWhite);
+
+    gsyst = ROOT.TGraphAsymmErrors(hsum);
+    gratiosyst = ROOT.TGraphAsymmErrors(hsum);
+
+    wgjets_pdf_syst=histogram_models[i].GetHistogram()
+
+    for j in range(labels["wg+jets"]["hists-pdf-variation0"][i].GetNbinsX()+1):
+        mean_pdf=0
+
+        for k in range(1,32):
+            mean_pdf += labels["wg+jets"]["hists-pdf-variation"+str(k)][i].GetBinContent(j)*labels["wg+jets"]["hists"][i].Integral()/labels["wg+jets"]["hists-pdf-variation"+str(k)][i].Integral()
+
+        mean_pdf = mean_pdf/31
+
+        stddev_pdf = 0
+
+        for k in range(1,32):
+            stddev_pdf += pow(labels["wg+jets"]["hists-pdf-variation"+str(k)][i].GetBinContent(j)*labels["wg+jets"]["hists"][i].Integral()/labels["wg+jets"]["hists-pdf-variation"+str(k)][i].Integral() - mean_pdf,2)
+
+        stddev_pdf = sqrt(stddev_pdf/(31-1))
+
+        wgjets_pdf_syst.SetBinContent(j,labels["wg+jets"]["hists"][i].GetBinContent(j)+stddev_pdf)
+
+    wgjets_pass_fiducial_pdf_syst=histogram_models[i].GetHistogram()
+
+    for j in range(labels["wg+jets"]["hists-pass-fiducial-pdf-variation0"][i].GetNbinsX()+1):
+        mean_pdf=0
+
+        for k in range(1,32):
+            mean_pdf += labels["wg+jets"]["hists-pass-fiducial-pdf-variation"+str(k)][i].GetBinContent(j)*labels["wg+jets"]["hists-pass-fiducial"][i].Integral()/labels["wg+jets"]["hists-pass-fiducial-pdf-variation"+str(k)][i].Integral()
+
+        mean_pdf = mean_pdf/31
+
+        stddev_pdf = 0
+
+        for k in range(1,32):
+            stddev_pdf += pow(labels["wg+jets"]["hists-pass-fiducial-pdf-variation"+str(k)][i].GetBinContent(j)*labels["wg+jets"]["hists-pass-fiducial"][i].Integral()/labels["wg+jets"]["hists-pass-fiducial-pdf-variation"+str(k)][i].Integral() - mean_pdf,2)
+
+        stddev_pdf = sqrt(stddev_pdf/(31-1))
+
+        wgjets_pass_fiducial_pdf_syst.SetBinContent(j,labels["wg+jets"]["hists-pass-fiducial"][i].GetBinContent(j)+stddev_pdf)
+
+    wgjets_fail_fiducial_pdf_syst=histogram_models[i].GetHistogram()
+
+    for j in range(labels["wg+jets"]["hists-pdf-variation0"][i].GetNbinsX()+1):
+        mean_pdf=0
+
+        for k in range(1,32):
+            mean_pdf += labels["wg+jets"]["hists-fail-fiducial-pdf-variation"+str(k)][i].GetBinContent(j)
+
+        mean_pdf = mean_pdf/31
+
+        stddev_pdf = 0
+
+        for k in range(1,32):
+            stddev_pdf += pow(labels["wg+jets"]["hists-fail-fiducial-pdf-variation"+str(k)][i].GetBinContent(j) - mean_pdf,2)
+
+        stddev_pdf = sqrt(stddev_pdf/(31-1))
+
+        wgjets_fail_fiducial_pdf_syst.SetBinContent(j,labels["wg+jets"]["hists-fail-fiducial"][i].GetBinContent(j)+stddev_pdf)
+
+    wgjets_scale_syst=histogram_models[i].GetHistogram()
+
+    for j in range(labels["wg+jets"]["hists-scale-variation0"][i].GetNbinsX()+1):
+        wgjets_scale_syst.SetBinContent(j,labels["wg+jets"]["hists"][i].GetBinContent(j)+labels["wg+jets"]["hists"][i].Integral()*max(
+            abs(labels["wg+jets"]["hists-scale-variation0"][i].GetBinContent(j)/labels["wg+jets"]["hists-scale-variation0"][i].Integral() - labels["wg+jets"]["hists"][i].GetBinContent(j)/labels["wg+jets"]["hists"][i].Integral()),
+            abs(labels["wg+jets"]["hists-scale-variation1"][i].GetBinContent(j)/labels["wg+jets"]["hists-scale-variation1"][i].Integral() - labels["wg+jets"]["hists"][i].GetBinContent(j)/labels["wg+jets"]["hists"][i].Integral()),
+            abs(labels["wg+jets"]["hists-scale-variation3"][i].GetBinContent(j)/labels["wg+jets"]["hists-scale-variation3"][i].Integral() - labels["wg+jets"]["hists"][i].GetBinContent(j)/labels["wg+jets"]["hists"][i].Integral()),
+            abs(labels["wg+jets"]["hists-scale-variation4"][i].GetBinContent(j)/labels["wg+jets"]["hists-scale-variation4"][i].Integral() - labels["wg+jets"]["hists"][i].GetBinContent(j)/labels["wg+jets"]["hists"][i].Integral()),
+            abs(labels["wg+jets"]["hists-scale-variation5"][i].GetBinContent(j)/labels["wg+jets"]["hists-scale-variation5"][i].Integral() - labels["wg+jets"]["hists"][i].GetBinContent(j)/labels["wg+jets"]["hists"][i].Integral()),
+            abs(labels["wg+jets"]["hists-scale-variation6"][i].GetBinContent(j)/labels["wg+jets"]["hists-scale-variation6"][i].Integral() - labels["wg+jets"]["hists"][i].GetBinContent(j)/labels["wg+jets"]["hists"][i].Integral())))
+
+    wgjets_pass_fiducial_scale_syst=histogram_models[i].GetHistogram()
+
+    for j in range(labels["wg+jets"]["hists-pass-fiducial-scale-variation0"][i].GetNbinsX()+1):
+        wgjets_pass_fiducial_scale_syst.SetBinContent(j,labels["wg+jets"]["hists-pass-fiducial"][i].GetBinContent(j)+labels["wg+jets"]["hists-pass-fiducial"][i].Integral()*max(
+            abs(labels["wg+jets"]["hists-pass-fiducial-scale-variation0"][i].GetBinContent(j)/labels["wg+jets"]["hists-pass-fiducial-scale-variation0"][i].Integral() - labels["wg+jets"]["hists-pass-fiducial"][i].GetBinContent(j)/labels["wg+jets"]["hists-pass-fiducial"][i].Integral()),
+            abs(labels["wg+jets"]["hists-pass-fiducial-scale-variation1"][i].GetBinContent(j)/labels["wg+jets"]["hists-pass-fiducial-scale-variation1"][i].Integral() - labels["wg+jets"]["hists-pass-fiducial"][i].GetBinContent(j)/labels["wg+jets"]["hists-pass-fiducial"][i].Integral()),
+            abs(labels["wg+jets"]["hists-pass-fiducial-scale-variation3"][i].GetBinContent(j)/labels["wg+jets"]["hists-pass-fiducial-scale-variation3"][i].Integral() - labels["wg+jets"]["hists-pass-fiducial"][i].GetBinContent(j)/labels["wg+jets"]["hists-pass-fiducial"][i].Integral()),
+            abs(labels["wg+jets"]["hists-pass-fiducial-scale-variation4"][i].GetBinContent(j)/labels["wg+jets"]["hists-pass-fiducial-scale-variation4"][i].Integral() - labels["wg+jets"]["hists-pass-fiducial"][i].GetBinContent(j)/labels["wg+jets"]["hists-pass-fiducial"][i].Integral()),
+            abs(labels["wg+jets"]["hists-pass-fiducial-scale-variation5"][i].GetBinContent(j)/labels["wg+jets"]["hists-pass-fiducial-scale-variation5"][i].Integral() - labels["wg+jets"]["hists-pass-fiducial"][i].GetBinContent(j)/labels["wg+jets"]["hists-pass-fiducial"][i].Integral()),
+            abs(labels["wg+jets"]["hists-pass-fiducial-scale-variation6"][i].GetBinContent(j)/labels["wg+jets"]["hists-pass-fiducial-scale-variation6"][i].Integral() - labels["wg+jets"]["hists-pass-fiducial"][i].GetBinContent(j)/labels["wg+jets"]["hists-pass-fiducial"][i].Integral())))
+
+    wgjets_fail_fiducial_scale_syst=histogram_models[i].GetHistogram()
+
+    for j in range(labels["wg+jets"]["hists-fail-fiducial-scale-variation0"][i].GetNbinsX()+1):
+        wgjets_fail_fiducial_scale_syst.SetBinContent(j,labels["wg+jets"]["hists-fail-fiducial"][i].GetBinContent(j)+max(
+            abs(labels["wg+jets"]["hists-fail-fiducial-scale-variation0"][i].GetBinContent(j) - labels["wg+jets"]["hists-fail-fiducial"][i].GetBinContent(j)),
+            abs(labels["wg+jets"]["hists-fail-fiducial-scale-variation1"][i].GetBinContent(j) - labels["wg+jets"]["hists-fail-fiducial"][i].GetBinContent(j)),
+            abs(labels["wg+jets"]["hists-fail-fiducial-scale-variation3"][i].GetBinContent(j) - labels["wg+jets"]["hists-fail-fiducial"][i].GetBinContent(j)),
+            abs(labels["wg+jets"]["hists-fail-fiducial-scale-variation4"][i].GetBinContent(j) - labels["wg+jets"]["hists-fail-fiducial"][i].GetBinContent(j)),
+            abs(labels["wg+jets"]["hists-fail-fiducial-scale-variation5"][i].GetBinContent(j) - labels["wg+jets"]["hists-fail-fiducial"][i].GetBinContent(j)),
+            abs(labels["wg+jets"]["hists-fail-fiducial-scale-variation6"][i].GetBinContent(j) - labels["wg+jets"]["hists-fail-fiducial"][i].GetBinContent(j))))
+
+    zgjets_pdf_syst=histogram_models[i].GetHistogram()
+
+    for j in range(labels["zg+jets"]["hists-pdf-variation0"][i].GetNbinsX()+1):
+        mean_pdf=0
+
+        for k in range(1,32):
+            mean_pdf += labels["zg+jets"]["hists-pdf-variation"+str(k)][i].GetBinContent(j)
+
+        mean_pdf = mean_pdf/31
+
+        stddev_pdf = 0
+
+        for k in range(1,32):
+            stddev_pdf += pow(labels["zg+jets"]["hists-pdf-variation"+str(k)][i].GetBinContent(j) - mean_pdf,2)
+
+        stddev_pdf = sqrt(stddev_pdf/(31-1))
+
+        zgjets_pdf_syst.SetBinContent(j,labels["zg+jets"]["hists"][i].GetBinContent(j)+stddev_pdf)
+
+    zgjets_scale_syst=histogram_models[i].GetHistogram()
+
+    for j in range(labels["zg+jets"]["hists-scale-variation0"][i].GetNbinsX()+2):
+        zgjets_scale_syst.SetBinContent(j,labels["zg+jets"]["hists"][i].GetBinContent(j)+max(
+            abs(labels["zg+jets"]["hists-scale-variation0"][i].GetBinContent(j) - labels["zg+jets"]["hists"][i].GetBinContent(j)),
+            abs(labels["zg+jets"]["hists-scale-variation1"][i].GetBinContent(j) - labels["zg+jets"]["hists"][i].GetBinContent(j)),
+            abs(labels["zg+jets"]["hists-scale-variation3"][i].GetBinContent(j) - labels["zg+jets"]["hists"][i].GetBinContent(j)),
+            abs(labels["zg+jets"]["hists-scale-variation4"][i].GetBinContent(j) - labels["zg+jets"]["hists"][i].GetBinContent(j)),
+            abs(labels["zg+jets"]["hists-scale-variation5"][i].GetBinContent(j) - labels["zg+jets"]["hists"][i].GetBinContent(j)),
+            abs(labels["zg+jets"]["hists-scale-variation6"][i].GetBinContent(j) - labels["zg+jets"]["hists"][i].GetBinContent(j))))
+
+
+    for j in range(1,gsyst.GetN()+1):
+        total_unc = 0
+        
+        total_unc += pow(zgjets_scale_syst.GetBinContent(j) - labels["zg+jets"]["hists"][i].GetBinContent(j),2)
+
+        total_unc += pow(zgjets_pdf_syst.GetBinContent(j) - labels["zg+jets"]["hists"][i].GetBinContent(j),2)
+
+        for k in range(n_fake_photon_alt):
+            total_unc += pow(fake_photon["hists-alt"+str(k)][i].GetBinContent(j)-fake_photon["hists"][i].GetBinContent(j),2)
+
+        total_unc += pow(fake_photon_syst2_smoothed[i].GetBinContent(j)-fake_photon["hists"][i].GetBinContent(j),2)
+
+        total_unc += pow(0.3*fake_lepton["hists"][i].GetBinContent(j),2)
+
+        for label in ["top+jets","vv+jets","zg+jets"]:
+            total_unc += pow(0.018*labels[label]["hists"][i].GetBinContent(j),2)
+
+        if args.draw_non_fid:
+            total_unc += pow(0.018*labels["wg+jets"]["hists-pass-fiducial-"+unc+"-up"][i].GetBinContent(j),2)
+            total_unc += pow(0.018*labels["wg+jets"]["hists-fail-fiducial-"+unc+"-up"][i].GetBinContent(j),2)
+            total_unc += pow(wgjets_pass_fiducial_pdf_syst.GetBinContent(j) - labels["wg+jets"]["hists-pass-fiducial"][i].GetBinContent(j),2)
+            total_unc += pow(wgjets_pass_fiducial_scale_syst.GetBinContent(j) - labels["wg+jets"]["hists-pass-fiducial"][i].GetBinContent(j),2)
+            total_unc += pow(wgjets_fail_fiducial_pdf_syst.GetBinContent(j) - labels["wg+jets"]["hists-fail-fiducial"][i].GetBinContent(j),2)
+            total_unc += pow(wgjets_fail_fiducial_scale_syst.GetBinContent(j) - labels["wg+jets"]["hists-fail-fiducial"][i].GetBinContent(j),2)
+        else:
+            pass
+            total_unc += pow(0.018*labels["wg+jets"]["hists"][i].GetBinContent(j),2)
+            total_unc += pow(wgjets_pdf_syst.GetBinContent(j) - labels["wg+jets"]["hists"][i].GetBinContent(j),2)
+            total_unc += pow(wgjets_scale_syst.GetBinContent(j) - labels["wg+jets"]["hists"][i].GetBinContent(j),2)
+
+        for unc in ["pileup","prefire","jes","jer","muon-id-sf","muon-iso-sf","muon-hlt-sf","electron-reco-sf","electron-id-sf","electron-hlt-sf","photon-id-sf"]:
+            if unc != "jer" and unc != "jes":
+                total_unc += pow(labels["w+jets"]["hists-prompt-pileup-"+unc+"-up"][i].GetBinContent(j) - labels["w+jets"]["hists-prompt-pileup"][i].GetBinContent(j),2)
+            for label in ["top+jets","vv+jets","zg+jets"]:
+                total_unc += pow(labels[label]["hists-"+unc+"-up"][i].GetBinContent(j) - labels[label]["hists"][i].GetBinContent(j),2)
+            if args.draw_non_fid:
+                total_unc += pow(labels["wg+jets"]["hists-pass-fiducial-"+unc+"-up"][i].GetBinContent(j) - labels["wg+jets"]["hists-pass-fiducial"][i].GetBinContent(j),2)
+                total_unc += pow(labels["wg+jets"]["hists-fail-fiducial-"+unc+"-up"][i].GetBinContent(j) - labels["wg+jets"]["hists-fail-fiducial"][i].GetBinContent(j),2)
+            else:
+                total_unc += pow(labels["wg+jets"]["hists-"+unc+"-up"][i].GetBinContent(j) - labels["wg+jets"]["hists"][i].GetBinContent(j),2)
+
+        total_unc += pow(hsum.GetBinError(j),2)
+
+        total_unc = sqrt(total_unc)     
+
+        gsyst.SetPointEYlow (j-1, total_unc)
+        gsyst.SetPointEYlow (j-1, total_unc)
+
+        gratiosyst.SetPoint (j, hsum.GetXaxis().GetBinCenter(j), 1);
+        if hsum.GetBinContent(j) > 0:
+            gratiosyst.SetPointEYlow (j-1, total_unc/hsum.GetBinContent(j))
+            gratiosyst.SetPointEYhigh (j-1, total_unc/hsum.GetBinContent(j))
+        else:
+            gratiosyst.SetPointEYlow (j-1, 0)
+            gratiosyst.SetPointEYhigh (j-1, 0)
+
+    gsyst.SetFillColor(12);
+    gsyst.SetFillStyle(3345);
+    gsyst.SetMarkerSize(0);
+    gsyst.SetLineWidth(0);
+    gsyst.SetLineColor(ROOT.kWhite);
+
+    gratiosyst.SetFillColor(12);
+    gratiosyst.SetFillStyle(3345);
+    gratiosyst.SetMarkerSize(0);
+    gratiosyst.SetLineWidth(0);
+    gratiosyst.SetLineColor(ROOT.kWhite);
+
     gstat.Draw("E2same");
 
     if variables[i] != "photon_pt_overflow":
@@ -4135,38 +4406,18 @@ for i in range(len(variables)):
 
     for j in range(1,denominator.GetNbinsX()):
         denominator.SetBinError(j,0)
-
+                                 
     ratio.Add(numerator)    
 
     ratio.Divide(denominator)
 
-    ratio.SetMaximum(1.2)
+    ratio.SetMaximum(1.3)
 
-    ratio.SetMinimum(0.8)
-
-    uncband = hsum.Clone()
-
-    gratiounc = ROOT.TGraphAsymmErrors(hsum);
-
-    for j in range(0,gratiounc.GetN()):
-        gratiounc.SetPoint (j, hsum.GetXaxis().GetBinCenter(j+1), 1);
-        if hsum.GetBinContent(j+1) > 0:
-            gratiounc.SetPointEYlow (j, hsum.GetBinError(j+1)/hsum.GetBinContent(j+1))
-            gratiounc.SetPointEYhigh (j, hsum.GetBinError(j+1)/hsum.GetBinContent(j+1))
-        else:
-            gratiounc.SetPointEYlow (j, 0)
-            gratiounc.SetPointEYhigh (j, 0)
-
-    gratiounc.SetFillColor(12);
-    gratiounc.SetFillStyle(3345);
-    gratiounc.SetMarkerSize(0);
-    gratiounc.SetLineWidth(0);
-    gratiounc.SetLineColor(ROOT.kWhite);
-    gratiounc.Draw("E2same");
+    ratio.SetMinimum(0.7)
 
     ratio.Draw()
 
-    gratiounc.Draw("E2same")
+    gratiosyst.Draw("E2same")
 
     c1.cd()
 
@@ -4451,7 +4702,7 @@ elif lepton_name == "electron":
     }
 
     for i in range(n_fake_photon_alt):
-        xs_inputs["signal_syst_unc_due_to_fake_photon_alt"+str(i)+"_electron"] = abs(fake_photon["hists-alt"+str(i)][mlg_index].Integral() - fake_photon["hists"][mlg_index].Integral()),
+        xs_inputs_electron["signal_syst_unc_due_to_fake_photon_alt"+str(i)+"_electron"] = abs(fake_photon["hists-alt"+str(i)][mlg_index].Integral() - fake_photon["hists"][mlg_index].Integral()),
 
     if args.no_wjets_for_2017_and_2018:
         xs_inputs_electron["signal_syst_unc_due_to_fake_photon_wjets_electron"] = abs(labels["w+jets"]["hists"][mlg_index].Integral() - fake_photon_2016["hists"][mlg_index].Integral())*fake_photon["hists"][mlg_index].Integral()/fake_photon_2016["hists"][mlg_index].Integral()
