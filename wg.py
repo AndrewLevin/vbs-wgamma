@@ -323,17 +323,17 @@ def getXaxisLabel(varname):
     if varname == "njets40":
         return "number of jets"
     elif varname == "detalg":
-        return "#Delta#eta(l,g)"
+        return "#Delta#eta(l,#gamma)"
     elif varname == "dphilpuppimet":
         return "#Delta#phi(l,MET)"
     elif varname == "dphigpuppimet":
-        return "#Delta#phi(g,MET)"
+        return "#Delta#phi(#gamma,MET)"
     elif varname == "corrdphilpuppimet":
         return "corrected #Delta#phi(l,MET)"
     elif varname == "drlg":
-        return "#Delta R(l,g)"
+        return "#Delta R(l,#gamma)"
     elif varname == "dphilg":
-        return "#Delta#phi(l,g)"
+        return "#Delta#phi(l,#gamma)"
     elif varname == "npvs":
         return "number of PVs"
     elif varname == "mt":
@@ -4093,12 +4093,14 @@ for i in range(len(variables)):
     hsum.SetMinimum(0)
 
     tpad1=ROOT.TPad("", "", 0, 0.3, 1, 1.0)
+    tpad1.SetBottomMargin(0.02)
     tpad1.Draw()
     
     c1.cd()
 
-    tpad2 =ROOT.TPad("", "", 0, 0.05, 1, 0.3)
-
+    tpad2 =ROOT.TPad("", "", 0, 0.0, 1, 0.275)
+    tpad2.SetTopMargin(0)
+    tpad2.SetBottomMargin(0.35)
     tpad2.Draw()
 
     tpad1.cd()
@@ -4414,6 +4416,26 @@ for i in range(len(variables)):
     ratio.SetMaximum(1.3)
 
     ratio.SetMinimum(0.7)
+
+    ratio.GetXaxis().SetLabelFont  (   42)
+    ratio.GetXaxis().SetLabelOffset(0.015)
+    ratio.GetXaxis().SetLabelSize  (0.150)
+
+    ratio.GetYaxis().SetLabelFont  (   42)
+    ratio.GetYaxis().SetLabelOffset(0.015)
+    ratio.GetYaxis().SetLabelSize  (0.100)
+
+    ratio.GetYaxis().SetTitleFont  (   42)
+    ratio.GetYaxis().SetTitleOffset(0.45)
+    ratio.GetYaxis().SetTitleSize  (0.100)
+    ratio.GetYaxis().SetTitle("data / pred")
+
+
+    ratio.GetXaxis().SetTitleFont (42)
+    ratio.GetXaxis().SetTitleOffset (0.95)
+    ratio.GetXaxis().SetTitleSize (0.15)
+    ratio.GetXaxis().SetNdivisions (505)
+    ratio.GetXaxis().SetTitle(getXaxisLabel(variables[i]))
 
     ratio.Draw()
 
