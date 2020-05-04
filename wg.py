@@ -4394,7 +4394,8 @@ for i in range(len(variables)):
     gratiosyst.SetLineWidth(0);
     gratiosyst.SetLineColor(ROOT.kWhite);
 
-    gstat.Draw("E2same");
+#    gstat.Draw("E2same");
+    gsyst.Draw("E2same");
 
     if variables[i] != "photon_pt_overflow":
         data["hists"][i].Draw("same")
