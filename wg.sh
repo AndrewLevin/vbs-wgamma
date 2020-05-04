@@ -1,6 +1,6 @@
 date 2>&1 | tee wg_ewdim6.txt; python -u wg.py --lep both --ewdim6 --draw_ewdim6 -o /eos/user/a/amlevin/www/wg/ewdim6/ --make_all_plots  --phoeta both --year run2 2>&1 | tee -a wg_ewdim6.txt; date 2>&1 | tee -a wg_ewdim6.txt
 
-date 2>&1 | tee wg_electron.txt; python -u wg.py --lep electron -o /eos/user/a/amlevin/www/wg/electron/ --phoeta both --year run2 --make_datacard --make_all_plots --zveto 2>&1 | tee -a wg_electron.txt; date 2>&1 | tee -a wg_electron.txt
+date 2>&1 | tee wg_electron.txt; python -u wg.py --lep electron -o /eos/user/a/amlevin/www/wg/electron/ --phoeta both --year run2 --make_datacard --make_all_plots 2>&1 | tee -a wg_electron.txt; date 2>&1 | tee -a wg_electron.txt
 
 date 2>&1 | tee wg_electron_zveto.txt; python -u wg.py --lep electron -o /eos/user/a/amlevin/www/wg/electron_zveto/ --phoeta both --year run2 --make_all_plots --zveto 2>&1 | tee -a wg_electron_zveto.txt; date 2>&1 | tee -a wg_electron_zveto.txt
 
