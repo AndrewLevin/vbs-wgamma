@@ -44,7 +44,7 @@ cp /eos/user/a/amlevin/www/wg/muon/mlg.png /afs/cern.ch/user/a/amlevin/tdr/notes
 cp /eos/user/a/amlevin/www/wg/muon/lepton_pt.png /afs/cern.ch/user/a/amlevin/tdr/notes/AN-18-238/plots/muon/   
 cp /eos/user/a/amlevin/www/wg/muon/lepton_eta.png /afs/cern.ch/user/a/amlevin/tdr/notes/AN-18-238/plots/muon/   
 cp /eos/user/a/amlevin/www/wg/muon/lepton_phi.png /afs/cern.ch/user/a/amlevin/tdr/notes/AN-18-238/plots/muon/   
-cp /eos/user/a/amlevin/www/wg/muon/photon_pt_20to180.png /afs/cern.ch/user/a/amlevin/tdr/notes/AN-18-238/plots/muon/photon_pt.png
+cp /eos/user/a/amlevin/www/wg/muon/photon_pt.png /afs/cern.ch/user/a/amlevin/tdr/notes/AN-18-238/plots/muon/photon_pt.png
 cp /eos/user/a/amlevin/www/wg/muon/photon_eta.png /afs/cern.ch/user/a/amlevin/tdr/notes/AN-18-238/plots/muon/
 cp /eos/user/a/amlevin/www/wg/muon/photon_phi.png /afs/cern.ch/user/a/amlevin/tdr/notes/AN-18-238/plots/muon/
 
@@ -61,7 +61,7 @@ cp /eos/user/a/amlevin/www/wg/electron_zveto/mlg.png /afs/cern.ch/user/a/amlevin
 cp /eos/user/a/amlevin/www/wg/electron_zveto/lepton_pt.png /afs/cern.ch/user/a/amlevin/tdr/notes/AN-18-238/plots/electron/   
 cp /eos/user/a/amlevin/www/wg/electron_zveto/lepton_eta.png /afs/cern.ch/user/a/amlevin/tdr/notes/AN-18-238/plots/electron/   
 cp /eos/user/a/amlevin/www/wg/electron_zveto/lepton_phi.png /afs/cern.ch/user/a/amlevin/tdr/notes/AN-18-238/plots/electron/   
-cp /eos/user/a/amlevin/www/wg/electron_zveto/photon_pt_20to180.png /afs/cern.ch/user/a/amlevin/tdr/notes/AN-18-238/plots/electron/photon_pt.png
+cp /eos/user/a/amlevin/www/wg/electron_zveto/photon_pt.png /afs/cern.ch/user/a/amlevin/tdr/notes/AN-18-238/plots/electron/photon_pt.png
 cp /eos/user/a/amlevin/www/wg/electron_zveto/photon_eta.png /afs/cern.ch/user/a/amlevin/tdr/notes/AN-18-238/plots/electron/
 cp /eos/user/a/amlevin/www/wg/electron_zveto/photon_phi.png /afs/cern.ch/user/a/amlevin/tdr/notes/AN-18-238/plots/electron/
 
@@ -78,7 +78,7 @@ cp /eos/user/a/amlevin/www/wg/muon_mcfakephoton/mlg.png /afs/cern.ch/user/a/amle
 cp /eos/user/a/amlevin/www/wg/muon_mcfakephoton/lepton_pt.png /afs/cern.ch/user/a/amlevin/tdr/notes/AN-18-238/plots/mcfakephoton/muon/   
 cp /eos/user/a/amlevin/www/wg/muon_mcfakephoton/lepton_eta.png /afs/cern.ch/user/a/amlevin/tdr/notes/AN-18-238/plots/mcfakephoton/muon/   
 cp /eos/user/a/amlevin/www/wg/muon_mcfakephoton/lepton_phi.png /afs/cern.ch/user/a/amlevin/tdr/notes/AN-18-238/plots/mcfakephoton/muon/   
-cp /eos/user/a/amlevin/www/wg/muon_mcfakephoton/photon_pt_20to180.png /afs/cern.ch/user/a/amlevin/tdr/notes/AN-18-238/plots/mcfakephoton/muon/photon_pt.png
+cp /eos/user/a/amlevin/www/wg/muon_mcfakephoton/photon_pt.png /afs/cern.ch/user/a/amlevin/tdr/notes/AN-18-238/plots/mcfakephoton/muon/photon_pt.png
 cp /eos/user/a/amlevin/www/wg/muon_mcfakephoton/photon_eta.png /afs/cern.ch/user/a/amlevin/tdr/notes/AN-18-238/plots/mcfakephoton/muon/
 cp /eos/user/a/amlevin/www/wg/muon_mcfakephoton/photon_phi.png /afs/cern.ch/user/a/amlevin/tdr/notes/AN-18-238/plots/mcfakephoton/muon/
 
@@ -95,7 +95,7 @@ cp /eos/user/a/amlevin/www/wg/electron_mcfakephoton_zveto/mlg.png /afs/cern.ch/u
 cp /eos/user/a/amlevin/www/wg/electron_mcfakephoton_zveto/lepton_pt.png /afs/cern.ch/user/a/amlevin/tdr/notes/AN-18-238/plots/mcfakephoton/electron/   
 cp /eos/user/a/amlevin/www/wg/electron_mcfakephoton_zveto/lepton_eta.png /afs/cern.ch/user/a/amlevin/tdr/notes/AN-18-238/plots/mcfakephoton/electron/   
 cp /eos/user/a/amlevin/www/wg/electron_mcfakephoton_zveto/lepton_phi.png /afs/cern.ch/user/a/amlevin/tdr/notes/AN-18-238/plots/mcfakephoton/electron/   
-cp /eos/user/a/amlevin/www/wg/electron_mcfakephoton_zveto/photon_pt_20to180.png /afs/cern.ch/user/a/amlevin/tdr/notes/AN-18-238/plots/mcfakephoton/electron/photon_pt.png
+cp /eos/user/a/amlevin/www/wg/electron_mcfakephoton_zveto/photon_pt.png /afs/cern.ch/user/a/amlevin/tdr/notes/AN-18-238/plots/mcfakephoton/electron/photon_pt.png
 cp /eos/user/a/amlevin/www/wg/electron_mcfakephoton_zveto/photon_eta.png /afs/cern.ch/user/a/amlevin/tdr/notes/AN-18-238/plots/mcfakephoton/electron/
 cp /eos/user/a/amlevin/www/wg/electron_mcfakephoton_zveto/photon_phi.png /afs/cern.ch/user/a/amlevin/tdr/notes/AN-18-238/plots/mcfakephoton/electron/
 
@@ -116,12 +116,12 @@ cp /eos/user/a/amlevin/www/wg/electron/frame4.png /afs/cern.ch/user/a/amlevin/td
 
 cp /eos/user/a/amlevin/www/wg/fake-photon/sources/dphilg.png /afs/cern.ch/user/a/amlevin/tdr/notes/AN-18-238/plots/fake-photon/sources/
 cp /eos/user/a/amlevin/www/wg/fake-photon/sources/dphilpuppimet.png /afs/cern.ch/user/a/amlevin/tdr/notes/AN-18-238/plots/fake-photon/sources/dphilmet.png
-cp /eos/user/a/amlevin/www/wg/fake-photon/sources/photon_pt_20to180.png /afs/cern.ch/user/a/amlevin/tdr/notes/AN-18-238/plots/fake-photon/sources/photon_pt.png
+cp /eos/user/a/amlevin/www/wg/fake-photon/sources/photon_pt.png /afs/cern.ch/user/a/amlevin/tdr/notes/AN-18-238/plots/fake-photon/sources/photon_pt.png
 cp /eos/user/a/amlevin/www/wg/fake-photon/sources/lepton_pt.png /afs/cern.ch/user/a/amlevin/tdr/notes/AN-18-238/plots/fake-photon/sources/
 cp /eos/user/a/amlevin/www/wg/fake-photon/sources/met.png /afs/cern.ch/user/a/amlevin/tdr/notes/AN-18-238/plots/fake-photon/sources/
 cp /eos/user/a/amlevin/www/wg/fake-photon/sources/mt.png /afs/cern.ch/user/a/amlevin/tdr/notes/AN-18-238/plots/fake-photon/sources/
 
-cp /eos/user/a/amlevin/www/wg/fake-photon/closure/photon_pt_20to180.png /afs/cern.ch/user/a/amlevin/tdr/notes/AN-18-238/plots/fake-photon/closure/photon_pt.png
+cp /eos/user/a/amlevin/www/wg/fake-photon/closure/photon_pt.png /afs/cern.ch/user/a/amlevin/tdr/notes/AN-18-238/plots/fake-photon/closure/photon_pt.png
 cp /eos/user/a/amlevin/www/wg/fake-photon/closure/photon_eta.png /afs/cern.ch/user/a/amlevin/tdr/notes/AN-18-238/plots/fake-photon/closure/
 cp /eos/user/a/amlevin/www/wg/fake-photon/closure/photon_phi.png /afs/cern.ch/user/a/amlevin/tdr/notes/AN-18-238/plots/fake-photon/closure/
 cp /eos/user/a/amlevin/www/wg/fake-photon/closure/puppimet.png /afs/cern.ch/user/a/amlevin/tdr/notes/AN-18-238/plots/fake-photon/closure/met.png
