@@ -4369,18 +4369,18 @@ for i in range(len(variables)):
 
         total_unc += pow(hsum.GetBinError(j),2)
 
-        total_unc = sqrt(total_unc)     
+        total_unc = sqrt(total_unc)
 
-        gsyst.SetPointEYlow (j-1, total_unc)
-        gsyst.SetPointEYlow (j-1, total_unc)
+        gsyst.SetPointEYlow(j-1, total_unc)
+        gsyst.SetPointEYlow(j-1, total_unc)
 
-        gratiosyst.SetPoint (j, hsum.GetXaxis().GetBinCenter(j), 1);
+        gratiosyst.SetPoint(j-1, hsum.GetXaxis().GetBinCenter(j), 1)
         if hsum.GetBinContent(j) > 0:
-            gratiosyst.SetPointEYlow (j-1, total_unc/hsum.GetBinContent(j))
-            gratiosyst.SetPointEYhigh (j-1, total_unc/hsum.GetBinContent(j))
+            gratiosyst.SetPointEYlow(j-1, total_unc/hsum.GetBinContent(j))
+            gratiosyst.SetPointEYhigh(j-1, total_unc/hsum.GetBinContent(j))
         else:
-            gratiosyst.SetPointEYlow (j-1, 0)
-            gratiosyst.SetPointEYhigh (j-1, 0)
+            gratiosyst.SetPointEYlow(j-1, 0)
+            gratiosyst.SetPointEYhigh(j-1, 0)
 
     gsyst.SetFillColor(12);
     gsyst.SetFillStyle(3345);
