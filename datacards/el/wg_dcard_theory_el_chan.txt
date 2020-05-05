@@ -12,11 +12,11 @@ shapes fake_photon el_chan wg_dcard_el_chan_shapes.root fakephoton fakephoton_$S
 shapes fake_electron el_chan wg_dcard_el_chan_shapes.root fakeelectron fakeelectron_$SYSTEMATIC
 shapes double_fake el_chan wg_dcard_el_chan_shapes.root doublefake doublefake_$SYSTEMATIC
 shapes e_to_p_bin0 el_chan wg_dcard_el_chan_shapes.root etopbin0 etopbin0_$SYSTEMATIC
-Observation 112721.83061
+Observation 376696.036605
 bin el_chan el_chan el_chan el_chan el_chan el_chan el_chan el_chan el_chan el_chan
 process Wg Wg_out topjets zgjets vvjets pileup fake_photon fake_electron double_fake e_to_p_bin0
 process 0 1 2 3 4 5 6 7 8 9
-rate 51659.971076 1196.51962548 8837.22227416 4264.12642646 704.567673185 8930.83855904 19188.7611615 11800.8418639 7930.72117227 7139.09933738
+rate 98031.421769 2207.40484119 14976.4214954 21183.8076779 1348.11073788 4965.42137431 42337.5384904 21437.1650305 19034.6622207 156139.504342
 wgscale shape1 1.0 - - - - - - - - -
 wgpdf shape1 1.0 - - - - - - - - -
 wgoutscale shape1 - 1.0 - - - - - - - -

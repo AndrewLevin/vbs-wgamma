@@ -12,11 +12,11 @@ shapes fake_photon el_chan wg_dcard_el_chan_shapes.root fakephoton fakephoton_$S
 shapes fake_electron el_chan wg_dcard_el_chan_shapes.root fakeelectron fakeelectron_$SYSTEMATIC
 shapes double_fake el_chan wg_dcard_el_chan_shapes.root doublefake doublefake_$SYSTEMATIC
 shapes e_to_p_bin0 el_chan wg_dcard_el_chan_shapes.root etopbin0 etopbin0_$SYSTEMATIC
-Observation 112721.83061
+Observation 376696.036605
 bin el_chan el_chan el_chan el_chan el_chan el_chan el_chan el_chan el_chan el_chan
 process Wg Wg_out topjets zgjets vvjets pileup fake_photon fake_electron double_fake e_to_p_bin0
 process 0 1 2 3 4 5 6 7 8 9
-rate 51659.971076 1196.51962548 8837.22227416 4264.12642646 704.567673185 8930.83855904 19188.7611615 11800.8418639 7930.72117227 7139.09933738
+rate 98031.421769 2207.40484119 14976.4214954 21183.8076779 1348.11073788 4965.42137431 42337.5384904 21437.1650305 19034.6622207 156139.504342
 lumi lnN 1.018 1.018 1.018 1.018 1.018 1.018 - - - 1.018
 pileup shape1 1.0 1.0 1.0 1.0 1.0 1.0 - - - - -
 prefire shape1 1.0 1.0 1.0 1.0 1.0 1.0 - - - - -
@@ -26,7 +26,30 @@ photonid shape1 1.0 1.0 1.0 1.0 1.0 1.0 - - - -
 electronreco shape1 1.0 1.0 1.0 1.0 1.0 1.0 - - - -
 electronid shape1 1.0 1.0 1.0 1.0 1.0 1.0 - - - -
 electronhlt shape1 1.0 1.0 1.0 1.0 1.0 1.0 - - - -
-fakephotonsyst1 shape1 - - - - - - 1.0 - - - -
+fakephotonsyst1var0 shape1 - - - - - - 1.0 - - - -
+fakephotonsyst1var1 shape1 - - - - - - 1.0 - - - -
+fakephotonsyst1var2 shape1 - - - - - - 1.0 - - - -
+fakephotonsyst1var3 shape1 - - - - - - 1.0 - - - -
+fakephotonsyst1var4 shape1 - - - - - - 1.0 - - - -
+fakephotonsyst1var5 shape1 - - - - - - 1.0 - - - -
+fakephotonsyst1var6 shape1 - - - - - - 1.0 - - - -
+fakephotonsyst1var7 shape1 - - - - - - 1.0 - - - -
+fakephotonsyst1var8 shape1 - - - - - - 1.0 - - - -
+fakephotonsyst1var9 shape1 - - - - - - 1.0 - - - -
+fakephotonsyst1var10 shape1 - - - - - - 1.0 - - - -
+fakephotonsyst1var11 shape1 - - - - - - 1.0 - - - -
+fakephotonsyst1var12 shape1 - - - - - - 1.0 - - - -
+fakephotonsyst1var13 shape1 - - - - - - 1.0 - - - -
+fakephotonsyst1var14 shape1 - - - - - - 1.0 - - - -
+fakephotonsyst1var15 shape1 - - - - - - 1.0 - - - -
+fakephotonsyst1var16 shape1 - - - - - - 1.0 - - - -
+fakephotonsyst1var17 shape1 - - - - - - 1.0 - - - -
+fakephotonsyst1var18 shape1 - - - - - - 1.0 - - - -
+fakephotonsyst1var19 shape1 - - - - - - 1.0 - - - -
+fakephotonsyst1var20 shape1 - - - - - - 1.0 - - - -
+fakephotonsyst1var21 shape1 - - - - - - 1.0 - - - -
+fakephotonsyst1var22 shape1 - - - - - - 1.0 - - - -
+fakephotonsyst1var23 shape1 - - - - - - 1.0 - - - -
 * autoMCStats 0
 etopbin0norm rateParam el_chan e_to_p_bin0 2 [0,10]
 fakephotonsyst2var1 shape1 - - - - - - 1.0 - - -
@@ -269,3 +292,4 @@ fakeelectronsystbin117 shape1 - - - - - - - 1.0 - - -
 fakeelectronsystbin118 shape1 - - - - - - - 1.0 - - -
 fakeelectronsystbin119 shape1 - - - - - - - 1.0 - - -
 fakeelectronsystbin120 shape1 - - - - - - - 1.0 - - -
+fakeelectronsyst group = fakeelectronsystbin1 fakeelectronsystbin2 fakeelectronsystbin3 fakeelectronsystbin4 fakeelectronsystbin5 fakeelectronsystbin6 fakeelectronsystbin7 fakeelectronsystbin8 fakeelectronsystbin9 fakeelectronsystbin10 fakeelectronsystbin11 fakeelectronsystbin12 fakeelectronsystbin13 fakeelectronsystbin14 fakeelectronsystbin15 fakeelectronsystbin16 fakeelectronsystbin17 fakeelectronsystbin18 fakeelectronsystbin19 fakeelectronsystbin20 fakeelectronsystbin21 fakeelectronsystbin22 fakeelectronsystbin23 fakeelectronsystbin24 fakeelectronsystbin25 fakeelectronsystbin26 fakeelectronsystbin27 fakeelectronsystbin28 fakeelectronsystbin29 fakeelectronsystbin30 fakeelectronsystbin31 fakeelectronsystbin32 fakeelectronsystbin33 fakeelectronsystbin34 fakeelectronsystbin35 fakeelectronsystbin36 fakeelectronsystbin37 fakeelectronsystbin38 fakeelectronsystbin39 fakeelectronsystbin40 fakeelectronsystbin41 fakeelectronsystbin42 fakeelectronsystbin43 fakeelectronsystbin44 fakeelectronsystbin45 fakeelectronsystbin46 fakeelectronsystbin47 fakeelectronsystbin48 fakeelectronsystbin49 fakeelectronsystbin50 fakeelectronsystbin51 fakeelectronsystbin52 fakeelectronsystbin53 fakeelectronsystbin54 fakeelectronsystbin55 fakeelectronsystbin56 fakeelectronsystbin57 fakeelectronsystbin58 fakeelectronsystbin59 fakeelectronsystbin60 fakeelectronsystbin61 fakeelectronsystbin62 fakeelectronsystbin63 fakeelectronsystbin64 fakeelectronsystbin65 fakeelectronsystbin66 fakeelectronsystbin67 fakeelectronsystbin68 fakeelectronsystbin69 fakeelectronsystbin70 fakeelectronsystbin71 fakeelectronsystbin72 fakeelectronsystbin73 fakeelectronsystbin74 fakeelectronsystbin75 fakeelectronsystbin76 fakeelectronsystbin77 fakeelectronsystbin78 fakeelectronsystbin79 fakeelectronsystbin80 fakeelectronsystbin81 fakeelectronsystbin82 fakeelectronsystbin83 fakeelectronsystbin84 fakeelectronsystbin85 fakeelectronsystbin86 fakeelectronsystbin87 fakeelectronsystbin88 fakeelectronsystbin89 fakeelectronsystbin90 fakeelectronsystbin91 fakeelectronsystbin92 fakeelectronsystbin93 fakeelectronsystbin94 fakeelectronsystbin95 fakeelectronsystbin96 fakeelectronsystbin97 fakeelectronsystbin98 fakeelectronsystbin99 fakeelectronsystbin100 fakeelectronsystbin101 fakeelectronsystbin102 fakeelectronsystbin103 fakeelectronsystbin104 fakeelectronsystbin105 fakeelectronsystbin106 fakeelectronsystbin107 fakeelectronsystbin108 fakeelectronsystbin109 fakeelectronsystbin110 fakeelectronsystbin111 fakeelectronsystbin112 fakeelectronsystbin113 fakeelectronsystbin114 fakeelectronsystbin115 fakeelectronsystbin116 fakeelectronsystbin117 fakeelectronsystbin118 fakeelectronsystbin119 fakeelectronsystbin120  

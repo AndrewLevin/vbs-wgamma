@@ -12,11 +12,11 @@ shapes fake_photon mu_chan wg_dcard_mu_chan_shapes.root fakephoton fakephoton_$S
 shapes fake_muon mu_chan wg_dcard_mu_chan_shapes.root fakemuon fakemuon_$SYSTEMATIC
 shapes double_fake mu_chan wg_dcard_mu_chan_shapes.root doublefake doublefake_$SYSTEMATIC
 shapes e_to_p_bin0 mu_chan wg_dcard_mu_chan_shapes.root etopbin0 etopbin0_$SYSTEMATIC
-Observation 369172.060613
+Observation 364811.960696
 bin mu_chan mu_chan mu_chan mu_chan mu_chan mu_chan mu_chan mu_chan mu_chan mu_chan
 process Wg Wg_out topjets zgjets vvjets pileup fake_photon fake_muon double_fake e_to_p_bin0
 process 0 1 2 3 4 5 6 7 8 9
-rate 167320.934182 2694.35246519 22931.8744246 43403.9460773 2147.21563395 16093.9517264 84800.2499971 18481.7007131 18988.9660033 8402.82111662
+rate 165836.650488 2726.27891803 22649.8227171 42923.4675355 2122.63506581 10887.6112265 83707.984182 18104.2804937 18850.2544478 7890.58684825
 lumi lnN 1.018 1.018 1.018 1.018 1.018 1.018 - - - 1.018
 pileup shape1 1.0 1.0 1.0 1.0 1.0 1.0 - - - - -
 prefire shape1 1.0 1.0 1.0 1.0 1.0 1.0 - - - - -
@@ -26,7 +26,30 @@ photonid shape1 1.0 1.0 1.0 1.0 1.0 1.0 - - - -
 muonid shape1 1.0 1.0 1.0 1.0 1.0 1.0 - - - -
 muonhlt shape1 1.0 1.0 1.0 1.0 1.0 1.0 - - - -
 muoniso shape1 1.0 1.0 1.0 1.0 1.0 1.0 - - - -
-fakephotonsyst1 shape1 - - - - - - 1.0 - - - -
+fakephotonsyst1var0 shape1 - - - - - - 1.0 - - - -
+fakephotonsyst1var1 shape1 - - - - - - 1.0 - - - -
+fakephotonsyst1var2 shape1 - - - - - - 1.0 - - - -
+fakephotonsyst1var3 shape1 - - - - - - 1.0 - - - -
+fakephotonsyst1var4 shape1 - - - - - - 1.0 - - - -
+fakephotonsyst1var5 shape1 - - - - - - 1.0 - - - -
+fakephotonsyst1var6 shape1 - - - - - - 1.0 - - - -
+fakephotonsyst1var7 shape1 - - - - - - 1.0 - - - -
+fakephotonsyst1var8 shape1 - - - - - - 1.0 - - - -
+fakephotonsyst1var9 shape1 - - - - - - 1.0 - - - -
+fakephotonsyst1var10 shape1 - - - - - - 1.0 - - - -
+fakephotonsyst1var11 shape1 - - - - - - 1.0 - - - -
+fakephotonsyst1var12 shape1 - - - - - - 1.0 - - - -
+fakephotonsyst1var13 shape1 - - - - - - 1.0 - - - -
+fakephotonsyst1var14 shape1 - - - - - - 1.0 - - - -
+fakephotonsyst1var15 shape1 - - - - - - 1.0 - - - -
+fakephotonsyst1var16 shape1 - - - - - - 1.0 - - - -
+fakephotonsyst1var17 shape1 - - - - - - 1.0 - - - -
+fakephotonsyst1var18 shape1 - - - - - - 1.0 - - - -
+fakephotonsyst1var19 shape1 - - - - - - 1.0 - - - -
+fakephotonsyst1var20 shape1 - - - - - - 1.0 - - - -
+fakephotonsyst1var21 shape1 - - - - - - 1.0 - - - -
+fakephotonsyst1var22 shape1 - - - - - - 1.0 - - - -
+fakephotonsyst1var23 shape1 - - - - - - 1.0 - - - -
 wgscale shape1 1.0 - - - - - - - - -
 wgpdf shape1 1.0 - - - - - - - - -
 wgoutscale shape1 - 1.0 - - - - - - - -
@@ -275,3 +298,6 @@ fakemuonsystbin117 shape1 - - - - - - - 1.0 - - -
 fakemuonsystbin118 shape1 - - - - - - - 1.0 - - -
 fakemuonsystbin119 shape1 - - - - - - - 1.0 - - -
 fakemuonsystbin120 shape1 - - - - - - - 1.0 - - -
+fakephotonsyst1 group = fakephotonsyst1var0 fakephotonsyst1var1 fakephotonsyst1var2 fakephotonsyst1var3 fakephotonsyst1var4 fakephotonsyst1var5 fakephotonsyst1var6 fakephotonsyst1var7 fakephotonsyst1var8 fakephotonsyst1var9 fakephotonsyst1var10 fakephotonsyst1var11 fakephotonsyst1var12 fakephotonsyst1var13 fakephotonsyst1var14 fakephotonsyst1var15 fakephotonsyst1var16 fakephotonsyst1var17 fakephotonsyst1var18 fakephotonsyst1var19 fakephotonsyst1var20 fakephotonsyst1var21 fakephotonsyst1var22 fakephotonsyst1var23  
+fakephotonsyst2 group = fakephotonsyst2var1 fakephotonsyst2var2 fakephotonsyst2var3 fakephotonsyst2var4 fakephotonsyst2var5 fakephotonsyst2var6 fakephotonsyst2var7 fakephotonsyst2var8 fakephotonsyst2var9 fakephotonsyst2var10 fakephotonsyst2var11 fakephotonsyst2var12 fakephotonsyst2var13 fakephotonsyst2var14 fakephotonsyst2var15 fakephotonsyst2var16 fakephotonsyst2var17 fakephotonsyst2var18 fakephotonsyst2var19 fakephotonsyst2var20 fakephotonsyst2var21 fakephotonsyst2var22 fakephotonsyst2var23 fakephotonsyst2var24 fakephotonsyst2var25 fakephotonsyst2var26 fakephotonsyst2var27 fakephotonsyst2var28 fakephotonsyst2var29 fakephotonsyst2var30 fakephotonsyst2var31 fakephotonsyst2var32 fakephotonsyst2var33 fakephotonsyst2var34 fakephotonsyst2var35 fakephotonsyst2var36 fakephotonsyst2var37 fakephotonsyst2var38 fakephotonsyst2var39 fakephotonsyst2var40 fakephotonsyst2var41 fakephotonsyst2var42 fakephotonsyst2var43 fakephotonsyst2var44 fakephotonsyst2var45 fakephotonsyst2var46 fakephotonsyst2var47 fakephotonsyst2var48 fakephotonsyst2var49 fakephotonsyst2var50 fakephotonsyst2var51 fakephotonsyst2var52 fakephotonsyst2var53 fakephotonsyst2var54 fakephotonsyst2var55 fakephotonsyst2var56 fakephotonsyst2var57 fakephotonsyst2var58 fakephotonsyst2var59 fakephotonsyst2var60 fakephotonsyst2var61 fakephotonsyst2var62 fakephotonsyst2var63 fakephotonsyst2var64 fakephotonsyst2var65 fakephotonsyst2var66 fakephotonsyst2var67 fakephotonsyst2var68 fakephotonsyst2var69 fakephotonsyst2var70 fakephotonsyst2var71 fakephotonsyst2var72 fakephotonsyst2var73 fakephotonsyst2var74 fakephotonsyst2var75 fakephotonsyst2var76 fakephotonsyst2var77 fakephotonsyst2var78 fakephotonsyst2var79 fakephotonsyst2var80 fakephotonsyst2var81 fakephotonsyst2var82 fakephotonsyst2var83 fakephotonsyst2var84 fakephotonsyst2var85 fakephotonsyst2var86 fakephotonsyst2var87 fakephotonsyst2var88 fakephotonsyst2var89 fakephotonsyst2var90 fakephotonsyst2var91 fakephotonsyst2var92 fakephotonsyst2var93 fakephotonsyst2var94 fakephotonsyst2var95 fakephotonsyst2var96 fakephotonsyst2var97 fakephotonsyst2var98 fakephotonsyst2var99 fakephotonsyst2var100 fakephotonsyst2var101 fakephotonsyst2var102 fakephotonsyst2var103 fakephotonsyst2var104 fakephotonsyst2var105 fakephotonsyst2var106 fakephotonsyst2var107 fakephotonsyst2var108 fakephotonsyst2var109 fakephotonsyst2var110 fakephotonsyst2var111 fakephotonsyst2var112 fakephotonsyst2var113 fakephotonsyst2var114 fakephotonsyst2var115 fakephotonsyst2var116 fakephotonsyst2var117 fakephotonsyst2var118 fakephotonsyst2var119 fakephotonsyst2var120  
+fakemuonsyst group = fakemuonsystbin1 fakemuonsystbin2 fakemuonsystbin3 fakemuonsystbin4 fakemuonsystbin5 fakemuonsystbin6 fakemuonsystbin7 fakemuonsystbin8 fakemuonsystbin9 fakemuonsystbin10 fakemuonsystbin11 fakemuonsystbin12 fakemuonsystbin13 fakemuonsystbin14 fakemuonsystbin15 fakemuonsystbin16 fakemuonsystbin17 fakemuonsystbin18 fakemuonsystbin19 fakemuonsystbin20 fakemuonsystbin21 fakemuonsystbin22 fakemuonsystbin23 fakemuonsystbin24 fakemuonsystbin25 fakemuonsystbin26 fakemuonsystbin27 fakemuonsystbin28 fakemuonsystbin29 fakemuonsystbin30 fakemuonsystbin31 fakemuonsystbin32 fakemuonsystbin33 fakemuonsystbin34 fakemuonsystbin35 fakemuonsystbin36 fakemuonsystbin37 fakemuonsystbin38 fakemuonsystbin39 fakemuonsystbin40 fakemuonsystbin41 fakemuonsystbin42 fakemuonsystbin43 fakemuonsystbin44 fakemuonsystbin45 fakemuonsystbin46 fakemuonsystbin47 fakemuonsystbin48 fakemuonsystbin49 fakemuonsystbin50 fakemuonsystbin51 fakemuonsystbin52 fakemuonsystbin53 fakemuonsystbin54 fakemuonsystbin55 fakemuonsystbin56 fakemuonsystbin57 fakemuonsystbin58 fakemuonsystbin59 fakemuonsystbin60 fakemuonsystbin61 fakemuonsystbin62 fakemuonsystbin63 fakemuonsystbin64 fakemuonsystbin65 fakemuonsystbin66 fakemuonsystbin67 fakemuonsystbin68 fakemuonsystbin69 fakemuonsystbin70 fakemuonsystbin71 fakemuonsystbin72 fakemuonsystbin73 fakemuonsystbin74 fakemuonsystbin75 fakemuonsystbin76 fakemuonsystbin77 fakemuonsystbin78 fakemuonsystbin79 fakemuonsystbin80 fakemuonsystbin81 fakemuonsystbin82 fakemuonsystbin83 fakemuonsystbin84 fakemuonsystbin85 fakemuonsystbin86 fakemuonsystbin87 fakemuonsystbin88 fakemuonsystbin89 fakemuonsystbin90 fakemuonsystbin91 fakemuonsystbin92 fakemuonsystbin93 fakemuonsystbin94 fakemuonsystbin95 fakemuonsystbin96 fakemuonsystbin97 fakemuonsystbin98 fakemuonsystbin99 fakemuonsystbin100 fakemuonsystbin101 fakemuonsystbin102 fakemuonsystbin103 fakemuonsystbin104 fakemuonsystbin105 fakemuonsystbin106 fakemuonsystbin107 fakemuonsystbin108 fakemuonsystbin109 fakemuonsystbin110 fakemuonsystbin111 fakemuonsystbin112 fakemuonsystbin113 fakemuonsystbin114 fakemuonsystbin115 fakemuonsystbin116 fakemuonsystbin117 fakemuonsystbin118 fakemuonsystbin119 fakemuonsystbin120  
