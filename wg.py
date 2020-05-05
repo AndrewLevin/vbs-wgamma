@@ -7045,7 +7045,7 @@ if args.make_datacard:
 
     shapes.Close()
 
-    goodbins = lambda hist : filter(lambda i : i > 0, [i*int(abs(hist.GetBinContent(i)) > 10) for i in range(1,hist.GetNbinsX()+1)])
+    goodbins = lambda hist : filter(lambda i : i > 0, [i*int(abs(hist.GetBinContent(i)) > 0) for i in range(1,hist.GetNbinsX()+1)])
 
     uncmin = lambda up,nom : 100*(min([abs(up.GetBinContent(i)/nom.GetBinContent(i)-1) for i in goodbins(nom)]))
 
@@ -7064,14 +7064,13 @@ if args.make_datacard:
 
     print """\\begin{table}[htbp]
 \\begin{center}
-\\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+\\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
 \\hline
    & WG & ZG & top & VV & pileup & fake lepton & fake photon & double fake & e to p   \\\\
 \\hline
 \\hline"""
     for i in range(n_fake_photon_alt):
-        print """
-fake photon comp 1 variation %i & - & - & - & - & - & - & %0.2f-%0.2f & - & - \\\\
+        print """fake photon comp 1 variation %i & - & - & - & - & - & - & %0.2f-%0.2f & - & - \\\\
 \\hline"""%(i,
             uncmin(fake_photon["hists-alt"+str(i)][mlg_index],fake_photon["hists"][mlg_index]),
             uncmax(fake_photon["hists-alt"+str(i)][mlg_index],fake_photon["hists"][mlg_index])
