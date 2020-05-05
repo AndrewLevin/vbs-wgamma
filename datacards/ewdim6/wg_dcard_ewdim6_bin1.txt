@@ -1,31 +1,55 @@
 imax 1 number of channels
 jmax * number of background
 kmax * number of nuisance parameters
-Observation 0.0
+Observation 542.0
 bin bin1 bin1 bin1 bin1 bin1 bin1 bin1 bin1
-process Wg top+jets zg+jets vv+jets fake_photon fake_lepton double_fake e_to_p_non_res
+process Wg top+jets zg+jets vv+jets fake_photon fake_lepton double_fake e_to_p
 process 0 1 2 3 4 5 6 7
-rate 615.913509086 107.759566808 25.4355131684 8.85835899518 6.13760743852 47.895195026 1.10243785844 19.5864024174
-lumi_13tev lnN 1.018 1.018 1.018 1.018 - - - 1.018
-mcstat_ewdim6_bin1 lnN 1.03147225179 - - - - - - -
-mcstat_top+jets_bin1 lnN  - 1.04806696764 - - - - - - -
-mcstat_zg+jets_bin1 lnN  - - 1.2067645688 - - - - - -
-mcstat_vv+jets_bin1 lnN  - - - 1.21138798324 - - - - -
-fake_lepton_syst lnN - - - - - 1.3 - -
-fake_lepton_stat lnN - - - - - 1.4018748122 - -
-fake_photon_stat lnN - - - - 1.50029751454 - - -
-muon_id_sf lnN 1.0020308619 1.00173855128 1.00217380105 1.00153346738 - - - -
-muon_hlt_sf lnN 1.00316682026 1.00154949485 1.00409320773 1.00426075841 - - - -
-muon_iso_sf lnN 1.00059573994 1.00051144471 1.00056478515 1.00044572485 - - - -
-electron_hlt_sf lnN 1.00324667641 1.00280951126 1.00248632753 1.00415036481 - - - 1.00763606641
-electron_id_sf lnN 1.01166727127 1.01726417602 1.00543929358 1.00859376541 - - - 1.01490291016
-electron_reco_sf lnN 1.00466105171 1.00539677632 1.00296733035 1.00462166108 - - - 1.01011276396
-photon_id_sf lnN 1.07013989284 1.07376473547 1.0739878227 1.06220188156 - - - 1.06975572096
-jes lnN 1.00701104077 1.00489992082 1.09062767251 1.0 - - - 1.0
-jer lnN 1.00568161742 1.00982878714 0.99667891169 1.0 - - - 1.0
-prefire lnN 0.994700808523 0.993260539833 0.998278869046 0.995402234171 - - - 0.998400602462
-pileup lnN 0.999153962149 0.997650719823 1.00193310524 1.01677800656 - - - 1.14119023229
-wgscale lnN 1.18782809658 - - - - - - -
-wgpdf lnN 1.00058813847 - - - - - - -
+rate 565.972983799 107.759566808 25.4355131684 8.85835899518 8.18554253397 32.8529912745 1.16215904291 36.2539929378
+lumi lnN 1.018 1.018 1.018 1.018 - - - 1.018
+mcstatewdim6bin1 lnN 1.03625919231 - - - - - - -
+mcstattopjetsbin1 lnN  - 1.04806696764 - - - - - - -
+mcstatzgjetsbin1 lnN  - - 1.2067645688 - - - - - -
+mcstatvvjetsbin1 lnN  - - - 1.21138798324 - - - - -
+fakeleptonsyst lnN - - - - - 1.3 - -
+fakeleptonstatbin1 lnN - - - - - 1.73840591563 - -
+fakephotonstatbin1 lnN - - - - 1.45242885506 - - -
+fakephotonsyst1var0 lnN - - - - 1.0 - - -
+fakephotonsyst1var1 lnN - - - - 1.0 - - -
+fakephotonsyst1var2 lnN - - - - 1.0 - - -
+fakephotonsyst1var3 lnN - - - - 1.13474122433 - - -
+fakephotonsyst1var4 lnN - - - - 1.0 - - -
+fakephotonsyst1var5 lnN - - - - 1.0 - - -
+fakephotonsyst1var6 lnN - - - - 1.0 - - -
+fakephotonsyst1var7 lnN - - - - 1.00097054272 - - -
+fakephotonsyst1var8 lnN - - - - 1.0 - - -
+fakephotonsyst1var9 lnN - - - - 1.0 - - -
+fakephotonsyst1var10 lnN - - - - 1.0 - - -
+fakephotonsyst1var11 lnN - - - - 1.09288753567 - - -
+fakephotonsyst1var12 lnN - - - - 1.0 - - -
+fakephotonsyst1var13 lnN - - - - 1.0 - - -
+fakephotonsyst1var14 lnN - - - - 1.0 - - -
+fakephotonsyst1var15 lnN - - - - 0.998877947622 - - -
+fakephotonsyst1var16 lnN - - - - 1.0 - - -
+fakephotonsyst1var17 lnN - - - - 1.0 - - -
+fakephotonsyst1var18 lnN - - - - 1.0 - - -
+fakephotonsyst1var19 lnN - - - - 1.24880670364 - - -
+fakephotonsyst1var20 lnN - - - - 1.0 - - -
+fakephotonsyst1var21 lnN - - - - 1.0 - - -
+fakephotonsyst1var22 lnN - - - - 1.0 - - -
+fakephotonsyst1var23 lnN - - - - 0.92246731403 - - -
+muonid lnN 1.00194385884 1.00173855128 1.00217380105 1.00153346738 - - - -
+muonhlt lnN 1.00325085261 1.00154949485 1.00409320773 1.00426075841 - - - -
+muoniso lnN 1.00056753507 1.00051144471 1.00056478515 1.00044572485 - - - -
+electronhlt lnN 1.004058431 1.00280951126 1.00248632753 1.00415036481 - - - 1.00800286622
+electronid lnN 1.02647858897 1.01726417602 1.00543929358 1.00859376541 - - - 1.01540626732
+electronreco lnN 1.00561163511 1.00539677632 1.00296733035 1.00462166108 - - - 1.01058215606
+photonid lnN 1.0711552796 1.07376473547 1.0739878227 1.06220188156 - - - 1.0711074559
+jes lnN 0.996467468785 1.00489992082 1.09062767251 1.0 - - - 1.0
+jer lnN 0.999909743526 1.00982878714 0.99667891169 1.0 - - - 1.0
+prefire lnN 0.995927990085 0.993260539833 0.998278869046 0.995402234171 - - - 0.999135917418
+pileup lnN 0.992370915763 0.997650719823 1.00193310524 1.01677800656 - - - 1.14547752476
+wgscale lnN 1.20979455685 - - - - - - -
+wgpdf lnN 1.00298305391 - - - - - - -
 zgscale lnN - - 1.04052292222 - - - - -
-zgpdf lnN - - 1.00216698092 - - - - -
+zgpdf lnN - - 1.00546781937 - - - - -
