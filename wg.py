@@ -43,6 +43,7 @@ parser.add_argument('--phoeta',dest='phoeta',default='both')
 parser.add_argument('--make_datacard',dest='make_datacard',action='store_true',default=False)
 parser.add_argument('--make_cut_and_count_datacard',dest='make_cut_and_count_datacard',action='store_true',default=False)
 parser.add_argument('--closure_test',dest='closure_test',action='store_true',default=False)
+parser.add_argument('--apply_2018_photon_phi_cut',dest='apply_2018_photon_phi_cut',action='store_true',default=False)
 parser.add_argument('--no_wjets_for_2017_and_2018',dest='no_wjets_for_2017_and_2018',action='store_true',default=False)
 parser.add_argument('--ewdim6',dest='ewdim6',action='store_true',default=False)
 parser.add_argument('--use_wjets_for_fake_photon',dest='use_wjets_for_fake_photon',action='store_true',default=False)
@@ -143,13 +144,18 @@ def get_filter_string(year,isdata=True,lep=None):
     else:
         zveto_cutstring = "1"
 
+    if args.apply_2018_photon_phi_cut:
+        photon_phi_2018_cutstring = "!(photon_phi > 0.5 && photon_phi < 0.6)"
+    else:
+        photon_phi_2018_cutstring = "1"
+
     if lep == "muon":
         if year == "2016":
             return "(pass_selection && " + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 26)"
         elif year == "2017":
             return "(pass_selection && " + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 30)"
         elif year == "2018":
-            return "(pass_selection && " + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 26)"
+            return "(pass_selection && " + photon_phi_2018_cutstring + " && " + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 26)"
         else:
             assert(0)
     elif lep == "electron":                
@@ -158,7 +164,7 @@ def get_filter_string(year,isdata=True,lep=None):
         elif year == "2017":
             return "(pass_selection && " + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35)"
         elif year == "2018":
-            return "(pass_selection && " + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35)"
+            return "(pass_selection && " + photon_phi_2018_cutstring + " && " + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35)"
         else:
             assert(0)
     elif lep == "both":    
@@ -167,7 +173,7 @@ def get_filter_string(year,isdata=True,lep=None):
         elif year == "2017":
             return "(pass_selection && " + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && ((abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 30) || (abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35)))"
         elif year == "2018":
-            return "(pass_selection && " + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && ((abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 26) || (abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35)))"
+            return "(pass_selection && " + photon_phi_2018_cutstring + " && " + photon_eta_cutstring+" && " + zveto_cutstring + " && " + puppimet_cutstring + " && ((abs(lepton_pdg_id) == 13 && photon_pt > 25 && lepton_pt > 26) || (abs(lepton_pdg_id) == 11 && photon_pt > 25 && lepton_pt > 35)))"
         else:
             assert(0)
     else:
