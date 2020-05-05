@@ -142,12 +142,12 @@ def get_filter_string(year,isdata=True,lep=None):
     if args.zveto:
         zveto_cutstring = "(mlg < 60 || mlg > 120)"
     else:
-        zveto_cutstring = "1"
+        zveto_cutstring = "true"
 
     if args.apply_2018_photon_phi_cut:
-        photon_phi_2018_cutstring = "!(photon_phi > 0.5 && photon_phi < 0.6)"
+        photon_phi_2018_cutstring = "!(photon_phi > 0.55 && photon_phi < 0.7)"
     else:
-        photon_phi_2018_cutstring = "1"
+        photon_phi_2018_cutstring = "true"
 
     if lep == "muon":
         if year == "2016":
