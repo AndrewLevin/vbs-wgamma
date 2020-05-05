@@ -1,4 +1,8 @@
 import ROOT
+ROOT.PyConfig.IgnoreCommandLineOptions = True
+
+ROOT.ROOT.EnableImplicitMT()
+
 import math
 
 fid_reg_cuts = "(pass_fid_selection && fid_met_pt > 0)"
