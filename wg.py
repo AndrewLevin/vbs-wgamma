@@ -7045,7 +7045,7 @@ if args.make_datacard:
 
     shapes.Close()
 
-    goodbins = lambda hist : filter(lambda i : i > 0, [i*int(abs(hist.GetBinContent(i)) > 0) for i in range(1,hist.GetNbinsX()+1)])
+    goodbins = lambda hist : filter(lambda i : i > 0, [i*int(abs(hist.GetBinContent(i)) > 10) for i in range(1,hist.GetNbinsX()+1)])
 
     uncmin = lambda up,nom : 100*(min([abs(up.GetBinContent(i)/nom.GetBinContent(i)-1) for i in goodbins(nom)]))
 
