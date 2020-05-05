@@ -51,7 +51,7 @@ fakephotonsyst1var21 shape1 - - - - - - 1.0 - - - -
 fakephotonsyst1var22 shape1 - - - - - - 1.0 - - - -
 fakephotonsyst1var23 shape1 - - - - - - 1.0 - - - -
 * autoMCStats 0
-etopbin0norm lnN - - - - - - - - - - 2.0
+etopbin0norm lnN - - - - - - - - - 2.0
 fakephotonsyst2var1 shape1 - - - - - - 1.0 - - -
 fakephotonsyst2var2 shape1 - - - - - - 1.0 - - -
 fakephotonsyst2var3 shape1 - - - - - - 1.0 - - -
