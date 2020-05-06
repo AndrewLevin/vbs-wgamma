@@ -338,17 +338,9 @@ for i in range(len(photon1_eta_ranges)):
                 if real_photon_template_hist.GetBinContent(k) < 0:
                     real_photon_template_hist.SetBinContent(k,0)
 
-#            for k in range(fake_photon_template_hist.GetNbinsX()+2):
-#                if fake_photon_template_hist.GetBinContent(k) < 0:
-#                    fake_photon_template_hist.SetBinContent(k,0)
-
-            print "andrew debug 1"
-            fake_photon_template_hist.Print("all")
-            print "andrew debug 2"
-            real_photon_template_hist.Print("all")
-            print "andrew debug 3"
-            total_hist.Print("all")
-            print "andrew debug 4"
+            for k in range(fake_photon_template_hist.GetNbinsX()+2):
+                if fake_photon_template_hist.GetBinContent(k) < 0:
+                    fake_photon_template_hist.SetBinContent(k,0)
 
             mc = ROOT.TObjArray(2)
 
