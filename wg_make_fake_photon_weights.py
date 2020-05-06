@@ -1,6 +1,11 @@
 import ROOT
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 
+#when the TMinuit object is reused, the random seed is not reset after each fit, so the fit result can change when it is run on the same input
+ROOT.TMinuitMinimizer.UseStaticMinuit(False)
+
+ROOT.ROOT.EnableImplicitMT()
+
 import argparse
 parser = argparse.ArgumentParser()
 
@@ -66,7 +71,6 @@ photon2_eta_ranges = ["photon2_isScEtaEB","photon2_isScEtaEE"]
 #photon2_pt_range_cutstrings = ["photon2_pt > 20 && photon2_pt < 25","photon2_pt > 25 && photon2_pt < 30","photon2_pt > 30 && photon2_pt < 40","photon2_pt > 40 && photon2_pt < 50","photon2_pt > 50 && photon2_pt < 70","photon2_pt > 70 && photon2_pt < 100","photon2_pt > 100 && photon2_pt < 135","photon2_pt > 135 && photon2_pt < 400"]
 
 photon1_pt_range_cutstrings = ["photon1_pt > 20 && photon1_pt < 30","photon1_pt > 30 && photon1_pt < 40","photon1_pt > 40 && photon1_pt < 50","photon1_pt > 50 && photon1_pt < 400"]
-
 photon2_pt_range_cutstrings = ["photon2_pt > 20 && photon2_pt < 30","photon2_pt > 30 && photon2_pt < 40","photon2_pt > 40 && photon2_pt < 50","photon2_pt > 50 && photon2_pt < 400"]
 
 assert(len(photon1_pt_range_cutstrings) == len(photon2_pt_range_cutstrings))
@@ -151,27 +155,27 @@ njets_max = 1000
 
 #mc_fake_photon_samples = []
 
-mc_fake_photon_samples = [{"file" : ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+args.year+"/1June2019/wjets_fake_photon.root"),"xs" : 60430.0, "prompt" : False},{"file" : ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+args.year+"/1June2019/wgjets_fake_photon.root"),"xs" : 178.6, "prompt" : True}]
+mc_fake_photon_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/"+args.year+"/1June2019/wjets_fake_photon.root","xs" : 60430.0, "prompt" : False},{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/"+args.year+"/1June2019/wgjets_fake_photon.root","xs" : 178.6, "prompt" : True}]
 
 #mc_fake_photon_samples = [{"file" : ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+args.year+"/1June2019/wjets_fake_photon.root"),"xs" : 60430.0, "prompt" : False}]
 
-muon_data_fake_photon_samples = [{"file" : ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+args.year+"/1June2019/single_muon_fake_photon.root")}]
+muon_data_fake_photon_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/"+args.year+"/1June2019/single_muon_fake_photon.root"}]
 
 if args.year == "2016" or args.year == "2017":
-    electron_data_fake_photon_samples = [{"file" : ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+args.year+"/1June2019/single_electron_fake_photon.root")}]
+    electron_data_fake_photon_samples = [{"file" : "/afs/cern.ch/work/a/amlevin/data/wg/"+args.year+"/1June2019/single_electron_fake_photon.root"}]
 elif args.year == "2018":
-    electron_data_fake_photon_samples = [{"file" : ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+args.year+"/1June2019/egamma_fake_photon.root")}]
+    electron_data_fake_photon_samples = [{"file" : "/afs/cern.ch/work/a/amlevin/data/wg/"+args.year+"/1June2019/egamma_fake_photon.root"}]
 else:
     assert(0)
 
-data_fake_photon_samples = [{"file" : ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+args.year+"/1June2019/data_fake_photon.root")}]
+data_fake_photon_samples = [{"filename" : "/afs/cern.ch/work/a/amlevin/data/wg/"+args.year+"/1June2019/data_fake_photon.root"}]
 
 #data_fake_photon_samples = []
 
 #muon_data_fake_photon_samples = []
 #electron_data_fake_photon_samples = []
 
-real_photon_template_file = ROOT.TFile.Open("/afs/cern.ch/work/a/amlevin/data/wg/"+args.year+"/1June2019/real_photon_template.root")
+real_photon_template_filename = "/afs/cern.ch/work/a/amlevin/data/wg/"+args.year+"/1June2019/real_photon_template.root"
 
 created_muon_fitter = False
 created_electron_fitter = False
@@ -185,7 +189,7 @@ if args.lep == "muon":
 elif args.lep == "electron":
     lepton_pdg_id = "(lepton_pdg_id == 11)"
 elif args.lep == "both":    
-    lepton_pdg_id = "1"
+    lepton_pdg_id = "true"
 else:
     assert(0)
 
@@ -230,10 +234,12 @@ for i in range(len(photon1_eta_ranges)):
 
 
         if not args.true:    
-            total_hist = ROOT.TH1F("total","",n_bins,sieie_lower,sieie_upper)
+            total_hist_model = ROOT.RDF.TH1DModel("","",n_bins,sieie_lower,sieie_upper)
+            total_hist = total_hist_model.GetHistogram()
             total_hist.Sumw2()
 
-            fake_photon_template_hist = ROOT.TH1F("fake_photon_template_hist","fake_photon_template_hist",n_bins,sieie_lower,sieie_upper)
+            fake_photon_template_hist_model = ROOT.RDF.TH1DModel("","",n_bins,sieie_lower,sieie_upper)
+            fake_photon_template_hist = fake_photon_template_hist_model.GetHistogram()
             fake_photon_template_hist.Sumw2()
 
         numerator = float(0)
@@ -241,29 +247,28 @@ for i in range(len(photon1_eta_ranges)):
 
         if not args.mc:
 
-            for k,fake_photon_data_sample in enumerate(fake_photon_data_samples):   
-                fake_photon_tree = fake_photon_data_sample["file"].Get("Events")
-            
-                denominator+=fake_photon_tree.GetEntries(photon1_eta_range+ " && "+lepton_pdg_id + " && (photon1_selection == "+den_pho_sel+") && "+ photon1_pt_range_cutstring + " && pass_selection1" + " && " + photon1_recoil_cutstring + " && njets_fake >= "+ str(njets_min) + " && njets_fake <= "+str(njets_max) + " && photon1_sieie < "+str(max_sieie) + " && photon1_pfRelIso03_chg*photon1_pt < "+str(max_chiso)+ " && " + str(photon1_veto_signal_selection_cutstring))
+            for k,fake_photon_data_sample in enumerate(fake_photon_data_samples):
 
-            total_hist_data = ROOT.TH1F("total_hist_data_sample"+str(k),"total_hist_data_sample"+str(k),n_bins,sieie_lower,sieie_upper)
-            total_hist_data.Sumw2()
+                rdf=ROOT.RDataFrame("Events",fake_photon_data_sample["filename"])
 
-            fake_photon_template_hist_data = ROOT.TH1F("fake_photon_template_hist_data_sample"+str(k),"fake_photon_template_hist_data_sample"+str(k),n_bins,sieie_lower,sieie_upper)
-            fake_photon_template_hist_data.Sumw2()
+                denominator+=rdf.Filter(photon1_eta_range+ " && "+lepton_pdg_id + " && (photon1_selection == "+den_pho_sel+") && "+ photon1_pt_range_cutstring + " && pass_selection1" + " && " + photon1_recoil_cutstring + " && njets_fake >= "+ str(njets_min) + " && njets_fake <= "+str(njets_max) + " && photon1_sieie < "+str(max_sieie) + " && photon1_pfRelIso03_chg*photon1_pt < "+str(max_chiso)+ " && " + str(photon1_veto_signal_selection_cutstring)).Count().GetValue()
 
-            fake_photon_tree.Draw("photon1_sieie >> total_hist_data_sample"+str(k),photon1_eta_range+ " && "+lepton_pdg_id+" && (photon1_selection == 0 || photon1_selection == 4) && "+photon1_pt_range_cutstring + " && pass_selection1 && "+str(photon1_veto_signal_selection_cutstring) + " && " + photon1_recoil_cutstring + "&& njets_fake >= "+str(njets_min) + " && njets_fake <= "+str(njets_max))
 
-            fake_photon_tree.Draw("photon2_sieie >> fake_photon_template_hist_data_sample"+str(k),photon2_eta_range + " && "+lepton_pdg_id+" && "+photon2_pt_range_cutstring + " && pass_selection2 && "+str(photon2_veto_signal_selection_cutstring)  + " && " + photon2_recoil_cutstring +" && njets_fake_template  >= "+str(njets_min) + " && njets_fake_template <= " + str(njets_max))
+            for k,fake_photon_data_sample in enumerate(fake_photon_data_samples):
 
-            total_hist.Add(total_hist_data)
-            fake_photon_template_hist.Add(fake_photon_template_hist_data)
+                rresultptr_total_hist_data = rdf.Filter(photon1_eta_range+ " && "+lepton_pdg_id+" && (photon1_selection == 0 || photon1_selection == 4) && "+photon1_pt_range_cutstring + " && pass_selection1 && "+str(photon1_veto_signal_selection_cutstring) + " && " + photon1_recoil_cutstring + "&& njets_fake >= "+str(njets_min) + " && njets_fake <= "+str(njets_max)).Histo1D(total_hist_model,"photon1_sieie")
+
+                total_hist.Add(rresultptr_total_hist_data.GetValue())
+
+                rresultptr_fake_photon_template_hist_data = rdf.Filter(photon2_eta_range + " && "+lepton_pdg_id+" && "+photon2_pt_range_cutstring + " && pass_selection2 && "+str(photon2_veto_signal_selection_cutstring)  + " && " + photon2_recoil_cutstring +" && njets_fake_template  >= "+str(njets_min) + " && njets_fake_template <= " + str(njets_max)).Histo1D(total_hist_model,"photon2_sieie")
+
+                fake_photon_template_hist.Add(rresultptr_fake_photon_template_hist_data.GetValue())
 
         else:
 
             for k,fake_photon_mc_sample in enumerate(fake_photon_mc_samples):   
 
-                fake_photon_tree = fake_photon_mc_sample["file"].Get("Events")
+                rdf=ROOT.RDataFrame("Events",fake_photon_mc_sample["filename"])
 
                 if fake_photon_mc_sample["prompt"]:
                     photon1_gen_matching_cutstring = "(photon1_gen_matching == 6 || photon1_gen_matching == 5 || photon1_gen_matching == 4 || photon1_gen_matching == 1)"
@@ -274,133 +279,76 @@ for i in range(len(photon1_eta_ranges)):
                     photon1_gen_matching_cutstring = "!(photon1_gen_matching == 6 || photon1_gen_matching == 5 || photon1_gen_matching == 4 || photon1_gen_matching == 1)"
                     photon2_gen_matching_cutstring = "!(photon2_gen_matching == 6 || photon2_gen_matching == 5 || photon2_gen_matching == 4 || photon2_gen_matching == 1)"    
 
-                if not fake_photon_mc_sample["prompt"]:    
-                    denominator+=fake_photon_tree.GetEntries(photon1_eta_range+ " && "+lepton_pdg_id + " && (photon1_selection == "+den_pho_sel+") && "+ photon1_pt_range_cutstring + " && pass_selection1" + " && " + photon1_recoil_cutstring + " && njets_fake >= "+ str(njets_min) + " && njets_fake <= "+str(njets_max) + " && photon1_sieie < "+str(max_sieie) + " && photon1_pfRelIso03_chg*photon1_pt < "+str(max_chiso) + " && gen_weight > 0 && " + photon1_gen_matching_cutstring+ " && " + str(photon1_veto_signal_selection_cutstring))*fake_photon_mc_sample["xs"]*1000*lumi/fake_photon_mc_sample["file"].Get("nEventsGenWeighted").GetBinContent(1)
-                    denominator-=fake_photon_tree.GetEntries(photon1_eta_range+ " && "+lepton_pdg_id + " && (photon1_selection == "+den_pho_sel+") && "+ photon1_pt_range_cutstring + " && pass_selection1" + " && " + photon1_recoil_cutstring + " && njets_fake >= "+ str(njets_min) + " && njets_fake <= "+str(njets_max) + " && photon1_sieie < "+str(max_sieie) + " && photon1_pfRelIso03_chg*photon1_pt < "+str(max_chiso) + " && gen_weight < 0 && "  + photon1_gen_matching_cutstring + " && " + str(photon1_veto_signal_selection_cutstring))*fake_photon_mc_sample["xs"]*1000*lumi/fake_photon_mc_sample["file"].Get("nEventsGenWeighted").GetBinContent(1)
+                if not fake_photon_mc_sample["prompt"]:
+                    tfile=ROOT.TFile.Open(fake_photon_mc_sample["filename"])
+                    neventsgenweighted=tfile.Get("nEventsGenWeighted").GetBinContent(1)
+                    denominator+=rdf.Filter(photon1_eta_range+ " && "+lepton_pdg_id + " && (photon1_selection == "+den_pho_sel+") && "+ photon1_pt_range_cutstring + " && pass_selection1" + " && " + photon1_recoil_cutstring + " && njets_fake >= "+ str(njets_min) + " && njets_fake <= "+str(njets_max) + " && photon1_sieie < "+str(max_sieie) + " && photon1_pfRelIso03_chg*photon1_pt < "+str(max_chiso) + " && gen_weight > 0 && " + photon1_gen_matching_cutstring+ " && " + str(photon1_veto_signal_selection_cutstring)).Count().GetValue()*fake_photon_mc_sample["xs"]*1000*lumi/neventsgenweighted
+                    denominator-=rdf.Filter(photon1_eta_range+ " && "+lepton_pdg_id + " && (photon1_selection == "+den_pho_sel+") && "+ photon1_pt_range_cutstring + " && pass_selection1" + " && " + photon1_recoil_cutstring + " && njets_fake >= "+ str(njets_min) + " && njets_fake <= "+str(njets_max) + " && photon1_sieie < "+str(max_sieie) + " && photon1_pfRelIso03_chg*photon1_pt < "+str(max_chiso) + " && gen_weight < 0 && " + photon1_gen_matching_cutstring+ " && " + str(photon1_veto_signal_selection_cutstring)).Count().GetValue()*fake_photon_mc_sample["xs"]*1000*lumi/neventsgenweighted
 
                 if not args.true:    
-                    total_hist_pos = ROOT.TH1F("total_hist_pos_sample"+str(k),"total_hist_pos_sample"+str(k),n_bins,sieie_lower,sieie_upper)
-                    total_hist_neg = ROOT.TH1F("total_hist_neg_sample"+str(k),"total_hist_neg_sample"+str(k),n_bins,sieie_lower,sieie_upper)
-                    total_hist_pos.Sumw2()
-                    total_hist_neg.Sumw2()
 
-                    fake_photon_tree.Draw("photon1_sieie >> total_hist_pos_sample"+str(k),photon1_eta_range+ " && "+lepton_pdg_id+" && (photon1_selection == 0 || photon1_selection == 4) && "+photon1_pt_range_cutstring + " && pass_selection1 && "+str(photon1_veto_signal_selection_cutstring) + " && " + photon1_recoil_cutstring + "&& njets_fake >= "+str(njets_min) + " && njets_fake <= "+str(njets_max) + " && gen_weight > 0 && " + photon1_gen_matching_cutstring)
-                    fake_photon_tree.Draw("photon1_sieie >> total_hist_neg_sample"+str(k),photon1_eta_range+ " && "+lepton_pdg_id+" && (photon1_selection == 0 || photon1_selection == 4) && "+photon1_pt_range_cutstring + " && pass_selection1 && "+str(photon1_veto_signal_selection_cutstring) + " && " + photon1_recoil_cutstring + "&& njets_fake >= "+str(njets_min) + " && njets_fake <= "+str(njets_max) + " && gen_weight < 0 && "+photon1_gen_matching_cutstring)
+                    tfile=ROOT.TFile.Open(fake_photon_mc_sample["filename"])
+                    neventsgenweighted=tfile.Get("nEventsGenWeighted").GetBinContent(1)
 
-                    total_hist_pos.Scale(fake_photon_mc_sample["xs"]*1000*lumi/fake_photon_mc_sample["file"].Get("nEventsGenWeighted").GetBinContent(1))
-                    total_hist_neg.Scale(-fake_photon_mc_sample["xs"]*1000*lumi/fake_photon_mc_sample["file"].Get("nEventsGenWeighted").GetBinContent(1))
+                    rdf=ROOT.RDataFrame("Events",fake_photon_mc_sample["filename"])
 
-                    total_hist.Add(total_hist_pos)
-                    total_hist.Add(total_hist_neg)
+                    rresultptr_total_hist = rdf.Filter(photon1_eta_range+ " && "+lepton_pdg_id+" && (photon1_selection == 0 || photon1_selection == 4) && "+photon1_pt_range_cutstring + " && pass_selection1 && "+str(photon1_veto_signal_selection_cutstring) + " && " + photon1_recoil_cutstring + "&& njets_fake >= "+str(njets_min) + " && njets_fake <= "+str(njets_max) + " && " + photon1_gen_matching_cutstring).Define("weight",str(fake_photon_mc_sample["xs"]*1000*lumi/neventsgenweighted)+"*gen_weight/abs(gen_weight)").Histo1D(total_hist_model,"photon1_sieie","weight")
 
-                    fake_photon_template_hist_pos = ROOT.TH1F("fake_photon_template_hist_pos_sample"+str(k),"fake_photon_template_hist_pos_sample"+str(k),n_bins,sieie_lower,sieie_upper)
-                    fake_photon_template_hist_neg = ROOT.TH1F("fake_photon_template_hist_neg_sample"+str(k),"fake_photon_template_hist_neg_sample"+str(k),n_bins,sieie_lower,sieie_upper)
-                    fake_photon_template_hist_pos.Sumw2()
-                    fake_photon_template_hist_neg.Sumw2()
+                    total_hist.Add(rresultptr_total_hist.GetValue())
 
-#                    if not fake_photon_mc_sample["prompt"]:
-#                        fake_photon_tree.Draw("photon1_sieie >> fake_photon_template_hist_pos_sample"+str(k),photon1_eta_range+ " && "+lepton_pdg_id+" && (photon1_selection == 0 || photon1_selection == 4) && "+photon1_pt_range_cutstring + " && pass_selection1 && "+str(photon1_veto_signal_selection_cutstring) + " && " + photon1_recoil_cutstring + "&& njets_fake >= "+str(njets_min) + " && njets_fake <= "+str(njets_max) + " && gen_weight > 0 && " + photon1_gen_matching_cutstring)
-#                        fake_photon_tree.Draw("photon1_sieie >> fake_photon_template_hist_neg_sample"+str(k),photon1_eta_range+ " && "+lepton_pdg_id+" && (photon1_selection == 0 || photon1_selection == 4) && "+photon1_pt_range_cutstring + " && pass_selection1 && "+str(photon1_veto_signal_selection_cutstring) + " && " + photon1_recoil_cutstring + "&& njets_fake >= "+str(njets_min) + " && njets_fake <= "+str(njets_max) + " && gen_weight < 0 && "+photon1_gen_matching_cutstring)
-
-                    fake_photon_tree.Draw("photon2_sieie >> fake_photon_template_hist_pos_sample"+str(k),photon2_eta_range + " && "+lepton_pdg_id+" && "+photon2_pt_range_cutstring + " && pass_selection2 && "+str(photon2_veto_signal_selection_cutstring)  + " && " + photon2_recoil_cutstring +" && njets_fake_template  >= "+str(njets_min) + " && njets_fake_template <= " + str(njets_max)  + " && gen_weight > 0 && "+photon2_gen_matching_cutstring)
-                    fake_photon_tree.Draw("photon2_sieie >> fake_photon_template_hist_neg_sample"+str(k),photon2_eta_range + " && "+lepton_pdg_id+" && "+photon2_pt_range_cutstring + " && pass_selection2 && "+str(photon2_veto_signal_selection_cutstring)  + " && " + photon2_recoil_cutstring +" && njets_fake_template  >= "+str(njets_min) + " && njets_fake_template <= " + str(njets_max) + " && gen_weight < 0 &&" + photon2_gen_matching_cutstring)
+                    rresultptr_fake_photon_template_hist = rdf.Filter(photon2_eta_range + " && "+lepton_pdg_id+" && "+photon2_pt_range_cutstring + " && pass_selection2 && "+str(photon2_veto_signal_selection_cutstring)  + " && " + photon2_recoil_cutstring +" && njets_fake_template  >= "+str(njets_min) + " && njets_fake_template <= " + str(njets_max)  + " && "+photon2_gen_matching_cutstring).Define("weight",str(fake_photon_mc_sample["xs"]*1000*lumi/neventsgenweighted)+"*gen_weight/abs(gen_weight)").Histo1D(fake_photon_template_hist_model,"photon2_sieie","weight")
                 
-                    fake_photon_template_hist_pos.Scale(fake_photon_mc_sample["xs"]*1000*lumi/fake_photon_mc_sample["file"].Get("nEventsGenWeighted").GetBinContent(1))
-                    fake_photon_template_hist_neg.Scale(-fake_photon_mc_sample["xs"]*1000*lumi/fake_photon_mc_sample["file"].Get("nEventsGenWeighted").GetBinContent(1))
-
-                    fake_photon_template_hist.Add(fake_photon_template_hist_pos)
-                    fake_photon_template_hist.Add(fake_photon_template_hist_neg)
+                    fake_photon_template_hist.Add(rresultptr_fake_photon_template_hist.GetValue())
 
                 else:
                     if not fake_photon_mc_sample["prompt"]:
-                        numerator+=fake_photon_tree.GetEntries(photon1_eta_range+ " && "+lepton_pdg_id + " && (photon1_selection == 0) && "+ photon1_pt_range_cutstring + " && pass_selection1" + " && " + photon1_recoil_cutstring + " && njets_fake >= "+ str(njets_min) + " && njets_fake <= "+str(njets_max) + " && gen_weight > 0 &&" + photon1_gen_matching_cutstring+ " && " + str(photon1_veto_signal_selection_cutstring))*fake_photon_mc_sample["xs"]*1000*lumi/fake_photon_mc_sample["file"].Get("nEventsGenWeighted").GetBinContent(1)
-                        numerator-=fake_photon_tree.GetEntries(photon1_eta_range+ " && "+lepton_pdg_id + " && (photon1_selection == 0) && "+ photon1_pt_range_cutstring + " && pass_selection1" + " && " + photon1_recoil_cutstring + " && njets_fake >= "+ str(njets_min) + " && njets_fake <= "+str(njets_max) + " && gen_weight < 0 &&" + photon1_gen_matching_cutstring+ " && " + str(photon1_veto_signal_selection_cutstring))*fake_photon_mc_sample["xs"]*1000*lumi/fake_photon_mc_sample["file"].Get("nEventsGenWeighted").GetBinContent(1)
-                
-#                fake_photon_tree.Scan("run:lumi:event:photon1_pt:photon1_eta:photon1_phi:lepton_pt:lepton_eta:lepton_phi:lepton_pdg_id",photon1_eta_range+ "  && lepton_pdg_id == "+lepton_pdg_id + " && (photon1_selection == 3) && "+ photon1_pt_range_cutstring + " && pass_selection1" + " && " + photon1_recoil_cutstring + " && njets_fake >= "+ str(njets_min) + " && njets_fake <= "+str(njets_max) + " && photon1_sieie < "+str(max_sieie) + " && photon1_pfRelIso03_chg*photon1_pt < "+str(max_chiso) + " && "+photon1_gen_matching_cutstring)*fake_photon_mc_sample["xs"]*1000*lumi/fake_photon_mc_sample["file"].Get("nEventsGenWeighted").GetBinContent(1)
-#                fake_photon_tree.Scan("run:lumi:event:photon1_pt:photon1_eta:photon1_phi:lepton_pt:lepton_eta:lepton_phi:lepton_pdg_id",photon1_eta_range+ " && lumi == 1054017 && lepton_pdg_id == "+lepton_pdg_id + " && (photon1_selection == 4) && "+ photon1_pt_range_cutstring + " && pass_selection1" + " && " + photon1_recoil_cutstring + " && njets_fake >= "+ str(njets_min) + " && njets_fake <= "+str(njets_max) + " && photon1_sieie < "+str(max_sieie) + " && photon1_pfRelIso03_chg*photon1_pt < "+str(max_chiso) + " && "+photon1_gen_matching_cutstring)*fake_photon_mc_sample["xs"]*1000*lumi/fake_photon_mc_sample["file"].Get("nEventsGenWeighted").GetBinContent(1)
+                        
+                        tfile= ROOT.TFile.Open(fake_photon_mc_sample["filename"])
+                        
+                        neventsgenweighted=tfile.Get("nEventsGenWeighted").GetBinContent(1)
 
+                        rdf=ROOT.RDataFrame("Events",fake_photon_mc_sample["filename"])
 
-#                fake_photon_tree.Draw("photon2_sieie >> fake_photon_template_hist",photon2_eta_range + " && lepton_pdg_id == "+lepton_pdg_id+" && "+photon2_pt_range_cutstring + " && pass_selection2 && "+str(veto_signal_selection_cutstring))
-                
+                        numerator+=rdf.Filter(photon1_eta_range+ " && "+lepton_pdg_id + " && (photon1_selection == 0) && "+ photon1_pt_range_cutstring + " && pass_selection1" + " && " + photon1_recoil_cutstring + " && njets_fake >= "+ str(njets_min) + " && njets_fake <= "+str(njets_max) + " && gen_weight > 0 &&" + photon1_gen_matching_cutstring+ " && " + str(photon1_veto_signal_selection_cutstring)).Count().GetValue()*fake_photon_mc_sample["xs"]*1000*lumi/neventsgenweighted
+                        numerator-=rdf.Filter(photon1_eta_range+ " && "+lepton_pdg_id + " && (photon1_selection == 0) && "+ photon1_pt_range_cutstring + " && pass_selection1" + " && " + photon1_recoil_cutstring + " && njets_fake >= "+ str(njets_min) + " && njets_fake <= "+str(njets_max) + " && gen_weight < 0 &&" + photon1_gen_matching_cutstring+ " && " + str(photon1_veto_signal_selection_cutstring)).Count().GetValue()*fake_photon_mc_sample["xs"]*1000*lumi/neventsgenweighted
 
         if args.subtract_prompt_from_denom:        
             for k,fake_photon_mc_sample in enumerate(fake_photon_mc_samples):   
 
-                fake_photon_tree = fake_photon_mc_sample["file"].Get("Events")
-
                 if fake_photon_mc_sample["prompt"]:
+                    tfile= ROOT.TFile.Open(fake_photon_mc_sample["filename"])
+                    neventsgenweighted=tfile.Get("nEventsGenWeighted").GetBinContent(1)
+                    rdf=ROOT.RDataFrame("Events",fake_photon_mc_sample["filename"])
                     photon1_gen_matching_cutstring = "(photon1_gen_matching == 6 || photon1_gen_matching == 5 || photon1_gen_matching == 4 || photon1_gen_matching == 1)"
                     photon2_gen_matching_cutstring = "(photon2_gen_matching == 6 || photon2_gen_matching == 5 || photon2_gen_matching == 4 || photon2_gen_matching == 1)"
-                    denominator-=fake_photon_tree.GetEntries(photon1_eta_range+ " && "+lepton_pdg_id + " && (photon1_selection == "+den_pho_sel+") && "+ photon1_pt_range_cutstring + " && pass_selection1" + " && " + photon1_recoil_cutstring + " && njets_fake >= "+ str(njets_min) + " && njets_fake <= "+str(njets_max) + " && photon1_sieie < "+str(max_sieie) + " && photon1_pfRelIso03_chg*photon1_pt < "+str(max_chiso) + " && gen_weight > 0 && " + photon1_gen_matching_cutstring+ " && " + str(photon1_veto_signal_selection_cutstring))*fake_photon_mc_sample["xs"]*1000*lumi/fake_photon_mc_sample["file"].Get("nEventsGenWeighted").GetBinContent(1)
-                    denominator+=fake_photon_tree.GetEntries(photon1_eta_range+ " && "+lepton_pdg_id + " && (photon1_selection == "+den_pho_sel+") && "+ photon1_pt_range_cutstring + " && pass_selection1" + " && " + photon1_recoil_cutstring + " && njets_fake >= "+ str(njets_min) + " && njets_fake <= "+str(njets_max) + " && photon1_sieie < "+str(max_sieie) + " && photon1_pfRelIso03_chg*photon1_pt < "+str(max_chiso) + " && gen_weight < 0 && "  + photon1_gen_matching_cutstring + " && " + str(photon1_veto_signal_selection_cutstring))*fake_photon_mc_sample["xs"]*1000*lumi/fake_photon_mc_sample["file"].Get("nEventsGenWeighted").GetBinContent(1)
-
-
+                    denominator-=rdf.Filter(photon1_eta_range+ " && "+lepton_pdg_id + " && (photon1_selection == "+den_pho_sel+") && "+ photon1_pt_range_cutstring + " && pass_selection1" + " && " + photon1_recoil_cutstring + " && njets_fake >= "+ str(njets_min) + " && njets_fake <= "+str(njets_max) + " && photon1_sieie < "+str(max_sieie) + " && photon1_pfRelIso03_chg*photon1_pt < "+str(max_chiso) + " && gen_weight > 0 && " + photon1_gen_matching_cutstring+ " && " + str(photon1_veto_signal_selection_cutstring)).Count().GetValue()*fake_photon_mc_sample["xs"]*1000*lumi/neventsgenweighted
+                    denominator+=rdf.Filter(photon1_eta_range+ " && "+lepton_pdg_id + " && (photon1_selection == "+den_pho_sel+") && "+ photon1_pt_range_cutstring + " && pass_selection1" + " && " + photon1_recoil_cutstring + " && njets_fake >= "+ str(njets_min) + " && njets_fake <= "+str(njets_max) + " && photon1_sieie < "+str(max_sieie) + " && photon1_pfRelIso03_chg*photon1_pt < "+str(max_chiso) + " && gen_weight < 0 && "  + photon1_gen_matching_cutstring + " && " + str(photon1_veto_signal_selection_cutstring)).Count().GetValue()*fake_photon_mc_sample["xs"]*1000*lumi/neventsgenweighted
 
         if not args.true:        
 
-            real_photon_template_tree = real_photon_template_file.Get("Events")
-            real_photon_template_hist = ROOT.TH1F("real_photon_template_hist","real_photon_template_hist",n_bins,sieie_lower,sieie_upper)
+            rdf=ROOT.RDataFrame("Events",real_photon_template_filename)
+            real_photon_template_hist_model = ROOT.RDF.TH1DModel("","",n_bins,sieie_lower,sieie_upper)
+            real_photon_template_hist = real_photon_template_hist_model.GetHistogram()
             real_photon_template_hist.Sumw2()
-            for k in range(real_photon_template_tree.GetEntries()):
-                real_photon_template_tree.GetEntry(k)
 
-                pass_eta_range = False
-
-                if photon1_eta_range == "photon1_isScEtaEB":
-                    if real_photon_template_tree.photon_isScEtaEB == '\x01':
-                        pass_eta_range = True
-                elif photon1_eta_range == "photon1_isScEtaEE":
-                    if real_photon_template_tree.photon_isScEtaEE == '\x01':
-                        pass_eta_range = True
-                else:
-                    assert(0)
-
-                pass_lepton_pdg_id = False
-
-                if args.lep == "muon":
-                    if real_photon_template_tree.lepton_pdg_id == 13:
-                        pass_lepton_pdg_id = True
-                elif args.lep == "electron":
-                    if real_photon_template_tree.lepton_pdg_id == 11:
-                        pass_lepton_pdg_id = True
-                elif args.lep == "both":    
-                    pass_lepton_pdg_id = True
-                else:
-                    assert(0)
-
-                pass_photon_pt_range = False
-
-                if photon1_pt_range_cutstring == "photon1_pt > 20 && photon1_pt < 30":
-                    if real_photon_template_tree.photon_pt > 20 and real_photon_template_tree.photon_pt < 30:
-                        pass_photon_pt_range = True
-                elif photon1_pt_range_cutstring == "photon1_pt > 30 && photon1_pt < 40":
-                    if real_photon_template_tree.photon_pt > 30 and real_photon_template_tree.photon_pt < 40:
-                        pass_photon_pt_range = True
-                elif photon1_pt_range_cutstring == "photon1_pt > 40 && photon1_pt < 50":
-                    if real_photon_template_tree.photon_pt > 40 and real_photon_template_tree.photon_pt < 50:
-                        pass_photon_pt_range = True
-                elif photon1_pt_range_cutstring == "photon1_pt > 50 && photon1_pt < 400":
-                    if real_photon_template_tree.photon_pt > 100 and real_photon_template_tree.photon_pt < 400:
-                        pass_photon_pt_range = True
-                else:
-                    assert(0)
-
-
-#                pass_signal_selection_veto = not ((real_photon_template_tree.puppimet > 60 and real_photon_template_tree.puppimt > 35 and real_photon_template_tree.lepton_pt > 35 and real_photon_template_tree.photon_pt > 35 and real_photon_template_tree.lepton_pdg_id == 11) or (real_photon_template_tree.puppimet > 60 and real_photon_template_tree.puppimt > 35 and real_photon_template_tree.lepton_pt > 35 and real_photon_template_tree.photon_pt > 35 and real_photon_template_tree.lepton_pdg_id == 13))
-
-                pass_signal_selection_veto = True
-#                pass_signal_selection_veto = real_photon_template_tree.puppimet > 60 and real_photon_template_tree.puppimt < 35
-
-                if pass_photon_pt_range and pass_lepton_pdg_id and pass_eta_range and pass_signal_selection_veto:
-
-                    if real_photon_template_tree.gen_weight > 0:
-                        real_photon_template_hist.Fill(real_photon_template_tree.photon_sieie)
-                    else:
-                        real_photon_template_hist.Fill(real_photon_template_tree.photon_sieie,-1)
+            rresultptr_real_photon_template_hist=rdf.Filter(photon1_eta_range.replace("photon1","photon") + " && " + photon1_pt_range_cutstring.replace("photon1","photon")+ " && " + lepton_pdg_id).Define("weight","gen_weight/abs(gen_weight)").Histo1D(real_photon_template_hist_model,"photon_sieie","weight")
+            real_photon_template_hist.Add(rresultptr_real_photon_template_hist.GetValue())
 
             for k in range(real_photon_template_hist.GetNbinsX()+2):
                 if real_photon_template_hist.GetBinContent(k) < 0:
                     real_photon_template_hist.SetBinContent(k,0)
+
+#            for k in range(fake_photon_template_hist.GetNbinsX()+2):
+#                if fake_photon_template_hist.GetBinContent(k) < 0:
+#                    fake_photon_template_hist.SetBinContent(k,0)
+
+            print "andrew debug 1"
+            fake_photon_template_hist.Print("all")
+            print "andrew debug 2"
+            real_photon_template_hist.Print("all")
+            print "andrew debug 3"
+            total_hist.Print("all")
+            print "andrew debug 4"
 
             mc = ROOT.TObjArray(2)
 
@@ -408,7 +356,6 @@ for i in range(len(photon1_eta_ranges)):
             mc.Add(real_photon_template_hist)
 
             ffitter = ROOT.TFractionFitter(total_hist,mc)
-
 
             c1 = ROOT.TCanvas("c1", "c1",5,50,500,500);
 
@@ -448,7 +395,7 @@ for i in range(len(photon1_eta_ranges)):
             
             c1.SaveAs(args.outdir+"/"+args.year+"/"+args.lep+"/"+eta_range_no_spaces+"/fake_photon_template_"+photon_pt_range_cutstring_no_spaces+".png")
             
-            
+            ROOT.gROOT.cd() #avoids some TFractionFitter destructor crashes (see https://sft.its.cern.ch/jira/browse/ROOT-10752)
             ffitter.Fit()
             
             total_hist.GetXaxis().SetTitle("\sigma_{i \eta i \eta}")            
@@ -540,9 +487,9 @@ for i in range(len(photon1_eta_ranges)):
             print value*fake_photon_template_hist.Integral()/total_hist.Integral()
 
 #            print total_sieie_for_fake_photon_fraction_tree.GetEntries(eta_range+" && lepton_pdg_id == "+lepton_pdg_id+" && (photon_selection == 0 || photon_selection == 1) && "+ photon_pt_range_cutstring)                                                                                                                                                                     
-            print fake_photon_tree.GetEntries(photon1_eta_range+ " && lepton_pdg_id == "+lepton_pdg_id+" && (photon1_selection == 3) && "+ photon1_pt_range_cutstring+ " && pass_selection1")
+#            print fake_photon_tree.GetEntries(photon1_eta_range+ " && lepton_pdg_id == "+lepton_pdg_id+" && (photon1_selection == 3) && "+ photon1_pt_range_cutstring+ " && pass_selection1")
 
-            print value*fake_photon_template_hist.Integral(1,fake_photon_template_hist.GetXaxis().FindFixBin( sieie_cut ))*total_hist.Integral()/total_hist.Integral(1,total_hist.GetXaxis().FindFixBin( sieie_cut ))/fake_photon_template_hist.Integral()
+#            print value*fake_photon_template_hist.Integral(1,fake_photon_template_hist.GetXaxis().FindFixBin( sieie_cut ))*total_hist.Integral()/total_hist.Integral(1,total_hist.GetXaxis().FindFixBin( sieie_cut ))/fake_photon_template_hist.Integral()
 
 
 
