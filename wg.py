@@ -31,6 +31,7 @@ dict_lumi = {"2016" : 35.9, "2017" : 41.5, "2018" : 59.6}
 
 parser = argparse.ArgumentParser()
 
+parser.add_argument('--use_yings_electron_hlt_sfs',action='store_true',default=False)
 parser.add_argument('--singleproc',action='store_true',default=False)
 parser.add_argument('--nthreads',dest='nthreads',default=0) #the argument to EnableImplicitMT
 parser.add_argument('--userdir',dest='userdir',default='/afs/cern.ch/user/a/amlevin/') #not used now
@@ -1304,7 +1305,7 @@ bool is_photon_prompt(int lumi,int event, string year, string dsetversion) {
 '''
 
 
-eff_scale_factor_cpp = '''
+photon_eff_scale_factor_cpp = '''
 
 TFile photon_id_2016_sf_file("eff_scale_factors/2016/Fall17V2_2016_Medium_photons.root");
 TH2F * photon_id_2016_sf = (TH2F*) photon_id_2016_sf_file.Get("EGamma_SF2D");
@@ -1314,6 +1315,31 @@ TH2F * photon_id_2017_sf = (TH2F*) photon_id_2017_sf_file.Get("EGamma_SF2D");
 
 TFile photon_id_2018_sf_file("eff_scale_factors/2018/2018_PhotonsMedium.root","read");
 TH2F * photon_id_2018_sf = (TH2F*) photon_id_2018_sf_file.Get("EGamma_SF2D");
+
+float photon_efficiency_scale_factor(float pt,float eta,string year,bool err_up=false){
+
+    TH2F * photon_id_sf = 0;
+
+    if (year == "2016") photon_id_sf = photon_id_2016_sf;
+    else if (year == "2017") photon_id_sf = photon_id_2017_sf;
+    else if (year == "2018") photon_id_sf = photon_id_2018_sf;
+    else exit(1);
+
+    float mypt = TMath::Min(pt,float(photon_id_sf->GetYaxis()->GetBinCenter(photon_id_sf->GetNbinsY())));
+    float myeta = TMath::Max(TMath::Min(eta,float(photon_id_sf->GetXaxis()->GetBinCenter(photon_id_sf->GetNbinsX()))),float(photon_id_sf->GetXaxis()->GetBinCenter(1)));
+
+    float sf = photon_id_sf->GetBinContent(photon_id_sf->GetXaxis()->FindFixBin(myeta),photon_id_sf->GetYaxis()->FindFixBin(mypt));
+
+    if (err_up) sf += photon_id_sf->GetBinError(photon_id_sf->GetXaxis()->FindFixBin(myeta),photon_id_sf->GetYaxis()->FindFixBin(mypt));
+
+    return sf;
+}
+
+
+'''
+
+if not args.use_yings_electron_hlt_sfs:
+    electron_eff_scale_factor_cpp = '''
 
 TFile electron_id_2016_sf_file("eff_scale_factors/2016/2016LegacyReReco_ElectronMedium_Fall17V2.root","read");
 TH2F * electron_id_2016_sf = (TH2F*) electron_id_2016_sf_file.Get("EGamma_SF2D");
@@ -1341,34 +1367,6 @@ TH2D * electron_hlt_2017_sf = (TH2D*)electron_hlt_2017_sf_file.Get("hlt_sfs_etap
 
 TFile electron_hlt_2018_sf_file("eff_scale_factors/2018/electron_hlt_sfs_2018.root" ,"read");
 TH2D * electron_hlt_2018_sf = (TH2D*)electron_hlt_2018_sf_file.Get("hlt_sfs_etapt");
-
-TFile muon_iso_2016_sf_file("eff_scale_factors/2016/RunBCDEF_SF_ISO.root","read");
-TH2D * muon_iso_2016_sf = (TH2D*) muon_iso_2016_sf_file.Get("NUM_TightRelIso_DEN_TightIDandIPCut_eta_pt");
-
-TFile muon_id_2016_sf_file("eff_scale_factors/2016/RunBCDEF_SF_ID.root","read");
-TH2D * muon_id_2016_sf = (TH2D*) muon_id_2016_sf_file.Get("NUM_TightID_DEN_genTracks_eta_pt");
-
-TFile muon_iso_2017_sf_file("eff_scale_factors/2017/RunBCDEF_SF_ISO.root","read");
-TH2D * muon_iso_2017_sf = (TH2D*) muon_iso_2017_sf_file.Get("NUM_TightRelIso_DEN_TightIDandIPCut_pt_abseta");
-
-TFile muon_id_2017_sf_file("eff_scale_factors/2017/RunBCDEF_SF_ID.root","read");
-TH2D * muon_id_2017_sf = (TH2D*) muon_id_2017_sf_file.Get("NUM_TightID_DEN_genTracks_pt_abseta");
-
-TFile muon_iso_2018_sf_file("eff_scale_factors/2018/RunABCD_SF_ISO.root","read");
-TH2D * muon_iso_2018_sf = (TH2D*) muon_iso_2018_sf_file.Get("NUM_TightRelIso_DEN_TightIDandIPCut_pt_abseta");
-
-TFile muon_id_2018_sf_file("eff_scale_factors/2018/RunABCD_SF_ID.root","read");
-TH2D * muon_id_2018_sf = (TH2D*)muon_id_2018_sf_file.Get("NUM_TightID_DEN_TrackerMuons_pt_abseta");
-
-TFile muon_hlt_2016_sf_file("eff_scale_factors/2016/EfficienciesStudies_2016_trigger_EfficienciesAndSF_RunGtoH.root","read");
-TH2F * muon_hlt_2016_sf = (TH2F*) muon_hlt_2016_sf_file.Get("IsoMu24_OR_IsoTkMu24_PtEtaBins/abseta_pt_ratio");
-
-TFile muon_hlt_2017_sf_file("eff_scale_factors/2017/EfficienciesAndSF_RunBtoF_Nov17Nov2017.root","read");
-TH2F * muon_hlt_2017_sf = (TH2F*) muon_hlt_2017_sf_file.Get("IsoMu27_PtEtaBins/abseta_pt_ratio");
-
-TFile muon_hlt_2018_sf_file("eff_scale_factors/2018/EfficienciesStudies_2018_trigger_EfficienciesAndSF_2018Data_BeforeMuonHLTUpdate.root","read");
-TH2F * muon_hlt_2018_sf = (TH2F*) muon_hlt_2018_sf_file.Get("IsoMu24_PtEtaBins/abseta_pt_ratio");
-
 
 float electron_efficiency_scale_factor(float pt, float eta, string year,bool id_err_up=false, bool reco_err_up=false, bool hlt_err_up=false) {
 
@@ -1442,24 +1440,141 @@ float electron_efficiency_scale_factor(float pt, float eta, string year,bool id_
     return sf_id*sf_reco*sf_hlt;
 }
 
-float photon_efficiency_scale_factor(float pt,float eta,string year,bool err_up=false){
 
-    TH2F * photon_id_sf = 0;
+'''
+else:
+    electron_eff_scale_factor_cpp = '''
 
-    if (year == "2016") photon_id_sf = photon_id_2016_sf;
-    else if (year == "2017") photon_id_sf = photon_id_2017_sf;
-    else if (year == "2018") photon_id_sf = photon_id_2018_sf;
+TFile electron_id_2016_sf_file("eff_scale_factors/2016/2016LegacyReReco_ElectronMedium_Fall17V2.root","read");
+TH2F * electron_id_2016_sf = (TH2F*) electron_id_2016_sf_file.Get("EGamma_SF2D");
+
+TFile electron_id_2017_sf_file("eff_scale_factors/2017/2017_ElectronMedium.root","read");
+TH2F * electron_id_2017_sf = (TH2F*)electron_id_2017_sf_file.Get("EGamma_SF2D");
+
+TFile electron_id_2018_sf_file("eff_scale_factors/2018/2018_ElectronMedium.root","read");
+TH2F * electron_id_2018_sf = (TH2F*)electron_id_2018_sf_file.Get("EGamma_SF2D");
+
+TFile electron_reco_2016_sf_file("eff_scale_factors/2016/EGM2D_BtoH_GT20GeV_RecoSF_Legacy2016.root","read");
+TH2F * electron_reco_2016_sf = (TH2F*) electron_reco_2016_sf_file.Get("EGamma_SF2D");
+
+TFile electron_reco_2017_sf_file("eff_scale_factors/2017/egammaEffi.txt_EGM2D_runBCDEF_passingRECO.root","read");
+TH2F * electron_reco_2017_sf = (TH2F*)electron_reco_2017_sf_file.Get("EGamma_SF2D");
+
+TFile electron_reco_2018_sf_file("eff_scale_factors/2018/egammaEffi.txt_EGM2D_updatedAll.root" ,"read");
+TH2F * electron_reco_2018_sf = (TH2F*)electron_reco_2018_sf_file.Get("EGamma_SF2D");
+
+TFile electron_hlt_2016_sf_file("eff_scale_factors/2016/egammaEffi.txt_EGM2D.root","read");
+TH2D * electron_hlt_2016_sf = (TH2D*) electron_hlt_2016_sf_file.Get("EGamma_SF2D");
+
+TFile electron_hlt_2017_sf_file("eff_scale_factors/2017/egammaEffi.txt_EGM2D.root","read");
+TH2D * electron_hlt_2017_sf = (TH2D*)electron_hlt_2017_sf_file.Get("EGamma_SF2D");
+
+TFile electron_hlt_2018_sf_file("eff_scale_factors/2018/egammaEffi.txt_EGM2D.root" ,"read");
+TH2D * electron_hlt_2018_sf = (TH2D*)electron_hlt_2018_sf_file.Get("EGamma_SF2D");
+
+float electron_efficiency_scale_factor(float pt, float eta, string year,bool id_err_up=false, bool reco_err_up=false, bool hlt_err_up=false) {
+
+    TH2F * electron_reco_sf = 0;
+    TH2F * electron_id_sf = 0;
+    TH2D * electron_hlt_sf = 0;
+
+    if (year == "2016") {
+        electron_reco_sf = electron_reco_2016_sf;
+        electron_id_sf = electron_id_2016_sf;
+        electron_hlt_sf = electron_hlt_2016_sf;
+    }
+    else if (year == "2017"){
+        electron_reco_sf = electron_reco_2017_sf;
+        electron_id_sf = electron_id_2017_sf;
+        electron_hlt_sf = electron_hlt_2017_sf;
+    }
+    else if (year == "2018") {
+        electron_reco_sf = electron_reco_2018_sf;
+        electron_id_sf = electron_id_2018_sf;
+        electron_hlt_sf = electron_hlt_2018_sf;
+    }
+    else
+        exit(1);
+
+    int electron_id_sf_xaxisbin = -1;
+    int electron_id_sf_yaxisbin = -1;
+
+    if (year == "2016") {    
+        electron_id_sf_xaxisbin = electron_id_sf->GetXaxis()->FindFixBin(eta);
+        electron_id_sf_yaxisbin = electron_id_sf->GetYaxis()->FindFixBin(TMath::Min(pt,float(electron_id_sf->GetYaxis()->GetBinCenter(electron_id_sf->GetNbinsY()))));
+    }
+    else if (year == "2017") {
+        electron_id_sf_xaxisbin = electron_id_sf->GetXaxis()->FindFixBin(eta);
+        electron_id_sf_yaxisbin = electron_id_sf->GetYaxis()->FindFixBin(TMath::Min(pt,float(electron_id_sf->GetYaxis()->GetBinCenter(electron_id_sf->GetNbinsY()))));
+    }
+    else if (year == "2018") {
+        electron_id_sf_xaxisbin = electron_id_sf->GetXaxis()->FindFixBin(eta);
+        electron_id_sf_yaxisbin = electron_id_sf->GetYaxis()->FindFixBin(TMath::Min(pt,float(electron_id_sf->GetYaxis()->GetBinCenter(electron_id_sf->GetNbinsY()))));
+    }
     else exit(1);
 
-    float mypt = TMath::Min(pt,float(photon_id_sf->GetYaxis()->GetBinCenter(photon_id_sf->GetNbinsY())));
-    float myeta = TMath::Max(TMath::Min(eta,float(photon_id_sf->GetXaxis()->GetBinCenter(photon_id_sf->GetNbinsX()))),float(photon_id_sf->GetXaxis()->GetBinCenter(1)));
+    int electron_hlt_sf_xaxisbin = -1;
+    int electron_hlt_sf_yaxisbin = -1;
 
-    float sf = photon_id_sf->GetBinContent(photon_id_sf->GetXaxis()->FindFixBin(myeta),photon_id_sf->GetYaxis()->FindFixBin(mypt));
+    if (year == "2016") {    
+        electron_hlt_sf_xaxisbin = electron_hlt_sf->GetXaxis()->FindFixBin(eta);
+        electron_hlt_sf_yaxisbin = electron_hlt_sf->GetYaxis()->FindFixBin(TMath::Min(pt,float(electron_hlt_sf->GetYaxis()->GetBinCenter(electron_hlt_sf->GetNbinsY()))));
+    }
+    else if (year == "2017") {
+        electron_hlt_sf_xaxisbin = electron_hlt_sf->GetXaxis()->FindFixBin(eta);
+        electron_hlt_sf_yaxisbin = electron_hlt_sf->GetYaxis()->FindFixBin(TMath::Min(pt,float(electron_hlt_sf->GetYaxis()->GetBinCenter(electron_hlt_sf->GetNbinsY()))));
+    }
+    else if (year == "2018") {
+        electron_hlt_sf_xaxisbin = electron_hlt_sf->GetXaxis()->FindFixBin(eta);
+        electron_hlt_sf_yaxisbin = electron_hlt_sf->GetYaxis()->FindFixBin(TMath::Min(pt,float(electron_hlt_sf->GetYaxis()->GetBinCenter(electron_hlt_sf->GetNbinsY()))));
+    }
+    else exit(1);
 
-    if (err_up) sf += photon_id_sf->GetBinError(photon_id_sf->GetXaxis()->FindFixBin(myeta),photon_id_sf->GetYaxis()->FindFixBin(mypt));
 
-    return sf;
+    float sf_id = electron_id_sf->GetBinContent(electron_id_sf_xaxisbin,electron_id_sf_yaxisbin); 
+    if (id_err_up) sf_id += electron_id_sf->GetBinError(electron_id_sf_xaxisbin,electron_id_sf_yaxisbin) ;
+
+    //the reco 2D histogram is really a 1D histogram
+    float sf_reco=electron_reco_sf->GetBinContent(electron_reco_sf->GetXaxis()->FindFixBin(eta),1);
+    if (reco_err_up) sf_reco+=electron_reco_sf->GetBinError(electron_reco_sf->GetXaxis()->FindFixBin(eta),1);
+
+    float sf_hlt = electron_hlt_sf->GetBinContent(electron_hlt_sf_xaxisbin,electron_hlt_sf_yaxisbin); 
+    if (hlt_err_up) sf_hlt += electron_hlt_sf->GetBinError(electron_hlt_sf_xaxisbin,electron_hlt_sf_yaxisbin) ;
+
+    return sf_id*sf_reco*sf_hlt;
 }
+
+
+'''
+
+muon_eff_scale_factor_cpp = '''
+
+TFile muon_iso_2016_sf_file("eff_scale_factors/2016/RunBCDEF_SF_ISO.root","read");
+TH2D * muon_iso_2016_sf = (TH2D*) muon_iso_2016_sf_file.Get("NUM_TightRelIso_DEN_TightIDandIPCut_eta_pt");
+
+TFile muon_id_2016_sf_file("eff_scale_factors/2016/RunBCDEF_SF_ID.root","read");
+TH2D * muon_id_2016_sf = (TH2D*) muon_id_2016_sf_file.Get("NUM_TightID_DEN_genTracks_eta_pt");
+
+TFile muon_iso_2017_sf_file("eff_scale_factors/2017/RunBCDEF_SF_ISO.root","read");
+TH2D * muon_iso_2017_sf = (TH2D*) muon_iso_2017_sf_file.Get("NUM_TightRelIso_DEN_TightIDandIPCut_pt_abseta");
+
+TFile muon_id_2017_sf_file("eff_scale_factors/2017/RunBCDEF_SF_ID.root","read");
+TH2D * muon_id_2017_sf = (TH2D*) muon_id_2017_sf_file.Get("NUM_TightID_DEN_genTracks_pt_abseta");
+
+TFile muon_iso_2018_sf_file("eff_scale_factors/2018/RunABCD_SF_ISO.root","read");
+TH2D * muon_iso_2018_sf = (TH2D*) muon_iso_2018_sf_file.Get("NUM_TightRelIso_DEN_TightIDandIPCut_pt_abseta");
+
+TFile muon_id_2018_sf_file("eff_scale_factors/2018/RunABCD_SF_ID.root","read");
+TH2D * muon_id_2018_sf = (TH2D*)muon_id_2018_sf_file.Get("NUM_TightID_DEN_TrackerMuons_pt_abseta");
+
+TFile muon_hlt_2016_sf_file("eff_scale_factors/2016/EfficienciesStudies_2016_trigger_EfficienciesAndSF_RunGtoH.root","read");
+TH2F * muon_hlt_2016_sf = (TH2F*) muon_hlt_2016_sf_file.Get("IsoMu24_OR_IsoTkMu24_PtEtaBins/abseta_pt_ratio");
+
+TFile muon_hlt_2017_sf_file("eff_scale_factors/2017/EfficienciesAndSF_RunBtoF_Nov17Nov2017.root","read");
+TH2F * muon_hlt_2017_sf = (TH2F*) muon_hlt_2017_sf_file.Get("IsoMu27_PtEtaBins/abseta_pt_ratio");
+
+TFile muon_hlt_2018_sf_file("eff_scale_factors/2018/EfficienciesStudies_2018_trigger_EfficienciesAndSF_2018Data_BeforeMuonHLTUpdate.root","read");
+TH2F * muon_hlt_2018_sf = (TH2F*) muon_hlt_2018_sf_file.Get("IsoMu24_PtEtaBins/abseta_pt_ratio");
 
 float muon_efficiency_scale_factor(float pt,float eta,string year,bool iso_err_up=false,bool id_err_up=false, bool hlt_err_up=false) {
 
@@ -1815,7 +1930,9 @@ ROOT.gInterpreter.ProcessLine(wjets_pileup_photons_flags_initialization_cpp)
 ROOT.gInterpreter.Declare(wjets_pileup_photons_flags_cpp)
 ROOT.gInterpreter.Declare(fake_lepton_weight_cpp)
 ROOT.gInterpreter.Declare(fake_photon_weight_cpp)
-ROOT.gInterpreter.Declare(eff_scale_factor_cpp)
+ROOT.gInterpreter.Declare(muon_eff_scale_factor_cpp)
+ROOT.gInterpreter.Declare(electron_eff_scale_factor_cpp)
+ROOT.gInterpreter.Declare(photon_eff_scale_factor_cpp)
 
 def processMCSample(dummy):
 
