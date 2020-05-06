@@ -1,3 +1,4 @@
+#this should be run with ROOT 620 in order to avoid TFractionFitter crashes
 import ROOT
 ROOT.PyConfig.IgnoreCommandLineOptions = True
 
